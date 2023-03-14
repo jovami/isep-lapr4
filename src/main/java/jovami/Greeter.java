@@ -8,12 +8,8 @@ import javax.persistence.Id;
 /**
  * Greeter
  */
-@Entity
-public class Greeter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
+public class Greeter {
     protected Greeter() {}
 
     public String sayHello() {
