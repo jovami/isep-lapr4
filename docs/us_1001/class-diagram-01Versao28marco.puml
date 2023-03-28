@@ -1,0 +1,267 @@
+@startuml
+
+skinparam linetype ortho
+skinparam Shadowing False
+'hide empty members
+'left to right direction
+
+skinparam class {
+    BackgroundColor<<Entity>> Moccasin
+    BackgroundColor<<value object>> Azure
+    BackgroundColor<<Event>> MediumAquaMarine
+    BackgroundColor<<Service>> SkyBlue
+    ArrowColor DarkSlateGrey
+}
+
+skinparam package {
+    BackgroundColor PowderBlue
+}
+
+' ############## USERS ##############
+
+'''Users
+/'class User{
+    - email
+    - fullName
+    - shortName
+    - pwd
+    - name??
+    - dateOfBirth
+    - taxPayerNumber
+}'/
+
+
+package Users <<Aggregate>> {
+
+    class User <<root>> <<Entity>>
+
+    class FullName <<value object>> {
+        -fullName
+    }
+
+    class ShortName <<value object>> {
+            -shortName
+        }
+
+    class DateOfBirth <<value object>> {
+            -dateOfBirth
+        }
+
+    class Password <<value object>> {
+            -password
+        }
+
+    class TaxPayerNumber <<value object>> {
+                    -taxPayerNumber
+                }
+
+    class Role <<value object>> {
+        -description
+        -function
+    }
+
+    note right : A User can be a Student, Teacher, \nManager.
+}
+
+/'
+
+class Student{
+      - mecanographicNumber
+  }
+
+class Teacher{
+    - acronimo
+}
+
+class Manager{
+    - managerId??
+}
+
+'/
+
+' ############## USERS ##############
+
+User "1" ---down> "1" FullName
+User "1" ---down> "1" ShortName
+User "1" ---down> "1" DateOfBirth
+User "1" ---down> "1" TaxPayerNumber
+User "1" ---down> "1" Password
+User "*" ---down> "*"Role
+
+
+
+' ############## COURSE ##############
+
+package Course <<Aggregate>> {
+
+    class Course <<root>> <<Entity>>
+
+    class FullName <<value object>> {
+        -fullName
+    }
+
+    class ShortName <<value object>> {
+            -shortName
+        }
+
+    class DateOfBirth <<value object>> {
+            -dateOfBirth
+        }
+
+    class Password <<value object>> {
+            -password
+        }
+
+    class TaxPayerNumber <<value object>> {
+                    -taxPayerNumber
+                }
+
+    class Role <<value object>> {
+        -description
+        -function
+    }
+
+    note right : A User can be a Student, Teacher, \nManager.
+}
+
+
+
+
+
+
+
+
+/'
+
+class Course{
+    - courseId @Id
+    - courseName
+    - Collections<> Teacher:regent
+    - description
+    - minStudents 
+    - maxStudents
+}
+
+class Enrollment{
+    -studentId
+    -courseId
+    -finalGrade
+}
+
+class Class{
+    - Title @Id
+    - date
+    - duration
+    
+    - Course: course??
+    - teacher??
+}
+
+class Exam{
+    - title
+    - description
+
+
+    - Course: course??
+    - openDate
+    - closeDate
+    
+    - header
+    - sequenceSection
+    - questionTypes
+}
+
+class QuestionTypes{
+    - enumerate
+    - matching
+    - multipleChoices
+    - shortAnswer
+    - numerical
+    - selectMissingWord
+    - true/False
+}
+
+class ExamResult{
+    - Exam
+    - Student
+    - feedback
+    - grade
+}
+
+
+class Board{
+    - Student:admin
+    - Collection:usersInvited
+    - historyUpdates
+    - rows/columns property file
+}
+
+class PostIt{
+    - postItId
+    - text
+}
+
+
+class Meeting{
+    -time
+    -duration
+    -User:admin
+    -Collection:usersInvited
+}
+
+
+
+''
+User --> Teacher
+User --> Student
+User --> Manager
+
+''Courses
+
+Manager ---> Course : Manages >
+Manager ---> Enrollment : Manages >
+
+Teacher -left-> Class : Creates >
+
+Enrollment "1" ---* "1" Student
+Enrollment "1" ---* "1" Course
+
+Course "1" ---* "*" Class
+
+
+
+''Exams
+
+' Student --> Exam
+Student --> ExamResult
+
+Teacher "1" -up-> "*" Exam
+Course "1" *-- "*" Exam
+Exam "1" *-- "*" ExamResult 
+
+Exam "1" ---> "*" QuestionTypes
+
+
+''Shared Boards
+
+' User --> Admin : is the >
+User "1" ----> "*" Board : manages >
+Board "1" --* "*" User : contains >
+
+Board "1" ---> "*" PostIt : contains >
+User "*" ---> "*" PostIt : manages >
+
+
+
+
+''Meeting
+' User --> Admin : is the >
+User "1" ---> "*" Meeting : managers >
+Meeting "1" ---* "*" User : contains >'/
+
+
+
+
+
+
+@enduml
