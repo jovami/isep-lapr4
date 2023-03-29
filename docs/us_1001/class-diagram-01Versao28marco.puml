@@ -17,9 +17,9 @@ skinparam package {
     BackgroundColor PowderBlue
 }
 
+'TALVEZ APAGAR O PACKAGE USER OU CORRIGIR PELO CODIGO
 ' ############## USERS ##############
 
-'''Users
 /'class User{
     - email
     - fullName
@@ -28,10 +28,15 @@ skinparam package {
     - name??
     - dateOfBirth
     - taxPayerNumber
-}'/
+}
 
+class Student{ -mecanographicNumber}
+class Teacher{ - acronimo}
+class Manager{ - managerId?? }
 
-package Users <<Aggregate>> {
+'/
+
+package USER <<Aggregate>> {
 
     class User <<root>> <<Entity>>
 
@@ -63,22 +68,6 @@ package Users <<Aggregate>> {
     note right : A User can be a Student, Teacher, \nManager.
 }
 
-/'
-
-class Student{
-      - mecanographicNumber
-  }
-
-class Teacher{
-    - acronimo
-}
-
-class Manager{
-    - managerId??
-}
-
-'/
-
 ' ############## USERS ##############
 
 User "1" ---down> "1" FullName
@@ -92,56 +81,200 @@ User "*" ---down> "*"Role
 
 ' ############## COURSE ##############
 
-package Course <<Aggregate>> {
+/'
+    class Course{
+        - courseId @Id??
+        - courseName
+        - Collections<> Teacher:regent
+        - description
+        - minStudents
+        - maxStudents
+    }
+'/
+
+package COURSE <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+    - courseId @Id??
+    - Collections<> Teacher:regent
+    '/
 
     class Course <<root>> <<Entity>>
 
-    class FullName <<value object>> {
-        -fullName
+    class CourseName <<value object>> {
+        -courseName
     }
 
-    class ShortName <<value object>> {
-            -shortName
+    class Description <<value object>> {
+            -description
         }
 
-    class DateOfBirth <<value object>> {
-            -dateOfBirth
+    class Capacity <<value object>> {
+            -minStudents
+            -maxStudents
         }
 
-    class Password <<value object>> {
-            -password
+    }
+
+' ############## COURSE ##############
+
+Course "1" ---down> "1" CourseName
+Course "1" ---down> "1" Description
+Course "1" ---down> "1" Capacity
+
+' ############## EXAMS ##############
+
+/'class Exam{
+      - title
+      - description
+
+
+      - Course: course??
+      - openDate
+      - closeDate
+
+      - header
+      - sequenceSection
+      - questionTypes
+  }'/
+
+
+package EXAM <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+        -Course: course?? '/
+
+    class Exam <<root>> <<Entity>>
+
+    class Title <<value object>> {
+        -title
+    }
+
+    class Description <<value object>> {
+            -description
         }
 
-    class TaxPayerNumber <<value object>> {
-                    -taxPayerNumber
+    class OpenDate <<value object>> {
+            -openDate
+        }
+
+    class CloseDate <<value object>> {
+                    -closeDate
                 }
 
-    class Role <<value object>> {
-        -description
-        -function
+    class Header <<value object>> {
+        -header
     }
 
-    note right : A User can be a Student, Teacher, \nManager.
+    class SequenceSection <<value object>> {
+            -sequenceSection
+        }
+
+    class QuestionType <<value object>> {
+            -questionType
+        }
+
 }
 
+' ############## EXAMS ##############
+
+Exam "1" ---down> "1" Title
+'Exam "1" ---down> "1" Description
+Exam "1" ---down> "1" OpenDate
+Exam "1" ---down> "1" CloseDate
+Exam "1" ---down> "1" Header
+Exam "1" ---down> "1" SequenceSection
+Exam "1" ---down> "1" QuestionType
+
+' ############## BOARD ##############
+
+/'class Board{
+    - Student:admin
+    - Collection:usersInvited
+    - historyUpdates
+    - rows/columns property file
+}'/
+
+package BOARD <<Aggregate>> {
+
+    class Board <<root>> <<Entity>>
+
+    class HistoryUpdate <<value object>> {
+        -historyUpdate
+    }
+}
+
+' ############## BOARD ##############
+
+Board "1" ---down> "1" HistoryUpdate
 
 
-
-
-
-
+' ############## MEETING ##############
 
 /'
+class Meeting{
+    -time
+    -duration
+    -User:admin
+    -Collection:usersInvited
+}'/
 
-class Course{
-    - courseId @Id
-    - courseName
-    - Collections<> Teacher:regent
-    - description
-    - minStudents 
-    - maxStudents
+package MEETING <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+             -User:admin
+             -Collection:usersInvited '/
+
+    class Meeting <<root>> <<Entity>>
+
+    class Time <<value object>> {
+        -time
+    }
+
+    class Duration <<value object>> {
+            -duration
+        }
 }
 
+Meeting "1" ---down> "1" Time
+Meeting "1" ---down> "1" Duration
+
+' ############## STUDENT ##############
+
+package STUDENT <<Aggregate>> {
+
+    class Student <<root>> <<Entity>>
+
+    class MecanographicNumber <<value object>> {
+        -mecanographicNumber
+    }
+}
+
+' ############## TEACHER ##############
+
+package TEACHER <<Aggregate>> {
+
+    class Teacher <<root>> <<Entity>>
+
+    class Acrimony <<value object>> {
+        -acrimony
+    }
+}
+
+' ############## MANAGER ##############
+'NAO FAZ SENTIDO A CENA DE MANAGERID
+package MANAGER <<Aggregate>> {
+
+    class Manager <<root>> <<Entity>>
+
+    class ManagerId <<value object>> {
+        -managerId
+    }
+}
+
+}
+
+/'
 class Enrollment{
     -studentId
     -courseId
@@ -155,20 +288,6 @@ class Class{
     
     - Course: course??
     - teacher??
-}
-
-class Exam{
-    - title
-    - description
-
-
-    - Course: course??
-    - openDate
-    - closeDate
-    
-    - header
-    - sequenceSection
-    - questionTypes
 }
 
 class QuestionTypes{
@@ -188,28 +307,10 @@ class ExamResult{
     - grade
 }
 
-
-class Board{
-    - Student:admin
-    - Collection:usersInvited
-    - historyUpdates
-    - rows/columns property file
-}
-
 class PostIt{
     - postItId
     - text
 }
-
-
-class Meeting{
-    -time
-    -duration
-    -User:admin
-    -Collection:usersInvited
-}
-
-
 
 ''
 User --> Teacher
