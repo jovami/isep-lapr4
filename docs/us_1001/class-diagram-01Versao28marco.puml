@@ -35,30 +35,14 @@ class Teacher{ - acronimo}
 class Manager{ - managerId?? }
 
 '/
-
+/'
 package USER <<Aggregate>> {
 
     class User <<root>> <<Entity>>
 
-    class FullName <<value object>> {
-        -fullName
-    }
-
-    class ShortName <<value object>> {
-            -shortName
-        }
-
-    class DateOfBirth <<value object>> {
-            -dateOfBirth
-        }
-
     class Password <<value object>> {
             -password
         }
-
-    class TaxPayerNumber <<value object>> {
-                    -taxPayerNumber
-                }
 
     class Role <<value object>> {
         -description
@@ -77,7 +61,7 @@ User "1" ---down> "1" TaxPayerNumber
 User "1" ---down> "1" Password
 User "*" ---down> "*"Role
 
-
+'/
 
 ' ############## COURSE ##############
 
@@ -95,11 +79,15 @@ User "*" ---down> "*"Role
 package COURSE <<Aggregate>> {
 
     /'FALTA VER COMO ADICIONAR ISTO
-    - courseId @Id??
+
     - Collections<> Teacher:regent
     '/
 
     class Course <<root>> <<Entity>>
+
+    class CourseCode <<value object>>{
+        -courseCode
+    }
 
     class CourseName <<value object>> {
         -courseName
@@ -108,6 +96,12 @@ package COURSE <<Aggregate>> {
     class Description <<value object>> {
             -description
         }
+
+    class CourseState <<value object>>{
+        -courseState
+    }
+
+    note right: states: close, open, enroll, in progress, closed
 
     class Capacity <<value object>> {
             -minStudents
@@ -118,9 +112,12 @@ package COURSE <<Aggregate>> {
 
 ' ############## COURSE ##############
 
+Course "1" ---down> "1" CourseCode
 Course "1" ---down> "1" CourseName
+Course "*" ---down> "1" CourseState
 Course "1" ---down> "1" Description
 Course "1" ---down> "1" Capacity
+
 
 ' ############## EXAMS ##############
 
@@ -138,6 +135,16 @@ Course "1" ---down> "1" Capacity
       - questionTypes
   }'/
 
+/'class QuestionTypes{
+      - enumerate
+      - matching
+      - multipleChoices
+      - shortAnswer
+      - numerical
+      - selectMissingWord
+      - true/False
+  }'/
+
 
 package EXAM <<Aggregate>> {
 
@@ -146,45 +153,58 @@ package EXAM <<Aggregate>> {
 
     class Exam <<root>> <<Entity>>
 
-    class Title <<value object>> {
-        -title
+    class ExamTitle <<value object>> {
+        -examTitle
     }
 
-    class Description <<value object>> {
-            -description
+    class ExamDescription <<value object>> {
+            -examDescription
         }
 
-    class OpenDate <<value object>> {
-            -openDate
-        }
-
-    class CloseDate <<value object>> {
-                    -closeDate
-                }
+    class ExamDate <<value object>> {
+                -openDate
+                -closeDate
+            }
 
     class Header <<value object>> {
+    'talvez criar uma entidade aqui com os types?
+        -typeOfFeedback
+        -typeOfGrade
         -header
     }
 
-    class SequenceSection <<value object>> {
+    class SequenceSection <<Entity>> {
             -sequenceSection
+
         }
+
+    class Question <<Entity>> {
+            -description
+            -solution
+    }
 
     class QuestionType <<value object>> {
             -questionType
+            - enumerate
+            - matching
+            - multipleChoices
+            - shortAnswer
+            - numerical
+            - selectMissingWord
+            - true/False
         }
 
 }
 
 ' ############## EXAMS ##############
 
-Exam "1" ---down> "1" Title
-'Exam "1" ---down> "1" Description
-Exam "1" ---down> "1" OpenDate
-Exam "1" ---down> "1" CloseDate
+Exam "1" ---down> "1" ExamTitle
+Exam "1" ---down> "1" ExamDescription
+Exam "1" ---down> "1" ExamDate
 Exam "1" ---down> "1" Header
-Exam "1" ---down> "1" SequenceSection
-Exam "1" ---down> "1" QuestionType
+Exam "1" ---down> "1..*" SequenceSection
+SequenceSection "1" ---down> "1..*" Question
+Question "1" ---down> "1" QuestionType
 
 ' ############## BOARD ##############
 
@@ -193,20 +213,49 @@ Exam "1" ---down> "1" QuestionType
     - Collection:usersInvited
     - historyUpdates
     - rows/columns property file
-}'/
+}
+
+class PostIt{
+    - postItId
+    - text
+}
+
+'/
 
 package BOARD <<Aggregate>> {
 
     class Board <<root>> <<Entity>>
 
+    note right: colunas e linhas titulo?
+
+    class BoardTitle <<value object>>{
+        -boardTitle
+    }
+
+    class Cell <<value object>>{
+    }
+
+
+
     class HistoryUpdate <<value object>> {
         -historyUpdate
     }
+
+    class PostIt <<value object>> {
+        - postItId
+        - typeOfContent
+    }
+
+    note right: Image or text
+
 }
 
 ' ############## BOARD ##############
 
-Board "1" ---down> "1" HistoryUpdate
+Board "1" ---down> "*" HistoryUpdate
+Board "1" ---down> "1" BoardTitle
+Board "1" ---down> "1..*" Cell : contains >
+Cell "1"  ---down> "0..1" PostIt : contains >
 
 
 ' ############## MEETING ##############
@@ -227,6 +276,11 @@ package MEETING <<Aggregate>> {
 
     class Meeting <<root>> <<Entity>>
 
+    class MeetingInfo <<Entity>>{
+        -admin
+        -Collection: usersInvited
+    }
+
     class Time <<value object>> {
         -time
     }
@@ -238,6 +292,7 @@ package MEETING <<Aggregate>> {
 
 Meeting "1" ---down> "1" Time
 Meeting "1" ---down> "1" Duration
+Meeting "1" ---down> "1" MeetingInfo
 
 ' ############## STUDENT ##############
 
@@ -248,7 +303,30 @@ package STUDENT <<Aggregate>> {
     class MecanographicNumber <<value object>> {
         -mecanographicNumber
     }
+
+    class StudentFullName <<value object>> {
+            -fullName
+        }
+
+        class StudentShortName <<value object>> {
+           -shortName
+        }
+
+        class StudentDateOfBirth <<value object>> {
+             -dateOfBirth
+       }
+
+       class StudentTaxPayerNumber <<value object>> {
+             -taxPayerNumber
+       }
 }
+
+Student "1" ---down> "1" MecanographicNumber
+Student "1" ---down> "1" StudentFullName
+Student "1" ---down> "1" StudentShortName
+Student "1" ---down> "1" StudentDateOfBirth
+Student "1" ---down> "1" StudentTaxPayerNumber
+
 
 ' ############## TEACHER ##############
 
@@ -259,7 +337,31 @@ package TEACHER <<Aggregate>> {
     class Acrimony <<value object>> {
         -acrimony
     }
+
+    class TeacherFullName <<value object>> {
+        -fullName
+    }
+
+    class TeacherShortName <<value object>> {
+       -shortName
+    }
+
+    class TeacherDateOfBirth <<value object>> {
+         -dateOfBirth
+   }
+
+   class TeacherTaxPayerNumber <<value object>> {
+         -taxPayerNumber
+   }
+
 }
+
+Teacher "1" ---down> "1" Acrimony
+Teacher "1" ---down> "1" TeacherFullName
+Teacher "1" ---down> "1" TeacherShortName
+Teacher "1" ---down> "1" TeacherDateOfBirth
+Teacher "1" ---down> "1" TeacherTaxPayerNumber
+
 
 ' ############## MANAGER ##############
 'NAO FAZ SENTIDO A CENA DE MANAGERID
@@ -270,10 +372,51 @@ package MANAGER <<Aggregate>> {
     class ManagerId <<value object>> {
         -managerId
     }
+
+    class ManagerFullName <<value object>> {
+        -fullName
+    }
+
+    class ManagerShortName <<value object>> {
+         -shortName
+    }
+
+    class ManagerDateOfBirth <<value object>> {
+         -dateOfBirth
+    }
+
+    class ManagerTaxPayerNumber <<value object>> {
+         -taxPayerNumber
+    }
 }
 
-}
+Manager "1" ---down> "1" ManagerId
+Manager "1" ---down> "1" ManagerFullName
+Manager "1" ---down> "1" ManagerShortName
+Manager "1" ---down> "1" ManagerDateOfBirth
+Manager "1" ---down> "1" ManagerTaxPayerNumber
 
+
+'########### CONNECTIONS BETWEEN AGGREGATES ###########
+
+Student "*" ---down> "*" Course : participates >
+Teacher "*" ---down> "1" Course : regent >
+
+Student "*" ---down> "*" Exam : does >
+Teacher "*" ---down> "1" Exam : creates >
+
+
+Student "*" ---down> "*" Board : creates >
+Teacher "*" ---down> "*" Board : creates >
+Manager "*" ---down> "*" Board : creates >
+
+Student "*" ---down> "*" MeetingInfo : creates/participate? >
+Teacher "*" ---down> "*" MeetingInfo : creates/participate ? >
+Manager "*" ---down> "*" MeetingInfo : creates/participate? >
+
+
+
+}
 /'
 class Enrollment{
     -studentId
@@ -290,15 +433,7 @@ class Class{
     - teacher??
 }
 
-class QuestionTypes{
-    - enumerate
-    - matching
-    - multipleChoices
-    - shortAnswer
-    - numerical
-    - selectMissingWord
-    - true/False
-}
+
 
 class ExamResult{
     - Exam
@@ -307,10 +442,7 @@ class ExamResult{
     - grade
 }
 
-class PostIt{
-    - postItId
-    - text
-}
+
 
 ''
 User --> Teacher
