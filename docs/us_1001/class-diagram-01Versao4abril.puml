@@ -108,6 +108,8 @@ package COURSE <<Aggregate>> {
             -maxStudents
         }
 
+    class ClassEvent <<Event>>
+
     }
 
 ' ############## COURSE ##############
@@ -117,6 +119,7 @@ Course "1" ---down> "1" CourseName
 Course "*" ---down> "1" CourseState
 Course "1" ---down> "1" Description
 Course "1" ---down> "1" Capacity
+
 
 
 ' ############## EXAMS ##############
@@ -194,6 +197,7 @@ package EXAM <<Aggregate>> {
             - true/False
         }
 
+    class ExamEvent <<Event>>
 }
 
 ' ############## EXAMS ##############
@@ -205,6 +209,8 @@ Exam "1" ---down> "1" Header
 Exam "1" ---down> "1..*" SequenceSection
 SequenceSection "1" ---down> "1..*" Question
 Question "1" ---down> "1" QuestionType
+
+
 
 ' ############## BOARD ##############
 
@@ -288,11 +294,14 @@ package MEETING <<Aggregate>> {
     class Duration <<value object>> {
             -duration
         }
+
+    class MeetingEvent <<Event>>
 }
 
 Meeting "1" ---down> "1" Time
 Meeting "1" ---down> "1" Duration
 Meeting "1" ---down> "1" MeetingInfo
+
 
 ' ############## STUDENT ##############
 
@@ -388,6 +397,8 @@ package MANAGER <<Aggregate>> {
     class ManagerTaxPayerNumber <<value object>> {
          -taxPayerNumber
     }
+
+
 }
 
 Manager "1" ---down> "1" ManagerId
@@ -414,7 +425,61 @@ Student "*" ---down> "*" MeetingInfo : creates/participate? >
 Teacher "*" ---down> "*" MeetingInfo : creates/participate ? >
 Manager "*" ---down> "*" MeetingInfo : creates/participate? >
 
+'########### SERVICES ###########
 
+class UserManagementService <<Service>>
+Manager ---down> UserManagementService
+note right: responsible for creating, disabling/enabling, \nand listing users in the system
+
+
+class CourseManagementService <<Service>>
+Course ---down> CourseManagementService
+Manager ---down> CourseManagementService
+Teacher ---down> CourseManagementService : lists course >
+Student ---down> CourseManagementService : lists course >
+note right: responsible for creating courses\n, opening/closing enrollments and courses, \nsetting course teachers, and listing courses
+
+
+class CourseEnrollmentService <<Service>>
+Course ---down> CourseEnrollmentService
+Manager ---down> CourseEnrollmentService
+Student ---down> CourseEnrollmentService : request >
+note right: responsible for enrolling students in a course,\n either by bulk import or by individual request
+
+
+class ExamService <<Service>>
+Exam ---down> ExamService
+Teacher ---down> ExamService
+Student ---down> ExamService
+note right: responsible for creating exams,\n listing exams, and managing\n exam-taking and grading
+
+
+class SharedBoardService <<Service>>
+Board ---down> SharedBoardService
+Manager ---down> SharedBoardService
+Teacher ---down> SharedBoardService
+Student ---down> SharedBoardService
+note right :responsible for creating,\n sharing, and managing\n shared boards and post-its
+
+class MeetingService <<Service>>
+Meeting ---down> MeetingService
+Manager ---down> MeetingService
+Teacher ---down> MeetingService
+Student ---down> MeetingService
+note right :responsible for scheduling,\n cancelling, and managing\n meetings between users
+
+
+'########### EVENTS ###########
+
+Course ---down> ClassEvent
+
+
+
+Exam ---down> ExamEvent
+ExamEvent ---> ExamService
+
+Meeting ---down> MeetingEvent
+MeetingEvent ---> MeetingService
 
 }
 /'
