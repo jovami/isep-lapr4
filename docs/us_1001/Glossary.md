@@ -1,0 +1,70 @@
+**Glossary**
+
+- **User** - Registered entity on the system
+- **Teacher** - 
+- **Student** -
+- **Manager/Administrator** -
+- **Course** - 
+- **Edition** -
+- **Enrollment** -
+- **Enroll Students** -
+- **CSV** -
+- **File** -
+- **Enlistment** -
+- **Schedule of Class** -
+- **Class** -
+- **Exam** -
+- **Question** -
+- **Exam Feedback** -
+- **Exam Result** -
+- **Parser** -
+- **Grammar** -
+- **Grade** -
+- **Board** -
+- **Share Board** -
+- **HTML page** -
+- **Post-it** -
+- **Board History** -
+- **Meeting** -
+- **Invitation** -
+- **Response Status** -
+- **Programming language** -
+- **Java** -
+- **Project Repository** -
+- **Markdown** -
+- **UML notation** -
+- **Analysis** -
+- **Design** -
+- **Testing** -
+- **Test-driven** -
+- **US** -
+- **Method** -
+- **Artifact** -
+- **GitHub** -
+- **Metrics** -
+- **Linux** -
+- **Windows** -
+- **Scripts** -
+- **Database** -
+- **Data Persistence** -
+- **RDB** -
+- **Default Data** -
+- **Authentication** -
+- **Authorization** -
+- **Exam Language** -
+- **ANTLR** -
+- **Board Architecture** -
+- **AJAX** -
+- **Board Synchronization** -
+- **C** -
+- **Process** -
+- **Semaphore** -
+- **Threads** -
+- **Mutex** -
+- **Localhost** -
+- **Cloud** -
+- **History/log** -
+- **Title** -
+- **Header** -
+- **Sequence of Sections** -
+- **Question Types** -

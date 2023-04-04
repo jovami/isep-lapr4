@@ -1,0 +1,500 @@
+@startuml
+
+skinparam linetype ortho
+skinparam Shadowing False
+'hide empty members
+'left to right direction
+
+skinparam class {
+    BackgroundColor<<Entity>> Moccasin
+    BackgroundColor<<value object>> Azure
+    BackgroundColor<<Event>> MediumAquaMarine
+    BackgroundColor<<Service>> SkyBlue
+    ArrowColor DarkSlateGrey
+}
+
+skinparam package {
+    BackgroundColor PowderBlue
+}
+
+'TALVEZ APAGAR O PACKAGE USER OU CORRIGIR PELO CODIGO
+' ############## USERS ##############
+
+/'class User{
+    - email
+    - fullName
+    - shortName
+    - pwd
+    - name??
+    - dateOfBirth
+    - taxPayerNumber
+}
+
+class Student{ -mecanographicNumber}
+class Teacher{ - acronimo}
+class Manager{ - managerId?? }
+
+'/
+/'
+package USER <<Aggregate>> {
+
+    class User <<root>> <<Entity>>
+
+    class Password <<value object>> {
+            -password
+        }
+
+    class Role <<value object>> {
+        -description
+        -function
+    }
+
+    note right : A User can be a Student, Teacher, \nManager.
+}
+
+' ############## USERS ##############
+
+User "1" ---down> "1" FullName
+User "1" ---down> "1" ShortName
+User "1" ---down> "1" DateOfBirth
+User "1" ---down> "1" TaxPayerNumber
+User "1" ---down> "1" Password
+User "*" ---down> "*"Role
+
+'/
+
+' ############## COURSE ##############
+
+/'
+    class Course{
+        - courseId @Id??
+        - courseName
+        - Collections<> Teacher:regent
+        - description
+        - minStudents
+        - maxStudents
+    }
+'/
+
+package COURSE <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+
+    - Collections<> Teacher:regent
+    '/
+
+    class Course <<root>> <<Entity>>
+
+    class CourseCode <<value object>>{
+        -courseCode
+    }
+
+    class CourseName <<value object>> {
+        -courseName
+    }
+
+    class Description <<value object>> {
+            -description
+        }
+
+    class CourseState <<value object>>{
+        -courseState
+    }
+
+    note right: states: close, open, enroll, in progress, closed
+
+    class Capacity <<value object>> {
+            -minStudents
+            -maxStudents
+        }
+
+    }
+
+' ############## COURSE ##############
+
+Course "1" ---down> "1" CourseCode
+Course "1" ---down> "1" CourseName
+Course "*" ---down> "1" CourseState
+Course "1" ---down> "1" Description
+Course "1" ---down> "1" Capacity
+
+
+' ############## EXAMS ##############
+
+/'class Exam{
+      - title
+      - description
+
+
+      - Course: course??
+      - openDate
+      - closeDate
+
+      - header
+      - sequenceSection
+      - questionTypes
+  }'/
+
+/'class QuestionTypes{
+      - enumerate
+      - matching
+      - multipleChoices
+      - shortAnswer
+      - numerical
+      - selectMissingWord
+      - true/False
+  }'/
+
+
+package EXAM <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+        -Course: course?? '/
+
+    class Exam <<root>> <<Entity>>
+
+    class ExamTitle <<value object>> {
+        -examTitle
+    }
+
+    class ExamDescription <<value object>> {
+            -examDescription
+        }
+
+    class ExamDate <<value object>> {
+                -openDate
+                -closeDate
+            }
+
+    class Header <<value object>> {
+    'talvez criar uma entidade aqui com os types?
+        -typeOfFeedback
+        -typeOfGrade
+        -header
+    }
+
+    class SequenceSection <<Entity>> {
+            -sequenceSection
+
+        }
+
+    class Question <<Entity>> {
+            -description
+            -solution
+    }
+
+    class QuestionType <<value object>> {
+            -questionType
+            - enumerate
+            - matching
+            - multipleChoices
+            - shortAnswer
+            - numerical
+            - selectMissingWord
+            - true/False
+        }
+
+}
+
+' ############## EXAMS ##############
+
+Exam "1" ---down> "1" ExamTitle
+Exam "1" ---down> "1" ExamDescription
+Exam "1" ---down> "1" ExamDate
+Exam "1" ---down> "1" Header
+Exam "1" ---down> "1..*" SequenceSection
+SequenceSection "1" ---down> "1..*" Question
+Question "1" ---down> "1" QuestionType
+
+' ############## BOARD ##############
+
+/'class Board{
+    - Student:admin
+    - Collection:usersInvited
+    - historyUpdates
+    - rows/columns property file
+}
+
+class PostIt{
+    - postItId
+    - text
+}
+
+'/
+
+package BOARD <<Aggregate>> {
+
+    class Board <<root>> <<Entity>>
+
+    note right: colunas e linhas titulo?
+
+    class BoardTitle <<value object>>{
+        -boardTitle
+    }
+
+    class Cell <<value object>>{
+    }
+
+
+
+    class HistoryUpdate <<value object>> {
+        -historyUpdate
+    }
+
+    class PostIt <<value object>> {
+        - postItId
+        - typeOfContent
+    }
+
+    note right: Image or text
+
+}
+
+' ############## BOARD ##############
+
+Board "1" ---down> "*" HistoryUpdate
+Board "1" ---down> "1" BoardTitle
+Board "1" ---down> "1..*" Cell : contains >
+Cell "1"  ---down> "0..1" PostIt : contains >
+
+
+' ############## MEETING ##############
+
+/'
+class Meeting{
+    -time
+    -duration
+    -User:admin
+    -Collection:usersInvited
+}'/
+
+package MEETING <<Aggregate>> {
+
+    /'FALTA VER COMO ADICIONAR ISTO
+             -User:admin
+             -Collection:usersInvited '/
+
+    class Meeting <<root>> <<Entity>>
+
+    class MeetingInfo <<Entity>>{
+        -admin
+        -Collection: usersInvited
+    }
+
+    class Time <<value object>> {
+        -time
+    }
+
+    class Duration <<value object>> {
+            -duration
+        }
+}
+
+Meeting "1" ---down> "1" Time
+Meeting "1" ---down> "1" Duration
+Meeting "1" ---down> "1" MeetingInfo
+
+' ############## STUDENT ##############
+
+package STUDENT <<Aggregate>> {
+
+    class Student <<root>> <<Entity>>
+
+    class MecanographicNumber <<value object>> {
+        -mecanographicNumber
+    }
+
+    class StudentFullName <<value object>> {
+            -fullName
+        }
+
+        class StudentShortName <<value object>> {
+           -shortName
+        }
+
+        class StudentDateOfBirth <<value object>> {
+             -dateOfBirth
+       }
+
+       class StudentTaxPayerNumber <<value object>> {
+             -taxPayerNumber
+       }
+}
+
+Student "1" ---down> "1" MecanographicNumber
+Student "1" ---down> "1" StudentFullName
+Student "1" ---down> "1" StudentShortName
+Student "1" ---down> "1" StudentDateOfBirth
+Student "1" ---down> "1" StudentTaxPayerNumber
+
+
+' ############## TEACHER ##############
+
+package TEACHER <<Aggregate>> {
+
+    class Teacher <<root>> <<Entity>>
+
+    class Acrimony <<value object>> {
+        -acrimony
+    }
+
+    class TeacherFullName <<value object>> {
+        -fullName
+    }
+
+    class TeacherShortName <<value object>> {
+       -shortName
+    }
+
+    class TeacherDateOfBirth <<value object>> {
+         -dateOfBirth
+   }
+
+   class TeacherTaxPayerNumber <<value object>> {
+         -taxPayerNumber
+   }
+
+}
+
+Teacher "1" ---down> "1" Acrimony
+Teacher "1" ---down> "1" TeacherFullName
+Teacher "1" ---down> "1" TeacherShortName
+Teacher "1" ---down> "1" TeacherDateOfBirth
+Teacher "1" ---down> "1" TeacherTaxPayerNumber
+
+
+' ############## MANAGER ##############
+'NAO FAZ SENTIDO A CENA DE MANAGERID
+package MANAGER <<Aggregate>> {
+
+    class Manager <<root>> <<Entity>>
+
+    class ManagerId <<value object>> {
+        -managerId
+    }
+
+    class ManagerFullName <<value object>> {
+        -fullName
+    }
+
+    class ManagerShortName <<value object>> {
+         -shortName
+    }
+
+    class ManagerDateOfBirth <<value object>> {
+         -dateOfBirth
+    }
+
+    class ManagerTaxPayerNumber <<value object>> {
+         -taxPayerNumber
+    }
+}
+
+Manager "1" ---down> "1" ManagerId
+Manager "1" ---down> "1" ManagerFullName
+Manager "1" ---down> "1" ManagerShortName
+Manager "1" ---down> "1" ManagerDateOfBirth
+Manager "1" ---down> "1" ManagerTaxPayerNumber
+
+
+'########### CONNECTIONS BETWEEN AGGREGATES ###########
+
+Student "*" ---down> "*" Course : participates >
+Teacher "*" ---down> "1" Course : regent >
+
+Student "*" ---down> "*" Exam : does >
+Teacher "*" ---down> "1" Exam : creates >
+
+
+Student "*" ---down> "*" Board : creates >
+Teacher "*" ---down> "*" Board : creates >
+Manager "*" ---down> "*" Board : creates >
+
+Student "*" ---down> "*" MeetingInfo : creates/participate? >
+Teacher "*" ---down> "*" MeetingInfo : creates/participate ? >
+Manager "*" ---down> "*" MeetingInfo : creates/participate? >
+
+
+
+}
+/'
+class Enrollment{
+    -studentId
+    -courseId
+    -finalGrade
+}
+
+class Class{
+    - Title @Id
+    - date
+    - duration
+    
+    - Course: course??
+    - teacher??
+}
+
+
+
+class ExamResult{
+    - Exam
+    - Student
+    - feedback
+    - grade
+}
+
+
+
+''
+User --> Teacher
+User --> Student
+User --> Manager
+
+''Courses
+
+Manager ---> Course : Manages >
+Manager ---> Enrollment : Manages >
+
+Teacher -left-> Class : Creates >
+
+Enrollment "1" ---* "1" Student
+Enrollment "1" ---* "1" Course
+
+Course "1" ---* "*" Class
+
+
+
+''Exams
+
+' Student --> Exam
+Student --> ExamResult
+
+Teacher "1" -up-> "*" Exam
+Course "1" *-- "*" Exam
+Exam "1" *-- "*" ExamResult 
+
+Exam "1" ---> "*" QuestionTypes
+
+
+''Shared Boards
+
+' User --> Admin : is the >
+User "1" ----> "*" Board : manages >
+Board "1" --* "*" User : contains >
+
+Board "1" ---> "*" PostIt : contains >
+User "*" ---> "*" PostIt : manages >
+
+
+
+
+''Meeting
+' User --> Admin : is the >
+User "1" ---> "*" Meeting : managers >
+Meeting "1" ---* "*" User : contains >'/
+
+
+
+
+
+
+@enduml
