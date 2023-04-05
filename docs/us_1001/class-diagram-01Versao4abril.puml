@@ -108,10 +108,10 @@ package COURSE <<Aggregate>> {
             -maxStudents
         }
 
-    class ClassEvent <<Event>>
+
 
     }
-
+class ClassEvent <<Event>>
 ' ############## COURSE ##############
 
 Course "1" ---down> "1" CourseCode
@@ -149,46 +149,33 @@ Course "1" ---down> "1" Capacity
   }'/
 
 
-package EXAM <<Aggregate>> {
+package EXAM_SPECIFICATION <<Aggregate>> {
 
     /'FALTA VER COMO ADICIONAR ISTO
         -Course: course?? '/
 
-    class Exam <<root>> <<Entity>>
+    class ExamSpecification <<root>> <<Entity>>
 
-    class ExamTitle <<value object>> {
-        -examTitle
-    }
+    class ExamTitle <<value object>>
 
-    class ExamDescription <<value object>> {
-            -examDescription
-        }
+    class HeaderDescription <<value object>>
 
-    class ExamDate <<value object>> {
-                -openDate
-                -closeDate
-            }
+ /' class ExamDate <<value object>> {
+                 -openDate
+                 -closeDate
+             } '/
 
-    class Header <<value object>> {
-    'talvez criar uma entidade aqui com os types?
-        -typeOfFeedback
-        -typeOfGrade
-        -header
-    }
+    class ExamHeader <<value object>>
 
-    class SequenceSection <<Entity>> {
-            -sequenceSection
+    class ExamSection <<value object>>
 
-        }
 
-    class Question <<Entity>> {
+    class Question <<value object>> {
             -description
             -solution
     }
 
-    class QuestionType <<value object>> {
-            -questionType
-            - enumerate
+    enum QuestionType <<value object>> {
             - matching
             - multipleChoices
             - shortAnswer
@@ -197,17 +184,21 @@ package EXAM <<Aggregate>> {
             - true/False
         }
 
-    class ExamEvent <<Event>>
+
 }
 
+ /' class ExamEvent <<Event>>
+  class ExamCompletedEvent <<Event>> '/
 ' ############## EXAMS ##############
 
-Exam "1" ---down> "1" ExamTitle
-Exam "1" ---down> "1" ExamDescription
-Exam "1" ---down> "1" ExamDate
-Exam "1" ---down> "1" Header
-Exam "1" ---down> "1..*" SequenceSection
-SequenceSection "1" ---down> "1..*" Question
+ExamSpecification "1" ---down> "1" ExamTitle
+ExamHeader "1" ---down> "0..1" HeaderDescription
+
+
+/' ExamSpecification "1" ---down> "1" ExamDate '/
+ExamSpecification "1" ---down> "1" ExamHeader
+ExamSpecification "1" ---down> "1..*" ExamSection
+ExamSection "1" ---down> "1..*" Question
 Question "1" ---down> "1" QuestionType
 
 
@@ -416,8 +407,8 @@ Manager "1" ---down> "1" ManagerTaxPayerNumber
 Student "*" ---down> "*" Course : participates >
 Teacher "*" ---down> "1" Course : regent >
 
-Student "*" ---down> "*" Exam : does >
-Teacher "*" ---down> "1" Exam : creates >
+Student "*" ---down> "*" ExamSpecification : does >
+Teacher "*" ---down> "1" ExamSpecification : creates >
 
 
 Student "1" ---down> "*" Board : creates >
@@ -439,8 +430,10 @@ class CourseManagementService <<Service>>
 Course ---down> CourseManagementService
 /'Manager ---down> CourseManagementService
 Teacher ---down> CourseManagementService : lists course >
-Student ---down> CourseManagementService : lists course >'/
-note right: responsible for creating courses\n, opening/closing enrollments and courses, \nsetting course teachers, and listing courses
+
+Student ---down> CourseManagementService : lists course >
+note bottom: responsible for creating courses\n, opening/closing enrollments and courses, \nsetting course teachers, and listing courses
+
 
 
 class CourseEnrollmentService <<Service>>
@@ -449,12 +442,11 @@ Course ---down> CourseEnrollmentService
 Student ---down> CourseEnrollmentService : request >'/
 note right: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
-
-class ExamService <<Service>>
-Exam ---down> ExamService
-/'Teacher ---down> ExamService
-Student ---down> ExamService'/
-note right: responsible for creating exams,\n listing exams, and managing\n exam-taking and grading
+/'class ExamService <<Service>>
+ExamSpecification ---down> ExamService
+Teacher ---down> ExamService
+Student ---down> ExamService
+note right: managing exam-taking and grading'/
 
 
 class SharedBoardService <<Service>>
@@ -478,8 +470,8 @@ Course ---down> ClassEvent
 
 
 
-Exam ---down> ExamEvent
-ExamEvent ---> ExamService
+/' ExamSpecification ---down> ExamEvent '/
+/' ExamEvent ---> ExamService '/
 
 Meeting ---down> MeetingEvent
 
@@ -487,7 +479,6 @@ Meeting ---down> MeetingEvent
 
 'MeetingEvent ---> MeetingService
 
-}
 /'
 class Enrollment{
     -studentId
@@ -507,7 +498,7 @@ class Class{
 
 
 class ExamResult{
-    - Exam
+    - ExamSpecification
     - Student
     - feedback
     - grade
@@ -539,11 +530,11 @@ Course "1" ---* "*" Class
 ' Student --> Exam
 Student --> ExamResult
 
-Teacher "1" -up-> "*" Exam
-Course "1" *-- "*" Exam
-Exam "1" *-- "*" ExamResult 
+Teacher "1" -up-> "*" ExamSpecification
+Course "1" *-- "*" ExamSpecification
+ExamSpecification "1" *-- "*" ExamResult
 
-Exam "1" ---> "*" QuestionTypes
+ExamSpecification "1" ---> "*" QuestionTypes
 
 
 ''Shared Boards
