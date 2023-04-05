@@ -230,15 +230,16 @@ class PostIt{
 
 package BOARD <<Aggregate>> {
 
-    class Board <<root>> <<Entity>>
-
-    note right: colunas e linhas titulo?
+    class Board <<root>> <<Entity>>{
+    }
+    note right: criar a entidade que gere as celulas ou e a board\n que gere as celulas
 
     class BoardTitle <<value object>>{
         -boardTitle
     }
 
-    class Cell <<value object>>{
+    class Cell <<Entity>>{
+        -header
     }
 
 
@@ -247,7 +248,7 @@ package BOARD <<Aggregate>> {
         -historyUpdate
     }
 
-    class PostIt <<value object>> {
+    class PostIt <<Entity>> {
         - postItId
         - typeOfContent
     }
@@ -258,10 +259,10 @@ package BOARD <<Aggregate>> {
 
 ' ############## BOARD ##############
 
-Board "1" ---down> "*" HistoryUpdate
+Cell "1" ---down> "*" HistoryUpdate
 Board "1" ---down> "1" BoardTitle
 Board "1" ---down> "1..*" Cell : contains >
-Cell "1"  ---down> "0..1" PostIt : contains >
+Cell "1"  *---down "0..1" PostIt : part of <
 
 
 ' ############## MEETING ##############
@@ -296,6 +297,8 @@ package MEETING <<Aggregate>> {
         }
 
     class MeetingEvent <<Event>>
+
+    note right: when a user schedules a meeting,\n cancels a meeting, accepts an\n invitation to a meeting\n,rejects an invitation to a meeting
 }
 
 Meeting "1" ---down> "1" Time
@@ -417,13 +420,13 @@ Student "*" ---down> "*" Exam : does >
 Teacher "*" ---down> "1" Exam : creates >
 
 
-Student "*" ---down> "*" Board : creates >
-Teacher "*" ---down> "*" Board : creates >
-Manager "*" ---down> "*" Board : creates >
+Student "1" ---down> "*" Board : creates >
+Teacher "1" ---down> "*" Board : creates >
+Manager "1" ---down> "*" Board : creates >
 
-Student "*" ---down> "*" MeetingInfo : creates/participate? >
-Teacher "*" ---down> "*" MeetingInfo : creates/participate ? >
-Manager "*" ---down> "*" MeetingInfo : creates/participate? >
+Student "1" ---down> "*" Meeting : creates/participate >
+Teacher "1" ---down> "*" Meeting : creates/participate  >
+Manager "1" ---down> "*" Meeting : creates/participate >
 
 '########### SERVICES ###########
 
@@ -434,38 +437,38 @@ note right: responsible for creating, disabling/enabling, \nand listing users in
 
 class CourseManagementService <<Service>>
 Course ---down> CourseManagementService
-Manager ---down> CourseManagementService
+/'Manager ---down> CourseManagementService
 Teacher ---down> CourseManagementService : lists course >
-Student ---down> CourseManagementService : lists course >
+Student ---down> CourseManagementService : lists course >'/
 note right: responsible for creating courses\n, opening/closing enrollments and courses, \nsetting course teachers, and listing courses
 
 
 class CourseEnrollmentService <<Service>>
 Course ---down> CourseEnrollmentService
-Manager ---down> CourseEnrollmentService
-Student ---down> CourseEnrollmentService : request >
+/'Manager ---down> CourseEnrollmentService
+Student ---down> CourseEnrollmentService : request >'/
 note right: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
 
 class ExamService <<Service>>
 Exam ---down> ExamService
-Teacher ---down> ExamService
-Student ---down> ExamService
+/'Teacher ---down> ExamService
+Student ---down> ExamService'/
 note right: responsible for creating exams,\n listing exams, and managing\n exam-taking and grading
 
 
 class SharedBoardService <<Service>>
 Board ---down> SharedBoardService
-Manager ---down> SharedBoardService
+/'Manager ---down> SharedBoardService
 Teacher ---down> SharedBoardService
-Student ---down> SharedBoardService
+Student ---down> SharedBoardService'/
 note right :responsible for creating,\n sharing, and managing\n shared boards and post-its
 
 class MeetingService <<Service>>
 Meeting ---down> MeetingService
-Manager ---down> MeetingService
+/'Manager ---down> MeetingService
 Teacher ---down> MeetingService
-Student ---down> MeetingService
+Student ---down> MeetingService'/
 note right :responsible for scheduling,\n cancelling, and managing\n meetings between users
 
 
@@ -479,7 +482,10 @@ Exam ---down> ExamEvent
 ExamEvent ---> ExamService
 
 Meeting ---down> MeetingEvent
-MeetingEvent ---> MeetingService
+
+
+
+'MeetingEvent ---> MeetingService
 
 }
 /'
