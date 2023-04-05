@@ -48,7 +48,17 @@
 ## CLASSES
 
 ## TEACHER
+- A : A teacher can be in charge of several courses.
+- A : The acronym should be formed by a sequence of capital letters. There is really no maximum number of characters, but I would provide the possibility of setting a maximum as a property configuration of the system (with a default value).
+- A : Only teachers should be able to schedule classes.
 
 ## STUDENT
 
 ## MANAGER
+- A : It is important to track changes that a manager has made but not mandatory.
+
+## USER
+- A : Each User as only on specific role in the system.
+- A : I think a sequence of capitalised words should be used for the teacher acronym. Maybe the length could be a configuration setting of the application.
+- A : I think it would be wise to enforce that acronyms be unique.
+- A : It is important to track changes that a manager has made but not mandatory.
