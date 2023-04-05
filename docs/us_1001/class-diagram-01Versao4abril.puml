@@ -169,6 +169,7 @@ package EXAM_SPECIFICATION <<Aggregate>> {
 
     class ExamSection <<value object>>
 
+    class SectionDescription <<value object>>
 
     class Question <<value object>> {
             -description
@@ -183,8 +184,17 @@ package EXAM_SPECIFICATION <<Aggregate>> {
             - selectMissingWord
             - true/False
         }
+    enum FeedbackType <<value object>> {
+            - none
+            - onSubmission
+            - afterClosing
+        }
 
-
+    enum GradeType <<value object>> {
+        - none
+        - onSubmission
+        - afterClosing
+    }
 }
 
  /' class ExamEvent <<Event>>
@@ -193,8 +203,9 @@ package EXAM_SPECIFICATION <<Aggregate>> {
 
 ExamSpecification "1" ---down> "1" ExamTitle
 ExamHeader "1" ---down> "0..1" HeaderDescription
-
-
+ExamSection "1" ---down> "0..1" SectionDescription
+ExamHeader "1" ---down> "1" FeedbackType
+ExamHeader "1" ---down> "1" GradeType
 /' ExamSpecification "1" ---down> "1" ExamDate '/
 ExamSpecification "1" ---down> "1" ExamHeader
 ExamSpecification "1" ---down> "1..*" ExamSection
@@ -490,7 +501,7 @@ class Class{
     - Title @Id
     - date
     - duration
-    
+
     - Course: course??
     - teacher??
 }
