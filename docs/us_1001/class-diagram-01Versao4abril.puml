@@ -124,31 +124,6 @@ Course "1" ---down> "1" Capacity
 
 ' ############## EXAMS ##############
 
-/'class Exam{
-      - title
-      - description
-
-
-      - Course: course??
-      - openDate
-      - closeDate
-
-      - header
-      - sequenceSection
-      - questionTypes
-  }'/
-
-/'class QuestionTypes{
-      - enumerate
-      - matching
-      - multipleChoices
-      - shortAnswer
-      - numerical
-      - selectMissingWord
-      - true/False
-  }'/
-
-
 package EXAM_SPECIFICATION <<Aggregate>> {
 
     /'FALTA VER COMO ADICIONAR ISTO
@@ -160,11 +135,6 @@ package EXAM_SPECIFICATION <<Aggregate>> {
 
     class HeaderDescription <<value object>>
 
- /' class ExamDate <<value object>> {
-                 -openDate
-                 -closeDate
-             } '/
-
     class ExamHeader <<value object>>
 
     class ExamSection <<value object>>
@@ -172,23 +142,24 @@ package EXAM_SPECIFICATION <<Aggregate>> {
     class SectionDescription <<value object>>
 
     class Question <<value object>> {
-            -description
-            -solution
+        -description
+        -solution
     }
 
     enum QuestionType <<value object>> {
-            - matching
-            - multipleChoices
-            - shortAnswer
-            - numerical
-            - selectMissingWord
-            - true/False
-        }
+        - matching
+        - multipleChoices
+        - shortAnswer
+        - numerical
+        - selectMissingWord
+        - true/False
+    }
+
     enum FeedbackType <<value object>> {
-            - none
-            - onSubmission
-            - afterClosing
-        }
+        - none
+        - onSubmission
+        - afterClosing
+    }
 
     enum GradeType <<value object>> {
         - none
@@ -197,8 +168,15 @@ package EXAM_SPECIFICATION <<Aggregate>> {
     }
 }
 
- /' class ExamEvent <<Event>>
-  class ExamCompletedEvent <<Event>> '/
+package EXAM <<Aggregate>> {
+    class Exam <<root>> <<Entity>>
+
+    class ExamDate <<value object>> {
+        -openDate
+        -closeDate
+    }
+}
+
 ' ############## EXAMS ##############
 
 ExamSpecification "1" ---down> "1" ExamTitle
@@ -206,12 +184,13 @@ ExamHeader "1" ---down> "0..1" HeaderDescription
 ExamSection "1" ---down> "0..1" SectionDescription
 ExamHeader "1" ---down> "1" FeedbackType
 ExamHeader "1" ---down> "1" GradeType
-/' ExamSpecification "1" ---down> "1" ExamDate '/
 ExamSpecification "1" ---down> "1" ExamHeader
 ExamSpecification "1" ---down> "1..*" ExamSection
 ExamSection "1" ---down> "1..*" Question
 Question "1" ---down> "1" QuestionType
 
+Exam "1" -> "1" ExamDate
+Exam "1" -> "1" ExamSpecification
 
 
 ' ############## BOARD ##############
