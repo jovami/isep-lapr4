@@ -146,6 +146,9 @@ package EXAM_SPECIFICATION <<Aggregate>> {
         -solution
     }
 
+    class QuestionFeedback <<value object>> {
+    }
+
     enum QuestionType <<value object>> {
         - matching
         - multipleChoices
@@ -175,7 +178,20 @@ package EXAM <<Aggregate>> {
         -openDate
         -closeDate
     }
+
+    class ExamEvent <<Event>>
+    class OpeningEvent <<Event>>
+    class ClosingEvent <<Event>>
 }
+
+package EXAM_RESULT <<Aggregate>> {
+    class ExamResult <<root>> <<Entity>>
+
+    class ExamGrade <<value object>>
+    class ExamFeedback <<value object>>
+}
+
+class ExamGradingService <<Service>>
 
 ' ############## EXAMS ##############
 
@@ -188,10 +204,24 @@ ExamSpecification "1" ---down> "1" ExamHeader
 ExamSpecification "1" ---down> "1..*" ExamSection
 ExamSection "1" ---down> "1..*" Question
 Question "1" ---down> "1" QuestionType
-
-Exam "1" -> "1" ExamDate
+Question "1" ---down> "0..*" QuestionFeedback
 Exam "1" -> "1" ExamSpecification
+/' curso liga se a exame '/
+Exam "1" -left> "1" ExamDate
+OpeningEvent -up> ExamEvent
+ClosingEvent -up> ExamEvent
+Exam "1" -down> "1" ExamEvent
+ExamGradingService "1" -> "1" ExamResult
 
+Student "1" -right> "0..1" ExamResult
+
+ExamResult "1" -left> "1" ExamGrade
+ExamResult "1" -right> "1" ExamFeedback
+
+Course "1" -> "0..*" Exam
+
+ClosingEvent -down> ExamGradingService
+note bottom: responsible for auto-correcting\nand grading the exam
 
 ' ############## BOARD ##############
 
@@ -397,7 +427,7 @@ Manager "1" ---down> "1" ManagerTaxPayerNumber
 Student "*" ---down> "*" Course : participates >
 Teacher "*" ---down> "1" Course : regent >
 
-Student "*" ---down> "*" ExamSpecification : does >
+/' Student "*" ---down> "*" ExamSpecification : does > '/
 Teacher "*" ---down> "1" ExamSpecification : creates >
 
 
