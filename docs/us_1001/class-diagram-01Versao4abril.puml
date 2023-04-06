@@ -16,6 +16,67 @@ skinparam class {
 skinparam package {
     BackgroundColor PowderBlue
 }
+' ############## TEACHER ##############
+
+package TEACHER <<Aggregate>> {
+
+    class Teacher <<root>> <<Entity>>
+
+    class Acrimony <<value object>> {
+        -acrimony
+    }
+
+    class TeacherFullName <<value object>> {
+        -fullName
+    }
+
+    class TeacherShortName <<value object>> {
+       -shortName
+    }
+
+    class TeacherDateOfBirth <<value object>> {
+        -dateOfBirth
+    }
+
+    class TeacherTaxPayerNumber <<value object>> {
+        -taxPayerNumber
+    }
+}
+
+Teacher "1" ---down> "1" Acrimony
+Teacher "1" ---down> "1" TeacherFullName
+Teacher "1" ---down> "1" TeacherShortName
+Teacher "1" ---down> "1" TeacherDateOfBirth
+Teacher "1" ---down> "1" TeacherTaxPayerNumber
+
+
+
+' ############## MANAGER ##############
+'NAO FAZ SENTIDO A CENA DE MANAGERID
+package MANAGER <<Aggregate>> {
+
+    class Manager <<root>> <<Entity>>
+
+    class ManagerId <<value object>> {
+        -managerId
+    }
+
+    class ManagerFullName <<value object>> {
+        -fullName
+    }
+
+    class ManagerShortName <<value object>> {
+         -shortName
+    }
+
+    class ManagerDateOfBirth <<value object>> {
+         -dateOfBirth
+    }
+
+    class ManagerTaxPayerNumber <<value object>> {
+         -taxPayerNumber
+    }
+}
 
 'TALVEZ APAGAR O PACKAGE USER OU CORRIGIR PELO CODIGO
 ' ############## USERS ##############
@@ -75,7 +136,40 @@ User "*" ---down> "*"Role
         - maxStudents
     }
 '/
+' ############## STUDENT ##############
 
+package STUDENT <<Aggregate>> {
+
+    class Student <<root>> <<Entity>>
+
+    class MecanographicNumber <<value object>> {
+        -mecanographicNumber
+    }
+
+    class StudentFullName <<value object>> {
+        -fullName
+    }
+
+    class StudentShortName <<value object>> {
+        -shortName
+    }
+
+    class StudentDateOfBirth <<value object>> {
+        -dateOfBirth
+    }
+
+    class StudentTaxPayerNumber <<value object>> {
+        -taxPayerNumber
+    }
+}
+
+Student "1" ---down> "1" MecanographicNumber
+Student "1" ---down> "1" StudentFullName
+Student "1" ---down> "1" StudentShortName
+Student "1" ---down> "1" StudentDateOfBirth
+Student "1" ---down> "1" StudentTaxPayerNumber
+
+package CoursePackage <<Rectangle>> {
 package COURSE <<Aggregate>> {
 
     /'FALTA VER COMO ADICIONAR ISTO
@@ -83,53 +177,72 @@ package COURSE <<Aggregate>> {
     - Collections<> Teacher:regent
     '/
 
-    class Course <<root>> <<Entity>>
+    entity Course <<root>> <<Entity>>
 
     class CourseCode <<value object>>{
         -courseCode
     }
 
-    class CourseName <<value object>> {
-        -courseName
+    class CourseName <<value object>>
+
+
+    class CourseDescription <<value object>>
+
+    enum CourseState <<value object>>{
+        - closed
+        - open
+        - enroll
+        - inProgress
     }
 
-    class Description <<value object>> {
-            -description
-        }
-
-    class CourseState <<value object>>{
-        -courseState
+    class CourseCapacity <<value object>> {
+        -minStudents
+        -maxStudents
     }
-
-    note right: states: close, open, enroll, in progress, closed
-
-    class Capacity <<value object>> {
-            -minStudents
-            -maxStudents
-        }
+    class CourseEvent <<Event>>
 
 
-
-    }
-class ClassEvent <<Event>>
+    class CourseClosedEvent
+    class CourseOpenEvent
+    class CourseEnrollOpenEvent
+    class CourseEnrollClosedEvent
+    class CourseCreatedEvent
+}
+/' class ClassEvent <<Event>> '/
 ' ############## COURSE ##############
 
 Course "1" ---down> "1" CourseCode
 Course "1" ---down> "1" CourseName
-Course "*" ---down> "1" CourseState
-Course "1" ---down> "1" Description
-Course "1" ---down> "1" Capacity
+Course "1" ---down> "1" CourseState
+Course "1" ---down> "1" CourseDescription
+Course "1" ---down> "1" CourseCapacity
+
+CourseEvent -> CourseClosedEvent
+CourseEvent -> CourseOpenEvent
+CourseEvent -> CourseEnrollOpenEvent
+CourseEvent -> CourseEnrollClosedEvent
+CourseEvent -> CourseCreatedEvent
 
 
+package COURSE_ACCESS <<Aggreggate>>{
+    entity CourseAccess <<root>> <<Entity>>
+    CourseAccess "*" -> "1" Student
+    Course "1" -> "*" CourseAccess
 
+    class CourseEnrollmentRequestEvent <<Event>>
+    CourseAccess "1" <- "1" CourseEnrollmentRequestEvent
+    Manager "1" -> "1" CourseEnrollmentRequestEvent
+}
+
+}
 ' ############## EXAMS ##############
-
+package ExamPackage <<Rectangle>> {
 package EXAM_SPECIFICATION <<Aggregate>> {
 
     /'FALTA VER COMO ADICIONAR ISTO
         -Course: course?? '/
 
-    class ExamSpecification <<root>> <<Entity>>
+    entity ExamSpecification <<root>> <<Entity>>
 
     class ExamTitle <<value object>>
 
@@ -146,8 +259,7 @@ package EXAM_SPECIFICATION <<Aggregate>> {
         -solution
     }
 
-    class QuestionFeedback <<value object>> {
-    }
+    class QuestionFeedback <<value object>>
 
     enum QuestionType <<value object>> {
         - matching
@@ -172,7 +284,7 @@ package EXAM_SPECIFICATION <<Aggregate>> {
 }
 
 package EXAM <<Aggregate>> {
-    class Exam <<root>> <<Entity>>
+    entity Exam <<root>> <<Entity>>
 
     class ExamDate <<value object>> {
         -openDate
@@ -185,7 +297,7 @@ package EXAM <<Aggregate>> {
 }
 
 package EXAM_RESULT <<Aggregate>> {
-    class ExamResult <<root>> <<Entity>>
+    entity ExamResult <<root>> <<Entity>>
 
     class ExamGrade <<value object>>
     class ExamFeedback <<value object>>
@@ -213,7 +325,7 @@ ClosingEvent -up> ExamEvent
 Exam "1" -down> "1" ExamEvent
 ExamGradingService "1" -> "1" ExamResult
 
-Student "1" -right> "0..1" ExamResult
+
 
 ExamResult "1" -left> "1" ExamGrade
 ExamResult "1" -right> "1" ExamFeedback
@@ -222,7 +334,8 @@ Course "1" -> "0..*" Exam
 
 ClosingEvent -down> ExamGradingService
 note bottom: responsible for auto-correcting\nand grading the exam
-
+Student "1" -right> "0..1" ExamResult
+}
 ' ############## BOARD ##############
 
 /'class Board{
@@ -317,103 +430,9 @@ Meeting "1" ---down> "1" Duration
 Meeting "1" ---down> "1" MeetingInfo
 
 
-' ############## STUDENT ##############
-
-package STUDENT <<Aggregate>> {
-
-    class Student <<root>> <<Entity>>
-
-    class MecanographicNumber <<value object>> {
-        -mecanographicNumber
-    }
-
-    class StudentFullName <<value object>> {
-            -fullName
-        }
-
-        class StudentShortName <<value object>> {
-           -shortName
-        }
-
-        class StudentDateOfBirth <<value object>> {
-             -dateOfBirth
-       }
-
-       class StudentTaxPayerNumber <<value object>> {
-             -taxPayerNumber
-       }
-}
-
-Student "1" ---down> "1" MecanographicNumber
-Student "1" ---down> "1" StudentFullName
-Student "1" ---down> "1" StudentShortName
-Student "1" ---down> "1" StudentDateOfBirth
-Student "1" ---down> "1" StudentTaxPayerNumber
 
 
-' ############## TEACHER ##############
 
-package TEACHER <<Aggregate>> {
-
-    class Teacher <<root>> <<Entity>>
-
-    class Acrimony <<value object>> {
-        -acrimony
-    }
-
-    class TeacherFullName <<value object>> {
-        -fullName
-    }
-
-    class TeacherShortName <<value object>> {
-       -shortName
-    }
-
-    class TeacherDateOfBirth <<value object>> {
-         -dateOfBirth
-   }
-
-   class TeacherTaxPayerNumber <<value object>> {
-         -taxPayerNumber
-   }
-
-}
-
-Teacher "1" ---down> "1" Acrimony
-Teacher "1" ---down> "1" TeacherFullName
-Teacher "1" ---down> "1" TeacherShortName
-Teacher "1" ---down> "1" TeacherDateOfBirth
-Teacher "1" ---down> "1" TeacherTaxPayerNumber
-
-
-' ############## MANAGER ##############
-'NAO FAZ SENTIDO A CENA DE MANAGERID
-package MANAGER <<Aggregate>> {
-
-    class Manager <<root>> <<Entity>>
-
-    class ManagerId <<value object>> {
-        -managerId
-    }
-
-    class ManagerFullName <<value object>> {
-        -fullName
-    }
-
-    class ManagerShortName <<value object>> {
-         -shortName
-    }
-
-    class ManagerDateOfBirth <<value object>> {
-         -dateOfBirth
-    }
-
-    class ManagerTaxPayerNumber <<value object>> {
-         -taxPayerNumber
-    }
-
-
-}
 
 Manager "1" ---down> "1" ManagerId
 Manager "1" ---down> "1" ManagerFullName
@@ -424,8 +443,8 @@ Manager "1" ---down> "1" ManagerTaxPayerNumber
 
 '########### CONNECTIONS BETWEEN AGGREGATES ###########
 
-Student "*" ---down> "*" Course : participates >
-Teacher "*" ---down> "1" Course : regent >
+Teacher "*" ---down> "1" Course : participate >
+Teacher "1" ---down> "1" Course : in charge of >
 
 /' Student "*" ---down> "*" ExamSpecification : does > '/
 Teacher "*" ---down> "1" ExamSpecification : creates >
@@ -486,7 +505,7 @@ note right :responsible for scheduling,\n cancelling, and managing\n meetings be
 
 '########### EVENTS ###########
 
-Course ---down> ClassEvent
+/' Course ---down> ClassEvent '/
 
 
 
@@ -573,7 +592,6 @@ User "*" ---> "*" PostIt : manages >
 ' User --> Admin : is the >
 User "1" ---> "*" Meeting : managers >
 Meeting "1" ---* "*" User : contains >'/
-
 
 
 
