@@ -351,7 +351,7 @@ class PostIt{
 }
 
 '/
-
+package BOARDPackage <<Rectangle>> {
 package BOARD <<Aggregate>> {
 
     class Board <<root>> <<Entity>>{
@@ -362,22 +362,29 @@ package BOARD <<Aggregate>> {
         -boardTitle
     }
 
+
+    class CreateBoard <<Event>>
+
+
+}
+
+package CELL <<Aggregate>> {
     class Cell <<Entity>>{
-        -header
-    }
+            -header
+        }
 
+        class HistoryUpdate <<value object>> {
+            -historyUpdate
+        }
 
+        class PostIt <<Entity>> {
+            - postItId
+            - typeOfContent
+        }
 
-    class HistoryUpdate <<value object>> {
-        -historyUpdate
-    }
+        note right: Image or text
 
-    class PostIt <<Entity>> {
-        - postItId
-        - typeOfContent
-    }
-
-    note right: Image or text
+}
 
 }
 
@@ -385,8 +392,10 @@ package BOARD <<Aggregate>> {
 
 Cell "1" ---down> "*" HistoryUpdate
 Board "1" ---down> "1" BoardTitle
-Board "1" ---down> "1..*" Cell : contains >
+Board "1" *---down "1..*" Cell : part of <
 Cell "1"  *---down "0..1" PostIt : part of <
+
+CreateBoard ---> Board
 
 
 ' ############## MEETING ##############
@@ -407,9 +416,8 @@ package MEETING <<Aggregate>> {
 
     class Meeting <<root>> <<Entity>>
 
-    class MeetingInfo <<Entity>>{
+    class MeetingInfo <<value object>>{
         -admin
-        -Collection: usersInvited
     }
 
     class Time <<value object>> {
@@ -420,17 +428,23 @@ package MEETING <<Aggregate>> {
             -duration
         }
 
-    class MeetingEvent <<Event>>
+    class ScheduleMeeting <<Event>>
 
-    note right: when a user schedules a meeting,\n cancels a meeting, accepts an\n invitation to a meeting\n,rejects an invitation to a meeting
+    class AcceptMeeting <<Event>>
+
+    class RejectMeeting <<Event>>
+
+    class CancelsMeeting <<Event>>
+
 }
 
 Meeting "1" ---down> "1" Time
 Meeting "1" ---down> "1" Duration
 Meeting "1" ---down> "1" MeetingInfo
-
-
-
+Meeting "1" ---> "1" ScheduleMeeting
+CancelsMeeting "1" ---> "1" Meeting
+AcceptMeeting "1" ---right> "1" Meeting
+RejectMeeting "1" ---left> "1" Meeting
 
 
 
@@ -500,7 +514,7 @@ Meeting ---down> MeetingService
 /'Manager ---down> MeetingService
 Teacher ---down> MeetingService
 Student ---down> MeetingService'/
-note right :responsible for scheduling,\n cancelling, and managing\n meetings between users
+note right :responsible for managing\n meetings between users
 
 
 '########### EVENTS ###########
@@ -512,7 +526,7 @@ note right :responsible for scheduling,\n cancelling, and managing\n meetings be
 /' ExamSpecification ---down> ExamEvent '/
 /' ExamEvent ---> ExamService '/
 
-Meeting ---down> MeetingEvent
+
 
 
 
