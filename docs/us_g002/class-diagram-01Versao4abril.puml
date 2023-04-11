@@ -78,27 +78,24 @@
       Student "1" -> "1" StudentTaxPayerNumber
   }
 
-  package TIMETABLE <<Aggregate>> {
-      entity TimeTable <<root>> <<entity>>
+      package TIMETABLE <<Aggregate>> {
+          interface Event <<interface>>
 
-      class Class <<value object>>{
-          - classType
+          entity RecurringPattern <<root>> <<entity>>{
+              - startDate
+              - endDate
+              - startTime
+              - endTime
+          }
+
+          enum RecurringFrequency <<enum>>{
+            - weekly
+            - once
+          }
+
+          RecurringPattern "1" --> "1" RecurringFrequency
+          RecurringPattern "1" -> "*" Event
       }
-      enum ClassType <<value object>>{
-          - weekly
-          - extra
-      }
-      class ClassDateTime <<value object>>{
-          - date
-          - startTime
-          - endTime
-      }
-
-      Class "1" <- "1" ClassDateTime
-
-  }
-
-
 
   package CoursePackage <<Rectangle>> {
       package COURSE <<Aggregate>> {
@@ -109,6 +106,8 @@
           class CourseName <<value object>>
 
           class CourseDescription <<value object>>
+
+          class CourseClass <<value object>>
 
           enum CourseState <<value object>>{
               - closed
@@ -136,11 +135,13 @@
           Course "1" -down--> "1" CourseDescription
           Course "1" -down--> "1" CourseCapacity
           Course -up-> CourseEvent
+          Course "1" ----> "*" CourseClass
           CourseEvent -up--> CourseClosedEvent
           CourseEvent -up--> CourseOpenEvent
           CourseEvent -up--> CourseEnrollOpenEvent
           CourseEvent -up--> CourseEnrollClosedEvent
           CourseEvent -up--> CourseCreatedEvent
+          CourseClass -up-|> Event
       }
 
       package COURSE_ACCESS <<Aggreggate>>{
@@ -321,7 +322,10 @@
       Student "1" -> "*" Meeting : creates/participate >
       Teacher "1" -> "*" Meeting : creates/participate  >
       Manager "1" -> "*" Meeting : creates/participate >
+
+      Meeting -up|> Event
   }
+
 
   class UserManagementService <<Service>>
   Manager --left> UserManagementService
