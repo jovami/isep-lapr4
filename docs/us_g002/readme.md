@@ -1,4 +1,4 @@
-# US G002
+# US 1001
 
 *This is an example template*
 
@@ -65,4 +65,4 @@ public void ensureNullIsNotAllowed() {
 
 *The team should present here, for instance, a critical prespective on the developed work including the analysis of alternative solutioons or related works*
 
-*The team should include in this section statements/references regarding third party works that were used in the development this work.* 
+*The team should include in this section statements/references regarding third party works that were used in the development this work.*
