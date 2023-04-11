@@ -257,37 +257,65 @@
   package BOARD <<Aggregate>> {
 
       entity Board <<root>> <<Entity>>
-      note right: criar a entidade que gere as celulas ou e a board\n que gere as celulas
-
       class BoardTitle <<value object>>
 
-      class CreateBoard <<Event>>
-  }
-
-  package CELL <<Aggregate>> {
       entity Cell <<Entity>>{
-              -header
-          }
+                    -rowTitle
+                    -columnTitle
+                }
+      note right : save history of cell
 
-          class HistoryUpdate <<value object>> 
+      class cellID <<value object>>
+      class header <<value object>>
 
-          entity PostIt <<Entity>> {
-              - postItId
-              - typeOfContent
-          }
-          note right: Image or text
+      entity BoardHistory <<Entity>>
+
+      class TimeStamp <<value object>>
+
+      entity PostIt <<Entity>> {
+                    - typeOfContent
+                    -owner
+      }
+      note right: Image or text
+
+      class PostItID <<value object>>
+
+      abstract  Participant <<Entity>>
+      note right : VERIFICAR!!
+
+      class ShareBoard <<Event>>
+
+      class CreatePostIt <<Event>>
+
+      class BoardService <<Service>>
+      Board -down--> BoardService
+      note right :responsible for creating,\n sharing, and managing\n shared boards
+
+      class PostItService <<Service>>
+      BoardHistory -down-> PostItService
+      note bottom : change or undo PostIt\n(save previous post in BoardHistory)
+
   }
 
-    Cell "1" --> "*" HistoryUpdate
+
+    Cell "1" --> "1" cellID
+    Cell "1" --> "1" header
+    Board "1" --> "*" BoardHistory
+    BoardHistory "*"--> "1" PostIt
     Board "1" --> "1" BoardTitle
-    Board "1" *-up- "1..*" Cell : part of <
+    Board "1" *-up-- "1..*" Cell : part of <
     Cell "1"  *--- "0..1" PostIt : part of <
 
-    CreateBoard -> Board
+    ShareBoard <- Board
+    Participant "*"--up> "1" Board : creates/participate >
+    CreatePostIt <- PostIt
+    PostIt "1" -down-> "1" PostItID
+    Participant "1" --> "1" TimeStamp
+    BoardHistory --> Participant
 
-    Student "1" -up--> "*" Board : creates >
-    Teacher "1" -up--> "*" Board : creates >
-    Manager "1" -> "*" Board : creates >
+    Student "1" -up--> "1" Participant
+    Teacher "1" -up--> "1" Participant
+    Manager "1" -> "1" Participant
 
   }
 
@@ -305,25 +333,30 @@
 
       class ScheduleMeeting <<Event>>
 
-      class AcceptMeeting <<Event>>
-
-      class RejectMeeting <<Event>>
-
       class CancelsMeeting <<Event>>
+
+      class MeetingService <<Service>>
+
+      abstract  Participant <<Entity>>
+
+
+      Participant "*"--up> "1" Meeting : creates/participate >
 
       Meeting "1" --> "1" Time
       Meeting "1" --> "1" Duration
       Meeting "1" --> "1" MeetingInfo
-      Meeting "1" -up-> "1" ScheduleMeeting
-      CancelsMeeting "1" -down-> "1" Meeting
-      AcceptMeeting "1" -down-> "1" Meeting
-      RejectMeeting "1" -down-> "1" Meeting
+      Meeting  -up->  ScheduleMeeting
+      CancelsMeeting  -down->  Meeting
 
-      Student "1" -> "*" Meeting : creates/participate >
-      Teacher "1" -> "*" Meeting : creates/participate  >
-      Manager "1" -> "*" Meeting : creates/participate >
+      Student "1" -up--> "1" Participant
+      Teacher "1" -up--> "1" Participant
+      Manager "1" -> "1" Participant
 
-      Meeting -up|> Event
+
+
+      Meeting ---> MeetingService
+      note right: responsible for managing\n meetings between users
+
   }
 
 
@@ -335,11 +368,5 @@
   Course -> CourseManagementService
   note right: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
-  class SharedBoardService <<Service>>
-  Board -down--> SharedBoardService
-  note right :responsible for creating,\n sharing, and managing\n shared boards and post-its
 
-  class MeetingService <<Service>>
-  Meeting -> MeetingService
-  note right :responsible for managing\n meetings between users
 @enduml
