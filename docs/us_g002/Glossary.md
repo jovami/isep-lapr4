@@ -55,16 +55,16 @@
 - **ANTLR** - Is a parser generator that is commonly used in software development for generating parsers for programming languages and other data formats.
 - **Board Architecture** - Board architecture refers to the overall design and structure of a collaborative whiteboard or drawing tool used in software development.
 - **AJAX** - AJAX (Asynchronous JavaScript and XML) is a set of web development techniques used for creating dynamic web applications.
-- **Board Synchronization** -
-- **C** -
-- **Process** -
-- **Semaphore** -
-- **Threads** -
-- **Mutex** -
-- **Localhost** -
-- **Cloud** -
-- **History/log** -
-- **Title** -
-- **Header** -
-- **Sequence of Sections** -
-- **Question Types** -
+- **Board Synchronization** - The process of ensuring that all users accessing a shared board have the same view of its contents, by updating and propagating changes made by one user to all other users viewing the board in real-time.
+- **C** - A high-level programming language often used for system programming, embedded systems, and applications where performance is a critical factor.
+- **Process** - An instance of a computer program that is being executed, which can consist of multiple threads and has its own memory space and system resources allocated to it.
+- **Semaphore** - A synchronization object used to protect shared resources in a concurrent system, which allows multiple threads to access the resource but limits the number of threads that can access it at the same time.
+- **Threads** - The smallest unit of execution in a concurrent system, which enables multiple tasks to be executed concurrently within a single process.
+- **Mutex** - A synchronization object used to protect shared resources in a concurrent system, which allows only one thread to access the resource at a time and blocks other threads that try to access it.
+- **Localhost** - A hostname that refers to the local computer in a network, commonly used to access services running on the same machine.
+- **Cloud** - A model of delivering computing services over the internet, where resources such as servers, storage, and applications are accessed on-demand over a network connection.
+- **History/log** - A record of events that have occurred in a system, often used for troubleshooting, auditing, and analysis.
+- **Title** - The name or label given to a document, page, or section, often used to identify and organize content.
+- **Header** - The top section of a document, page, or message that contains information such as the title, author, date, and other metadata.
+- **Sequence of Sections** - The order in which different sections of a document or page are presented, often used to organize and structure content.
+- **Question Types** - The different types of questions that can be included in an exam or assessment, such as multiple choice, true/false, short answer, essay, and others.
