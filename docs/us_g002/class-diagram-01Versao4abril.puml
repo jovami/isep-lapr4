@@ -259,6 +259,12 @@
       entity Board <<root>> <<Entity>>
       class BoardTitle <<value object>>
 
+      enum BoardStatus <<value object>>{
+                    - created
+                    - shared
+                    - archived
+                }
+
       entity Cell <<Entity>>{
                     -rowTitle
                     -columnTitle
@@ -281,11 +287,14 @@
       class PostItID <<value object>>
 
       abstract  Participant <<Entity>>
-      note right : VERIFICAR!!
+
 
       class ShareBoard <<Event>>
 
-      class CreatePostIt <<Event>>
+      class CommitPostIt <<Event>>
+      note bottom : event triggered when\npost-it is created or modified
+
+
 
       class BoardService <<Service>>
       Board -down--> BoardService
@@ -293,10 +302,12 @@
 
       class PostItService <<Service>>
       BoardHistory -down-> PostItService
-      note bottom : change or undo PostIt\n(save previous post in BoardHistory)
+      note bottom : responsible for create or modify PostIt\n(save previous post in BoardHistory)
+
 
   }
 
+    Board "1" --> "1" BoardStatus
 
     Cell "1" --> "1" cellID
     Cell "1" --> "1" header
@@ -308,15 +319,17 @@
 
     ShareBoard <- Board
     Participant "*"--up> "1" Board : creates/participate >
-    CreatePostIt <- PostIt
+    CommitPostIt <- PostIt
     PostIt "1" -down-> "1" PostItID
-    Participant "1" --> "1" TimeStamp
+    BoardHistory "1" --> "1" TimeStamp
     BoardHistory --> Participant
 
     Student "1" -up--> "1" Participant
     Teacher "1" -up--> "1" Participant
     Manager "1" -> "1" Participant
 
+    CommitPostIt -> PostItService
+    
   }
 
   package MEETING <<Aggregate>> {
@@ -327,8 +340,6 @@
           -admin
       }
 
-      class Time <<value object>> 
-
       class Duration <<value object>> 
 
       class ScheduleMeeting <<Event>>
@@ -336,13 +347,15 @@
       class CancelsMeeting <<Event>>
 
       class MeetingService <<Service>>
+      note right: responsible for managing\n meetings between users
+
 
       abstract  Participant <<Entity>>
 
 
       Participant "*"--up> "1" Meeting : creates/participate >
 
-      Meeting "1" --> "1" Time
+
       Meeting "1" --> "1" Duration
       Meeting "1" --> "1" MeetingInfo
       Meeting  -up->  ScheduleMeeting
@@ -355,8 +368,7 @@
 
 
       Meeting ---> MeetingService
-      note right: responsible for managing\n meetings between users
-
+      MeetingService --> RecurringPattern
   }
 
 
