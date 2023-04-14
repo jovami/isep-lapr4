@@ -1,375 +1,401 @@
-    @startuml
+@startuml
 
-  skinparam linetype ortho
-  skinparam Shadowing False
+skinparam linetype ortho
+skinparam Shadowing False
 
-  skinparam class {
-        BackgroundColor<<Entity>> Moccasin
-        BackgroundColor<<value object>> Azure
-        BackgroundColor<<Event>> MediumAquaMarine
-        BackgroundColor<<Service>> SkyBlue
-        ArrowColor DarkSlateGrey
-    }
+skinparam class {
+    BackgroundColor<<Entity>> Moccasin
+    BackgroundColor<<value object>> Azure
+    BackgroundColor<<Event>> MediumAquaMarine
+    BackgroundColor<<Service>> SkyBlue
+    ArrowColor DarkSlateGrey
+}
 
-    skinparam package {
-        BackgroundColor PowderBlue
-        packageLayout grid
-        packageColumn 2
-    }
-
-    
-package USER <<package>>{
-
-    abstract User <<Entity>> 
-        class DateOfBirth <<value object>> 
-        class TaxPayerNumber <<value object>> 
-        class FullName <<value object>> 
-        class ShortName <<value object>> 
-
-        User "1" --> "1" FullName   
-        User "1" --> "1" ShortName
-        User "1" --> "1" DateOfBirth
-        User "1" --> "1" TaxPayerNumber
-
-
-
-
-  package TEACHER <<Aggregate>> {
-      entity Teacher <<root>> <<Entity>>
-
-      class Acronym <<value object>> 
-
-
-
-  Teacher "1" -> "1" Acronym
-  }
-  Teacher "1" --|> "1" User
-
-  package MANAGER <<Aggregate>> {
-      entity Manager <<root>> <<Entity>>
-
-      class ManagerId <<value object>> 
-
-
-      Manager "1" -> "1" ManagerId
-  }
-      Manager "1" --|> "1" User
-
-  package STUDENT <<Aggregate>> {
-      entity Student <<root>> <<Entity>>
-
-      class MecanographicNumber <<value object>> 
-
-
-      Student "1" -> "1" MecanographicNumber
-  }
-      Student "1" --|> "1" User
+skinparam package {
+    BackgroundColor PowderBlue
+    packageLayout grid
+    packageColumn 2
 }
 
 
-      package TIMETABLE <<Aggregate>> {
-          interface Event <<interface>>
+package USER <<package>>{
+    abstract User <<Entity>>
 
-          entity RecurringPattern <<root>> <<entity>>{
-              - startDate
-              - endDate
-              - startTime
-              - endTime
-          }
+    class DateOfBirth <<value object>>
+    class TaxPayerNumber <<value object>>
+    class FullName <<value object>>
+    class ShortName <<value object>>
 
-          enum RecurringFrequency <<enum>>{
-            - weekly
-            - once
-          }
+    User  -->  FullName
+    User  -->  ShortName
+    User  -->  DateOfBirth
+    User  -->  TaxPayerNumber
 
-          RecurringPattern "1" --> "1" RecurringFrequency
-          RecurringPattern "1" -> "*" Event
-      }
+    package TEACHER <<Aggregate>> {
+        entity Teacher <<root>> <<Entity>>
+        class Acronym <<value object>>
 
-    User "N" --> "N" RecurringPattern
+        Teacher  ->  Acronym
+    }
+   
 
-  package CoursePackage <<Rectangle>> {
-      package COURSE <<Aggregate>> {
-          entity Course <<root>> <<Entity>>
+    package MANAGER <<Aggregate>> {
+        entity Manager <<root>> <<Entity>>
+        class ManagerId <<value object>>
 
-          class CourseCode <<value object>>
+        Manager  ->  ManagerId
+    }
+   
 
-          class CourseName <<value object>>
+    package STUDENT <<Aggregate>> {
+        entity Student <<root>> <<Entity>>
+        class MecanographicNumber <<value object>>
 
-          class CourseDescription <<value object>>
+        Student  ->  MecanographicNumber
+    }
 
-          class CourseClass <<value object>>
+    Manager  --|>  User
+    Teacher  --|>  User
+    Student  --|>  User
+}
 
-          enum CourseState <<value object>>{
-              - closed
-              - open
-              - enroll
-              - inProgress
-          }
+package CoursePackage <<Rectangle>> {
+    package COURSE <<Aggregate>> {
+        entity Course <<root>> <<Entity>>
 
-          class CourseCapacity <<value object>> {
-              -minStudents
-              -maxStudents
-          }
+        class CourseCode <<value object>>
 
-          class CourseEvent <<Event>>
+        class CourseName <<value object>>
 
-          class CourseClosedEvent
-          class CourseOpenEvent
-          class CourseEnrollOpenEvent
-          class CourseEnrollClosedEvent
-          class CourseCreatedEvent
+        class CourseDescription <<value object>>
 
-          Course "1" -down--> "1" CourseCode
-          Course "1" -down--> "1" CourseName
-          Course "1" -down--> "1" CourseState
-          Course "1" -down--> "1" CourseDescription
-          Course "1" -down--> "1" CourseCapacity
-          Course -up-> CourseEvent
-          Course "1" ----> "*" CourseClass
-          CourseEvent -up--> CourseClosedEvent
-          CourseEvent -up--> CourseOpenEvent
-          CourseEvent -up--> CourseEnrollOpenEvent
-          CourseEvent -up--> CourseEnrollClosedEvent
-          CourseEvent -up--> CourseCreatedEvent
-          CourseClass -up-|> Event
-      }
+        enum CourseState <<value object>>{
+            - closed
+            - open
+            - enroll
+            - inProgress
+        }
 
-      package COURSE_ACCESS <<Aggreggate>>{
-          entity CourseAccess <<root>> <<Entity>>
-          CourseAccess "*" -down----> "1" Student
-          Course "1" -> "*" CourseAccess
+        class CourseCapacity <<value object>> {
+            -minStudents
+            -maxStudents
+        }
 
-          class CourseEnrollmentRequestEvent <<Event>>
-          CourseAccess "1" <-up- "1" CourseEnrollmentRequestEvent
-          Manager "1" -down-> "1" CourseEnrollmentRequestEvent
-      }
+        class CourseEvent <<Event>>
 
-      Teacher "*" -up> "1" Course : participate >
-      'Teacher "1" -> "1" Course : in charge of >
-  }
+        class CourseClosedEvent
+        class CourseOpenEvent
+        class CourseEnrollOpenEvent
+        class CourseEnrollClosedEvent
+        class CourseCreatedEvent
 
-  package ExamPackage <<Rectangle>> {
-      package EXAM_SPECIFICATION <<Aggregate>> {
-          entity ExamSpecification <<root>> <<Entity>>
-          class ExamTitle <<value object>>
-          class HeaderDescription <<value object>>
-          class ExamHeader <<value object>>
-          class ExamSection <<value object>>
-          class SectionDescription <<value object>>
+        Course "1" -down-> "1" CourseCode
+        Course "1" -down-> "1" CourseName
+        Course "1" -down-> "1" CourseState
+        Course "1" -down-> "1" CourseDescription
+        Course "1" -down-> "1" CourseCapacity
+        Course -up-> CourseEvent
+        Course "1" ----> "*" Lecture
+        CourseEvent <|-up-- CourseClosedEvent
+        CourseEvent <|-up-- CourseOpenEvent
+        CourseEvent <|-up-- CourseEnrollOpenEvent
+        CourseEvent <|-up-- CourseEnrollClosedEvent
+        CourseEvent <|-up-- CourseCreatedEvent
+    }
 
-          class Question <<value object>> {
-              -description
-              -solution
-          }
+    package COURSE_ACCESS <<Aggreggate>>{
+        entity CourseAccess <<root>> <<Entity>>
+        CourseAccess "*" -down----> "1" Student
+        Course "1" -> "*" CourseAccess
 
-          class QuestionFeedback <<value object>>
+        class CourseEnrollmentRequestEvent <<Event>>
+        CourseAccess "1" <-up- "1" CourseEnrollmentRequestEvent
+        Manager "1" -down-> "1" CourseEnrollmentRequestEvent
+    }
 
-          enum QuestionType <<value object>> {
-              - matching
-              - multipleChoices
-              - shortAnswer
-              - numerical
-              - selectMissingWord
-              - true/False
-          }
+    Teacher "*" -up--> "1" Course : participate >
+    
+    class CourseManagementService <<Service>>
+    Course -> CourseManagementService
+    note top: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
-          enum FeedbackType <<value object>> {
-              - none
-              - onSubmission
-              - afterClosing
-          }
+}
 
-          enum GradeType <<value object>> {
-              - none
-              - onSubmission
-              - afterClosing
-          }
-      }
+package ExamPackage <<Rectangle>> {
+    package EXAM_SPECIFICATION <<Aggregate>> {
+        entity ExamSpecification <<root>> <<Entity>>
+        class ExamTitle <<value object>>
+        class HeaderDescription <<value object>>
+        class ExamHeader <<value object>>
+        class ExamSection <<value object>>
+        class SectionDescription <<value object>>
 
-      package EXAM <<Aggregate>> {
-          entity Exam <<root>> <<Entity>>
+        class Question <<value object>> {
+            -description
+            -solution
+        }
 
-          class ExamDate <<value object>> {
-              -openDate
-              -closeDate
-          }
+        class QuestionFeedback <<value object>>
 
-          class ExamEvent <<Event>>
-          class OpeningEvent <<Event>>
-          class ClosingEvent <<Event>>
-      }
+        enum QuestionType <<value object>> {
+            - matching
+            - multipleChoices
+            - shortAnswer
+            - numerical
+            - selectMissingWord
+            - true/False
+        }
 
-      package EXAM_RESULT <<Aggregate>> {
-          entity ExamResult <<root>> <<Entity>>
+        enum FeedbackType <<value object>> {
+            - none
+            - onSubmission
+            - afterClosing
+        }
 
-          class ExamGrade <<value object>>
-          class ExamFeedback <<value object>>
-      }
+        enum GradeType <<value object>> {
+            - none
+            - onSubmission
+            - afterClosing
+        }
+    }
 
-      class ExamGradingService <<Service>>
+    package EXAM <<Aggregate>> {
+        entity Exam <<root>> <<Entity>>
 
-      ExamSpecification "1" -up-> "1" ExamTitle
-      ExamSpecification "1" -right--> "1" ExamHeader
+        class ExamDate <<value object>> {
+            -openDate
+            -closeDate
+        }
 
-      ExamHeader "1" -right--> "0..1" HeaderDescription
-      ExamHeader "1" -down-> "1" FeedbackType
-      ExamHeader "1" -down-> "1" GradeType
+        class ExamEvent <<Event>>
+        class OpeningEvent <<Event>>
+        class ClosingEvent <<Event>>
+    }
 
-      ExamSpecification "1" -up-> "1..*" ExamSection
+    package EXAM_RESULT <<Aggregate>> {
+        entity ExamResult <<root>> <<Entity>>
 
-      ExamSection "1" -up-> "0..1" SectionDescription
-      ExamSection "1" -up--> "1..*" Question
+        class ExamGrade <<value object>>
+        class ExamFeedback <<value object>>
+    }
 
-      Question "1" -up> "1" QuestionType
-      Question "1" -> "0..*" QuestionFeedback
+    class ExamGradingService <<Service>>
 
-      Exam "1" -down> "1" ExamSpecification
-      /' curso liga se a exame '/
-      Exam "1" -> "1" ExamDate
-      OpeningEvent -up--> ExamEvent
-      ClosingEvent -up--> ExamEvent
-      Exam "1" -up-> "1" ExamEvent
-      ExamGradingService "1" -up----> "1" ExamResult
+    ExamSpecification "1" -up-> "1" ExamTitle
+    ExamSpecification "1" -right--> "1" ExamHeader
 
-      ExamResult "1" -up-> "1" ExamGrade
-      ExamResult "1" -> "1" ExamFeedback
+    ExamHeader "1" -right--> "0..1" HeaderDescription
+    ExamHeader "1" -down-> "1" FeedbackType
+    ExamHeader "1" -down-> "1" GradeType
 
-      Course "1" -> "0..*" Exam
+    ExamSpecification "1" -up-> "1..*" ExamSection
 
-      ClosingEvent -> ExamGradingService
-      note bottom: responsible for auto-correcting\nand grading the exam
+    ExamSection "1" -up-> "0..1" SectionDescription
+    ExamSection "1" -up--> "1..*" Question
 
-      Student "1" -right-> "0..1" ExamResult
-      Teacher "*" -u-> "1" ExamSpecification : creates >
-  }
+    Question "1" -up> "1" QuestionType
+    Question "1" -> "0..*" QuestionFeedback
 
-  package BOARDPackage <<Rectangle>> {
-  package BOARD <<Aggregate>> {
+    Exam "1" -down> "1" ExamSpecification
+    /' curso liga se a exame '/
+    Exam "1" -> "1" ExamDate
+    OpeningEvent -up--> ExamEvent
+    ClosingEvent -up--> ExamEvent
+    Exam "1" -up-> "1" ExamEvent
+    ExamGradingService "1" -up----> "1" ExamResult
 
-      entity Board <<root>> <<Entity>>
-      class BoardTitle <<value object>>
+    ExamResult "1" -up-> "1" ExamGrade
+    ExamResult "1" -> "1" ExamFeedback
 
-      enum BoardStatus <<value object>>{
-                    - created
-                    - shared
-                    - archived
-                }
+    Course "1" -> "0..*" Exam
 
-      entity Cell <<Entity>>{
-                    -rowTitle
-                    -columnTitle
-                }
-      note right : save history of cell
+    ClosingEvent -> ExamGradingService
+    note bottom: responsible for auto-correcting\nand grading the exam
 
-      class cellID <<value object>>
-      class header <<value object>>
+    Student "1" -right-> "0..1" ExamResult
+    Teacher "*" --> "1" ExamSpecification : creates >
+}
 
-      entity BoardHistory <<Entity>>
+package BOARDPackage <<Rectangle>> {
+    package BOARD <<Aggregate>> {
 
-      class TimeStamp <<value object>>
+        entity Board <<root>> <<Entity>>
+        class BoardTitle <<value object>>
 
-      entity PostIt <<Entity>> {
-                    - typeOfContent
-                    -owner
-      }
-      note right: Image or text
+        enum BoardStatus <<value object>>{
+            - created
+            - shared
+            - archived
+        }
 
-      class PostItID <<value object>>
+        entity Cell <<Entity>>{
+        }
 
-      abstract  BoardParticipant <<Entity>>
+        class rowTitle <<value object>>
+        class columnTitle <<value object>>
+        class cellID <<value object>>
+        class header <<value object>>
+
+        entity BoardHistory <<Entity>>
+        note left : stores every post-it that \nis created/modified
+
+        class TimeStamp <<value object>>
+
+        entity PostIt <<Entity>> {
+            - postItId
+        }
+        note right: Image or text
+
+        enum TypeOfContent{
+            - text
+            - image
+        }
+        PostIt -> TypeOfContent
+        PostIt -> User : owns <
+
+        abstract  BoardParticipant <<Entity>>
 
 
-      class ShareBoard <<Event>>
+        class ShareBoardEvent <<Event>>
 
-      class CommitPostIt <<Event>>
-      note bottom : event triggered when\npost-it is created or modified
+        class CommitPostItEvent <<Event>>
+        note bottom : event triggered when\npost-it is created or modified
 
+        class ShareBoardService <<Service>>
+        Board -down-> ShareBoardService
+        note right :responsible for sharing boards
 
-
-      class BoardService <<Service>>
-      Board -down--> BoardService
-      note right :responsible for creating,\n sharing, and managing\n shared boards
-
-      class PostItService <<Service>>
-      BoardHistory -down-> PostItService
-      note bottom : responsible for create or modify PostIt\n(save previous post in BoardHistory)
+        class PostItService <<Service>>
+        BoardHistory -down-> PostItService
+        note bottom : responsible for create or modify PostIt\n(save previous post in BoardHistory)
 
 
-  }
+    }
 
     Board "1" --> "1" BoardStatus
-
-    Cell "1" --> "1" cellID
-    Cell "1" --> "1" header
     Board "1" --> "*" BoardHistory
-    BoardHistory "*"--> "1" PostIt
     Board "1" --> "1" BoardTitle
-    Board "1" *-up-- "1..*" Cell : part of <
-    Cell "1"  *--- "0..1" PostIt : part of <
+    Board "1" *-up-> "1..*" Cell : part of <
 
-    ShareBoard <- Board
+    Cell "1" -> "1" cellID
+    Cell "1" -> "1" header
+    Cell "1" -> "1" rowTitle
+    Cell "1" -> "1" columnTitle
+    Cell "1"  *-- "0..1" PostIt : part of <
+    
+    ShareBoardEvent <- Board
+    ShareBoardEvent -> ShareBoardService
     BoardParticipant "*"--up> "1" Board : creates/participate >
-    CommitPostIt <- PostIt
-    PostIt "1" -down-> "1" PostItID
+    BoardParticipant "1" -> "*"  User
+
+    CommitPostItEvent <- PostIt
+    CommitPostItEvent -> PostItService
+
     BoardHistory "1" --> "1" TimeStamp
+    BoardHistory "*"--> "1" PostIt
     BoardHistory --> BoardParticipant
 
-    Student "1" -up--> "1" BoardParticipant
-    Teacher "1" -up--> "1" BoardParticipant
-    Manager "1" -> "1" BoardParticipant
+}
 
-    CommitPostIt -> PostItService
+package Event <<Rectangle>> {
+
+    interface Event <<interface>>
+
+    package TIMETABLE <<Aggregate>> {
+
+        entity EventAccess <<entity>><<root>>{
+        }
+
+        EventAccess "*" -> "1" User
+
+    }
+
+    package EventPattern <<Aggregate>> {
+
+
+        entity Exception{
+            -period
+        }
+
+        class RescheduleEventService <<Service>>
+        Exception --> RescheduleEventService
+
+        entity RecurringPattern <<root>> <<entity>>{
+            -endDate
+            -startDate
+            -dayOfTheWeek
+            -startTime
+            -endTime
+        }
+        class RescheduleEventService <<Service>>
+
+        enum RecurringFrequency <<enum>>{
+            - weekly
+            - once
+        }
+
+        RecurringPattern --> RecurringFrequency
+    }
+
+    class CheckAvailabilityService<<Service>>
     
-  }
+    package Lecture <<Aggregate>>{
+        Entity Lecture <<root>><<entity>>
 
-  package MEETING <<Aggregate>> {
+        entity LectureAttendant <<entity>>
 
-      entity Meeting <<root>> <<Entity>>
+        enum LectureType{
+            -regular
+            -extra
+        }
 
-      class MeetingInfo <<value object>>{
-          -admin
-      }
+        Lecture --> LectureType
+        Lecture --> LectureAttendant
 
-      class Duration <<value object>> 
+    }
+    
 
-      class ScheduleMeeting <<Event>>
+    package MEETING <<Aggregate>> {
 
-      class CancelsMeeting <<Event>>
+        entity Meeting <<root>> <<Entity>>
 
-      class MeetingService <<Service>>
-      note right: responsible for managing\n meetings between users
+        class ScheduleMeetingEvent <<Event>>
+
+        class CancelsMeetingEvent <<Event>>
+
+        class MeetingService <<Service>>
+        note right: responsible for managing\n meetings between users
+
+        abstract  MeetingParticipant <<Entity>>
+
+        Meeting -> MeetingService
+        Meeting  -up->  ScheduleMeetingEvent
+        Meeting <-up- CancelsMeetingEvent
+
+        MeetingParticipant "1" -> "*" User
+        MeetingParticipant "*"--up> "1" Meeting : creates/participate >
+
+    }
+    
+    
+    EventAccess --> CheckAvailabilityService
+    EventAccess ->  Event
+
+    LectureAttendant *-- Student
+
+    RecurringPattern --> CheckAvailabilityService
+    RecurringPattern *-- Exception
+
+    Event "1" -down-> "*" RecurringPattern
+
+    Lecture --> Teacher : teaches
+    Lecture -down--|> Event
+
+    Meeting -> User : administrates <
+    Meeting -down-|> Event
 
 
-      abstract  MeetingParticipant <<Entity>>
-
-
-      MeetingParticipant "*"--up> "1" Meeting : creates/participate >
-
-
-      Meeting "1" --> "1" Duration
-      Meeting "1" --> "1" MeetingInfo
-      Meeting  -up->  ScheduleMeeting
-      CancelsMeeting  -down->  Meeting
-
-      Student "1" -up--> "1" MeetingParticipant
-      Teacher "1" -up--> "1" MeetingParticipant
-      Manager "1" ---> "1" MeetingParticipant
-
-
-
-      Meeting ---> MeetingService
-      MeetingService --> RecurringPattern
-  }
-
-
-  class UserManagementService <<Service>>
-  Manager --left> UserManagementService
-  note left: responsible for creating, disabling/enabling, \nand listing users in the system
-
-  class CourseManagementService <<Service>>
-  Course -> CourseManagementService
-  note right: responsible for enrolling students in a course,\n either by bulk import or by individual request
+}
 
 
 @enduml
