@@ -17,66 +17,55 @@
         packageColumn 2
     }
 
+    
+package USER <<package>>{
+
+    abstract User <<Entity>> 
+        class DateOfBirth <<value object>> 
+        class TaxPayerNumber <<value object>> 
+        class FullName <<value object>> 
+        class ShortName <<value object>> 
+
+        User "1" --> "1" FullName   
+        User "1" --> "1" ShortName
+        User "1" --> "1" DateOfBirth
+        User "1" --> "1" TaxPayerNumber
+
+
+
+
   package TEACHER <<Aggregate>> {
       entity Teacher <<root>> <<Entity>>
 
       class Acronym <<value object>> 
 
-      class TeacherFullName <<value object>> 
 
-      class TeacherShortName <<value object>> 
 
-      class TeacherDateOfBirth <<value object>> 
-
-      class TeacherTaxPayerNumber <<value object>> 
-
-  Teacher "1" -down--> "1" Acronym
-  Teacher "1" -down--> "1" TeacherFullName
-  Teacher "1" -up-> "1" TeacherShortName
-  Teacher "1" -up-> "1" TeacherDateOfBirth
-  Teacher "1" -> "1" TeacherTaxPayerNumber
-
+  Teacher "1" -> "1" Acronym
   }
+  Teacher "1" --|> "1" User
 
   package MANAGER <<Aggregate>> {
       entity Manager <<root>> <<Entity>>
 
       class ManagerId <<value object>> 
 
-      class ManagerFullName <<value object>> 
 
-      class ManagerShortName <<value object>> 
-
-      class ManagerDateOfBirth <<value object>> 
-
-      class ManagerTaxPayerNumber <<value object>> 
-
-      Manager "1" -down--> "1" ManagerId
-      Manager "1" -down--> "1" ManagerFullName
-      Manager "1" -up-> "1" ManagerShortName
-      Manager "1" -up-> "1" ManagerDateOfBirth
-      Manager "1" -> "1" ManagerTaxPayerNumber
+      Manager "1" -> "1" ManagerId
   }
+      Manager "1" --|> "1" User
 
   package STUDENT <<Aggregate>> {
       entity Student <<root>> <<Entity>>
 
       class MecanographicNumber <<value object>> 
 
-      class StudentFullName <<value object>> 
 
-      class StudentShortName <<value object>> 
-
-      class StudentDateOfBirth <<value object>> 
-
-      class StudentTaxPayerNumber <<value object>> 
-
-      Student "1" -down--> "1" MecanographicNumber
-      Student "1" ---> "1" StudentFullName
-      Student "1" -up-> "1" StudentShortName
-      Student "1" -up--> "1" StudentDateOfBirth
-      Student "1" -> "1" StudentTaxPayerNumber
+      Student "1" -> "1" MecanographicNumber
   }
+      Student "1" --|> "1" User
+}
+
 
       package TIMETABLE <<Aggregate>> {
           interface Event <<interface>>
@@ -96,6 +85,8 @@
           RecurringPattern "1" --> "1" RecurringFrequency
           RecurringPattern "1" -> "*" Event
       }
+
+    User "N" --> "N" RecurringPattern
 
   package CoursePackage <<Rectangle>> {
       package COURSE <<Aggregate>> {
@@ -151,7 +142,7 @@
 
           class CourseEnrollmentRequestEvent <<Event>>
           CourseAccess "1" <-up- "1" CourseEnrollmentRequestEvent
-          Manager "1" -down-----> "1" CourseEnrollmentRequestEvent
+          Manager "1" -down-> "1" CourseEnrollmentRequestEvent
       }
 
       Teacher "*" -up> "1" Course : participate >
@@ -286,7 +277,7 @@
 
       class PostItID <<value object>>
 
-      abstract  Participant <<Entity>>
+      abstract  BoardParticipant <<Entity>>
 
 
       class ShareBoard <<Event>>
@@ -318,15 +309,15 @@
     Cell "1"  *--- "0..1" PostIt : part of <
 
     ShareBoard <- Board
-    Participant "*"--up> "1" Board : creates/participate >
+    BoardParticipant "*"--up> "1" Board : creates/participate >
     CommitPostIt <- PostIt
     PostIt "1" -down-> "1" PostItID
     BoardHistory "1" --> "1" TimeStamp
-    BoardHistory --> Participant
+    BoardHistory --> BoardParticipant
 
-    Student "1" -up--> "1" Participant
-    Teacher "1" -up--> "1" Participant
-    Manager "1" -> "1" Participant
+    Student "1" -up--> "1" BoardParticipant
+    Teacher "1" -up--> "1" BoardParticipant
+    Manager "1" -> "1" BoardParticipant
 
     CommitPostIt -> PostItService
     
@@ -350,10 +341,10 @@
       note right: responsible for managing\n meetings between users
 
 
-      abstract  Participant <<Entity>>
+      abstract  MeetingParticipant <<Entity>>
 
 
-      Participant "*"--up> "1" Meeting : creates/participate >
+      MeetingParticipant "*"--up> "1" Meeting : creates/participate >
 
 
       Meeting "1" --> "1" Duration
@@ -361,9 +352,9 @@
       Meeting  -up->  ScheduleMeeting
       CancelsMeeting  -down->  Meeting
 
-      Student "1" -up--> "1" Participant
-      Teacher "1" -up--> "1" Participant
-      Manager "1" -> "1" Participant
+      Student "1" -up--> "1" MeetingParticipant
+      Teacher "1" -up--> "1" MeetingParticipant
+      Manager "1" ---> "1" MeetingParticipant
 
 
 
