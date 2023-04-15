@@ -62,5 +62,6 @@ TEST*.xml
 
 # JPA
 .factorypath
+.db/
 
 README.html
