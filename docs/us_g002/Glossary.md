@@ -1,10 +1,41 @@
-**Glossary**
+# Glossary
+
+# Exams
+
+- **Exam** - A formal assessment or evaluation of a student's knowledge or skills in a
+  particular subject or course.
+- **ExamDate** - Refers to both start and end dates of the exam
+- **ExamSpecification** - A set of rules and guidelines defined by a teacher that outline the
+  structure, format, and content of an exam.
+- **ExamTitle** - The name or label given to a specific exam as part of the exam specification.
+- **ExamSection** - A distinct part of an exam that contains one or more questions related to a
+  specific topic or subject area.
+- **ExamHeader** - Part of the exam that contains important information regarding the feedback type
+  (none, on submission, after closing) and the grade type (none, on submission, after closing).
+- **Question** - A task or prompt presented to a student as part of an exam that requires a
+  response or answer.
+- **QuestionFeedback** - The response given to the student's answers in an exam, which may include
+  feedback on correctness or explanation of the correct answer.
+- **ExamGrade** - The score or mark received by a student for an exam, typically calculated
+  based on the number of correct answers or a predefined grading scheme.
+- **ExamFeedback** - The overall response given to the student regarding their performance on the
+  exam, which may include feedback on strengths and weaknesses and areas for improvement.
+
+# Courses
+
+- **Course** - A structured program of study that typically consists of multiple modules or
+  lessons and is designed to teach a specific subject or skill.
+- **CourseCode** - A unique code or identifier associated with a specific course, e.g., "JAVA-1".
+- **CourseTitle** - The name or label given to a specific course.
+- **CourseDescription** - A detailed explanation or overview of the content, goals,
+  objectives, and outcomes of a course.
+- **CourseCapacity** - The maximum and minimum number of students that a course can accommodate.
 
 - **User** - Registered entity on the system
 - **Teacher** - An individual who is responsible for instructing and teaching a course to students.
 - **Student** - An individual who is enrolled in a course and receiving instruction from a teacher.
 - **Manager/Administrator** - An individual who is responsible for managing the system, including managing users, courses, and enrollment.
-- **Course** -  A structured program of study that typically consists of multiple modules or lessons and is designed to teach a specific subject or skill.
+- **Course** - A structured program of study that typically consists of multiple modules or lessons and is designed to teach a specific subject or skill.
 - **Edition** - A specific offering of a course, usually with a set start and end date and a specific group of students.
 - **Enrollment** - The process of registering for and being admitted to a course.
 - **Enroll Students** - The action of adding students to a course and registering them for enrollment.
@@ -13,7 +44,6 @@
 - **Enlistment** - The act of registering for a course.
 - **Schedule of Class** - A calendar or timetable that outlines when a course's classes or lectures will be held.
 - **Class** - A single session of a course.
-- **Exam** - An assessment or evaluation of a student's knowledge or skills in a particular subject or course.
 - **Question** - A task or problem presented to a student as part of an exam or assessment.
 - **Exam Feedback** - Comments or notes provided to a student about their performance on an exam or assessment.
 - **Exam Result** - The outcome or grade received by a student on an exam or assessment.
@@ -43,7 +73,7 @@
 - **GitHub** - GitHub is a web-based platform used for version control and collaboration on software development projects.
 - **Metrics** - Metrics are numerical values used to measure and track the progress and performance of a software development project.
 - **Linux** - Linux is a free and open-source operating system that is widely used in software development.
-- **Windows** -  Windows is a popular operating system developed by Microsoft that is widely used in software development.
+- **Windows** - Windows is a popular operating system developed by Microsoft that is widely used in software development.
 - **Scripts** - A script is a program written in a scripting language that is interpreted rather than compiled. Scripts are often used in software development for automating tasks or performing repetitive actions.
 - **Database** - A database is a structured collection of data that is stored and accessed electronically.
 - **Data Persistence** - Data persistence is the ability of data to outlive an application's process or lifetime. This means that data can be stored and retrieved even after the application has been shut down or restarted.
@@ -51,7 +81,7 @@
 - **Default Data** - Default data refers to the initial data that is loaded into a database or application when it is first installed or created.
 - **Authentication** - Authentication is the process of verifying the identity of a user or system.
 - **Authorization** - Authorization is the process of granting or denying access to specific resources based on a user's identity or permissions.
-- **Exam Language** - 
+- **Exam Language** -
 - **ANTLR** - Is a parser generator that is commonly used in software development for generating parsers for programming languages and other data formats.
 - **Board Architecture** - Board architecture refers to the overall design and structure of a collaborative whiteboard or drawing tool used in software development.
 - **AJAX** - AJAX (Asynchronous JavaScript and XML) is a set of web development techniques used for creating dynamic web applications.
