@@ -2,9 +2,12 @@
 
 # User
 
-- **User** - Registered entity on the system
+- **User** - Registered entity on the system, composed by a date of birth, tax payer number, full
+  name and short name.
 - **Teacher** - An individual who is responsible for instructing and teaching a course to students.
-- **Student** - An individual who is enrolled in a course and receiving instruction from a teacher.
+- **Acronym** - An unique identifier to a teacher.
+- **Student** - An individual who is enrolled in a course and receiving instruction from a teacher,
+- **MecanographicNumber** - An unique identifier to a student.
 - **Manager/Administrator** - An individual who is responsible for managing the system,
   including managing users, courses, and enrollment.
 
