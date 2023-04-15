@@ -31,6 +31,29 @@
   objectives, and outcomes of a course.
 - **CourseCapacity** - The maximum and minimum number of students that a course can accommodate.
 
+# Events
+
+An event refers to either a lecture or a meeting.
+
+## Meetings
+
+- **Meeting** - An event or gathering where individuals come together to discuss or address a
+  particular topic or issue.
+- **MeetingParticipant** - A user who integrates a meeting.
+
+## Lectures
+
+- **Lecture** - A single session of a course that can be regular or extra.
+- **LectureAttendant** - A user who attends to a lecture.
+
+## EventPattern
+
+- **RecurringPattern** - A set of rules that defines the frequency (weekly or once), duration,
+  and timing of recurring events, such as lectures or meetings. A recurring pattern includes
+  a start and end date, a day of the week, and a start and end time.
+- **Exception** - A period when a recurring pattern won't take effect. This is used to specify
+  dates or times when an event will not occur, even if it is part of a recurring pattern.
+
 - **User** - Registered entity on the system
 - **Teacher** - An individual who is responsible for instructing and teaching a course to students.
 - **Student** - An individual who is enrolled in a course and receiving instruction from a teacher.
