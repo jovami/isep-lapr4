@@ -1,6 +1,14 @@
 # Glossary
 
-# Exams
+# User
+
+- **User** - Registered entity on the system
+- **Teacher** - An individual who is responsible for instructing and teaching a course to students.
+- **Student** - An individual who is enrolled in a course and receiving instruction from a teacher.
+- **Manager/Administrator** - An individual who is responsible for managing the system,
+  including managing users, courses, and enrollment.
+
+# Exam
 
 - **Exam** - A formal assessment or evaluation of a student's knowledge or skills in a
   particular subject or course.
@@ -21,7 +29,7 @@
 - **ExamFeedback** - The overall response given to the student regarding their performance on the
   exam, which may include feedback on strengths and weaknesses and areas for improvement.
 
-# Courses
+# Course
 
 - **Course** - A structured program of study that typically consists of multiple modules or
   lessons and is designed to teach a specific subject or skill.
@@ -31,17 +39,17 @@
   objectives, and outcomes of a course.
 - **CourseCapacity** - The maximum and minimum number of students that a course can accommodate.
 
-# Events
+# Event
 
 An event refers to either a lecture or a meeting.
 
-## Meetings
+## Meeting
 
 - **Meeting** - An event or gathering where individuals come together to discuss or address a
   particular topic or issue.
 - **MeetingParticipant** - A user who integrates a meeting.
 
-## Lectures
+## Lecture
 
 - **Lecture** - A single session of a course that can be regular or extra.
 - **LectureAttendant** - A user who attends to a lecture.
@@ -54,70 +62,15 @@ An event refers to either a lecture or a meeting.
 - **Exception** - A period when a recurring pattern won't take effect. This is used to specify
   dates or times when an event will not occur, even if it is part of a recurring pattern.
 
-- **User** - Registered entity on the system
-- **Teacher** - An individual who is responsible for instructing and teaching a course to students.
-- **Student** - An individual who is enrolled in a course and receiving instruction from a teacher.
-- **Manager/Administrator** - An individual who is responsible for managing the system, including managing users, courses, and enrollment.
-- **Course** - A structured program of study that typically consists of multiple modules or lessons and is designed to teach a specific subject or skill.
-- **Edition** - A specific offering of a course, usually with a set start and end date and a specific group of students.
-- **Enrollment** - The process of registering for and being admitted to a course.
-- **Enroll Students** - The action of adding students to a course and registering them for enrollment.
-- **CSV** - Comma-separated values, a file format used for storing and exchanging data.
-- **File** - A collection of data or information that is stored and accessed by a computer.
-- **Enlistment** - The act of registering for a course.
-- **Schedule of Class** - A calendar or timetable that outlines when a course's classes or lectures will be held.
-- **Class** - A single session of a course.
-- **Question** - A task or problem presented to a student as part of an exam or assessment.
-- **Exam Feedback** - Comments or notes provided to a student about their performance on an exam or assessment.
-- **Exam Result** - The outcome or grade received by a student on an exam or assessment.
-- **Parser** - A program or module that analyzes and interprets input data, typically used in computer programming.
-- **Grammar** - The rules and principles governing the structure and use of language, including syntax and morphology.
-- **Grade** - A numerical or letter rating that represents a student's level of performance in a course or on an exam or assessment.
-- **Board** - A virtual or physical space for sharing information, collaborating, or communicating.
-- **Share Board** - The action of making a board or workspace available to others for viewing or collaboration.
-- **HTML page** - A document or page written in Hypertext Markup Language, used for displaying information on the World Wide Web.
-- **Post-it** - A note used for writing short messages or reminders.
-- **Board History** - A record or archive of changes or activity on a board .
-- **Meeting** - An event or gathering where individuals come together to discuss or address a particular topic or issue.
-- **Invitation** - A request or invitation to attend a meeting or event.
-- **Response Status** - The status or response provided by an individual to an invitation or request.
-- **Programming language** - A formal language used to communicate instructions to a computer or other machine, typically used for software development.
-- **Java** - A widely-used programming language often used for developing enterprise-level applications.
-- **Project Repository** - A location or database where project files and code are stored and managed.
-- **Markdown** - A lightweight markup language used to format and style plain text documents.
-- **UML notation** - Unified Modeling Language notation, a standardized notation used for modeling software systems.
-- **Analysis** - The process of breaking down or examining a complex system or problem to better understand its structure and components.
-- **Design** - The process of creating or planning the structure, components, and interface of a software system or product.
-- **Testing** - The process of evaluating or validating a software
-- **Test-driven** - Test-driven development is a software development approach where tests are written before the actual code is implemented. The idea behind this is to ensure that the code is of high quality and that it meets the requirements specified in the test cases.
-- **US** - In software development, a user story (US) is a short, simple description of a feature that is desired by the user or customer.
-- **Method** - A method is a set of instructions that performs a specific task or a sequence of tasks in software development. Methods are often used in object-oriented programming to encapsulate functionality and enable reuse.
-- **Artifact** - In software development, an artifact is a tangible object that is produced during the software development life cycle.
-- **GitHub** - GitHub is a web-based platform used for version control and collaboration on software development projects.
-- **Metrics** - Metrics are numerical values used to measure and track the progress and performance of a software development project.
-- **Linux** - Linux is a free and open-source operating system that is widely used in software development.
-- **Windows** - Windows is a popular operating system developed by Microsoft that is widely used in software development.
-- **Scripts** - A script is a program written in a scripting language that is interpreted rather than compiled. Scripts are often used in software development for automating tasks or performing repetitive actions.
-- **Database** - A database is a structured collection of data that is stored and accessed electronically.
-- **Data Persistence** - Data persistence is the ability of data to outlive an application's process or lifetime. This means that data can be stored and retrieved even after the application has been shut down or restarted.
-- **RDB** - RDB stands for Relational Database. It is a type of database that stores data in tables that are related to one another through a set of predefined relationships.
-- **Default Data** - Default data refers to the initial data that is loaded into a database or application when it is first installed or created.
-- **Authentication** - Authentication is the process of verifying the identity of a user or system.
-- **Authorization** - Authorization is the process of granting or denying access to specific resources based on a user's identity or permissions.
-- **Exam Language** -
-- **ANTLR** - Is a parser generator that is commonly used in software development for generating parsers for programming languages and other data formats.
-- **Board Architecture** - Board architecture refers to the overall design and structure of a collaborative whiteboard or drawing tool used in software development.
-- **AJAX** - AJAX (Asynchronous JavaScript and XML) is a set of web development techniques used for creating dynamic web applications.
-- **Board Synchronization** - The process of ensuring that all users accessing a shared board have the same view of its contents, by updating and propagating changes made by one user to all other users viewing the board in real-time.
-- **C** - A high-level programming language often used for system programming, embedded systems, and applications where performance is a critical factor.
-- **Process** - An instance of a computer program that is being executed, which can consist of multiple threads and has its own memory space and system resources allocated to it.
-- **Semaphore** - A synchronization object used to protect shared resources in a concurrent system, which allows multiple threads to access the resource but limits the number of threads that can access it at the same time.
-- **Threads** - The smallest unit of execution in a concurrent system, which enables multiple tasks to be executed concurrently within a single process.
-- **Mutex** - A synchronization object used to protect shared resources in a concurrent system, which allows only one thread to access the resource at a time and blocks other threads that try to access it.
-- **Localhost** - A hostname that refers to the local computer in a network, commonly used to access services running on the same machine.
-- **Cloud** - A model of delivering computing services over the internet, where resources such as servers, storage, and applications are accessed on-demand over a network connection.
-- **History/log** - A record of events that have occurred in a system, often used for troubleshooting, auditing, and analysis.
-- **Title** - The name or label given to a document, page, or section, often used to identify and organize content.
-- **Header** - The top section of a document, page, or message that contains information such as the title, author, date, and other metadata.
-- **Sequence of Sections** - The order in which different sections of a document or page are presented, often used to organize and structure content.
-- **Question Types** - The different types of questions that can be included in an exam or assessment, such as multiple choice, true/false, short answer, essay, and others.
+# Board
+
+- **Board** - A virtual space for sharing information through the use of digital post-its.
+- **Post-it** - A digital representation of a small note used to store information, either in
+  the form of text or an image.
+- **BoardTitle** - The name or label given to a specific board to help identify its purpose.
+- **BoardParticipant** - A user who has access to a board and can create, edit or view post-its.
+- **BoardHistory** - A record of all post-its that have been created or modified on the board.
+- **BoardStatus** - Indicates the current status of a board, whether it is in the process of
+  being created, shared with others, or archived.
+- **Cell** - A specific position on the board where a post-it is placed. A cell is identified by its
+  column and row. A cell also contains a header.
