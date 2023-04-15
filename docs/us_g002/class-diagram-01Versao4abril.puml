@@ -18,7 +18,7 @@ skinparam package {
 }
 
 
-package USER <<package>>{
+package UserPackage <<rectangle>>{
     abstract User <<Entity>>
 
     class DateOfBirth <<value object>>
@@ -105,16 +105,20 @@ package CoursePackage <<Rectangle>> {
 
     package COURSE_ACCESS <<Aggreggate>>{
         entity CourseAccess <<root>> <<Entity>>
-        CourseAccess "*" -down----> "1" Student
         Course "1" -> "*" CourseAccess
-
-        class CourseEnrollmentRequestEvent <<Event>>
-        CourseAccess "1" <-up- "1" CourseEnrollmentRequestEvent
-        Manager "1" -down-> "1" CourseEnrollmentRequestEvent
+        Student "*" -> "1" CourseAccess
     }
 
-    Teacher "*" -up--> "1" Course : participate >
-    
+    package COURSE_ENROLLMENT_REQUEST <<Aggreggate>>{
+        entity EnrollmentRequest <<root>> <<Entity>>
+
+        EnrollmentRequest  *-- "*" Student
+        EnrollmentRequest -> CourseAccess
+    }
+
+    Teacher "*" -up--* Course : participate >
+    Teacher "1" -up--* Course : regent >
+
     class CourseManagementService <<Service>>
     Course -> CourseManagementService
     note top: responsible for enrolling students in a course,\n either by bulk import or by individual request
@@ -122,8 +126,20 @@ package CoursePackage <<Rectangle>> {
 }
 
 package ExamPackage <<Rectangle>> {
-    package EXAM_SPECIFICATION <<Aggregate>> {
-        entity ExamSpecification <<root>> <<Entity>>
+        
+    package EXAM <<Aggregate>> {
+        entity Exam <<root>> <<Entity>>
+
+        class ExamDate <<value object>> {
+            -openDate
+            -closeDate
+        }
+
+        class ExamEvent <<Event>>
+        class OpeningEvent <<Event>>
+        class ClosingEvent <<Event>>
+
+        entity ExamSpecification <<Entity>>
         class ExamTitle <<value object>>
         class HeaderDescription <<value object>>
         class ExamHeader <<value object>>
@@ -157,19 +173,7 @@ package ExamPackage <<Rectangle>> {
             - onSubmission
             - afterClosing
         }
-    }
 
-    package EXAM <<Aggregate>> {
-        entity Exam <<root>> <<Entity>>
-
-        class ExamDate <<value object>> {
-            -openDate
-            -closeDate
-        }
-
-        class ExamEvent <<Event>>
-        class OpeningEvent <<Event>>
-        class ClosingEvent <<Event>>
     }
 
     package EXAM_RESULT <<Aggregate>> {
@@ -181,13 +185,13 @@ package ExamPackage <<Rectangle>> {
 
     class ExamGradingService <<Service>>
 
-    ExamSpecification "1" -up-> "1" ExamTitle
-    ExamSpecification "1" -right--> "1" ExamHeader
-
     ExamHeader "1" -right--> "0..1" HeaderDescription
     ExamHeader "1" -down-> "1" FeedbackType
     ExamHeader "1" -down-> "1" GradeType
 
+
+    ExamSpecification "1" -up-> "1" ExamTitle
+    ExamSpecification "1" -right--> "1" ExamHeader
     ExamSpecification "1" -up-> "1..*" ExamSection
 
     ExamSection "1" -up-> "0..1" SectionDescription
@@ -196,27 +200,30 @@ package ExamPackage <<Rectangle>> {
     Question "1" -up> "1" QuestionType
     Question "1" -> "0..*" QuestionFeedback
 
-    Exam "1" -down> "1" ExamSpecification
-    /' curso liga se a exame '/
+    Exam "1" ----> "1" ExamSpecification
     Exam "1" -> "1" ExamDate
+    Exam "1" -up-> "1" ExamEvent
+
+    /' curso liga se a exame '/
+
     OpeningEvent -up--> ExamEvent
     ClosingEvent -up--> ExamEvent
-    Exam "1" -up-> "1" ExamEvent
+    
     ExamGradingService "1" -up----> "1" ExamResult
 
     ExamResult "1" -up-> "1" ExamGrade
     ExamResult "1" -> "1" ExamFeedback
 
-    Course "1" -> "0..*" Exam
+    Course "1" *-- "0..*" Exam
 
     ClosingEvent -> ExamGradingService
     note bottom: responsible for auto-correcting\nand grading the exam
 
     Student "1" -right-> "0..1" ExamResult
-    Teacher "*" --> "1" ExamSpecification : creates >
+    Teacher -->  Exam : creates >
 }
 
-package BOARDPackage <<Rectangle>> {
+package BoardPackage <<Rectangle>> {
     package BOARD <<Aggregate>> {
 
         entity Board <<root>> <<Entity>>
@@ -233,7 +240,6 @@ package BOARDPackage <<Rectangle>> {
 
         class rowTitle <<value object>>
         class columnTitle <<value object>>
-        class cellID <<value object>>
         class header <<value object>>
 
         entity BoardHistory <<Entity>>
@@ -251,10 +257,8 @@ package BOARDPackage <<Rectangle>> {
             - image
         }
         PostIt -> TypeOfContent
-        PostIt -> User : owns <
 
-        abstract  BoardParticipant <<Entity>>
-
+        entity  BoardParticipant <<Entity>>
 
         class ShareBoardEvent <<Event>>
 
@@ -272,12 +276,12 @@ package BOARDPackage <<Rectangle>> {
 
     }
 
-    Board "1" --> "1" BoardStatus
+    Board "1" -> "1" BoardStatus
+    Board "1" -> "1" BoardTitle
     Board "1" --> "*" BoardHistory
-    Board "1" --> "1" BoardTitle
     Board "1" *-up-> "1..*" Cell : part of <
+    Board "1" *-up- "1" User : owns <
 
-    Cell "1" -> "1" cellID
     Cell "1" -> "1" header
     Cell "1" -> "1" rowTitle
     Cell "1" -> "1" columnTitle
@@ -285,19 +289,23 @@ package BOARDPackage <<Rectangle>> {
     
     ShareBoardEvent <- Board
     ShareBoardEvent -> ShareBoardService
+
     BoardParticipant "*"--up> "1" Board : creates/participate >
     BoardParticipant "1" -> "*"  User
+    PostIt -> BoardParticipant : owns <
+
 
     CommitPostItEvent <- PostIt
-    CommitPostItEvent -> PostItService
+    CommitPostItEvent ---> PostItService
 
     BoardHistory "1" --> "1" TimeStamp
+    BoardHistory "*"--> "1" PostIt
     BoardHistory "*"--> "1" PostIt
     BoardHistory --> BoardParticipant
 
 }
 
-package Event <<Rectangle>> {
+package EventPackage <<Rectangle>> {
 
     interface Event <<interface>>
 
@@ -340,17 +348,16 @@ package Event <<Rectangle>> {
     class CheckAvailabilityService<<Service>>
     
     package Lecture <<Aggregate>>{
-        Entity Lecture <<root>><<entity>>
+        Entity Lecture <<root>><<entity>>{
+            -attendants
 
-        entity LectureAttendant <<entity>>
-
+        }
         enum LectureType{
             -regular
             -extra
         }
 
         Lecture --> LectureType
-        Lecture --> LectureAttendant
 
     }
     
@@ -366,13 +373,21 @@ package Event <<Rectangle>> {
         class MeetingService <<Service>>
         note right: responsible for managing\n meetings between users
 
-        abstract  MeetingParticipant <<Entity>>
+        entity MeetingParticipant <<Entity>>
+
+        enum ParticipantStatus {
+            - accepted
+            - rejected
+            - pending
+        }
 
         Meeting -> MeetingService
         Meeting  -up->  ScheduleMeetingEvent
         Meeting <-up- CancelsMeetingEvent
+        
 
         MeetingParticipant "1" -> "*" User
+        MeetingParticipant  ->  ParticipantStatus
         MeetingParticipant "*"--up> "1" Meeting : creates/participate >
 
     }
@@ -381,7 +396,7 @@ package Event <<Rectangle>> {
     EventAccess --> CheckAvailabilityService
     EventAccess ->  Event
 
-    LectureAttendant *-- Student
+    Lecture *-- Student
 
     RecurringPattern --> CheckAvailabilityService
     RecurringPattern *-- Exception
