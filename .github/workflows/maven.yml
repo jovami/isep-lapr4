@@ -28,24 +28,25 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn surefire-report:report checkstyle:checkstyle -B package --file pom.xml
-      
+
     - uses: ashley-taylor/junit-report-annotations-action@master
       with:
         access-token: ${{ secrets.GITHUB_TOKEN }}
-      if: always()    
-      
+      if: always()
+
     - name: Archive test results
       uses: actions/upload-artifact@v3
       with:
         name: test-report
         path: target/site/surefire-report.html
- 
+
     # generates coverage-report.md and publishes as checkrun
     - name: JaCoCo Code Coverage Report
       id: jacoco_reporter
       uses: PavanMudigonda/jacoco-reporter@v4.8
       with:
-        coverage_results_path: target/site/jacoco/jacoco.xml
+        coverage_results_path: base.core/target/site/jacoco/jacoco.xml
+        # coverage_results_path: target/site/jacoco/jacoco.xml
         coverage_report_name: Coverage
         coverage_report_title: JaCoCo
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,22 +54,22 @@ jobs:
         minimum_coverage: 80
         fail_below_threshold: false
         publish_only_summary: false
-      
+
     # Publish Coverage Job Summary  # Optional
     - name: Add Coverage Job Summary
       run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
-          
+
     # uploads the coverage-report.md artifact  # Optional
     - name: Upload Code Coverage Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage-report-markdown
-        path: target/site 
-        
+        path: target/site
+
     - uses: jwgmeligmeyling/checkstyle-github-action@master
       with:
         path: '**/checkstyle-result.xml'
-        
+
     - name: Run the gitinspector HTML process with Docker
       run: docker run --rm -v ${{ github.workspace }}:/repo felix/gitinspector:0.4.4 --format=html --grading > gitinspector.html
 
@@ -81,9 +82,9 @@ jobs:
 
     - name: Run the gitinspector TXT process with Docker
       run: docker run --rm -v ${{ github.workspace }}:/repo felix/gitinspector:0.4.4 --format=text --grading > gitinspector.txt
-  
+
     - name: Adding markdown
-      run: cat gitinspector.txt >> $GITHUB_STEP_SUMMARY    
+      run: cat gitinspector.txt >> $GITHUB_STEP_SUMMARY
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
