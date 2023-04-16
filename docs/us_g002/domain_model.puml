@@ -449,7 +449,7 @@ package EventPackage <<Rectangle>> {
 
     Event "1" -down-> "*" RecurringPattern
 
-    Lecture --> Teacher : teaches
+    Lecture --> Teacher
     Lecture -down--|> Event
 
     Meeting -> User
