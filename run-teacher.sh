@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # set the class path,
 # assumes the build was executed with maven copy-dependencies
