@@ -109,13 +109,13 @@ package CoursePackage <<Rectangle>> {
         Course "1" -> "1" CourseDuration
     }
 
-    package COURSE_ACCESS <<Aggreggate>>{
+    package COURSE_ACCESS <<Aggregate>>{
         entity CourseAccess <<root>> <<Entity>>
         Course "1" -> "*" CourseAccess
         Student "*" -> "1" CourseAccess
     }
 
-    package COURSE_ENROLLMENT_REQUEST <<Aggreggate>>{
+    package COURSE_ENROLLMENT_REQUEST <<Aggregate>>{
         entity EnrollmentRequest <<root>> <<Entity>>
 
         EnrollmentRequest  *-- "*" Student
@@ -139,7 +139,7 @@ package ExamPackage <<Rectangle>> {
         - gradingType()
     }
 
-    package RegularExam <<Aggregate>> {
+    package REGULAR_EXAM <<Aggregate>> {
         entity RegularExam <<root>> <<Entity>>
 
         class ExamDate <<value object>> {
@@ -152,10 +152,6 @@ package ExamPackage <<Rectangle>> {
         class ExamTitle <<value object>>
         class HeaderDescription <<value object>>
         class ExamHeader <<value object>>
-
-
-
-
 
         enum FeedbackType <<value object>> {
             - none
@@ -175,14 +171,14 @@ package ExamPackage <<Rectangle>> {
         - description
     }
 
-    package FormativeExam <<Aggregate>> {
+    package FORMATIVE_EXAM <<Aggregate>> {
         entity FormativeExam <<root>> <<entity>>
         note right: feedback and grading are always on submission
 
 
     }
 
-    package FormativeExamSpecification <<Aggregate>> {
+    package FORMATIVE_EXAM_SPECIFICATION <<Aggregate>> {
         entity FormativeExamSpecification <<root>> <<entity>>
 
 
@@ -194,7 +190,7 @@ package ExamPackage <<Rectangle>> {
     }
 
 
-    package ExamQuestion <<Aggregate>> {
+    package EXAM_QUESTION <<Aggregate>> {
         entity Question <<root>> <<entity>> {
             -description
             -solution
@@ -364,9 +360,7 @@ package EventPackage <<Rectangle>> {
 
     }
 
-    package EventPattern <<Aggregate>> {
-
-
+    package EVENT_PATTERN <<Aggregate>> {
         class Exception{
             -period
         }
@@ -394,17 +388,14 @@ package EventPackage <<Rectangle>> {
     class CheckAvailabilityService<<Service>>
 
     package Lecture <<Aggregate>>{
-        Entity Lecture <<root>><<entity>>{
+        entity Lecture <<root>> <<entity>> {
             -attendants
-
         }
-        enum LectureType{
+        enum LectureType {
             -regular
             -extra
         }
-
         Lecture --> LectureType
-
     }
 
 
