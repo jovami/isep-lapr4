@@ -1,21 +1,45 @@
+<!--
+- **Problem**:
+- **Discussion**:
+- **Decision**:
+-->
+
 # Course
 
-- We opted to add a start and end date to a course, due to its simplicity to model.
+1.
 
-# Exams
-
-- We opted to unify the common characteristics between exams and formative exams into an interface called
-  Exams.
+- **Problem**: Should courses have an end date?
+- **Discussion**: There is no requirement that refers to the duration of a course; however,
+  since recurring patterns have an end date, it'd also make sense for courses to have one.
+  [relevant forum link](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=22262#p28136)
+- **Decision**: Courses will also have an end date.
 
 # Recurring Patterns
 
-- Before talking to out teacher, we had two options: either generate and persist every class instance
-  in the database or use a pattern to encapsulate the recurssion. After discussing with our teacher,
-  we finally opted for the recurring pattern, not only for the agility it promotes but also due to the
-  fact that we're not interested in managing classes that already occured as that was not a part of
-  any of the established requirements.
+1.
 
-- When it came to rescheduling a specific event, we found ourselves in another problem. We had
-  two possible approaches to this situation: either split a recurring pattern into three or create
-  an exception for that occurance. In group, we opted for the exception due to its simplicity and
-  being more sofisticated than the other option.
+- **Problem**: How can we tell if a user is available to attend a meeting/lecture?
+- **Discussion**:
+  - Common approches:
+    1. Recurring patterns;
+    2. Persisting every single instance of an event.
+  - Discussion with our teacher:
+    - We are not interested in keeping track of past events;
+    - Recurring patterns are a more sophisticated/robust mechanism
+- **Decision**: Users will have a set of recurring patterns for the events they have been assigned.
+
+2.
+
+- **Problem**: How can a single intance of an event be rescheduled, without interfering with its
+  pattern.
+- **Discussion**:
+  - We came across two alternatives
+    1. Spliting an existing pattern into three, one for up until the period of rescheduling, another
+       for that specific period, and the final one for then onwards;
+    2. Design an exception mechanism.
+- **Decision**: We opted for an exception mechanism, due to it being more intuitive and easier to model.
+
+# Board
+
+- It would make more sense to save the postit before being it being modified as it would be easier
+  to process an undo.
