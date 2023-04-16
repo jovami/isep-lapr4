@@ -15,3 +15,4 @@ The members of Jovami:
 - Jonas Antunes (1181478)
 - Rúben Ferreria (1210954)
 - João Teixeira (1210957)
+- Marco Maia (1210951)
