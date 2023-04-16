@@ -41,12 +41,12 @@ import eapli.framework.infrastructure.pubsub.EventDispatcher;
  * @author Paulo Gandra Sousa
  */
 @SuppressWarnings("squid:S106")
-public final class BaseBackoffice extends BaseApplication {
+public final class BaseManager extends BaseApplication {
 
 	/**
 	 * avoid instantiation of this class.
 	 */
-	private BaseBackoffice() {
+	private BaseManager() {
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class BaseBackoffice extends BaseApplication {
 		AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
 				new PlainTextEncoder());
 
-		new BaseBackoffice().run(args);
+		new BaseManager().run(args);
 	}
 
 	@Override

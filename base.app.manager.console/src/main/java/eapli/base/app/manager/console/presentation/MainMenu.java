@@ -84,11 +84,15 @@ public class MainMenu extends AbstractUI {
     public boolean doShow() {
         final Menu menu = buildMainMenu();
         final MenuRenderer renderer;
+        renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
+        /*
         if (Application.settings().isMenuLayoutHorizontal()) {
             renderer = new HorizontalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
         } else {
             renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
         }
+
+         */
         return renderer.render();
     }
 
@@ -126,7 +130,7 @@ public class MainMenu extends AbstractUI {
     }
 
     private Menu buildAdminSettingsMenu() {
-        final Menu menu = new Menu("Settings >");
+        final Menu menu = new Menu("Settings");
 
         menu.addItem(SET_KITCHEN_ALERT_LIMIT_OPTION, "Set kitchen alert limit",
                 new ShowMessageAction("Not implemented yet"));
@@ -136,7 +140,7 @@ public class MainMenu extends AbstractUI {
     }
 
     private Menu buildUsersMenu() {
-        final Menu menu = new Menu("Users >");
+        final Menu menu = new Menu("Users");
 
         menu.addItem(ADD_USER_OPTION, "Add User", new AddUserUI()::show);
         menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
