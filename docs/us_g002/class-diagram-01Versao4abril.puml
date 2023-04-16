@@ -81,13 +81,13 @@ package CoursePackage <<Rectangle>> {
             -maxStudents
         }
 
-        class CourseEvent <<Event>>
+        interface CourseEvent <<Event>>
 
-        class CourseClosedEvent
-        class CourseOpenEvent
-        class CourseEnrollOpenEvent
-        class CourseEnrollClosedEvent
-        class CourseCreatedEvent
+        class CourseClosedEvent <<Event>>
+        class CourseOpenEvent <<Event>>
+        class CourseEnrollOpenEvent <<Event>>
+        class CourseEnrollClosedEvent <<Event>>
+        class CourseCreatedEvent <<Event>>
 
         Course "1" -down-> "1" CourseCode
         Course "1" -down-> "1" CourseName
@@ -126,41 +126,30 @@ package CoursePackage <<Rectangle>> {
 }
 
 package ExamPackage <<Rectangle>> {
-        
-    package EXAM <<Aggregate>> {
-        entity Exam <<root>> <<Entity>>
+
+    interface Exam <<interface>>{
+        - examSections()
+        - feedbackType()
+        - gradingType()
+    }
+
+    package RegularExam <<Aggregate>> {
+        entity RegularExam <<root>> <<Entity>>
 
         class ExamDate <<value object>> {
             -openDate
             -closeDate
         }
 
-        class ExamEvent <<Event>>
-        class OpeningEvent <<Event>>
         class ClosingEvent <<Event>>
 
-        entity ExamSpecification <<Entity>>
         class ExamTitle <<value object>>
         class HeaderDescription <<value object>>
         class ExamHeader <<value object>>
-        class ExamSection <<value object>>
-        class SectionDescription <<value object>>
 
-        class Question <<value object>> {
-            -description
-            -solution
-        }
 
-        class QuestionFeedback <<value object>>
 
-        enum QuestionType <<value object>> {
-            - matching
-            - multipleChoices
-            - shortAnswer
-            - numerical
-            - selectMissingWord
-            - true/False
-        }
+
 
         enum FeedbackType <<value object>> {
             - none
@@ -176,6 +165,49 @@ package ExamPackage <<Rectangle>> {
 
     }
 
+    class ExamSection <<value object>>{
+        - description
+    }
+
+    package FormativeExam <<Aggregate>> {
+        entity FormativeExam <<root>> <<entity>>
+        note right: feedback and grading are always on submission
+
+
+    }
+
+    package FormativeExamSpecification <<Aggregate>> {
+        entity FormativeExamSpecification <<root>> <<entity>>
+
+
+        class FormativeExamTitle <<value object>>
+        class FormativeExamDescription <<value object>>
+        class FormativeExamSection <<value object>>{
+            - description
+        }
+    }
+
+
+    package ExamQuestion <<Aggregate>> {
+        entity Question <<root>> <<entity>> {
+            -description
+            -solution
+        }
+
+        class QuestionFeedback <<value object>>
+
+        enum QuestionType <<value object>> {
+            - matching
+            - multipleChoices
+            - shortAnswer
+            - numerical
+            - selectMissingWord
+            - true/False
+        }
+
+        QuestionType "1..*" ---> "1" FormativeExamSection
+    }
+
     package EXAM_RESULT <<Aggregate>> {
         entity ExamResult <<root>> <<Entity>>
 
@@ -183,33 +215,38 @@ package ExamPackage <<Rectangle>> {
         class ExamFeedback <<value object>>
     }
 
+    class SubmissionEvent <<Event>>
     class ExamGradingService <<Service>>
+
+    FormativeExamSpecification "1" --down-> "0..1" FormativeExamDescription
+    FormativeExamSpecification "1" --> "1" FormativeExamTitle
+    FormativeExamSpecification "1" -up-> "*" FormativeExamSection
+    FormativeExamSpecification "1" -up---> "0..*" FormativeExam
 
     ExamHeader "1" -right--> "0..1" HeaderDescription
     ExamHeader "1" -down-> "1" FeedbackType
     ExamHeader "1" -down-> "1" GradeType
 
 
-    ExamSpecification "1" -up-> "1" ExamTitle
-    ExamSpecification "1" -right--> "1" ExamHeader
-    ExamSpecification "1" -up-> "1..*" ExamSection
+    RegularExam "1" -up-> "1" ExamTitle
+    RegularExam "1" -down--> "1" ExamHeader
+    RegularExam "1" -up-> "1..*" ExamSection
+    FormativeExam "1" --> "1..*" ExamSection
 
-    ExamSection "1" -up-> "0..1" SectionDescription
     ExamSection "1" -up--> "1..*" Question
 
     Question "1" -up> "1" QuestionType
     Question "1" -> "0..*" QuestionFeedback
 
-    Exam "1" ----> "1" ExamSpecification
-    Exam "1" -> "1" ExamDate
-    Exam "1" -up-> "1" ExamEvent
+    RegularExam "1" -> "1" ExamDate
 
     /' curso liga se a exame '/
 
-    OpeningEvent -up--> ExamEvent
-    ClosingEvent -up--> ExamEvent
+    ClosingEvent <-up-- RegularExam
+    SubmissionEvent -> ExamGradingService
+    Exam --> SubmissionEvent
     
-    ExamGradingService "1" -up----> "1" ExamResult
+    ExamGradingService "1" ---up--> "1" ExamResult
 
     ExamResult "1" -up-> "1" ExamGrade
     ExamResult "1" -> "1" ExamFeedback
@@ -220,7 +257,10 @@ package ExamPackage <<Rectangle>> {
     note bottom: responsible for auto-correcting\nand grading the exam
 
     Student "1" -right-> "0..1" ExamResult
-    Teacher -->  Exam : creates >
+    Teacher -->  RegularExam : creates >
+
+    RegularExam -|> Exam
+    FormativeExam -|> Exam
 }
 
 package BoardPackage <<Rectangle>> {
