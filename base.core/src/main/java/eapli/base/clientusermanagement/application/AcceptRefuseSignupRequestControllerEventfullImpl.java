@@ -60,7 +60,7 @@ public class AcceptRefuseSignupRequestControllerEventfullImpl implements AcceptR
 	@Override
 	@SuppressWarnings("squid:S1226")
 	public SignupRequest acceptSignupRequest(SignupRequest theSignupRequest) {
-		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.ADMIN);
+		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
 		Preconditions.nonNull(theSignupRequest);
 
@@ -92,7 +92,7 @@ public class AcceptRefuseSignupRequestControllerEventfullImpl implements AcceptR
 	@Override
 	@Transactional
 	public SignupRequest refuseSignupRequest(final SignupRequest theSignupRequest) {
-		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.ADMIN);
+		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
 		Preconditions.nonNull(theSignupRequest);
 

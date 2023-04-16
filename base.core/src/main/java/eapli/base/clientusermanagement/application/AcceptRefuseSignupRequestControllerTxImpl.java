@@ -77,7 +77,7 @@ public class AcceptRefuseSignupRequestControllerTxImpl
      */
     @Override
     public SignupRequest acceptSignupRequest(SignupRequest theSignupRequest) {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.ADMIN);
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
         if (theSignupRequest == null) {
             throw new IllegalArgumentException();
@@ -114,7 +114,7 @@ public class AcceptRefuseSignupRequestControllerTxImpl
     //
     private SystemUser createSystemUserForClientUser(final SignupRequest theSignupRequest) {
         final Set<Role> roles = new HashSet<>();
-        roles.add(BaseRoles.CLIENT_USER);
+        roles.add(BaseRoles.STUDENT);
         return userService.registerUser(theSignupRequest.username(), theSignupRequest.password(),
                 theSignupRequest.name(), theSignupRequest.email(), roles);
     }
@@ -128,7 +128,7 @@ public class AcceptRefuseSignupRequestControllerTxImpl
      */
     @Override
     public SignupRequest refuseSignupRequest(SignupRequest theSignupRequest) {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.ADMIN);
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
         if (theSignupRequest == null) {
             throw new IllegalArgumentException();

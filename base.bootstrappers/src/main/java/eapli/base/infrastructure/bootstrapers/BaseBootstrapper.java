@@ -37,6 +37,8 @@ import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import eapli.base.infrastructure.bootstrapers.TestDataConstants;
+import eapli.base.infrastructure.bootstrapers.demo.ManagerBootstrapper;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.strings.util.Strings;
 import eapli.framework.validations.Invariants;
@@ -51,9 +53,6 @@ import eapli.framework.validations.Invariants;
 public class BaseBootstrapper implements Action {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BaseBootstrapper.class);
 
-	private static final String POWERUSER_A1 = "poweruserA1";
-	private static final String POWERUSER = "poweruser";
-
 	private final AuthorizationService authz = AuthzRegistry.authorizationService();
 	private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
 	private final UserRepository userRepository = PersistenceContext.repositories().users();
@@ -61,7 +60,7 @@ public class BaseBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// declare bootstrap actions
-		final Action[] actions = { new MasterUsersBootstrapper(), };
+		final Action[] actions = { new ManagerBootstrapper(), };
 
 		registerPowerUser();
 		authenticateForBootstrapping();
@@ -81,8 +80,8 @@ public class BaseBootstrapper implements Action {
 	 */
 	private boolean registerPowerUser() {
 		final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
-		userBuilder.withUsername(POWERUSER).withPassword(POWERUSER_A1).withName("joe", "power")
-				.withEmail("joe@email.org").withRoles(BaseRoles.POWER_USER);
+		userBuilder.withUsername(TestDataConstants.POWERUSER_EMAIL).withPassword(TestDataConstants.POWERUSER_PWD).withName("power", "user")
+				.withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
 		final SystemUser newUser = userBuilder.build();
 
 		SystemUser poweruser;
@@ -104,7 +103,7 @@ public class BaseBootstrapper implements Action {
 	 *
 	 */
 	protected void authenticateForBootstrapping() {
-		authenticationService.authenticate(POWERUSER, POWERUSER_A1);
+		authenticationService.authenticate(TestDataConstants.POWERUSER_EMAIL, TestDataConstants.POWERUSER_PWD);
 		Invariants.ensure(authz.hasSession());
 	}
 

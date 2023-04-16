@@ -21,9 +21,9 @@
     </properties>
 
     <modules>
-        <module>base.app.backoffice.console</module>
-        <module>base.app.user.console</module>
-        <module>base.app.other.console</module>
+        <module>base.app.manager.console</module>
+        <module>base.app.student.console</module>
+        <module>base.app.teacher.console</module>
         <module>base.app.common.console</module>
         <module>base.app.bootstrap</module>
         <module>base.bootstrappers</module>

@@ -28,6 +28,7 @@ import eapli.framework.actions.Action;
 import eapli.framework.infrastructure.authz.application.AuthenticationService;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.base.infrastructure.bootstrapers.TestDataConstants;
 import eapli.framework.strings.util.Strings;
 import eapli.framework.validations.Invariants;
 
@@ -42,8 +43,7 @@ import eapli.framework.validations.Invariants;
 @SuppressWarnings("squid:S106")
 public class BaseDemoBootstrapper implements Action {
 
-	private static final String POWERUSER_A1 = "poweruserA1";
-	private static final String POWERUSER = "poweruser";
+	
 
 	private final AuthorizationService authz = AuthzRegistry.authorizationService();
 	private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
@@ -51,7 +51,7 @@ public class BaseDemoBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// declare bootstrap actions
-		final Action[] actions = { new BackofficeUsersBootstrapper(), new ClientUserBootstrapper(), };
+		final Action[] actions = {new ManagerBootstrapper(), new StudentBootstrapper(),new TeacherBootstrapper(),};
 
 		authenticateForBootstrapping();
 
@@ -69,8 +69,11 @@ public class BaseDemoBootstrapper implements Action {
 	 *
 	 */
 	protected void authenticateForBootstrapping() {
-		authenticationService.authenticate(POWERUSER, POWERUSER_A1);
+
+		authenticationService.authenticate(TestDataConstants.POWERUSER_EMAIL, TestDataConstants.POWERUSER_PWD);
+
 		Invariants.ensure(authz.hasSession());
+
 	}
 
 	private String nameOfEntity(final Action boot) {
