@@ -101,12 +101,14 @@ package CoursePackage <<Rectangle>> {
         Course "1" -down-> "1" CourseCapacity
         Course -up-> CourseEvent
         Course "1" ----> "*" Lecture
+        Course "1" -> "1" CourseDuration
+
         CourseEvent <|-up-- CourseClosedEvent
         CourseEvent <|-left-- CourseOpenEvent
         CourseEvent <|-up-- CourseEnrollOpenEvent
         CourseEvent <|-up-- CourseEnrollClosedEvent
         CourseEvent <|-up-- CourseCreatedEvent
-        Course "1" -> "1" CourseDuration
+        
     }
 
     package COURSE_ACCESS <<Aggregate>>{
@@ -174,13 +176,10 @@ package ExamPackage <<Rectangle>> {
     package FORMATIVE_EXAM <<Aggregate>> {
         entity FormativeExam <<root>> <<entity>>
         note right: feedback and grading are always on submission
-
-
     }
 
     package FORMATIVE_EXAM_SPECIFICATION <<Aggregate>> {
         entity FormativeExamSpecification <<root>> <<entity>>
-
 
         class FormativeExamTitle <<value object>>
         class FormativeExamDescription <<value object>>
@@ -188,7 +187,6 @@ package ExamPackage <<Rectangle>> {
             - description
         }
     }
-
 
     package EXAM_QUESTION <<Aggregate>> {
         entity Question <<root>> <<entity>> {
@@ -325,25 +323,25 @@ package BoardPackage <<Rectangle>> {
     Board "1" *-up- "1" User
 
     Cell "1" -up-> "1" header
-    Cell "1" -up-> "1" rowTitle
-    Cell "1" -up-> "1" columnTitle
-    Cell "1"  *-- "0..1" PostIt
+        Cell "1" -up-> "1" rowTitle
+        Cell "1" -up-> "1" columnTitle
+        Cell "1"  *-- "0..1" PostIt
 
-    ShareBoardEvent <- Board
-    ShareBoardEvent -up-> ShareBoardService
+        ShareBoardEvent <- Board
+        ShareBoardEvent -up-> ShareBoardService
 
-    BoardParticipant "*" --up> "1" Board
-    BoardParticipant "1" -> "*"  User
-    PostIt -> BoardParticipant
+        BoardParticipant "*" --up> "1" Board
+        BoardParticipant "1" -> "*"  User
+        PostIt -> BoardParticipant
 
 
-    CommitPostItEvent <- PostIt
-    CommitPostItEvent ---> PostItService
+        CommitPostItEvent <- PostIt
+        CommitPostItEvent ---> PostItService
 
-    BoardHistory "1" -> "1" TimeStamp
-    BoardHistory "*"--> "1" PostIt
+        BoardHistory "1" -> "1" TimeStamp
+        BoardHistory "*"--> "1" PostIt
 
-    BoardHistory --> BoardParticipant
+        BoardHistory --> BoardParticipant
 
 }
 
@@ -422,13 +420,11 @@ package EventPackage <<Rectangle>> {
         Meeting  -up->  ScheduleMeetingEvent
         Meeting <-up- CancelsMeetingEvent
 
-
         MeetingParticipant "1" -> "*" User
         MeetingParticipant  ->  ParticipantStatus
         MeetingParticipant "*" --up> "1" Meeting
 
     }
-
 
     EventAccess --> CheckAvailabilityService
     EventAccess ->  Event
@@ -445,9 +441,6 @@ package EventPackage <<Rectangle>> {
 
     Meeting -> User
     Meeting -down-|> Event
-
-
 }
-
 
 @enduml
