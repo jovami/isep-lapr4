@@ -1,9 +1,8 @@
-
+@startuml
 class LoginUI <<presentation>>
 class AuthenticationService <<application>>
 class UserSession <<domain>>
 class Role <<value object>>
-
 
 AuthenticationService : create(role,maxAttempts)
 LoginUI --> AuthenticationService : authentication
@@ -13,6 +12,4 @@ LoginUI ..> Role : role
 AuthenticationService --> UserSession : theSession
 
 LoginUI : show()
-
-
 @enduml
