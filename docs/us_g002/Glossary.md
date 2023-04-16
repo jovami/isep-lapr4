@@ -4,10 +4,11 @@
 
 - **User** - Registered entity on the system, composed by a date of birth, tax payer number, full
   name and short name.
-- **Teacher** - An individual who is responsible for instructing and teaching a course to students.
-- **Acronym** - An unique identifier to a teacher.
-- **Student** - An individual who is enrolled in a course and receiving instruction from a teacher,
-- **MecanographicNumber** - An unique identifier to a student.
+- **Teacher** - An individual who is responsible for scheduling lectures for a course and is
+  capable of creating exams.
+- **Acronym** - An additional unique identifier to a teacher.
+- **Student** - An individual who is enrolled in a course, capable of taking exams.
+- **MecanographicNumber** - An additional unique identifier to a student.
 - **Manager/Administrator** - An individual who is responsible for managing the system,
   including managing users, courses, and enrollment.
 
@@ -36,8 +37,8 @@
 
 # Course
 
-- **Course** - A structured program of study that typically consists of multiple modules or
-  lessons and is designed to teach a specific subject or skill.
+- **Course** - A course represents an area of study, in which students can enroll; it has a teacher
+  in charge (regent) but it may also have additional teachers.
 - **CourseCode** - A unique code or identifier associated with a specific course, e.g., "JAVA-1".
 - **CourseTitle** - The name or label given to a specific course.
 - **CourseDescription** - A detailed explanation or overview of the content, goals,
@@ -56,16 +57,18 @@ An event refers to either a lecture or a meeting.
 
 ## Lecture
 
-- **Lecture** - A single session of a course that can be regular or extra.
+- **Lecture** - Also known as a **class**, it is a single session of a course that can occur
+  on a weelky basis (regular lecture) or it can be one time event (extra lecture).
 - **LectureAttendant** - A user who attends to a lecture.
 
 ## EventPattern
 
 - **RecurringPattern** - A set of rules that defines the frequency (weekly or once), duration,
   and timing of recurring events, such as lectures or meetings. A recurring pattern includes
-  a start and end date, a day of the week, and a start and end time.
+  a start/end date, a day of the week, and a start/end time.
 - **Exception** - A period when a recurring pattern won't take effect. This is used to specify
-  dates or times when an event will not occur, even if it is part of a recurring pattern.
+  dates or times when an event will not occur (for instance, if it was rescheduled),
+  even if it is part of a recurring pattern.
 
 # Board
 
@@ -74,6 +77,7 @@ An event refers to either a lecture or a meeting.
   the form of text or an image.
 - **BoardTitle** - The name or label given to a specific board to help identify its purpose.
 - **BoardParticipant** - A user who has access to a board and can create, edit or view post-its.
+- **BoardAdmin** - The user who creates a board and has the ability to archive it.
 - **BoardHistory** - A record of all post-its that have been created or modified on the board.
 - **BoardStatus** - Indicates the current status of a board, whether it is in the process of
   being created, shared with others, or archived.
