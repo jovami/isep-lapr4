@@ -69,6 +69,11 @@ package CoursePackage <<Rectangle>> {
 
         class CourseDescription <<value object>>
 
+        class CourseDuration <<value object>>{
+            - startDate
+            - endDate
+        }
+
         enum CourseState <<value object>>{
             - closed
             - open
@@ -101,6 +106,7 @@ package CoursePackage <<Rectangle>> {
         CourseEvent <|-up-- CourseEnrollOpenEvent
         CourseEvent <|-up-- CourseEnrollClosedEvent
         CourseEvent <|-up-- CourseCreatedEvent
+        Course "1" -> "1" CourseDuration
     }
 
     package COURSE_ACCESS <<Aggreggate>>{
