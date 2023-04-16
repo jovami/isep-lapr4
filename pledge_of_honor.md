@@ -13,3 +13,4 @@ The members of Jovami:
 
 - José Diogo Rente (1211155)
 - Jonas Antunes (1181478)
+- Rúben Ferreria (1210954)
