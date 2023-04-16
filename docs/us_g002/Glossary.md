@@ -13,9 +13,11 @@
 
 # Exam
 
-- **Exam** - A formal assessment or evaluation of a student's knowledge or skills in a
-  particular subject or course.
-- **ExamDate** - Refers to both start and end dates of the exam
+- **Exam** - A formal assessment or evaluation of a student's knowledge or skills in a course.
+- **FormativeExam** - Similar to an exam, except it should be treated as a training tool for
+  students.
+- **FormativeExamSpecification** - A template used to automatically generate formative exams.
+- **ExamDate** - Refers to both start and end dates of the exam.
 - **ExamSpecification** - A set of rules and guidelines defined by a teacher that outline the
   structure, format, and content of an exam.
 - **ExamTitle** - The name or label given to a specific exam as part of the exam specification.
