@@ -205,7 +205,7 @@ package ExamPackage <<Rectangle>> {
             - true/False
         }
 
-        QuestionType "1..*" ---> "1" FormativeExamSection
+        QuestionType "1..*" <--- "1" FormativeExamSection
     }
 
     package EXAM_RESULT <<Aggregate>> {
