@@ -16,11 +16,11 @@ The members of the group:
 
 The assignment of tasks (requirements/user stories/use cases) during the project.
 
-|                    Task/US                     | Sprint A | Sprint B | Sprint C |
-| :--------------------------------------------: | :------: | :------: | :------: |
-|        [Glossary](us_g002/Glossary.md)         |   all    |          |          |
-|                      G001                      |   all    |          |          |
-| [G002/Domain Model](us_g002/domain-model.puml) |   all    |          |          |
-|                      G003                      |   all    |          |          |
-|                      G004                      |   all    |          |          |
-|                      G005                      |   all    |          |          |
+|                    Task/US                    | Sprint A | Sprint B | Sprint C |
+| :-------------------------------------------: | :------: | :------: | :------: |
+|        [Glossary](us_g002/Glossary.md)        |   all    |          |          |
+|                     G001                      |   all    |          |          |
+| [G002/Domain Model](us_g002/domain_model.svg) |   all    |          |          |
+|                     G003                      |   all    |          |          |
+|                     G004                      |   all    |          |          |
+|                     G005                      |   all    |          |          |
