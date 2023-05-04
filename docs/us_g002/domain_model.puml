@@ -21,7 +21,7 @@ skinparam package {
 package UserPackage <<Rectangle>>{
 
     package SystemUser <<Aggregate>> {
-        Class SystemUser <<Entity>>
+        Class SystemUser <<root>><<Entity>>
         class Password <<value object>>
         class Email <<value object>>
         
@@ -94,6 +94,7 @@ package CoursePackage <<Rectangle>> {
             - open
             - enroll
             - inProgress
+            - created
         }
 
         class CourseCapacity <<value object>> {
@@ -129,13 +130,12 @@ package CoursePackage <<Rectangle>> {
     package STAFF <<Aggregate>>{
         entity Staff <<Entity>>
     }
-    note right : STAFFF?????? \\0/ change name
     Course -down--> Staff
 
     package COURSE_ACCESS <<Aggregate>>{
         entity Enrollment <<root>> <<Entity>>
     }
-    Student "*" <-- "1" Enrollment
+    Student <-- Enrollment : enrolls
 
     package COURSE_ENROLLMENT_REQUEST <<Aggregate>>{
 
@@ -161,24 +161,33 @@ package CoursePackage <<Rectangle>> {
     Course -> CourseManagementService
     note top: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
-    Course "1" *- "1" Enrollment 
+    Course *- "0..*" Enrollment 
 }
 
 package ExamPackage <<Rectangle>> {
 
     package REGULAR_EXAM <<Aggregate>> {
+
         entity RegularExam <<root>> <<Entity>>
 
-        class ExamDate <<value object>> {
-            -openDate
-            -closeDate
-        }
+        entity RegularExamSection <<Entity>>{
+            - description
+        }     
 
+        entity RegularExamQuestion <<Entity>>{
+            -weight
+        }
+     
         class ClosingEvent <<Event>>
 
         class ExamTitle <<value object>>
         class HeaderDescription <<value object>>
         class ExamHeader <<value object>>
+
+        class ExamDate <<value object>> {
+            -openDate
+            -closeDate
+        }
 
         enum FeedbackType <<value object>> {
             - none
@@ -197,28 +206,33 @@ package ExamPackage <<Rectangle>> {
 'code duplied??? 
 'both types of exams need to have the exameSection-> 
 'this exam section should store the questions for that exame(??)
-
-    class ExamSection <<value object>>{
-        - description
-    }
-    class ExamQuestion <<entity>>
-    class QuestionWeight<<value object>>
     
-    ExamSection *- "*"ExamQuestion
-    ExamQuestion <- QuestionWeight
 
     package FORMATIVE_EXAM <<Aggregate>> {
         entity FormativeExam <<root>> <<entity>>
         note right: feedback and grading are always on submission
+
+        entity FormativeExamSection <<Entity>>{
+            - description
+        }     
+
+        entity FormativeExamQuestion <<Entity>>{
+            -weight
+        }
     }
+
 
     package FORMATIVE_EXAM_SPECIFICATION <<Aggregate>> {
         entity FormativeExamSpecification <<root>> <<entity>>
 
         class FormativeExamTitle <<value object>>
         class FormativeExamDescription <<value object>>
-        class FormativeExamSection <<value object>>{
+        
+        entity FormativeExamSpecificationSection <<entity>>{
             - description
+        }
+        entity FormativeExamSpecificationQuestion <<entity>>{
+            - weight
         }
     }
 
@@ -248,57 +262,67 @@ package ExamPackage <<Rectangle>> {
         class ExamGrade <<value object>>
         class ExamFeedback <<value object>>
         
-        entity AnswerGiven <<root>> <<Entity>>{
+        entity AnswerGiven <<Entity>>{
         }
+        note right: answerGiven to question or formative/RegularExamQuestion????
 
     }
 
     class Answer <<value object>>{
     }
 
+    class GenerateFormativeExam <<Service>>
+    note left : generate formative exams based on formativeExamSpecification
+    FormativeExamSpecification --> GenerateFormativeExam
+    GenerateFormativeExam --> FormativeExam
+
     class SubmissionEvent <<Event>>
     class ExamGradingService <<Service>>
 
-    FormativeExamSpecification "1" --down-> "0..1" FormativeExamDescription
+    FormativeExam --> "1..*" FormativeExamSpecificationSection
+    FormativeExamSpecificationSection *- "1..*"FormativeExamSpecificationQuestion
+    FormativeExamSpecificationQuestion --> QuestionType
+
+    FormativeExamSpecification "1" -> "0..1" FormativeExamDescription
     FormativeExamSpecification  -->  FormativeExamTitle
-    FormativeExamSpecification "1" -up-> "*" FormativeExamSection
-    FormativeExamSpecification "1" -up---> "0..*" FormativeExam
+    FormativeExamSpecification "1" --> "*" FormativeExamSection
+    FormativeExamSpecification "1" --> "0..*" FormativeExam
+
+    RegularExam -up-> ExamTitle
+    RegularExam  -down--> ExamHeader
+    RegularExam  -up-> "1..*" RegularExamSection
+    RegularExam -> ExamDate
+    RegularExamSection  *-up- "1..*" RegularExamQuestion
+    note right: question type for each question or section???
+    RegularExamQuestion  -up->  Question
 
     ExamHeader "1" -right--> "0..1" HeaderDescription
     ExamHeader -down-> FeedbackType
     ExamHeader -down-> GradeType
 
-
-    RegularExam -up-> ExamTitle
-    RegularExam  -down--> ExamHeader
-    RegularExam  -up-> "1..*" ExamSection
-    FormativeExam --> "1..*" ExamSection
-
-    ExamSection -up--> "1..*" Question
-
     Question  -up-> Answer : solution
     Question  -up-> QuestionType
     Question -> "0..*" QuestionFeedback
 
-    QuestionType "1..*" <--- "1" FormativeExamSection
-
-    RegularExam -> ExamDate
-
-    /' curso liga se a exame '/
+    QuestionType "1..*" <-- "1" FormativeExamSection
 
     ClosingEvent <-up-- RegularExam
     SubmissionEvent -> ExamGradingService
     RegularExam --> SubmissionEvent
     FormativeExam --> SubmissionEvent
 
-    ExamGradingService "1" ---up--> "1" ExamResult
+    ExamGradingService "1" -up-> "1" ExamResult
 
     ExamResult -up-> ExamGrade
     ExamResult -> ExamFeedback
     ExamResult  -right-> Student :does exam <
+    ExamResult --> "0..1" RegularExam
+    ExamResult --> "0..1" FormativeExam
 
     ExamResult *- "*" AnswerGiven
-    AnswerGiven -->  Question 
+    AnswerGiven -->  Question
+    ' AnswerGiven -->  FormativeExamQuestion 
+    ' AnswerGiven -->  RegularExamQuestion
     AnswerGiven -> Answer
 
     Course *-- "0..*" RegularExam
@@ -354,7 +378,6 @@ package BoardPackage <<Rectangle>> {
             - image
         }
 
-        entity  BoardParticipant <<Entity>>
         
         enum Permissions <<enum>>{
             - read
@@ -381,6 +404,10 @@ package BoardPackage <<Rectangle>> {
 
 
     }
+    
+    package BOARDPARTICIPANT <<Aggregate>> {
+        entity  BoardParticipant <<Entity>>
+    } 
 
     Board *-up- "*" BoardRow
     Board *-up- "*" BoardCollumn
@@ -398,8 +425,8 @@ package BoardPackage <<Rectangle>> {
     ShareBoardEvent <- Board
     ShareBoardEvent --> ShareBoardService
 
-    BoardParticipant "*" --* Board
-    BoardParticipant o-- "*"  SystemUser
+    BoardParticipant --> Board
+    BoardParticipant --> "*"  SystemUser
     BoardParticipant -->  Permissions
 
     PostIt --> BoardParticipant : owns <
@@ -410,7 +437,7 @@ package BoardPackage <<Rectangle>> {
 
     BoardHistory -> TimeStamp
     BoardHistory --> PostIt
-    BoardHistory "1" --> "1" BoardParticipant : commits post-it <
+    BoardHistory --> BoardParticipant : commits post-it <
 
 }
 
@@ -430,9 +457,6 @@ package EventPackage <<Rectangle>> {
 
     package EVENT <<Aggregate>> {
 
-        entity Event <<root>> <<entity>>{
-
-        }
         class Exception{
             -period
         }
@@ -459,6 +483,7 @@ package EventPackage <<Rectangle>> {
     }
 
     class CheckAvailabilityService<<Service>>
+    note right: checks if an user is available\n for the given RecurringPattern 
 
     package Lecture <<Aggregate>>{
         entity Lecture <<root>> <<entity>> {
@@ -506,21 +531,20 @@ package EventPackage <<Rectangle>> {
     }
 
     Timetable --> CheckAvailabilityService
-    Timetable "1..*" -* "1" RecurringPattern
+    Timetable *- "0..*" RecurringPattern
 
     RecurringPattern --> CheckAvailabilityService
-    RecurringPattern "1" *-- "*" Exception
+    RecurringPattern *-- "*" Exception
 
-    Event "1" *-down- "*" RecurringPattern
-
-    Lecture "1" o-- "1" Teacher : teaches
-    Lecture -down--> Event
-    Lecture "1" *- "1..*" LectureParticipant
+    Lecture --> Teacher : teaches
+    Lecture *- "1..*" LectureParticipant
     LectureParticipant o-- Student
 
 
     Meeting  ->  SystemUser : administrates
-    Meeting -down-> Event
+
+    Lecture -down-> RecurringPattern
+    Meeting -down-> RecurringPattern
 }
 
 @enduml
