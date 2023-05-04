@@ -264,7 +264,6 @@ package ExamPackage <<Rectangle>> {
         
         entity AnswerGiven <<Entity>>{
         }
-        note right: answerGiven to question or formative/RegularExamQuestion????
 
     }
 
@@ -272,14 +271,13 @@ package ExamPackage <<Rectangle>> {
     }
 
     class GenerateFormativeExam <<Service>>
-    note left : generate formative exams based on formativeExamSpecification
+    note bottom of GenerateFormativeExam: generate formative exams based on formativeExamSpecification
     FormativeExamSpecification --> GenerateFormativeExam
     GenerateFormativeExam --> FormativeExam
 
     class SubmissionEvent <<Event>>
     class ExamGradingService <<Service>>
 
-    FormativeExam --> "1..*" FormativeExamSpecificationSection
     FormativeExamSpecificationSection *- "1..*"FormativeExamSpecificationQuestion
     FormativeExamSpecificationQuestion --> QuestionType
 
@@ -293,14 +291,13 @@ package ExamPackage <<Rectangle>> {
     RegularExam  -up-> "1..*" RegularExamSection
     RegularExam -> ExamDate
     RegularExamSection  *-up- "1..*" RegularExamQuestion
-    note right: question type for each question or section???
     RegularExamQuestion  -up->  Question
 
     ExamHeader "1" -right--> "0..1" HeaderDescription
     ExamHeader -down-> FeedbackType
     ExamHeader -down-> GradeType
 
-    Question  -up-> Answer : solution
+    Question  --> Answer : solution
     Question  -up-> QuestionType
     Question -> "0..*" QuestionFeedback
 
@@ -316,7 +313,7 @@ package ExamPackage <<Rectangle>> {
     ExamResult -up-> ExamGrade
     ExamResult -> ExamFeedback
     ExamResult  -right-> Student :does exam <
-    ExamResult --> "0..1" RegularExam
+    ExamResult -> "0..1" RegularExam
     ExamResult --> "0..1" FormativeExam
 
     ExamResult *- "*" AnswerGiven
