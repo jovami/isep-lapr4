@@ -37,6 +37,11 @@
 			<artifactId>eapli.framework.core</artifactId>
 			<version>${eapli.framework.core.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.11.1</version>
+        </dependency>
 		<dependency>
 			<groupId>org.bitbucket.pag_isep.eapliframework</groupId>
 			<artifactId>eapli.framework.infrastructure.authz</artifactId>
