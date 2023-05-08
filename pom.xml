@@ -29,6 +29,9 @@
         <module>base.bootstrappers</module>
         <module>base.core</module>
         <module>base.persistence.impl</module>
+
+        <!-- CI builds only -->
+        <module>ecourse.util.ci</module>
     </modules>
 
     <dependencies>
@@ -83,7 +86,8 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency><!--Necessary to avoid drop-and-create failure with latest spring boot version-->
+            <dependency>
+                <!--Necessary to avoid drop-and-create failure with latest spring boot version-->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>5.4.14.Final</version>
@@ -100,6 +104,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <aggregate>true</aggregate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
