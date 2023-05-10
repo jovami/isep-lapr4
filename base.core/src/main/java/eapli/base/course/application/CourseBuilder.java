@@ -1,6 +1,6 @@
-package eapli;
+package eapli.base.course.application;
 
-import eapli.domain.Course;
+import eapli.base.course.domain.Course;
 
 import java.util.Date;
 

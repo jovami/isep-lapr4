@@ -1,9 +1,9 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.domain.Course;
+import eapli.base.course.domain.Course;
 import eapli.framework.actions.Action;
-import eapli.repositories.CourseRepository;
+import eapli.base.course.repositories.CourseRepository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

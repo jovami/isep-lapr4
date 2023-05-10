@@ -1,6 +1,6 @@
-package eapli.repositories;
+package eapli.base.course.repositories;
 
-import eapli.domain.Course;
+import eapli.base.course.domain.Course;
 import eapli.framework.domain.repositories.DomainRepository;
 
 public interface CourseRepository extends DomainRepository<Integer, Course> {

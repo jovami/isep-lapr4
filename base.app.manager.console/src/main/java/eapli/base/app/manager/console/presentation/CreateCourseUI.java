@@ -1,6 +1,6 @@
 package eapli.base.app.manager.console.presentation;
 
-import eapli.CreateCourseController;
+import eapli.base.course.application.CreateCourseController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import org.springframework.beans.factory.annotation.Autowired;

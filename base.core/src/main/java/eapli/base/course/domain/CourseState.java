@@ -1,4 +1,4 @@
-package eapli.domain;
+package eapli.base.course.domain;
 
 public enum CourseState {
     CLOSED,

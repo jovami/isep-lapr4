@@ -36,18 +36,6 @@
         </dependency>
         <dependency>
             <groupId>eapli</groupId>
-            <artifactId>application.course</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>eapli</groupId>
-            <artifactId>domain.course</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>eapli</groupId>
             <artifactId>base.core</artifactId>
             <version>${project.parent.version}</version>
             <type>jar</type>

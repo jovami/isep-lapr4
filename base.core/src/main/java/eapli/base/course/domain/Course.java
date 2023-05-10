@@ -1,4 +1,4 @@
-package eapli.domain;
+package eapli.base.course.domain;
 
 import eapli.framework.domain.model.AggregateRoot;
 
@@ -81,7 +81,7 @@ public class Course implements AggregateRoot<Integer> {
             this.headTeacher=headTeacher;
     }*/
 
-    protected String getName() {
+    public String getName() {
         return name.getName();
     }
 

@@ -1,4 +1,4 @@
-package eapli;
+package eapli.base.course.application;
 
 import java.util.Date;
 

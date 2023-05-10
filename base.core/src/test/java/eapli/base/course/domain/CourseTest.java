@@ -1,4 +1,4 @@
-package eapli.domain;
+package eapli.base.course.domain;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -80,7 +80,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        Assertions.assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin,testMax));
         assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -92,7 +92,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        Assertions.assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin,testMax));
         assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -126,7 +126,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        Assertions.assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin,testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -138,7 +138,7 @@ class CourseTest {
         Course course = new Course();
 
 
-        Assertions.assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin,testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -156,7 +156,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        Assertions.assertTrue(course.setDuration(startDate,endDate));
+        assertTrue(course.setDuration(startDate,endDate));
         assertEquals(startDate, course.getDuration().startDate());
         assertEquals(endDate, course.getDuration().endDate());
     }
@@ -175,7 +175,7 @@ class CourseTest {
         CourseDuration duration = new CourseDuration();
         Assertions.assertNull(duration.getEndDate());
         Assertions.assertNull(duration.getStartDate());
-        Assertions.assertTrue(duration.setIntervalDate(startDate,endDate));
+        assertTrue(duration.setIntervalDate(startDate,endDate));
         assertEquals(startDate, duration.getStartDate());
         assertEquals(endDate, duration.getEndDate());
     }
@@ -191,7 +191,7 @@ class CourseTest {
         Date endDate = df.parse(endDateString);
 
         CourseDuration duration = new CourseDuration();
-        Assertions.assertFalse(duration.setIntervalDate(startDate,endDate));
+        assertFalse(duration.setIntervalDate(startDate,endDate));
     }
     @Test
     void CourseDuration() throws ParseException {
@@ -222,7 +222,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        Assertions.assertFalse(course.setDuration(startDate,endDate));
+        assertFalse(course.setDuration(startDate,endDate));
         assertNull(course.getDuration().endDate());
         assertNull(course.getDuration().startDate());
     }
@@ -264,28 +264,28 @@ class CourseTest {
     void withoutIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        Assertions.assertFalse(c1.hasIdentity(1));
+        assertFalse(c1.hasIdentity(1));
     }
 
     @Test
     void sameIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        Assertions.assertEquals(0,c1.compareTo(0));
+        assertEquals(0,c1.compareTo(0));
     }
 
     @Test
     void biggerIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        Assertions.assertEquals(-1,c1.compareTo(10));
+        assertEquals(-1,c1.compareTo(10));
     }
 
     @Test
     void smallerIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        Assertions.assertEquals(1,c1.compareTo(-10));
+        assertEquals(1,c1.compareTo(-10));
     }
 
 }
