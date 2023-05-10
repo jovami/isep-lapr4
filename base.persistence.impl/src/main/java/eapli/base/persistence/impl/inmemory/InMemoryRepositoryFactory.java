@@ -27,6 +27,7 @@ import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryUserRepository;
+import eapli.repositories.CourseRepository;
 
 /**
  *
@@ -63,6 +64,12 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	@Override
 	public SignupRequestRepository signupRequests() {
 		return signupRequests(null);
+	}
+
+	//TODO: implement
+	@Override
+	public CourseRepository courses() {
+		return new InMemoryCourseRepository() ;
 	}
 
 	@Override

@@ -23,8 +23,8 @@
  */
 package eapli.base.app.manager.console.presentation;
 
-import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.Application;
+import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
 import eapli.base.app.manager.console.presentation.authz.ListUsersAction;
@@ -37,8 +37,6 @@ import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ExitWithMessageAction;
-import eapli.framework.presentation.console.ShowMessageAction;
-import eapli.framework.presentation.console.menu.HorizontalMenuRenderer;
 import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
@@ -60,12 +58,16 @@ public class MainMenu extends AbstractUI {
     private static final int DEACTIVATE_USER_OPTION = 3;
     private static final int ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION = 4;
 
+    //COURSE
+    private static final int ADD_COURSE_OPTION = 1;
+
     // SETTINGS
     private static final int SET_KITCHEN_ALERT_LIMIT_OPTION = 1;
 
     private static final int MY_USER_OPTION = 1;
     private static final int USERS_OPTION = 2;
-    private static final int SETTINGS_OPTION = 4;
+    private static final int SETTINGS_OPTION = 9;
+    private static final int COURSE_OPTION = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -116,8 +118,8 @@ public class MainMenu extends AbstractUI {
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.MANAGER)) {
             final Menu usersMenu = buildUsersMenu();
             mainMenu.addSubMenu(USERS_OPTION, usersMenu);
-            final Menu settingsMenu = buildAdminSettingsMenu();
-            mainMenu.addSubMenu(SETTINGS_OPTION, settingsMenu);
+            final Menu courseMenu = buildCourseMenu();
+            mainMenu.addSubMenu(COURSE_OPTION,courseMenu );
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -129,12 +131,10 @@ public class MainMenu extends AbstractUI {
         return mainMenu;
     }
 
-    private Menu buildAdminSettingsMenu() {
-        final Menu menu = new Menu("Settings");
+    private Menu buildCourseMenu() {
+        final Menu menu = new Menu("Courses");
 
-        menu.addItem(SET_KITCHEN_ALERT_LIMIT_OPTION, "Set kitchen alert limit",
-                new ShowMessageAction("Not implemented yet"));
-        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+        menu.addItem(ADD_COURSE_OPTION, "Add course", new CreateCourseUI()::show);
 
         return menu;
     }

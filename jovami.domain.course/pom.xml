@@ -6,27 +6,21 @@
     <parent>
         <groupId>eapli</groupId>
         <artifactId>base</artifactId>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
-    
-    <artifactId>base.core</artifactId>
+
+    <groupId>eapli</groupId>
+    <artifactId>domain.course</artifactId>
     <packaging>jar</packaging>
 
-    <name>base.core</name>
+    <name>domain.course</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>eapli</groupId>
-            <artifactId>domain.course</artifactId>
-            <version>${project.parent.version}</version>
-            <type>jar</type>
-        </dependency>
     </dependencies>
-
 </project>
-

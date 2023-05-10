@@ -21,6 +21,7 @@
     </properties>
 
     <modules>
+        <!--Eapli-base-->
         <module>base.app.manager.console</module>
         <module>base.app.student.console</module>
         <module>base.app.teacher.console</module>
@@ -29,6 +30,10 @@
         <module>base.bootstrappers</module>
         <module>base.core</module>
         <module>base.persistence.impl</module>
+
+        <!-- jovami -->
+        <module>jovami.domain.course</module>
+        <module>jovami.application.course</module>
 
         <!-- CI builds only -->
         <module>ecourse.util.ci</module>

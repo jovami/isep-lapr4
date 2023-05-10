@@ -5,7 +5,7 @@
     <parent>
         <groupId>eapli</groupId>
         <artifactId>base</artifactId>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
     
@@ -27,9 +27,15 @@
         </dependency>
         <dependency>
             <groupId>eapli</groupId>
-            <artifactId>base.bootstrappers</artifactId>
+            <artifactId>domain.course</artifactId>
             <version>${project.parent.version}</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>eapli</groupId>
+            <artifactId>base.bootstrappers</artifactId>
+            <version>1.4.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
