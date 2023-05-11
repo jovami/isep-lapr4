@@ -6,32 +6,35 @@ skinparam shadowing false
 actor Manager as Actor
 participant CreateCourseUI as UI <<presentation>> order 1
 participant CreateCourseController as Controller <<application>> order 2
-participant PersistenceContext as Persistence <<persistence>> order 3
-participant CreateCourseUi as UI <<presentation>> order 4
-participant "course:Course" as Course <<domain>> order 5
-participant RepositoryFactory as Fact <<factory>> order 6
-participant CourseRepository as Repo <<repository>> order 7
+participant "course:Course" as Course <<domain>> order 3
+participant PersistenceContext as Persistence <<persistence>> order 4
+participant RepositoryFactory as Fact <<factory>> order 5
+participant CourseRepository as Repo <<repository>> order 6
 
 Actor -> UI : create Course
 activate UI
     UI -> Controller : create
     Actor <-- UI : ask user information
-    Actor -> UI : code,name,\ndescription,duration,\ncapacity
-    UI -> Controller : addCourse(code,name,\ndescription,duration,\ncapacity)
+    Actor -> UI : name, description,\nduration, capacity
+    UI -> Controller : addCourse(name,\ndescription, duration,\ncapacity)
     activate Controller
-            Controller -> Course : createCourse()
+            Controller -> Course : course = createCourse()
             Controller -> Course : setCourseName(name)
-            note right of Course: Set the all the information
-            Controller <-- Course : course
-            Controller -> Fact : create Fact
+            note right of Controller: Set the all the information
+            Controller -> Persistence : repositories()
+            activate Persistence
+            Persistence -> Fact : courses()
             activate Fact
                 Fact -> Repo : create
-                Controller <-- Fact: courseRepo
-            deactivate Fact
+                activate Repo
+                Controller <-- Persistence: courseRepository
+                deactivate Fact
+                deactivate Persistence
         Controller -> Repo : saveCourse(course)
+        deactivate Repo
     UI <-- Controller : course
     deactivate Controller
-deactivate UI
 Actor <-- UI : displayCourseInfo
+deactivate UI
 
 @enduml

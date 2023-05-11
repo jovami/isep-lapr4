@@ -1,0 +1,45 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor SystemUser as Actor
+participant CreateBoardUI as UI <<presentation>> order 1
+participant CreateBoardController as Controller <<application>> order 2
+participant "board:Board" as Board <<domain>> order 3
+participant PersistenceContext as Persistence <<persistence>> order 4
+participant RepositoryFactory as Fact <<factory>> order 5
+participant BoardRepository as Repo <<repository>> order 6
+
+Actor -> UI : create Board
+activate UI
+    UI -> Controller : create
+    Actor <-- UI : ask user information
+    Actor -> UI : boardTitle, maxRows,\n maxColumns
+    UI -> Controller : createBoard(boardTitle,\n maxRows, maxColumns)
+    activate Controller
+    Controller -> Board : board = createBoard(boardTitle,\n maxRows, maxColumns
+            activate Board
+            Board -> Board : setUpBoard(cellId, BoardRow,\n BoardColumn)
+            note right of Board :Board creates all cells with\n the corresponding id from\n the rows and the columns
+            activate Board
+            deactivate Board
+            deactivate Board
+                        Controller -> Persistence : repositories()
+                        activate Persistence
+                        Persistence -> Fact : boards()
+                        activate Fact
+                            Fact -> Repo : create
+                            activate Repo
+                            Controller <-- Persistence: boardRepository
+                            deactivate Fact
+                            deactivate Persistence
+        Controller -> Repo : persistBoard(Board)
+        deactivate Repo
+    UI <-- Controller : board
+    deactivate Controller
+Actor <-- UI : Success of \nthe Operation
+deactivate UI
+
+
+@enduml
