@@ -2,6 +2,7 @@ package eapli.base.infrastructure.bootstrapers.demo;
 
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.course.domain.Course;
+
 import eapli.framework.actions.Action;
 import eapli.base.course.repositories.CourseRepository;
 

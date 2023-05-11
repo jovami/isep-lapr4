@@ -40,6 +40,7 @@ public class MyUserMenu extends Menu {
     private static final int CHANGE_PASSWORD_OPTION = 1;
     private static final int LOGIN_OPTION = 2;
     private static final int LOGOUT_OPTION = 3;
+    private static final int CREATE_BOARD_OPTION = 4;
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
@@ -58,6 +59,7 @@ public class MyUserMenu extends Menu {
             addItem(MenuItem.of(CHANGE_PASSWORD_OPTION, "Change password", new ChangePasswordUI()::show));
             addItem(MenuItem.of(LOGIN_OPTION, "Change user", new LoginUI(onlyWithThis)::show));
             addItem(MenuItem.of(LOGOUT_OPTION, "Logout", new LogoutUI()::show));
+            //addItem(MenuItem.of(CREATE_BOARD_OPTION, "Create Board", new BoardUI()::show));
         } else {
             addItem(MenuItem.of(LOGIN_OPTION, "Login", new LoginUI(onlyWithThis)::show));
         }

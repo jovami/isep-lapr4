@@ -24,6 +24,7 @@
 package eapli.base.app.manager.console.presentation;
 
 import eapli.base.Application;
+import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
@@ -58,6 +59,9 @@ public class MainMenu extends AbstractUI {
     private static final int DEACTIVATE_USER_OPTION = 3;
     private static final int ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION = 4;
 
+    // Boards
+    private static final int CREATE_BOARD_OPTION = 1;
+
     //COURSE
     private static final int ADD_COURSE_OPTION = 1;
 
@@ -66,6 +70,7 @@ public class MainMenu extends AbstractUI {
 
     private static final int MY_USER_OPTION = 1;
     private static final int USERS_OPTION = 2;
+    private static final int BOARD_OPTION = 3;
     private static final int SETTINGS_OPTION = 9;
     private static final int COURSE_OPTION = 4;
 
@@ -101,7 +106,7 @@ public class MainMenu extends AbstractUI {
     @Override
     public String headline() {
 
-        return authz.session().map(s -> "Base [ @" + s.authenticatedUser().identity() + " ]")
+        return authz.session().map(s -> "Base [ " + s.authenticatedUser().identity() + " ]")
                 .orElse("Base [ ==Anonymous== ]");
     }
 
@@ -118,6 +123,8 @@ public class MainMenu extends AbstractUI {
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.MANAGER)) {
             final Menu usersMenu = buildUsersMenu();
             mainMenu.addSubMenu(USERS_OPTION, usersMenu);
+            final Menu boardMenu = buildBoardMenu();
+            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu courseMenu = buildCourseMenu();
             mainMenu.addSubMenu(COURSE_OPTION,courseMenu );
         }
@@ -147,6 +154,15 @@ public class MainMenu extends AbstractUI {
         menu.addItem(DEACTIVATE_USER_OPTION, "Deactivate User", new DeactivateUserAction());
         menu.addItem(ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION, "Accept/Refuse Signup Request",
                 new AcceptRefuseSignupRequestAction());
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
+    private Menu buildBoardMenu() {
+        final Menu menu = new Menu("Boards");
+
+        menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

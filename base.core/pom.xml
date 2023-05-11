@@ -6,10 +6,10 @@
     <parent>
         <groupId>eapli</groupId>
         <artifactId>base</artifactId>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>base.core</artifactId>
     <packaging>jar</packaging>
 
@@ -24,4 +24,3 @@
     </dependencies>
 
 </project>
-

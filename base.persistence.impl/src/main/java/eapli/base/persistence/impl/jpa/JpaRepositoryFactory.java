@@ -24,6 +24,7 @@ import eapli.base.Application;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
+import eapli.base.board.repositories.BoardRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.jpa.JpaAutoTxUserRepository;
@@ -68,6 +69,16 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 	@Override
 	public SignupRequestRepository signupRequests() {
 		return new JpaSignupRequestRepository(Application.settings().getPersistenceUnitName());
+	}
+
+	@Override
+	public BoardRepository boards(TransactionalContext autoTx) {
+		return null;
+	}
+
+	@Override
+	public BoardRepository boards() {
+		return new JpaBoardRepository(Application.settings().getPersistenceUnitName());
 	}
 
 	//TODO: implement

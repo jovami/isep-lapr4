@@ -23,7 +23,10 @@
  */
 package eapli.base.app.student.console.presentation;
 
+import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -59,6 +62,10 @@ class MainMenu extends ClientUserBaseUI {
     // ACCOUNT MENU
     private static final int LIST_MOVEMENTS_OPTION = 1;
 
+    // BOARD MENU
+
+    private static final int CREATE_BOARD_OPTION = 1;
+
     // SETTINGS
     private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
 
@@ -88,10 +95,25 @@ class MainMenu extends ClientUserBaseUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
 
+        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
+            final Menu boardMenu = buildBoardMenu();
+            mainMenu.addSubMenu(CREATE_BOARD_OPTION, boardMenu);
+        }
+
         mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
+    }
+
+    private Menu buildBoardMenu() {
+        final Menu menu = new Menu("Boards");
+
+        menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN, Actions.SUCCESS);
+
+        return menu;
     }
 }

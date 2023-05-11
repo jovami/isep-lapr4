@@ -23,8 +23,10 @@
  */
 package eapli.base.app.teacher.console.presentation;
 
+import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -38,6 +40,8 @@ import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
  * @author Paulo Gandra Sousa
  */
 class MainMenu extends TeacherBaseUI {
+
+    private static final int EXIT_OPTION = 0;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -68,6 +72,10 @@ class MainMenu extends TeacherBaseUI {
 
     // ACCOUNT MENU
     // private static final int LIST_MOVEMENTS_OPTION = 1;
+
+    // BOARD MENU
+
+    private static final int CREATE_BOARD_OPTION = 1;
 
     // SETTINGS
     private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
@@ -100,10 +108,11 @@ class MainMenu extends TeacherBaseUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(Index.MY_USER_OPTION.ordinal(), myUserMenu);
 
-        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER))
-        {
+        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER)) {
             final Menu regularExamMenu = buildRegularExamMenu();
-            mainMenu.addSubMenu(REGULAR_EXAM_OPTION,regularExamMenu);
+            mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
+            final Menu boardMenu = buildBoardMenu();
+            mainMenu.addSubMenu(CREATE_BOARD_OPTION, boardMenu);
         }
 
         mainMenu.addItem(Index.CREATE_FORMATIVE_EXAM.ordinal(), "Create a formative exam", new CreateFormativeExamUI()::show);
@@ -119,6 +128,15 @@ class MainMenu extends TeacherBaseUI {
         final Menu menu = new Menu("Regular Exam");
 
         menu.addItem(Index.CREATE_REGULAR_EXAM.ordinal(), "Add regular exam", new CreateRegularExamUI()::show);
+
+        return menu;
+    }
+
+    private Menu buildBoardMenu() {
+        final Menu menu = new Menu("Boards");
+
+        menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN, Actions.SUCCESS);
 
         return menu;
     }
