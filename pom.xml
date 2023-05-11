@@ -32,7 +32,6 @@
         <module>base.persistence.impl</module>
         <!-- CI builds only -->
         <module>ecourse.util.ci</module>
-        <module>jovami.exam</module>
     </modules>
 
     <dependencies>

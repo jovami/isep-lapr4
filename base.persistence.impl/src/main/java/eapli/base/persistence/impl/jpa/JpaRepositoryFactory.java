@@ -29,6 +29,9 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.jpa.JpaAutoTxUserRepository;
 import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
 import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 
 /**
  *
@@ -82,5 +85,23 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 		return JpaAutoTxRepository.buildTransactionalContext(Application.settings().getPersistenceUnitName(),
 				Application.settings().getExtendedPersistenceProperties());
 	}
+
+    @Override
+    public QuestionRepository questions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'questions'");
+    }
+
+    @Override
+    public FormativeExamRepository formativeExams() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'formativeExams'");
+    }
+
+    @Override
+    public FormativeExamSpecificationRepository formativeExamSpecifications() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'formativeExamSpecifications'");
+    }
 
 }

@@ -29,6 +29,9 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryUserRepository;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 
 /**
  *
@@ -87,5 +90,23 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 		// in memory does not support transactions...
 		return null;
 	}
+
+    @Override
+    public QuestionRepository questions() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'questions'");
+    }
+
+    @Override
+    public FormativeExamRepository formativeExams() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'formativeExams'");
+    }
+
+    @Override
+    public FormativeExamSpecificationRepository formativeExamSpecifications() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'formativeExamSpecifications'");
+    }
 
 }

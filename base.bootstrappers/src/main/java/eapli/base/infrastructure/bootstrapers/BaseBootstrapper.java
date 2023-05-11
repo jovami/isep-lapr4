@@ -60,7 +60,7 @@ public class BaseBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// declare bootstrap actions
-		final Action[] actions = { new ManagerBootstrapper(),new CourseBootstrapper(), new RegularExamBootstrapper()};
+		final Action[] actions = { new ManagerBootstrapper(),new CourseBootstrapper(),/*  new RegularExamBootstrapper() */};
 
 
 		registerPowerUser();

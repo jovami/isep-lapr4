@@ -26,6 +26,9 @@ import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 
 /**
  * @author Paulo Gandra Sousa
@@ -89,4 +92,7 @@ public interface RepositoryFactory {
 
     RegularExamRepository exams();
 
+    QuestionRepository questions();
+    FormativeExamRepository formativeExams();
+    FormativeExamSpecificationRepository formativeExamSpecifications();
 }

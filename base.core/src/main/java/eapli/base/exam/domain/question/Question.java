@@ -11,6 +11,7 @@ public class Question implements AggregateRoot<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "questionId")
     private Long id;
 
     @Version
@@ -21,6 +22,9 @@ public class Question implements AggregateRoot<Long> {
 
     @Embedded
     private String solution;
+
+    @Embedded
+    private QuestionType questionType;
 
     //TODO
     /*@OneToMany
@@ -35,6 +39,10 @@ public class Question implements AggregateRoot<Long> {
 
     protected Question() {
         // for ORM only.
+    }
+
+    public QuestionType type() {
+        return this.questionType;
     }
 
     @Override

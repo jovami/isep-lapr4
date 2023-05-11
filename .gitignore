@@ -65,3 +65,4 @@ TEST*.xml
 .db/
 
 README.html
+*.png

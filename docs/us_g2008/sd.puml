@@ -1,0 +1,105 @@
+@startuml
+
+actor User as user
+participant CreateFormativeExamUI as ui
+participant CreateFormativeExamController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+
+participant FormativeExamSpecificationFactory as fac
+participant FormativeExamSpecificationGrammarVisitor as visitor
+
+participant FormativeExamSpecification as spec
+
+participant FormativeExamSpecificationRepository as fes_repo
+participant FormativeExamRepository as fe_repo
+participant QuestionRepository as q_repo
+
+participant FormativeExamFactory as gen_exam
+participant FormativeExam as exam
+
+user --> ui: enter
+
+activate ui
+
+    ui --> ctrl: create()
+    activate ctrl
+        ctrl --> ctx: repositories()
+        activate ctx
+            ctx --> rep_fac: create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+
+    deactivate ctrl
+deactivate ui
+
+user --> ui: type specification\nfile path
+
+activate ui
+    ui --> ctrl: createFormativeExam(file)
+    activate ctrl
+        ctrl --> fac: create(file)
+        activate fac
+            fac --> visitor: visit()
+            activate visitor
+                visitor --> spec: build()
+
+                activate spec
+                deactivate spec
+
+                visitor --> fac: specification
+            deactivate visitor
+
+            fac --> ctrl: specification
+        deactivate fac
+
+        ctrl --> rep_fac: formativeExamSpecifications()
+        activate rep_fac
+            rep_fac --> fes_repo: create()
+            activate fes_repo
+            deactivate fes_repo
+        deactivate
+
+        ctrl --> fes_repo: save(specification)
+        activate fes_repo
+        deactivate fes_repo
+
+        ctrl --> rep_fac: questions()
+        activate rep_fac
+            rep_fac --> q_repo: create()
+            activate q_repo
+            deactivate q_repo
+        deactivate
+
+        ctrl --> q_repo: findAll()
+        activate q_repo
+        deactivate q_repo
+
+        ctrl --> gen_exam: generateFormativeExam(specification, questions)
+        activate gen_exam
+            gen_exam --> exam: create()
+            activate exam
+            deactivate exam
+        deactivate gen_exam
+
+        ctrl --> rep_fac: formativeExams()
+        activate rep_fac
+            rep_fac --> fe_repo: create()
+            activate fe_repo
+            deactivate fe_repo
+        deactivate
+
+        ctrl --> fe_repo: save(exam)
+        activate fe_repo
+        deactivate fe_repo
+
+        ctrl --> ui
+    deactivate ctrl
+
+    ui --> user: show
+deactivate ui
+
+@enduml

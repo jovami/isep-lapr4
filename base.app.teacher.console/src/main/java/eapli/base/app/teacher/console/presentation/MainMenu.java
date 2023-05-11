@@ -45,23 +45,29 @@ class MainMenu extends TeacherBaseUI {
 
     private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
 
-    private static final int EXIT_OPTION = 0;
+    private enum Index {
+        EXIT_OPTION,
+
+        // MAIN MENU
+        MY_USER_OPTION,
+        CREATE_REGULAR_EXAM,
+        CREATE_FORMATIVE_EXAM,
+    }
+
+    // private static final int EXIT_OPTION = 0;
 
     // MAIN MENU
-    private static final int MY_USER_OPTION = 1;
-    private static final int BOOKINGS_OPTION = 2;
-    private static final int ACCOUNT_OPTION = 3;
-    private static final int SETTINGS_OPTION = 4;
+    // private static final int MY_USER_OPTION = 1;
+    // private static final int BOOKINGS_OPTION = 2;
+    // private static final int ACCOUNT_OPTION = 3;
+    // private static final int SETTINGS_OPTION = 4;
 
     // BOOKINGS MENU
-    private static final int BOOK_A_MEAL_OPTION = 2;
-    private static final int LIST_MY_BOOKINGS_OPTION = 3;
+    // private static final int BOOK_A_MEAL_OPTION = 2;
+    // private static final int LIST_MY_BOOKINGS_OPTION = 3;
 
     // ACCOUNT MENU
-    private static final int LIST_MOVEMENTS_OPTION = 1;
-
-    // REGULAR EXAM
-    private static final int ADD_REGULAR_EXAM_OPTION = 1;
+    // private static final int LIST_MOVEMENTS_OPTION = 1;
 
     // SETTINGS
     private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
@@ -92,7 +98,7 @@ class MainMenu extends TeacherBaseUI {
         final Menu mainMenu = new Menu();
 
         final Menu myUserMenu = new MyUserMenu();
-        mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
+        mainMenu.addSubMenu(Index.MY_USER_OPTION.ordinal(), myUserMenu);
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER))
         {
@@ -100,9 +106,11 @@ class MainMenu extends TeacherBaseUI {
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION,regularExamMenu);
         }
 
+        mainMenu.addItem(Index.CREATE_FORMATIVE_EXAM.ordinal(), "Create a formative exam", new CreateFormativeExamUI()::show);
+
         mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
-        mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
+        mainMenu.addItem(Index.EXIT_OPTION.ordinal(), "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
     }
@@ -110,7 +118,7 @@ class MainMenu extends TeacherBaseUI {
     private Menu buildRegularExamMenu() {
         final Menu menu = new Menu("Regular Exam");
 
-        menu.addItem(ADD_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
+        menu.addItem(Index.CREATE_REGULAR_EXAM.ordinal(), "Add regular exam", new CreateRegularExamUI()::show);
 
         return menu;
     }
