@@ -37,6 +37,9 @@ public class CreateCourseController {
         course = this.repo.save(course);
         return true;
     }
+    public long countAll(){
+        return repo.size();
+    }
 
     public String courseString() {
         return course.toString();

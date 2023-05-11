@@ -56,6 +56,7 @@ public class CreateCourseUI extends AbstractUI {
         if (ctrl.saveCourse()){
             System.out.println("\n\n\tCourse created and saved with success\n:"+ctrl.courseString());
         }
+        System.out.println(ctrl.countAll());
         return false;
 
     }
