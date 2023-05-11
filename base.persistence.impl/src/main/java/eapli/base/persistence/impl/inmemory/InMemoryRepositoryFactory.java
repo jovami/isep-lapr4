@@ -28,6 +28,7 @@ import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryUserRepository;
 import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.repositories.RegularExamRepository;
 
 /**
  *
@@ -71,6 +72,10 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	public CourseRepository courses() {
 		return new InMemoryCourseRepository() ;
 	}
+
+	//TODO: implement
+	@Override
+	public RegularExamRepository exams() { return new InMemoryRegularExamRepository();}
 
 	@Override
 	public SignupRequestRepository signupRequests(final TransactionalContext tx) {

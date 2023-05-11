@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+DishExportController -> DishRepository:allDishes
+            DishExportController <-- DishRepository: dishes
+           DishExportController -> DishExporterFactory:build(fmt)
+            participant DishExporter <<interface>>
+            create DishExporter
+            DishExporterFactory -> DishExporter: new
+            DishExportController -> DishExportService : export(dishes, filename, fmt)
+            activate DishExportService
+            group loop [dishes]
+            DishExportService -> DishExporter : begin(filename)
+            DishExportService -> DishExporter : element(aDish)
+            group alt [has next]
+            DishExportService -> DishExporter : separator
+            end group
+            DishExportService -> DishExporter : end
+            end group
+            deactivate DishExportService
+@enduml

@@ -9,8 +9,6 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ExamTitle implements ValueObject {
 
-    private static final long serialVersionUID = 1L;
-
     private String examTitle;
 
     protected ExamTitle(String examTitle) {
@@ -23,7 +21,7 @@ public class ExamTitle implements ValueObject {
     }
 
     //for ORM
-    protected ExamTitle() {
+    public ExamTitle() {
         examTitle = null;
     }
 

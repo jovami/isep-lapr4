@@ -1,41 +1,33 @@
-package eapli.base.exam.domain.regular_exam;
+package eapli.base.exam.domain.formative_exam;
 
+import eapli.base.exam.domain.regular_exam.RegularExamQuestion;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-@Entity
-@Table(name="REGULAREXAMSECTION")
-public class RegularExamSection implements AggregateRoot<Integer>{
+public class FormativeExamQuestion implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "IDRegularExamSection")
+    @Column(name="IDFormativeExamQuestion")
     private int id;
 
-    @Column(name = "DESCRIPTION")
-    private String description;
+    @Column(name = "WEIGHT")
+    private float weight;
 
-    @OneToMany
-    @Column(name = "REGULAREXAMQUESTION")
-    private List<RegularExamQuestion> regularExamQuestions;
-
-
-    protected RegularExamSection(String description, List<RegularExamQuestion> regularExamQuestions)
-    {
-        this.description = description;
-        this.regularExamQuestions = regularExamQuestions;
-    }
-
-    //FOR ORM ONLY
-    public RegularExamSection()
+    protected FormativeExamQuestion(float weight)
     {
 
     }
 
-    public List<RegularExamQuestion> regularExamQuestions(){return this.regularExamQuestions;}
+    public FormativeExamQuestion()
+    {
+
+    }
 
     @Override
     public boolean equals(final Object o) {
@@ -50,11 +42,11 @@ public class RegularExamSection implements AggregateRoot<Integer>{
 
     @Override
     public boolean sameAs(Object other) {
-        if (!(other instanceof RegularExamSection)) {
+        if (!(other instanceof FormativeExamQuestion)) {
             return false;
         }
 
-        final RegularExamSection that = (RegularExamSection) other;
+        final FormativeExamQuestion that = (FormativeExamQuestion) other;
         if (this == that) {
             return true;
         }

@@ -25,6 +25,7 @@ package eapli.base.infrastructure.bootstrapers;
 
 import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
 import eapli.base.infrastructure.bootstrapers.demo.ManagerBootstrapper;
+import eapli.base.infrastructure.bootstrapers.demo.RegularExamBootstrapper;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.usermanagement.domain.BaseRoles;
 import eapli.base.usermanagement.domain.UserBuilderHelper;
@@ -59,7 +60,8 @@ public class BaseBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// declare bootstrap actions
-		final Action[] actions = { new ManagerBootstrapper(),new CourseBootstrapper()};
+		final Action[] actions = { new ManagerBootstrapper(),new CourseBootstrapper(), new RegularExamBootstrapper()};
+
 
 		registerPowerUser();
 		authenticateForBootstrapping();

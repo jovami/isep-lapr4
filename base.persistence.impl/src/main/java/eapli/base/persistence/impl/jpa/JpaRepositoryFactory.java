@@ -22,6 +22,7 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.Application;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
@@ -70,6 +71,10 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 	@Override
 	public CourseRepository courses() {
 		return new JpaCourseRepository(Application.settings().getPersistenceUnitName());
+	}
+
+	public RegularExamRepository exams() {
+		return new JpaRegularExamRepository(Application.settings().getPersistenceUnitName());
 	}
 
 	@Override

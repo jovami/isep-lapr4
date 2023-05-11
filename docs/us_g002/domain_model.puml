@@ -262,7 +262,7 @@ package ExamPackage <<Rectangle>> {
         class ExamGrade <<value object>>
         class ExamFeedback <<value object>>
         
-        entity AnswerGiven <<Entit  y>>{
+        entity AnswerGiven <<Entity>>{
         }
 
     }

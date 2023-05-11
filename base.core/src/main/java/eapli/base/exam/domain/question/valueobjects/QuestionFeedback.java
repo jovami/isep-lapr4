@@ -6,6 +6,7 @@ import eapli.framework.validations.Preconditions;
 import javax.persistence.Embeddable;
 
 
+
 public class QuestionFeedback implements ValueObject {
 
     private String questionFeedback;

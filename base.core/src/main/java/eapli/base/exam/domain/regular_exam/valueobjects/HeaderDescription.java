@@ -1,6 +1,5 @@
 package eapli.base.exam.domain.regular_exam.valueobjects;
 
-import eapli.base.exam.domain.formative_exam_specification.valueobjects.FormativeExamDescription;
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;
@@ -9,8 +8,6 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class HeaderDescription implements ValueObject {
-
-    private static final long serialVersionUID = 1L;
 
     private String headerDescription;
 
@@ -24,7 +21,7 @@ public class HeaderDescription implements ValueObject {
     }
 
     //for ORM
-    protected HeaderDescription() {
+    public HeaderDescription() {
         headerDescription = null;
     }
 

@@ -2,10 +2,13 @@ package eapli.base.exam.domain.exam_result;
 
 import eapli.base.exam.domain.exam_result.valueobjects.ExamFeedback;
 import eapli.base.exam.domain.exam_result.valueobjects.ExamGrade;
+import eapli.base.exam.domain.regular_exam.RegularExamSection;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class ExamResult implements AggregateRoot<Long> {
@@ -26,11 +29,14 @@ public class ExamResult implements AggregateRoot<Long> {
     @Embedded
     private ExamFeedback examFeedback;
 
-    // TODO : verificar se este "period" e uma string
     @Embedded
-    private String period;
+    private Date period;
 
-    public ExamResult(ExamGrade examGrade, ExamFeedback examFeedback, String period)
+    @OneToMany
+    @Column(name = "ANSWERGIVEN")
+    private List<AnswerGiven> answersGiven;
+
+    public ExamResult(ExamGrade examGrade, ExamFeedback examFeedback, Date period)
     {
         this.examGrade = examGrade;
         this.examFeedback = examFeedback;
@@ -39,6 +45,11 @@ public class ExamResult implements AggregateRoot<Long> {
 
     protected ExamResult () {
         //for ORM only
+    }
+
+    public void addAnswersGiven(List<AnswerGiven> answersGiven)
+    {
+        this.answersGiven = answersGiven;
     }
 
     @Override

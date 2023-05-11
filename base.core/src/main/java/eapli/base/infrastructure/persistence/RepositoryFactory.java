@@ -25,6 +25,7 @@ import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.repositories.RegularExamRepository;
 
 /**
  * @author Paulo Gandra Sousa
@@ -85,5 +86,7 @@ public interface RepositoryFactory {
     SignupRequestRepository signupRequests();
 
     CourseRepository courses();
+
+    RegularExamRepository exams();
 
 }

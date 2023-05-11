@@ -9,9 +9,9 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ExamHeader implements ValueObject {
 
-    private static final long serialVersionUID = 1L;
-
     private String examHeader;
+
+    private HeaderDescription headerDescription;
 
     protected ExamHeader(String examHeader) {
         Preconditions.nonEmpty(examHeader, "Exam header should not be empty or null");
@@ -20,10 +20,11 @@ public class ExamHeader implements ValueObject {
         Invariants.ensure(examHeader.matches("[A-Z]"), "Invalid exam header");
 
         this.examHeader = examHeader;
+        this.headerDescription = new HeaderDescription();
     }
 
     //for ORM
-    protected ExamHeader() {
+    public ExamHeader() {
         examHeader = null;
     }
 

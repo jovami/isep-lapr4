@@ -1,6 +1,5 @@
 package eapli.base.exam.domain.valueobjects;
 
-import eapli.base.exam.domain.exam_result.valueobjects.ExamFeedback;
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
 

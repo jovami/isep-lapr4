@@ -24,6 +24,7 @@
 package eapli.base.app.teacher.console.presentation;
 
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -59,8 +60,13 @@ class MainMenu extends TeacherBaseUI {
     // ACCOUNT MENU
     private static final int LIST_MOVEMENTS_OPTION = 1;
 
+    // REGULAR EXAM
+    private static final int ADD_REGULAR_EXAM_OPTION = 1;
+
     // SETTINGS
     private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
+
+    private static final int REGULAR_EXAM_OPTION = 2;
 
     private final AuthorizationService authz =
             AuthzRegistry.authorizationService();
@@ -88,10 +94,24 @@ class MainMenu extends TeacherBaseUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
 
+        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER))
+        {
+            final Menu regularExamMenu = buildRegularExamMenu();
+            mainMenu.addSubMenu(REGULAR_EXAM_OPTION,regularExamMenu);
+        }
+
         mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
+    }
+
+    private Menu buildRegularExamMenu() {
+        final Menu menu = new Menu("Regular Exam");
+
+        menu.addItem(ADD_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
+
+        return menu;
     }
 }

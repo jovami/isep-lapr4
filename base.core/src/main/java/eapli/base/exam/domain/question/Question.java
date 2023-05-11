@@ -22,8 +22,9 @@ public class Question implements AggregateRoot<Long> {
     @Embedded
     private String solution;
 
-    // TODO : corrigir
+    //TODO
     /*@OneToMany
+    @Column(name = "QuestionFeedback")
     private List<QuestionFeedback> questionFeedbacks;*/
 
     public Question(String description, String solution)

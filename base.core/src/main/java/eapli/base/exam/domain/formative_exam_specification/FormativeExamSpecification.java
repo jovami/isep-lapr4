@@ -1,7 +1,7 @@
 package eapli.base.exam.domain.formative_exam_specification;
 
-import eapli.base.exam.domain.formative_exam_specification.valueobjects.FormativeExamDescription;
 import eapli.base.exam.domain.formative_exam_specification.valueobjects.FormativeExamTitle;
+import eapli.base.exam.domain.formative_exam_specification.valueobjects.FormativeExamDescription;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 

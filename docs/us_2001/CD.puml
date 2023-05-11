@@ -1,0 +1,27 @@
+@startuml
+ interface DishExporter{
+           +begin()
+            +element()
+            +separator()
+            +end()
+            }
+
+            enum FileFormat
+
+            class DishExportService{
+           +export()
+           }
+
+            DishRepository ..> Dish
+            DishExportController ..> DishRepository
+            DishExportService ..> Dish
+            DishExportController ..> FileFormat
+            DishExporterFactory ..> FileFormat
+            DishExportController ..> DishExportService
+            DishExporterFactory <.down. DishExportController
+            DishExporterFactory ..> DishExporter
+            DishExportService ..> DishExporter
+            DishExporter <|.. CsvDishExporter
+            DishExporter <|.. XmlDishExporter
+
+@enduml
