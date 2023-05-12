@@ -36,10 +36,9 @@ public class CreateBoardUI extends AbstractUI {
                 return false;
             }
 
-            System.out.println(controller.persistBoard());
-            System.out.println("Number os Boards Created: " + controller.countAll());
+            controller.persistBoard();
             System.out.println("Board Created Successfully!!");
-            controller.listBoards();
+            //controller.listBoards();
             return true;
         }
     }

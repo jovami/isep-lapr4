@@ -22,8 +22,8 @@ public class CreateBoardController {
     }
 
 
-    public boolean persistBoard(){
-        return repository.save(board)!=null;
+    public void persistBoard(){
+        repository.save(board);
     }
     public long countAll(){
         return repository.size();

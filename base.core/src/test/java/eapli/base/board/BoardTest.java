@@ -19,7 +19,7 @@ class BoardTest {
     }
 
     @Test
-    void createCells() {
+    void ensureCellCreation() {
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 int cellId = row * columns + column;
@@ -32,7 +32,7 @@ class BoardTest {
     }
 
     @Test
-    void addRowIds() {
+    void ensureRowIdsAreAdded() {
         for (int i = 0; i < rows; i++) {
             BoardRow boardRow = new BoardRow(i);
             assertEquals(boardRow.getRowId(), board.getBoardRowList().get(i).getRowId());
@@ -40,7 +40,7 @@ class BoardTest {
     }
 
     @Test
-    void addColumnIds() {
+    void ensureColumnsIdsAreAdded() {
         for (int i = 0; i < columns; i++) {
             BoardColumn boardColumn = new BoardColumn(i);
             assertEquals(boardColumn.getColumnId(), board.getBoardColumnList().get(i).getColumnId());
@@ -48,14 +48,14 @@ class BoardTest {
     }
 
     @Test
-    void createPostIt() {
+    void ensurePostItCreation() {
         int cellId = 10;
         PostIt postIt = new PostIt(cellId);
         assertEquals(postIt.getCellId(), board.createPostIt(cellId).getCellId());
     }
 
     @Test
-    void alterCell() {
+    void ensurePostItCanAlterCell() {
         int cellId = 10;
         PostIt postIt = new PostIt(cellId);
         postIt.alterCell(cellId+1);
@@ -63,7 +63,7 @@ class BoardTest {
     }
 
     @Test
-    void movePostIt() {
+    void ensurePostItCanBeMoved() {
         int cellId = 10;
         PostIt postIt = new PostIt(cellId);
         assertEquals(cellId,postIt.getCellId());
@@ -78,19 +78,19 @@ class BoardTest {
 
 
     @Test
-    void archiveBoard() {
+    void ensureAensureArchiveBoardStaterchiveBoard() {
         board.archiveBoard();
         assertEquals(BoardState.ARCHIVED, board.getState());
     }
 
     @Test
-    void sharedBoard() {
+    void ensureShareBoardState() {
         board.sharedBoard();
         assertEquals(BoardState.SHARED, board.getState());
     }
 
     @Test
-    void createdBoard() {
+    void createdBoensureCreateBoardStateard() {
         board.createdBoard();
         assertEquals(BoardState.CREATED, board.getState());
     }

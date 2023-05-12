@@ -128,12 +128,9 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     @Override
     public String toString() {
-        return "Board\n" + "e bela"
-                /*"boardTitle= \n" + boardTitle +
-                "state= \n" + state +
-                "boardColumnList= \n" + boardColumnList +
-                "boardRowList= \n" + boardRowList +
-                "cells=" + cells */;
+        return "\nBoard: " +
+                "\nboardTitle: " + boardTitle.getBoardTitle() +
+                "\nwith " + cells.size() + " cells" ;
     }
 }
 
