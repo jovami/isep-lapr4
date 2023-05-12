@@ -1,6 +1,7 @@
 package eapli.base.course.domain;
 
 import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.functional.Either;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -61,14 +62,28 @@ public class Course implements AggregateRoot<Integer> {
         this.name = new CourseName(name);
     }
 
-    public void closeCourse() {
+    public Either<String, CourseState> close() {
+        if (this.state == CourseState.CLOSED)
+            return Either.left("Course is already closed");
+        Either<String, CourseState> old = Either.right(this.state);
         this.state = CourseState.CLOSED;
+        return old;
     }
+
     public void openEnrollments() {
         this.state = CourseState.ENROLL;
     }
-    public void openCourse() {
-        this.state = CourseState.OPEN;
+
+    public Either<String, CourseState> open() {
+        switch (this.state) {
+            case CLOSE:
+                this.state = CourseState.OPEN;
+                return Either.right(CourseState.OPEN);
+            case OPEN:
+                return Either.left("Course is already open");
+            default:
+                return Either.left("Course cannot be opened in its current state");
+        }
     }
     public void closeEnrollments() {
         this.state = CourseState.INPROGRESS;
@@ -89,7 +104,7 @@ public class Course implements AggregateRoot<Integer> {
         return description.getDescription();
     }
 
-    protected CourseState getState() {
+    public CourseState state() {
         return state;
     }
 

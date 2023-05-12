@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CourseTest {
 
     @BeforeAll
-    static void BeforeEach(){
+    static void BeforeEach() {
     }
 
     @Test
@@ -27,36 +27,36 @@ class CourseTest {
     @Test
     void closeCourse() {
         Course course = new Course();
-        course.closeCourse();
-        assertEquals(CourseState.CLOSED,course.getState());
+        course.close();
+        assertEquals(CourseState.CLOSED, course.state());
     }
 
     @Test
     void openEnrollments() {
-            Course course = new Course();
-            course.openEnrollments();
-            assertEquals(CourseState.ENROLL,course.getState());
+        Course course = new Course();
+        course.openEnrollments();
+        assertEquals(CourseState.ENROLL, course.state());
     }
 
     @Test
     void openCourse() {
-            Course course = new Course();
-            course.openCourse();
-            assertEquals(CourseState.OPEN,course.getState());
+        Course course = new Course();
+        course.open();
+        assertEquals(CourseState.OPEN, course.state());
     }
 
     @Test
     void closeEnrollments() {
-            Course course = new Course();
-            course.closeEnrollments();
-            assertEquals(CourseState.INPROGRESS,course.getState());
+        Course course = new Course();
+        course.closeEnrollments();
+        assertEquals(CourseState.INPROGRESS, course.state());
     }
 
     @Test
     void createdCourse() {
-            Course course = new Course();
-            course.createdCourse();
-            assertEquals(CourseState.CLOSE,course.getState());
+        Course course = new Course();
+        course.createdCourse();
+        assertEquals(CourseState.CLOSE, course.state());
     }
 
     @Test
@@ -73,72 +73,73 @@ class CourseTest {
         CourseDescription course = new CourseDescription(test);
         assertEquals(test, course.toString());
     }
+
     @Test
     void setNegativeCapacities() {
-        int testMin=-5;
-        int testMax=-10;
+        int testMin = -5;
+        int testMax = -10;
 
         Course course = new Course();
 
-        assertFalse(course.setCapacity(testMin,testMax));
-        assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
+        assertFalse(course.setCapacity(testMin, testMax));
+        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
 
     @Test
     void setInversedCapacity() {
-        int testMin=40;
-        int testMax=10;
+        int testMin = 40;
+        int testMax = 10;
 
         Course course = new Course();
 
-        assertFalse(course.setCapacity(testMin,testMax));
-        assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
+        assertFalse(course.setCapacity(testMin, testMax));
+        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
+
     @Test
     void setConstructorCapacity() {
-        int testMin=20;
-        int testMax=30;
+        int testMin = 20;
+        int testMax = 30;
 
-        CourseCapacity capacity= new CourseCapacity(testMin,testMax);
-        assertEquals(testMin,capacity.getMinStudentsEnrolled());
-        assertEquals(testMax,capacity.getMaxStudentsEnrolled());
+        CourseCapacity capacity = new CourseCapacity(testMin, testMax);
+        assertEquals(testMin, capacity.getMinStudentsEnrolled());
+        assertEquals(testMax, capacity.getMaxStudentsEnrolled());
     }
 
     @Test
     void setRightCapacity() {
-        int testMin=5;
-        int testMax=20;
+        int testMin = 5;
+        int testMax = 20;
 
         Course course = new Course();
 
-        course.setCapacity(testMin,testMax);
+        course.setCapacity(testMin, testMax);
         assertEquals(testMin, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(testMax, course.getCapacity().getMaxStudentsEnrolled());
     }
 
-
     @Test
     void setMinNegativeCapacity() {
-        int testMin=-5;
-        int testMax=10;
+        int testMin = -5;
+        int testMax = 10;
 
         Course course = new Course();
 
-        assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin, testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
+
     @Test
     void setMaxNegativeCapacity() {
-        int testMin=5;
-        int testMax=-10;
+        int testMin = 5;
+        int testMax = -10;
 
         Course course = new Course();
 
-
-        assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin, testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -156,7 +157,7 @@ class CourseTest {
 
         Course course = new Course();
 
-        assertTrue(course.setDuration(startDate,endDate));
+        assertTrue(course.setDuration(startDate, endDate));
         assertEquals(startDate, course.getDuration().startDate());
         assertEquals(endDate, course.getDuration().endDate());
     }
@@ -175,10 +176,11 @@ class CourseTest {
         CourseDuration duration = new CourseDuration();
         Assertions.assertNull(duration.getEndDate());
         Assertions.assertNull(duration.getStartDate());
-        assertTrue(duration.setIntervalDate(startDate,endDate));
+        assertTrue(duration.setIntervalDate(startDate, endDate));
         assertEquals(startDate, duration.getStartDate());
         assertEquals(endDate, duration.getEndDate());
     }
+
     @Test
     void setFalseCourseDuration() throws ParseException {
 
@@ -191,8 +193,9 @@ class CourseTest {
         Date endDate = df.parse(endDateString);
 
         CourseDuration duration = new CourseDuration();
-        assertFalse(duration.setIntervalDate(startDate,endDate));
+        assertFalse(duration.setIntervalDate(startDate, endDate));
     }
+
     @Test
     void CourseDuration() throws ParseException {
 
@@ -204,11 +207,12 @@ class CourseTest {
         Date startDate = df.parse(startDateString);
         Date endDate = df.parse(endDateString);
 
-        CourseDuration duration = new CourseDuration(startDate,endDate);
+        CourseDuration duration = new CourseDuration(startDate, endDate);
         assertEquals(startDate, duration.getStartDate());
         assertEquals(endDate, duration.getEndDate());
-        assertEquals( "Start date: "+startDate.toString()+"\tEnd date: "+endDate.toString(),duration.toString());
+        assertEquals("Start date: " + startDate.toString() + "\tEnd date: " + endDate.toString(), duration.toString());
     }
+
     @Test
     void setInvertedDatesDuration() throws ParseException {
 
@@ -222,11 +226,10 @@ class CourseTest {
 
         Course course = new Course();
 
-        assertFalse(course.setDuration(startDate,endDate));
+        assertFalse(course.setDuration(startDate, endDate));
         assertNull(course.getDuration().endDate());
         assertNull(course.getDuration().startDate());
     }
-
 
     @Test
     void testSameCourse() {
@@ -243,6 +246,7 @@ class CourseTest {
         c2.setName("c1");
         assertTrue(c1.sameAs(c2));
     }
+
     @Test
     void testSameAsNotCourse() {
         Course c1 = new Course();
@@ -271,21 +275,110 @@ class CourseTest {
     void sameIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        assertEquals(0,c1.compareTo(0));
+        assertEquals(0, c1.compareTo(0));
     }
 
     @Test
     void biggerIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        assertEquals(-1,c1.compareTo(10));
+        assertEquals(-1, c1.compareTo(10));
     }
 
     @Test
     void smallerIdentity() {
         Course c1 = new Course();
         c1.setName("c1");
-        assertEquals(1,c1.compareTo(-10));
+        assertEquals(1, c1.compareTo(-10));
     }
 
+    @Test
+    void ensureCourseStateCannotGoBackToOpen() {
+        CourseState state;
+        var c1 = new Course();
+        c1.open().onLeft(__ -> fail("Created courses should be able to be opened"));
+
+        // sanity check
+        assertEquals(CourseState.OPEN, c1.state(), "Course state should've been OPEN");
+        c1.open().onRight(__ -> fail("Opening an open course should not alter its state"));
+        assertEquals(CourseState.OPEN, c1.state());
+
+
+        // check return values are correct
+        // && also ensure the course state actually changed
+
+        c1.openEnrollments();
+        state = c1.state();
+        c1.open().onRight(__ -> fail("Courses open to enrollments cannot be re-opened"));
+        assertEquals(state, c1.state(), "Course cannot go back to OPEN after open to enrollments");
+
+        c1.closeEnrollments();
+        state = c1.state();
+        c1.open().onRight(__ -> fail("Courses closed to enrollments cannot be re-opened"));
+        assertEquals(state, c1.state(), "Course cannot go back to OPEN after enrollments are closed");
+
+        c1.close();
+        state = c1.state();
+        c1.open().onRight(__ -> fail("Closed courses cannot be re-opened"));
+        assertEquals(state, c1.state(), "Course cannot go back to OPEN after being closed");
+    }
+
+    // }
+    @Test
+    void ensureCreatedCourseCanBeClosed() {
+        var c1 = new Course();
+
+        c1.close().onLeft(__ -> fail("Created courses should be able to be closed"));
+        assertEquals(CourseState.CLOSED, c1.state(), "Created course should be able to be closed");
+    }
+
+    @Test
+    void ensureOpenCourseCanBeClosed() {
+        var c1 = new Course();
+        c1.open();
+
+        var errMsg = "Opened courses should be able to be closed";
+
+        c1.close().onLeft(__ -> fail(errMsg));
+        assertEquals(CourseState.CLOSED, c1.state(), errMsg);
+    }
+
+    @Test
+    void ensureOpenToEnrollmentsCourseCanBeClosed() {
+        var c1 = new Course();
+        c1.open();
+        c1.openEnrollments();
+
+        var errMsg = "Courses opened to enrollments should be able to be closed";
+
+        c1.close().onLeft(__ -> fail(errMsg));
+        assertEquals(CourseState.CLOSED, c1.state(), errMsg);
+    }
+
+    @Test
+    void ensureClosedToEnrollmentsCourseCanBeClosed() {
+        var c1 = new Course();
+        c1.open();
+        c1.openEnrollments();
+        c1.closeEnrollments();
+
+        var errMsg = "Courses closed to enrollments should be able to be closed";
+
+        c1.close().onLeft(__ -> fail(errMsg));
+        assertEquals(CourseState.CLOSED, c1.state(), errMsg);
+    }
+
+    @Test
+    void ensureClosingClosedCourseDoesNotAlterState() {
+        var c1 = new Course();
+        c1.open();
+        c1.openEnrollments();
+        c1.closeEnrollments();
+        c1.close();
+
+        var errMsg = "Closing an already closed course should not alter its state";
+
+        c1.close().onRight(__ -> fail(errMsg));
+        assertEquals(CourseState.CLOSED, c1.state(), errMsg);
+    }
 }

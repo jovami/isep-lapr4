@@ -64,6 +64,8 @@ public class MainMenu extends AbstractUI {
 
     //COURSE
     private static final int ADD_COURSE_OPTION = 1;
+    private static final int OPEN_COURSE = 2;
+    private static final int CLOSE_COURSE = 3;
 
     // SETTINGS
     private static final int SET_KITCHEN_ALERT_LIMIT_OPTION = 1;
@@ -142,6 +144,8 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Courses");
 
         menu.addItem(ADD_COURSE_OPTION, "Add course", new CreateCourseUI()::show);
+        menu.addItem(OPEN_COURSE, "Open a course", new OpenCourseUI()::show);
+        menu.addItem(CLOSE_COURSE, "Close a course", new CloseCourseUI()::show);
 
         return menu;
     }

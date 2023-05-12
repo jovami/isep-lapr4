@@ -39,9 +39,8 @@ public class CourseBootstrapper implements Action {
             throw new RuntimeException(e);
         }
 
-        Course course = new Course();
         c.setDuration(sDate,eDate);
         c.setCapacity(min,max);
-        repo.save(course);
+        repo.save(c);
     }
 }
