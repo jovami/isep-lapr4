@@ -2,6 +2,7 @@ package eapli.base.course.dto;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import eapli.base.course.domain.Course;
@@ -19,6 +20,6 @@ public final class CourseAndStateDTOMapper {
         return StreamSupport.stream(courses.spliterator(), false)
                             .sorted(Comparator.comparing(Course::identity))
                             .map(CourseAndStateDTOMapper::toDTO)
-                            .toList();
+                            .collect(Collectors.toList());
     }
 }
