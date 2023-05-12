@@ -1,0 +1,100 @@
+EXAM {
+    TITLE: "Example Exam"
+    HEADER {
+        DESCRIPTION: "Optional Description" 
+        FEEDBACK: on-submission
+        GRADING: on-submission
+    }
+
+    SECTION 1 {
+        DESCRIPTION: "Section 1. OPTIONAL!!" 
+
+        MATCHING {
+            DESCRIPTION: "Match the countries with their capital cities"
+            
+            SUBQUESTION 1: "Portugal"
+            SUBQUESTION 2: "Spain"
+            SUBQUESTION 3: "France"
+            SUBQUESTION 4: "Italy"
+            
+            ANSWER 1: "Lisbon"
+            ANSWER 2: "Madrid"
+            ANSWER 3: "Paris"
+            ANSWER 4: "Rome"
+            
+            SOLUTION 1: 1-2 [1.0]
+            SOLUTION 2: 2-1 [1.0]
+            SOLUTION 3: 3-3 [1.0]
+            SOLUTION 4: 4-4 [1.0]
+        }
+
+        MULTIPLE_CHOICE {
+            CHOICE_TYPE: single-answer
+            DESCRIPTION: "Who was the first female astronaut to travel to space?"
+            
+            ANSWER 1: "Sally Ride" 
+            ANSWER 2: "Valentina Tereshkova"  
+            ANSWER 3: "Mae Jemison"  
+            ANSWER 4: "Yuri Gagarin"
+            
+            SOLUTION 1: 2 [5.0]
+        }
+
+        MULTIPLE_CHOICE {
+            CHOICE_TYPE: multiple-answer
+            DESCRIPTION: "Which of the following animals are mammals?"
+            
+            ANSWER 1: "Kangaroo" 
+            ANSWER 2: "Turtle" 
+            ANSWER 3: "Dolphin"  
+            ANSWER 4: "Salmon" 
+            
+            SOLUTION 1: 1,3 [2.0]
+            SOLUTION 2: 1,3,4 [1.5]
+            SOLUTION 3: 1,4 [1.0]
+            SOLUTION 4: 3,4 [0.5]
+            SOLUTION 5: 1 [0.2]
+            SOLUTION 6: 3 [0.2]
+            SOLUTION 7: 4 [0.1]
+        }
+    }
+
+    SECTION 2 {
+        DESCRIPTION: "Welcome to section 2! This message is optional." 
+
+        SHORT_ANSWER {
+            DESCRIPTION: "Where is Casa da Música located?"
+            CASE_SENSITIVE: false
+
+            SOLUTION 1: "Boavista" [0.5]
+            SOLUTION 2: "Avenida da Boavista" [1.0]
+        }
+
+        NUMERICAL {
+            DESCRIPTION: "What is the value of 1+1?"
+            ERROR: 0.5
+
+            SOLUTION 1: 2 [1.0] 
+        }
+
+        MISSING_WORDS {
+            DESCRIPTION: "The Wright brothers were the first to successfully [1] an airplane."
+
+            GROUP "verbs" {             
+                ITEM 1: "fly"
+                ITEM 2: "drive"
+                ITEM 3: "swim"
+            }
+
+            CHOICE 1 {                  
+                SOLUTION 1: 1 [1.5] 
+                FROM_GROUP: "verbs"    
+            }
+        }      
+
+        TRUE_FALSE {
+            DESCRIPTION: "Water boils at 100 degrees Celsius."
+            SOLUTION 1: true [1.0]
+        }
+    }
+}
