@@ -9,7 +9,7 @@ participant CreateBoardController as Controller <<application>> order 2
 participant "board:Board" as Board <<domain>> order 3
 participant PersistenceContext as Persistence <<persistence>> order 4
 participant RepositoryFactory as Fact <<factory>> order 5
-participant BoardRepository as Repo <<repository>> order 6
+database BoardRepository as Repo <<repository>> order 6
 
 Actor -> UI : create Board
 activate UI
