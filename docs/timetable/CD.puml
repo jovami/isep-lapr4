@@ -1,0 +1,39 @@
+@startuml
+
+class TimeTable <<domain>>{
+- UserName : user
+- List<RecurringPattern> : patterns
+}
+
+class RecurringPattern <<domain>>{
+- LocalDate: startDate
+- LocalDate: startDate
+- LocalTime: endTime
+- LocalTime: startTime
+}
+
+class RecurringFrequency<<enum>>{
+- WEEKLY
+- ONCE
+}
+
+class RecurringPatternRepository <<repository>>
+class TimeTableRepository <<repository>>
+class CheckAvailabilityService <<service>>
+
+TimeTable --> RecurringPattern : patterns
+TimeTable : checkAvailability(RecurringPattern)
+
+CheckAvailabilityService : checkAvailability(RecurringPattern, List<UserName>)
+CheckAvailabilityService --> RecurringPatternRepository :patternRepo
+CheckAvailabilityService --> TimeTableRepository :timeTableRepo
+
+RecurringPatternRepository --> RecurringPattern : the recurringPattern
+RecurringPattern --> RecurringFrequency : frequency
+RecurringPattern : addException(LocalDate date)
+RecurringPattern : overLap(RecurringPattern that)
+
+TimeTableRepository --> TimeTable: the timeTable
+
+
+@enduml
