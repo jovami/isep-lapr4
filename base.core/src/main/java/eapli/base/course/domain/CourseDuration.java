@@ -25,8 +25,10 @@ public class CourseDuration implements ValueObject {
         startDate=null;
         endDate=null;
     }
-    protected  CourseDuration(Date startDate,Date endDate){
-        setIntervalDate(startDate,endDate);
+    protected CourseDuration(Date startDate,Date endDate){
+        if (!setIntervalDate(startDate,endDate)){
+            throw new IllegalArgumentException();
+        }
     }
 
     protected boolean setIntervalDate(Date startDate, Date endDate) {

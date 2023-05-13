@@ -44,10 +44,16 @@ public class Course implements AggregateRoot<Integer> {
 
     //JPA needs empty constructor
     public Course(){
+
+    }
+
+    public Course(String name, String description, Date startDate, Date endDate){
         this.state = CourseState.CLOSE;
-        this.description = new CourseDescription();
+        this.name = new CourseName(name);
+        this.description = new CourseDescription(description);
+        //throws IllegalArgumentException
+        this.duration = new CourseDuration(startDate,endDate);
         this.capacity = new CourseCapacity();
-        this.duration = new CourseDuration();
     }
 /*
     public  Course(String name,String description){
@@ -58,7 +64,7 @@ public class Course implements AggregateRoot<Integer> {
         this.duration = new CourseDuration();
     }
 */
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = new CourseName(name);
     }
 
@@ -120,7 +126,12 @@ public class Course implements AggregateRoot<Integer> {
     }
 
     public boolean setCapacity(int minCacapity,int maxCapacity) {
-        return capacity.setCapacities(minCacapity,maxCapacity);
+        try{
+            capacity = new CourseCapacity(minCacapity,maxCapacity);
+            return true;
+        }catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     public boolean setDuration(Date startDate, Date endDate) {
@@ -135,7 +146,8 @@ public class Course implements AggregateRoot<Integer> {
         final Course o = (Course) other;
         if (this == o) {
             return true;}
-        return this.name.equals(o.name) && this.code==o.code;}
+        return this.name.equals(o.name)
+                && this.code==o.code;}
 
     //TODO:TEST
     @Override

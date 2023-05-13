@@ -1,0 +1,30 @@
+@startuml
+class CreateCourseUI <<presentation>>
+class CreateCourseController <<application>>{
+    - Course : course
+
+}
+class Course <<domain>>{
+    - int : code
+    - CourseName : name
+    - CourseDescription : description
+    - CourseState : state
+    - CourseDuration : duration
+    - CourseCapacity : capacity
+}
+class CourseRepository <<repository>>
+class AggregateRoot<<application>>
+
+Course --|> AggregateRoot
+CreateCourseUI --> CreateCourseController : theController
+CreateCourseUI ..> Course : the course
+CreateCourseUI : doShow()
+CreateCourseController --> CourseRepository : repo
+CreateCourseController --> Course : theCourse
+CreateCourseController : createCourse(String ,String ,Date ,Date)
+CreateCourseController : addCapacity(int,int)
+CreateCourseController : listCourse()
+CreateCourseController : persistCourse()
+Course : setCapacity(int,int)
+CourseRepository : save(course)
+@enduml

@@ -25,22 +25,25 @@ public class CourseBootstrapper implements Action {
 
     private void saveCourse(String name, String description, String startDate, String endDate, int min, int max) {
         CourseRepository repo = PersistenceContext.repositories().courses();
-        Course c = new Course();
-        c.setName(name);
-        c.setDescription(description);
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         Date sDate = null;
         Date eDate = null;
+
         try {
             sDate = df.parse(startDate);
             eDate = df.parse(endDate);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            System.out.printf("Course %s was not bootstrapped\n because Duration was not right",name);
         }
 
-        c.setDuration(sDate,eDate);
-        c.setCapacity(min,max);
-        repo.save(c);
+        try{
+            Course c =  new Course(name,description ,sDate ,eDate );
+            c.setCapacity(min,max);
+            repo.save(c);
+        }catch (IllegalArgumentException e){
+            System.out.printf("Course %s was not bootstrapped\n",name);
+            throw new RuntimeException(e);
+        }
     }
 }

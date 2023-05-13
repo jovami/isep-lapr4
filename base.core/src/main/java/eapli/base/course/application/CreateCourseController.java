@@ -17,14 +17,17 @@ public class CreateCourseController {
 
     public CreateCourseController() {
         repo = PersistenceContext.repositories().courses();
-        course = new Course();
+        course = null;
     }
 
     public boolean createCourse(String name,String description,Date startDate,Date endDate){
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER,BaseRoles.MANAGER);
-        course.setName(name);
-        course.setDescription(description);
-        return course.setDuration(startDate, endDate);
+        try{
+            course = new Course(name,description,startDate,endDate);
+            return true;
+        }catch (IllegalArgumentException e){
+            return false;
+        }
     }
 
     public boolean addCapacity(int minCacapity,int maxCapacity){

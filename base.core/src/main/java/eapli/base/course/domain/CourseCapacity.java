@@ -6,6 +6,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class CourseCapacity implements ValueObject {
+    //TODO:Optional
     private final int NOCAPACITY =-1;
     private int maxStudentsEnrolled;
     private int minStudentsEnrolled;
@@ -16,8 +17,9 @@ public class CourseCapacity implements ValueObject {
         minStudentsEnrolled= NOCAPACITY;
     }
     public CourseCapacity(int minStudentsEnrolled,int maxStudentsEnrolled){
-        this.maxStudentsEnrolled= maxStudentsEnrolled;
-        this.minStudentsEnrolled= minStudentsEnrolled;
+        if (!setCapacities(minStudentsEnrolled,maxStudentsEnrolled)){
+            throw new IllegalArgumentException();
+        }
 
     }
 
