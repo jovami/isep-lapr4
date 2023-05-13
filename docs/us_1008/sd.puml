@@ -1,0 +1,83 @@
+@startuml
+
+actor Student as user
+participant EnrollmentRequestUI as ui
+participant EnrollmentRequestController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+participant CourseRepository as course_repo
+participant EnrollmentRequestRepository as enrollment_request_repo
+
+participant ListCoursesService as svc
+
+participant CourseAndStateDTOMapper as mapper
+participant CourseAndStateDTO as dto
+
+participant EnrollmentRequest as enrollment_request
+
+user --> ui: enter
+
+activate ui
+    ui --> ctrl: create()
+    activate ctrl
+        ctrl --> ctx: repositories()
+        activate ctx
+            ctx --> rep_fac: create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+        ctrl --> rep_fac: courses()
+        activate rep_fac
+            rep_fac --> course_repo: create()
+            activate course_repo
+            deactivate course_repo
+        deactivate rep_fac
+        ctrl --> rep_fac : enrollmentRequests()
+        activate rep_fac
+            rep_fac --> enrollment_request_repo: create()
+            activate enrollment_request_repo
+            deactivate enrollment_request_repo
+        deactivate rep_fac
+    deactivate ctrl
+
+    ui --> ctrl: getCourses()
+    activate ctrl
+        ctrl --> svc: enrollable(coursesRepository)
+        activate svc
+            svc --> course_repo: findByState()
+            activate course_repo
+            deactivate course_repo
+        deactivate svc
+
+        ctrl --> mapper: toDto(courses)
+        activate mapper
+            loop for each course in courses
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+        deactivate mapper
+
+        ctrl --> ui: courses
+    deactivate ctrl
+
+    ui --> user: show courses
+deactivate ui
+
+user --> ui: selects course from list
+activate ui
+    ui --> ctrl: chosen course (dto)
+    activate ctrl
+        ctrl ---> enrollment_request: requestEnrollment()
+        activate enrollment_request
+            enrollment_request --> ctrl: result
+        deactivate enrollment_request
+
+        ctrl --> ui: result
+    deactivate ctrl
+
+    ui --> user: show result
+deactivate ui
+@enduml
