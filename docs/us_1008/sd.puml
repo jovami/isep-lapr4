@@ -9,7 +9,7 @@ participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant EnrollmentRequestRepository as enrollment_request_repo
 
-participant ListCoursesService as svc
+participant ListCoursesService as courses_svc
 
 participant CourseAndStateDTOMapper as mapper
 participant CourseAndStateDTO as dto
@@ -44,12 +44,12 @@ activate ui
 
     ui --> ctrl: getCourses()
     activate ctrl
-        ctrl --> svc: enrollable(coursesRepository)
-        activate svc
-            svc --> course_repo: findByState()
+        ctrl --> courses_svc: enrollable(coursesRepository)
+        activate courses_svc
+            courses_svc --> course_repo: findByState()
             activate course_repo
             deactivate course_repo
-        deactivate svc
+        deactivate courses_svc
 
         ctrl --> mapper: toDto(courses)
         activate mapper
@@ -59,21 +59,24 @@ activate ui
                 deactivate dto
             end loop
         deactivate mapper
-
         ctrl --> ui: courses
     deactivate ctrl
+
 
     ui --> user: show courses
 deactivate ui
 
 user --> ui: selects course from list
 activate ui
-    ui --> ctrl: chosen course (dto)
+    ui --> ctrl: addEnrollmentRequest(courseName)
     activate ctrl
-        ctrl ---> enrollment_request: requestEnrollment()
+        ctrl ---> enrollment_request: EnrollmentRequest = createEnrollmentRequest()
         activate enrollment_request
-            enrollment_request --> ctrl: result
         deactivate enrollment_request
+
+        ctrl --> enrollment_request_repo: save(enrollmentRequest)
+        activate enrollment_request_repo
+        deactivate enrollment_request_repo
 
         ctrl --> ui: result
     deactivate ctrl
