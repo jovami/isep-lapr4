@@ -36,7 +36,7 @@ public abstract class TeacherBaseUI extends AbstractUI {
     @Override
     public String headline() {
 
-        return authz.session().map(s -> "Base [ @" + s.authenticatedUser().identity() + " ] ")
+        return authz.session().map(s -> "Base [ " + s.authenticatedUser().identity() + " ] ")
                 .orElse("Base [ ==Anonymous== ]");
     }
 

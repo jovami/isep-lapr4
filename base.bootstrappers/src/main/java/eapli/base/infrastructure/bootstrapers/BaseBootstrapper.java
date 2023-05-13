@@ -82,7 +82,7 @@ public class BaseBootstrapper implements Action {
 	 */
 	private boolean registerPowerUser() {
 		final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
-		userBuilder.withUsername(TestDataConstants.POWERUSER_EMAIL).withPassword(TestDataConstants.POWERUSER_PWD).withName("power", "user")
+		userBuilder.withUsername(TestDataConstants.POWERUSER_USERNAME).withPassword(TestDataConstants.POWERUSER_PWD).withName("power", "user")
 				.withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
 		final SystemUser newUser = userBuilder.build();
 
@@ -105,7 +105,7 @@ public class BaseBootstrapper implements Action {
 	 *
 	 */
 	protected void authenticateForBootstrapping() {
-		authenticationService.authenticate(TestDataConstants.POWERUSER_EMAIL, TestDataConstants.POWERUSER_PWD);
+		authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
 		Invariants.ensure(authz.hasSession());
 	}
 

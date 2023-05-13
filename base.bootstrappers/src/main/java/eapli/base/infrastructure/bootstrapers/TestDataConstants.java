@@ -27,8 +27,7 @@ import eapli.framework.time.util.Calendars;
 public final class TestDataConstants {
 
     public static final String POWERUSER_PWD = "poweruserA1";
-    public static final String POWERUSER_EMAIL = "power@user.com";
-
+    public static final String POWERUSER_USERNAME = "power";
 
     public static final String USER_TEST1 = "john@smith.com";
 

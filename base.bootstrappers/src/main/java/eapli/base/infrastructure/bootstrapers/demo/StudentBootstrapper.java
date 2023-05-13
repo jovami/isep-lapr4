@@ -45,44 +45,45 @@ public class StudentBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// some users that signup and are approved
-		signupAndApprove("Password1", "Johnny", "Skrillex", "johnny@student.com",
+		signupAndApprove("johnny","Password1", "Johnny", "Skrillex", "johnny@student.com",
 				TestDataConstants.USER_TEST1);
-		signupAndApprove("Password1", "Mary", "Smith", "mary@student.com", "isep959");
+		signupAndApprove("mary","Password1", "Mary", "Smith", "mary@student.com",
+				"isep959");
 
 		// some users that signup but the approval is pending. use the backoffice
 		// application to approve these
-		signup("Password1", "Mary", "Smith One", "mary1@student.com", "isep111");
-		signup("Password1", "Mary", "Smith Two", "mary2@student.com", "isep222");
+		signup("mary23","Password1", "Mary", "Smith One", "mary1@student.com", "isep111");
+		/*signup("Password1", "Mary", "Smith Two", "mary2@student.com", "isep222");
 		signup("Password1", "Mary", "Smith Three", "mary3@student.com", "isep333");
 		signup("Password1", "Mary", "Smith Four", "mary4@student.com", "isep444");
-
+*/
 		return true;
 	}
 
-	private SignupRequest signupAndApprove(final String password, final String firstName,
+	private SignupRequest signupAndApprove(final String username, final String password, final String firstName,
 			final String lastName, final String email, final String mecanographicNumber) {
 		SignupRequest request = null;
 		try {
-			request = signupController.signup(email, password, firstName, lastName, email, mecanographicNumber);
+			request = signupController.signup(username, password, firstName, lastName, email, mecanographicNumber);
 			acceptController.acceptSignupRequest(request);
 		} catch (final ConcurrencyException | IntegrityViolationException e) {
 			// ignoring exception. assuming it is just a primary key violation
 			// due to the tentative of inserting a duplicated user
-			LOGGER.warn("Assuming {} already exists (activate trace log for details)", email);
+			LOGGER.warn("Assuming {} already exists (activate trace log for details)", username);
 			LOGGER.trace("Assuming existing record", e);
 		}
 		return request;
 	}
 
-	private SignupRequest signup(final String password, final String firstName,
+	private SignupRequest signup(final String username, final String password, final String firstName,
 			final String lastName, final String email, final String mecanographicNumber) {
 		SignupRequest request = null;
 		try {
-			request = signupController.signup(email, password, firstName, lastName, email, mecanographicNumber);
+			request = signupController.signup(username, password, firstName, lastName, email, mecanographicNumber);
 		} catch (final ConcurrencyException | IntegrityViolationException e) {
 			// ignoring exception. assuming it is just a primary key violation
 			// due to the tentative of inserting a duplicated user
-			LOGGER.warn("Assuming {} already exists (activate trace log for details)", email);
+			LOGGER.warn("Assuming {} already exists (activate trace log for details)", username);
 			LOGGER.trace("Assuming existing record", e);
 		}
 		return request;

@@ -49,7 +49,7 @@ public class SignupController {
 		// unauthenticated users may request a signup
 
 		final SignupRequestBuilder signupRequestBuilder = UserBuilderHelper.signupBuilder();
-		signupRequestBuilder.withUsername(email).withPassword(password).withName(firstName, lastName)
+		signupRequestBuilder.withUsername(username).withPassword(password).withName(firstName, lastName)
 				.withEmail(email).createdOn(createdOn).withMecanographicNumber(mecanographicNumber);
 
 		final SignupRequest newSignupRequest = signupRequestBuilder.build();

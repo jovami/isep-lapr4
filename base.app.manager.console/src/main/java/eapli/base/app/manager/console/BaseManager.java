@@ -72,12 +72,12 @@ public final class BaseManager extends BaseApplication {
 
 	@Override
 	protected String appTitle() {
-		return "Base Back Office";
+		return "eCourse";
 	}
 
 	@Override
 	protected String appGoodbye() {
-		return "Base Back Office";
+		return "eCourse";
 	}
 
 	@SuppressWarnings("unchecked")

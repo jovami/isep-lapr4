@@ -66,6 +66,7 @@ public class AddUserUI extends AbstractUI {
 
         try {
             this.theController.addUser(username, password, firstName, lastName, email, roleTypes);
+            System.out.println("\nUser Created Successfully!");
         } catch (final IntegrityViolationException | ConcurrencyException e) {
             System.out.println("That username is already in use.");
         }

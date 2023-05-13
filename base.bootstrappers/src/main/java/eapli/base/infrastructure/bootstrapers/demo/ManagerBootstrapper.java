@@ -43,8 +43,8 @@ public class ManagerBootstrapper extends UsersBootstrapperBase implements Action
 
     @Override
     public boolean execute() {
-        registerManager(EMAIL, PASSWORD, "Ruben", "Ferreira", EMAIL);
-        registerManager(EMAIL2, PASSWORD, "Diogo", "Napoles", EMAIL2);
+        registerManager("ruben", PASSWORD, "Ruben", "Ferreira", EMAIL);
+        registerManager("diogo", PASSWORD, "Diogo", "Napoles", EMAIL2);
         return true;
     }
 

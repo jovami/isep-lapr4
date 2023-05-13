@@ -70,7 +70,7 @@ public class BaseDemoBootstrapper implements Action {
 	 */
 	protected void authenticateForBootstrapping() {
 
-		authenticationService.authenticate(TestDataConstants.POWERUSER_EMAIL, TestDataConstants.POWERUSER_PWD);
+		authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
 
 		Invariants.ensure(authz.hasSession());
 

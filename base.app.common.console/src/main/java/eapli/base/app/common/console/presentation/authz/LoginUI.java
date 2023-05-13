@@ -64,10 +64,11 @@ public class LoginUI extends AbstractUI {
         int attempt = 1;
         while (attempt <= maxAttempts) {
             
-            final String email = Console.readLine("E-mail:");
+            final String username = Console.readLine("Username:");
             final String password = Console.readLine("Password:");
 
-            if (authenticationService.authenticate(email, password, onlyWithThis).isPresent()) {
+
+            if (authenticationService.authenticate(username, password, onlyWithThis).isPresent()) {
                 return true;
             } else {
                 System.out.printf("Wrong email or password. You have %d attempts left.%n%n»»»»»»»»»%n",
