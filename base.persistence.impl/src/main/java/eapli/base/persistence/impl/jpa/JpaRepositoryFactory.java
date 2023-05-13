@@ -22,6 +22,8 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.Application;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
+import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.base.board.repositories.BoardRepository;
@@ -96,8 +98,17 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 		return JpaAutoTxRepository.buildTransactionalContext(Application.settings().getPersistenceUnitName(),
 				Application.settings().getExtendedPersistenceProperties());
 	}
+	@Override
+	public RecurringPatternRepository recurringPatterns(){
+		return new JpaRecurringPatternRepository(Application.settings().getPersistenceUnitName());
+	}
 
-    @Override
+	@Override
+	public TimeTableRepository timeTables() {
+		return new JpaTimeTableRepository(Application.settings().getPersistenceUnitName());
+	}
+
+	@Override
     public QuestionRepository questions() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'questions'");

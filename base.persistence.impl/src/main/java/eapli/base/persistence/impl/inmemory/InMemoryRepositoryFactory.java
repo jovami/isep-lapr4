@@ -23,6 +23,8 @@ package eapli.base.persistence.impl.inmemory;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
+import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.infrastructure.bootstrapers.BaseBootstrapper;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.domain.repositories.TransactionalContext;
@@ -120,5 +122,15 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'formativeExamSpecifications'");
     }
+
+	@Override
+	public RecurringPatternRepository recurringPatterns() {
+		return new InMemoryRecurringPatternRepository();
+	}
+
+	@Override
+	public TimeTableRepository timeTables() {
+		return new InMemoryTimeTableRepository();
+	}
 
 }
