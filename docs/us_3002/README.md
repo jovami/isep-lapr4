@@ -46,4 +46,4 @@ All boards when created have the `CREATED` state assigned.
 
 ## Sequence Diagram
 
-![diagram](./SD.svg)
+![diagram](createBoardSD.svg)
