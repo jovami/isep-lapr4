@@ -6,7 +6,7 @@ participant OpenCloseCourseController as ctrl
 
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
-participant CouseRepository as repo
+participant CourseRepository as repo
 
 participant ListCoursesService as svc
 

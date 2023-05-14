@@ -19,7 +19,6 @@ US 1004 -- Open/Close a course
 
 # Design
 
-
 Even though this is a single use case, the user interface will be split into two:
 
 1. Open a course --- **OpenCourseUI**
