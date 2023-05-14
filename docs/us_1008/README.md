@@ -22,8 +22,7 @@ The former is responsible for receiving user input and displaying relevant infor
 responsible for implementing the system's business logic and interacting with the domain classes.
 
 In order to ensure a user-friendly experience, the **EnrollmentRequestUI** provides a list of courses that are available 
-for enrollment, thereby enabling the user to select the course of their choice. To minimize coupling between the UI 
-and the domain classes, the system also employs the DTO pattern while handling with **Courses** and their states.
+for enrollment, thereby enabling the user to select the course of their choice.
 
 To prevent code duplication, the **strategy pattern** is utilized in the **ListCoursesService**, as in **us_1004**. 
 Specifically, the service offers a `ofStates(states)` method that provides a list of courses whose state matches any of 

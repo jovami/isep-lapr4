@@ -51,16 +51,9 @@ activate ui
             deactivate course_repo
         deactivate courses_svc
 
-        ctrl --> mapper: toDto(courses)
-        activate mapper
-            loop for each course in courses
-                mapper --> dto: create()
-                activate dto
-                deactivate dto
-            end loop
-        deactivate mapper
         ctrl --> ui: courses
     deactivate ctrl
+
 
 
     ui --> user: show courses
@@ -68,19 +61,18 @@ deactivate ui
 
 user --> ui: selects course from list
 activate ui
-    ui --> ctrl: addEnrollmentRequest(courseName)
+    ui --> ctrl: createEnrollmentRequest(courseName)
     activate ctrl
-        ctrl ---> enrollment_request: EnrollmentRequest = createEnrollmentRequest()
+        ctrl ---> enrollment_request: EnrollmentRequest = new EnrollmentRequest(courseName, username)
+        note bottom: username is taken from user session
         activate enrollment_request
         deactivate enrollment_request
 
         ctrl --> enrollment_request_repo: save(enrollmentRequest)
         activate enrollment_request_repo
         deactivate enrollment_request_repo
-
-        ctrl --> ui: result
     deactivate ctrl
 
-    ui --> user: show result
+    ui --> user: show success message
 deactivate ui
 @enduml
