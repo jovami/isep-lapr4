@@ -23,54 +23,32 @@
  */
 package eapli.base.app.student.console.presentation;
 
-import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
+import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.usermanagement.domain.BaseRoles;
-import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ExitWithMessageAction;
 import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
-/**
- * @author Paulo Gandra Sousa
- */
-class MainMenu extends ClientUserBaseUI {
+public class MainMenu extends AbstractUI {
 
-    private static final String SEPARATOR_LABEL = "--------------";
-
-    private static final String RETURN = "Return ";
-
-    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
+    private static final String RETURN_LABEL = "Return ";
 
     private static final int EXIT_OPTION = 0;
 
-    // MAIN MENU
-    private static final int MY_USER_OPTION = 1;
-    private static final int BOOKINGS_OPTION = 2;
-    private static final int ACCOUNT_OPTION = 3;
-    private static final int SETTINGS_OPTION = 4;
-
-    // BOOKINGS MENU
-    private static final int BOOK_A_MEAL_OPTION = 2;
-    private static final int LIST_MY_BOOKINGS_OPTION = 3;
-
-    // ACCOUNT MENU
-    private static final int LIST_MOVEMENTS_OPTION = 1;
-
-    // BOARD MENU
-
-    private static final int CREATE_BOARD_OPTION = 1;
-
     // SETTINGS
-    private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
 
-    private final AuthorizationService authz =
-            AuthzRegistry.authorizationService();
+    private static final int MY_USER_OPTION = 1;
+
+    private static final String SEPARATOR_LABEL = "--------------";
+
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
     @Override
     public boolean show() {
@@ -84,9 +62,17 @@ class MainMenu extends ClientUserBaseUI {
     @Override
     public boolean doShow() {
         final Menu menu = buildMainMenu();
-        final MenuRenderer renderer =
-                new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
+        final MenuRenderer renderer;
+        renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
+
         return renderer.render();
+    }
+
+    @Override
+    public String headline() {
+
+        return authz.session().map(s -> "eCourse [ " + s.authenticatedUser().identity() + " ]")
+                .orElse("eCourse [ ==Anonymous== ]");
     }
 
     private Menu buildMainMenu() {
@@ -95,25 +81,20 @@ class MainMenu extends ClientUserBaseUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
 
-        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
-            final Menu boardMenu = buildBoardMenu();
-            mainMenu.addSubMenu(CREATE_BOARD_OPTION, boardMenu);
+        if (!Application.settings().isMenuLayoutHorizontal()) {
+            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
         }
 
-        mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+        if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
 
+        }
+
+        if (!Application.settings().isMenuLayoutHorizontal()) {
+            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+        }
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
-    }
-
-    private Menu buildBoardMenu() {
-        final Menu menu = new Menu("Boards");
-
-        menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
-        menu.addItem(EXIT_OPTION, RETURN, Actions.SUCCESS);
-
-        return menu;
     }
 }

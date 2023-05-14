@@ -23,6 +23,7 @@
  */
 package eapli.base.app.teacher.console.presentation;
 
+import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.usermanagement.domain.BaseRoles;
@@ -31,59 +32,35 @@ import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ExitWithMessageAction;
 import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
-/**
- * @author Paulo Gandra Sousa
- */
-class MainMenu extends TeacherBaseUI {
+public class MainMenu extends AbstractUI {
+
+    private static final String RETURN_LABEL = "Return ";
 
     private static final int EXIT_OPTION = 0;
 
-    private static final String SEPARATOR_LABEL = "--------------";
+    // REGULAR EXAM
 
-    private static final String RETURN = "Return ";
+    private static final int CREATE_REGULAR_EXAM_OPTION = 1;
 
-    private static final String NOT_IMPLEMENTED_YET = "Not implemented yet";
-
-    private enum Index {
-        EXIT_OPTION,
-
-        // MAIN MENU
-        MY_USER_OPTION,
-        CREATE_REGULAR_EXAM,
-        CREATE_FORMATIVE_EXAM,
-    }
-
-    // private static final int EXIT_OPTION = 0;
-
-    // MAIN MENU
-    // private static final int MY_USER_OPTION = 1;
-    // private static final int BOOKINGS_OPTION = 2;
-    // private static final int ACCOUNT_OPTION = 3;
-    // private static final int SETTINGS_OPTION = 4;
-
-    // BOOKINGS MENU
-    // private static final int BOOK_A_MEAL_OPTION = 2;
-    // private static final int LIST_MY_BOOKINGS_OPTION = 3;
-
-    // ACCOUNT MENU
-    // private static final int LIST_MOVEMENTS_OPTION = 1;
-
-    // BOARD MENU
+    // BOARD
 
     private static final int CREATE_BOARD_OPTION = 1;
 
     // SETTINGS
-    private static final int SET_USER_ALERT_LIMIT_OPTION = 1;
 
+    private static final int MY_USER_OPTION = 1;
     private static final int REGULAR_EXAM_OPTION = 2;
+    private static final int BOARD_OPTION = 3;
 
-    private final AuthorizationService authz =
-            AuthzRegistry.authorizationService();
+    private static final String SEPARATOR_LABEL = "--------------";
+
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
     @Override
     public boolean show() {
@@ -97,29 +74,41 @@ class MainMenu extends TeacherBaseUI {
     @Override
     public boolean doShow() {
         final Menu menu = buildMainMenu();
-        final MenuRenderer renderer =
-                new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
+        final MenuRenderer renderer;
+        renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
+
         return renderer.render();
+    }
+
+    @Override
+    public String headline() {
+
+        return authz.session().map(s -> "eCourse [ " + s.authenticatedUser().identity() + " ]")
+                .orElse("eCourse [ ==Anonymous== ]");
     }
 
     private Menu buildMainMenu() {
         final Menu mainMenu = new Menu();
 
         final Menu myUserMenu = new MyUserMenu();
-        mainMenu.addSubMenu(Index.MY_USER_OPTION.ordinal(), myUserMenu);
+        mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
+
+        if (!Application.settings().isMenuLayoutHorizontal()) {
+            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+        }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER)) {
             final Menu regularExamMenu = buildRegularExamMenu();
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
             final Menu boardMenu = buildBoardMenu();
-            mainMenu.addSubMenu(CREATE_BOARD_OPTION, boardMenu);
+            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
         }
 
-        mainMenu.addItem(Index.CREATE_FORMATIVE_EXAM.ordinal(), "Create a formative exam", new CreateFormativeExamUI()::show);
+        if (!Application.settings().isMenuLayoutHorizontal()) {
+            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+        }
 
-        mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-
-        mainMenu.addItem(Index.EXIT_OPTION.ordinal(), "Exit", new ExitWithMessageAction("Bye, Bye"));
+        mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
     }
@@ -127,7 +116,8 @@ class MainMenu extends TeacherBaseUI {
     private Menu buildRegularExamMenu() {
         final Menu menu = new Menu("Regular Exam");
 
-        menu.addItem(Index.CREATE_REGULAR_EXAM.ordinal(), "Add regular exam", new CreateRegularExamUI()::show);
+        menu.addItem(CREATE_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
     }
@@ -136,7 +126,7 @@ class MainMenu extends TeacherBaseUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
-        menu.addItem(EXIT_OPTION, RETURN, Actions.SUCCESS);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
     }

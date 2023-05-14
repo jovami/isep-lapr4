@@ -42,11 +42,6 @@ import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
-/**
- * TODO split this class in more specialized classes for each menu
- *
- * @author Paulo Gandra Sousa
- */
 public class MainMenu extends AbstractUI {
 
     private static final String RETURN_LABEL = "Return ";
@@ -68,12 +63,10 @@ public class MainMenu extends AbstractUI {
     private static final int CLOSE_COURSE = 3;
 
     // SETTINGS
-    private static final int SET_KITCHEN_ALERT_LIMIT_OPTION = 1;
 
     private static final int MY_USER_OPTION = 1;
     private static final int USERS_OPTION = 2;
     private static final int BOARD_OPTION = 3;
-    private static final int SETTINGS_OPTION = 9;
     private static final int COURSE_OPTION = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
@@ -94,22 +87,15 @@ public class MainMenu extends AbstractUI {
         final Menu menu = buildMainMenu();
         final MenuRenderer renderer;
         renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
-        /*
-        if (Application.settings().isMenuLayoutHorizontal()) {
-            renderer = new HorizontalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
-        } else {
-            renderer = new VerticalMenuRenderer(menu, MenuItemRenderer.DEFAULT);
-        }
 
-         */
         return renderer.render();
     }
 
     @Override
     public String headline() {
 
-        return authz.session().map(s -> "Base [ " + s.authenticatedUser().identity() + " ]")
-                .orElse("Base [ ==Anonymous== ]");
+        return authz.session().map(s -> "eCourse [ " + s.authenticatedUser().identity() + " ]")
+                .orElse("eCourse [ ==Anonymous== ]");
     }
 
     private Menu buildMainMenu() {
@@ -171,9 +157,4 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
-
-
-
-
-
 }
