@@ -1,5 +1,6 @@
 package eapli.base.course.application;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ public final class OpenCloseCourseController {
     }
 
     private List<CourseAndStateDTO> getCourses(Supplier<Iterable<Course>> courses) {
-        return CourseAndStateDTOMapper.toDTO(courses.get());
+        return new CourseAndStateDTOMapper().toDTO(courses.get(), Comparator.comparing(Course::identity));
     }
 
     private Course fromDTO(CourseAndStateDTO dto) throws ConcurrencyException {
