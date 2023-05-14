@@ -23,6 +23,7 @@ package eapli.base.infrastructure.persistence;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -115,6 +116,7 @@ public interface RepositoryFactory {
     FormativeExamRepository formativeExams();
     FormativeExamSpecificationRepository formativeExamSpecifications();
     EnrollmentRequestRepository enrollmentRequests();
+    EnrollmentRepository enrollments();
 
     RecurringPatternRepository recurringPatterns();
 

@@ -99,7 +99,8 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         if (this == o) {
             return true;}
         return this.courseName.equals(o.courseName)
-                && this.username.equals(o.username);}
+                && this.username.equals(o.username);
+    }
 
     @Override
     public Integer identity() {

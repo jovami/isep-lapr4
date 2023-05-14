@@ -23,6 +23,7 @@ package eapli.base.persistence.impl.inmemory;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -124,6 +125,11 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	@Override
 	public EnrollmentRequestRepository enrollmentRequests() {
 		return new InMemoryEnrollmentRequestsRepository();
+	}
+
+	@Override
+	public EnrollmentRepository enrollments() {
+		return new InMemoryEnrollmentRepository();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.Application;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -127,5 +128,10 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 	@Override
 	public EnrollmentRequestRepository enrollmentRequests() {
 		return new JpaEnrollmentRequestsRepository(Application.settings().getPersistenceUnitName());
+	}
+
+	@Override
+	public EnrollmentRepository enrollments() {
+		return new JpaEnrollmentRepository(Application.settings().getPersistenceUnitName());
 	}
 }
