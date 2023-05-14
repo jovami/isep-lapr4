@@ -48,8 +48,7 @@ call `ofStates()`.
     + **Course**
     + **CourseState**
 - Controller:
-    + **OpenCourseController**
-    + **CloseCourseController**
+    + **OpenCloseCourseController**
     + **ListCoursesService**
 - Repository:
     + **CourseRepository**

@@ -2,7 +2,7 @@
 
 actor Manager as user
 participant Open_CloseCourseUI as ui
-participant Open_CloseCourseController as ctrl
+participant OpenCloseCourseController as ctrl
 
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
@@ -36,7 +36,7 @@ activate ui
     deactivate ctrl
 
 
-    ui --> ctrl: getCourses()
+    ui --> ctrl: openable/closableCourses()
     activate ctrl
         ctrl --> svc: openable/closable(repository)
         activate svc
@@ -52,9 +52,10 @@ activate ui
                 activate dto
                 deactivate dto
             end loop
+            mapper --> ctrl: courseDTOList
         deactivate mapper
 
-        ctrl --> ui: courses
+        ctrl --> ui: courseDTOList
     deactivate ctrl
 
     ui --> user: show courses
@@ -64,8 +65,9 @@ user --> ui: selects course from list
 activate ui
     ui --> ctrl: chosen course (dto)
     activate ctrl
-        ctrl ---> course: open/close()
+        ctrl --> course: open/close()
         activate course
+            course --> course: open/close()
             course --> ctrl: result
         deactivate course
 

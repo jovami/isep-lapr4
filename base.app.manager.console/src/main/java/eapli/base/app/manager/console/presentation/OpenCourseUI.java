@@ -1,6 +1,6 @@
 package eapli.base.app.manager.console.presentation;
 
-import eapli.base.course.application.OpenCourseController;
+import eapli.base.course.application.OpenCloseCourseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
@@ -10,18 +10,16 @@ import eapli.framework.presentation.console.SelectWidget;
  * OpenCourseUI
  */
 public class OpenCourseUI extends AbstractUI {
-    private final OpenCourseController ctrl;
+    private final OpenCloseCourseController ctrl;
 
     public OpenCourseUI() {
         super();
-        this.ctrl = new OpenCourseController();
+        this.ctrl = new OpenCloseCourseController();
     }
 
     @Override
     protected boolean doShow() {
-        boolean keepGoing = false;
-
-        var widget = new SelectWidget<>("Choose a course to open:", this.ctrl.getCourses());
+        var widget = new SelectWidget<>("Choose a course to open:", this.ctrl.openableCourses());
         widget.show();
 
         if (widget.selectedOption() <= 0)
@@ -32,19 +30,18 @@ public class OpenCourseUI extends AbstractUI {
         if (Console.readBoolean("Is this ok? (y/n)")) {
             try {
                 this.ctrl.openCourse(chosen).consume(
+                        // Error
                         System.out::println,
+                        // Ok
                         (state) -> System.out.printf("Course opened with success! (previous state was %s)\n", state));
-
-                keepGoing = Console.readBoolean("Do you wish to open another course? (y/n)");
             } catch (ConcurrencyException e) {
                 System.out.println(e.getMessage());
-                keepGoing = false;
             }
         } else {
-            keepGoing = !Console.readBoolean("Exit? (y/n)");
+            System.out.println("Operation canceled with success!");
         }
 
-        return keepGoing;
+        return false;
     }
 
     @Override
