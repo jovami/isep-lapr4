@@ -21,7 +21,10 @@
 package eapli.base.persistence.impl.jpa;
 
 import eapli.base.Application;
+import eapli.base.clientusermanagement.repositories.ManagerRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
@@ -85,7 +88,21 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 		return new JpaBoardRepository(Application.settings().getPersistenceUnitName());
 	}
 
-	//TODO: implement
+    @Override
+    public StudentRepository students() {
+        return new JpaStudentRepository(Application.settings().getPersistenceUnitName());
+    }
+
+    @Override
+    public TeacherRepository teachers() {
+        return new JpaTeacherRepository(Application.settings().getPersistenceUnitName());
+    }
+
+    @Override
+    public ManagerRepository managers() {
+        return new JpaManagerRepository(Application.settings().getPersistenceUnitName());
+    }
+
 	@Override
 	public CourseRepository courses() {
 		return new JpaCourseRepository(Application.settings().getPersistenceUnitName());

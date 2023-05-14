@@ -22,7 +22,10 @@ package eapli.base.persistence.impl.inmemory;
 
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
+import eapli.base.clientusermanagement.repositories.ManagerRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
@@ -75,13 +78,11 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 		return signupRequests(null);
 	}
 
-	//TODO: implement
 	@Override
 	public CourseRepository courses() {
 		return new InMemoryCourseRepository() ;
 	}
 
-	//TODO: implement
 	@Override
 	public RegularExamRepository exams() { return new InMemoryRegularExamRepository();}
 
@@ -106,6 +107,22 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 		// in memory does not support transactions...
 		return null;
 	}
+
+    @Override
+    public StudentRepository students() {
+        return new InMemoryStudentRepository();
+    }
+
+    @Override
+    public TeacherRepository teachers() {
+        return new InMemoryTeacherRepository();
+    }
+
+    @Override
+    public ManagerRepository managers() {
+        return new InMemoryManagerRepository();
+    }
+
 
     @Override
     public QuestionRepository questions() {
@@ -141,5 +158,4 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	public TimeTableRepository timeTables() {
 		return new InMemoryTimeTableRepository();
 	}
-
 }
