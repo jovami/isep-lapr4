@@ -22,6 +22,7 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.Application;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
@@ -110,20 +111,21 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 
 	@Override
     public QuestionRepository questions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'questions'");
+		return new JpaQuestionRepository(Application.settings().getPersistenceUnitName());
     }
 
     @Override
     public FormativeExamRepository formativeExams() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'formativeExams'");
+		return new JpaFormativeExamRepository(Application.settings().getPersistenceUnitName());
     }
 
     @Override
     public FormativeExamSpecificationRepository formativeExamSpecifications() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'formativeExamSpecifications'");
+		return new JpaFormativeExamSpecificationRepository(Application.settings().getPersistenceUnitName());
     }
 
+	@Override
+	public EnrollmentRequestRepository enrollmentRequests() {
+		return new JpaEnrollmentRequestsRepository(Application.settings().getPersistenceUnitName());
+	}
 }

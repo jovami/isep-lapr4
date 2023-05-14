@@ -23,6 +23,7 @@ package eapli.base.persistence.impl.inmemory;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.infrastructure.bootstrapers.BaseBootstrapper;
@@ -107,21 +108,23 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 
     @Override
     public QuestionRepository questions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'questions'");
+		return new InMemoryQuestionRepository();
     }
 
     @Override
     public FormativeExamRepository formativeExams() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'formativeExams'");
+		return new InMemoryFormativeExamRepository();
     }
 
     @Override
     public FormativeExamSpecificationRepository formativeExamSpecifications() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'formativeExamSpecifications'");
+		return new InMemoryFormativeExamSpecificationRepository();
     }
+
+	@Override
+	public EnrollmentRequestRepository enrollmentRequests() {
+		return new InMemoryEnrollmentRequestsRepository();
+	}
 
 	@Override
 	public RecurringPatternRepository recurringPatterns() {

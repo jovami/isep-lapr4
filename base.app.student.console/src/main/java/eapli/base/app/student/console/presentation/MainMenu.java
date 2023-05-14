@@ -26,6 +26,7 @@ package eapli.base.app.student.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -42,9 +43,12 @@ public class MainMenu extends AbstractUI {
 
     private static final int EXIT_OPTION = 0;
 
-    // SETTINGS
+    // ENROLLMENTS
+    private static final int ENROLLMENT_REQUEST_OPTION = 1;
 
+    // SETTINGS
     private static final int MY_USER_OPTION = 1;
+    private static final int ENROLLMENTS_OPTION = 2;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -86,7 +90,8 @@ public class MainMenu extends AbstractUI {
         }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
-
+            final Menu enrollmentsMenu = buildEnrollmentsMenu();
+            mainMenu.addSubMenu(ENROLLMENTS_OPTION, enrollmentsMenu);
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -96,5 +101,14 @@ public class MainMenu extends AbstractUI {
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
+    }
+
+    private Menu buildEnrollmentsMenu() {
+        final Menu menu = new Menu("Enrollments");
+
+        menu.addItem(ENROLLMENT_REQUEST_OPTION, "Request Enrollment in a Course", new EnrollmentRequestUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
     }
 }

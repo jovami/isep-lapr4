@@ -84,7 +84,7 @@ public class Course implements AggregateRoot<Integer> {
         switch (this.state) {
             case CLOSE:
                 this.state = CourseState.OPEN;
-                return Either.right(CourseState.OPEN);
+                return Either.right(CourseState.CLOSE);
             case OPEN:
                 return Either.left("Course is already open");
             default:
@@ -104,6 +104,10 @@ public class Course implements AggregateRoot<Integer> {
 
     public String getName() {
         return name.getName();
+    }
+
+    public CourseName getCourseName(){
+        return name;
     }
 
     protected String  getDescription() {
