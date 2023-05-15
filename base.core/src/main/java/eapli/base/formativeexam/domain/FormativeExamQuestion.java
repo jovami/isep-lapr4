@@ -1,6 +1,8 @@
 package eapli.base.formativeexam.domain;
 
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import eapli.base.exam.domain.question.Question;
 import eapli.framework.domain.model.ValueObject;
@@ -10,6 +12,7 @@ import eapli.framework.domain.model.ValueObject;
  */
 @Embeddable
 public class FormativeExamQuestion implements ValueObject {
+    @OneToOne
     private final Question question;
     private final QuestionWeight weight;
 

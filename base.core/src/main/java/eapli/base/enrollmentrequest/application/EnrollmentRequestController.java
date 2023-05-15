@@ -1,8 +1,9 @@
 package eapli.base.enrollmentrequest.application;
 
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseName;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
@@ -10,7 +11,6 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.model.Username;
 
 /**
  * EnrollmentRequestController
@@ -19,11 +19,14 @@ public final class EnrollmentRequestController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     private final EnrollmentRequestRepository enrollmentRequestRepo;
     private final CourseRepository courseRepo;
+    private final StudentRepository studentRepo;
     private EnrollmentRequest enrollmentRequest;
+
 
     public EnrollmentRequestController() {
         this.enrollmentRequestRepo = PersistenceContext.repositories().enrollmentRequests();
         this.courseRepo = PersistenceContext.repositories().courses();
+        this.studentRepo = PersistenceContext.repositories().students();
         enrollmentRequest = null;
     }
 
@@ -31,31 +34,26 @@ public final class EnrollmentRequestController {
         return new ListCoursesService(courseRepo).enrollable();
     }
 
-    public boolean createEnrollmentRequest(CourseName courseName){
+    public boolean createEnrollmentRequest(Course course){
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
         var session = authz.session();
         if (session.isEmpty()) {
             return false;
         }
 
-        var username = session.get().authenticatedUser().username();
-        try {
-            enrollmentRequest = new EnrollmentRequest(courseName, username);
-            return true;
-        } catch (IllegalArgumentException e) {
+        var student = studentRepo.findBySystemUser(session.get().authenticatedUser());
+        if (student.isEmpty()){
             return false;
         }
+        enrollmentRequest = new EnrollmentRequest(course, student.get());
+        return true;
     }
 
     // can be used, for example, by a power user to create an enrollment request for a student
-    public boolean createEnrollmentRequest(CourseName courseName, Username username){
+    public boolean createEnrollmentRequest(Course course, Student student){
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER);
-        try {
-            enrollmentRequest = new EnrollmentRequest(courseName, username);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        enrollmentRequest = new EnrollmentRequest(course, student);
+        return true;
     }
 
     public boolean saveEnrollmentRequest(){

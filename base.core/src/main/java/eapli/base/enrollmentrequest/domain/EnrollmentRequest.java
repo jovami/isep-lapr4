@@ -1,16 +1,16 @@
 package eapli.base.enrollmentrequest.domain;
 
-import eapli.base.course.domain.CourseName;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.functional.Either;
-import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="ENROLLMENTREQUEST",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSENAME", "USERNAME" }) })
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSE", "STUDENT" }) })
 public class EnrollmentRequest implements AggregateRoot<Integer> {
 
     @Id
@@ -18,12 +18,14 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     @Column(name="IDENROLLMENTREQUEST")
     private int code;
 
-    @Column(name="COURSENAME",nullable = false)
-    private CourseName courseName;
+    @Column(name="COURSE",nullable = false)
+    @ManyToOne
+    private Course course;
 
     // TODO: username vs mecanographicNumber
-    @Column(name="USERNAME",nullable = false)
-    private Username username;
+    @Column(name="STUDENT",nullable = false)
+    @ManyToOne
+    private Student student;
 
     @Column(name="ENROLLMENTREQUESTSTATE",nullable = false)
     @Enumerated(EnumType.STRING)
@@ -36,14 +38,14 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         //for JPA
     }
 
-    public EnrollmentRequest(CourseName courseName, Username username){
-        Preconditions.nonNull(courseName, "Course name cannot be null");
-        Preconditions.nonNull(username, "Username cannot be null");
+    public EnrollmentRequest(Course course, Student student){
+        Preconditions.nonNull(course, "Course name cannot be null");
+        Preconditions.nonNull(student, "Username cannot be null");
         this.state = EnrollmentRequestState.PENDING;
         this.deniedReason = new DeniedReason(); // starts with null description value
 
-        this.courseName = courseName;
-        this.username = username;
+        this.course = course;
+        this.student = student;
     }
 
     public Either<String, EnrollmentRequestState> approveEnrollmentRequest() {
@@ -82,12 +84,12 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         return state;
     }
 
-    public CourseName getCourseName() {
-        return courseName;
+    public Course getCourseName() {
+        return course;
     }
 
-    public Username getUsername() {
-        return username;
+    public Student getUsername() {
+        return student;
     }
 
     @Override
@@ -98,8 +100,8 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         final EnrollmentRequest o = (EnrollmentRequest) other;
         if (this == o) {
             return true;}
-        return this.courseName.equals(o.courseName)
-                && this.username.equals(o.username);
+        return this.course.equals(o.course)
+                && this.student.equals(o.student);
     }
 
     @Override
@@ -116,8 +118,8 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     public String toString() {
         return "EnrollmentRequest{" +
                 "code=" + code +
-                ", courseName=" + courseName +
-                ", username=" + username +
+                ", course=" + course +
+                ", student=" + student +
                 ", state=" + state +
                 ", deniedReason=" + deniedReason +
                 '}';

@@ -8,6 +8,7 @@ participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant EnrollmentRequestRepository as enrollment_request_repo
+participant StudentRepository as student_repo
 
 participant ListCoursesService as courses_svc
 
@@ -34,11 +35,19 @@ activate ui
             activate course_repo
             deactivate course_repo
         deactivate rep_fac
+
         ctrl --> rep_fac : enrollmentRequests()
         activate rep_fac
             rep_fac --> enrollment_request_repo: create()
             activate enrollment_request_repo
             deactivate enrollment_request_repo
+        deactivate rep_fac
+
+        ctrl --> rep_fac: students()
+        activate rep_fac
+            rep_fac --> student_repo: create()
+            activate student_repo
+            deactivate student_repo
         deactivate rep_fac
     deactivate ctrl
 
@@ -61,10 +70,14 @@ deactivate ui
 
 user --> ui: selects course from list
 activate ui
-    ui --> ctrl: createEnrollmentRequest(courseName)
+    ui --> ctrl: createEnrollmentRequest(course)
     activate ctrl
-        ctrl ---> enrollment_request: EnrollmentRequest = new EnrollmentRequest(courseName, username)
-        note bottom: username is taken from user session
+        ctrl --> student_repo: student = findBySystemUser()
+        activate student_repo
+        deactivate student_repo
+
+        ctrl ---> enrollment_request: EnrollmentRequest = new EnrollmentRequest(course, student)
+        note bottom: systemUser is taken from user session
         activate enrollment_request
         deactivate enrollment_request
 
