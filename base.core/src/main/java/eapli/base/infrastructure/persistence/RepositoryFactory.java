@@ -114,14 +114,12 @@ public interface RepositoryFactory {
 
     CourseRepository courses();
 
-    RegularExamRepository exams();
-
     StudentRepository students();
     TeacherRepository teachers();
     ManagerRepository managers();
 
     QuestionRepository questions();
-    RegularExam regularExams();
+    RegularExamRepository exams();
     FormativeExamRepository formativeExams();
     FormativeExamSpecificationRepository formativeExamSpecifications();
     EnrollmentRequestRepository enrollmentRequests();
