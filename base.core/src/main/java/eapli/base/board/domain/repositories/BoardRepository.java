@@ -1,7 +1,7 @@
-package eapli.base.board.repositories;
+package eapli.base.board.domain.repositories;
 
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardTitle;
+import eapli.base.board.domain.domain.Board;
+import eapli.base.board.domain.domain.BoardTitle;
 import eapli.framework.domain.repositories.DomainRepository;
 
 

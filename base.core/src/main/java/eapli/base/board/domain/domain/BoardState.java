@@ -1,4 +1,4 @@
-package eapli.base.board.domain;
+package eapli.base.board.domain.domain;
 
 public enum BoardState {
 

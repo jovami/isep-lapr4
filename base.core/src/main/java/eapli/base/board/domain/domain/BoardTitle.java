@@ -1,9 +1,10 @@
-package eapli.base.board.domain;
+package eapli.base.board.domain.domain;
 
 
 import eapli.framework.domain.model.ValueObject;
 
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Embeddable
 public class BoardTitle implements Comparable<BoardTitle>, ValueObject {
@@ -25,6 +26,18 @@ public class BoardTitle implements Comparable<BoardTitle>, ValueObject {
         this.boardTitle = boardTitle;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardTitle that = (BoardTitle) o;
+        return Objects.equals(boardTitle, that.boardTitle);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boardTitle);
+    }
 
     @Override
     public int compareTo(BoardTitle o) {

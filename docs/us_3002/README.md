@@ -19,6 +19,10 @@ US 3002 -- Create a Board
 7. ensureArchiveBoardState
 8. ensureShareBoardState
 9. ensureCreateBoardState
+10. ensureSameAsVerify
+11. ensureBoardSameName
+12. ensureIdentity
+13. ensureToString
 
 # Design
 

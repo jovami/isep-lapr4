@@ -1,4 +1,4 @@
-package eapli.base.board.domain;
+package eapli.base.board.domain.domain;
 
 import eapli.framework.domain.model.AggregateRoot;
 
@@ -31,8 +31,6 @@ public class Board implements AggregateRoot<BoardTitle> {
     @OneToMany(cascade = CascadeType.ALL)
     private final List<BoardColumn> boardColumnList = new ArrayList<>();
 
-
-
     @OneToMany(cascade = CascadeType.ALL)
     private final List<BoardRow> boardRowList = new ArrayList<>();
 
@@ -63,6 +61,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     public List<BoardRow> getBoardRowList() {
         return boardRowList;
     }
+    public BoardTitle getBoardTitle(){return boardTitle;}
 
 
 

@@ -1,6 +1,7 @@
-package eapli.base.board.domain;
+package eapli.base.board.domain.domain;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Cell {
@@ -34,12 +35,17 @@ public class Cell {
         return cellId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cell cell = (Cell) o;
+        return cellId == cell.cellId && Objects.equals(row, cell.row) && Objects.equals(column, cell.column);
+    }
 
-
-
-
-
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(cellId, row, column);
+    }
 }
 
