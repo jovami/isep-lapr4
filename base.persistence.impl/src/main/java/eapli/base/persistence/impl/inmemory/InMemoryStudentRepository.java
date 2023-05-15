@@ -4,6 +4,7 @@ import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
 import java.util.Optional;
@@ -21,6 +22,11 @@ public class InMemoryStudentRepository extends InMemoryDomainRepository<Student,
         super();
     }
 
+
+    @Override
+    public Optional<Student> findBySystemUser(Username username) {
+        return matchOne(student -> student.user().username().equals(username));
+    }
 
     @Override
     public Optional<Student> findBySystemUser(SystemUser systemUser) {

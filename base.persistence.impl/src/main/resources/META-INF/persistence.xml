@@ -11,8 +11,8 @@
     <class>eapli.base.clientusermanagement.domain.SignupRequest</class>
     <class>eapli.base.course.domain.Course</class>
       <class>eapli.base.board.domain.Board</class>
-    <class>eapli.base.board.domain.BoardRow</class>
-    <class>eapli.base.board.domain.BoardColumn</class>
+   <!-- <class>eapli.base.board.domain.BoardRow</class>
+    <class>eapli.base.board.domain.BoardColumn</class>-->
     <class>eapli.base.board.domain.Cell</class>
     <class>eapli.base.board.domain.PostIt</class>
     <class>eapli.base.clientusermanagement.domain.users.Manager</class>

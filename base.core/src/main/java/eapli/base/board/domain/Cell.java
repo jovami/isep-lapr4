@@ -1,17 +1,17 @@
 package eapli.base.board.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Cell {
+public class Cell implements Serializable {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int cellId;
 
-    @OneToOne
     private BoardRow row;
-
-    @OneToOne
     private BoardColumn column;
 
 
@@ -25,27 +25,32 @@ public class Cell {
 
     protected Cell() {
     }
-    public Cell(int cellId, BoardRow row, BoardColumn column) {
-        this.cellId = cellId;
+    public Cell(BoardRow row, BoardColumn column) {
         this.row = row;
         this.column = column;
     }
 
-    public int getCellId() {
-        return cellId;
+    public BoardRow getRow() {
+        return row;
     }
+
+    public BoardColumn getColumn() {
+        return column;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cell cell = (Cell) o;
-        return cellId == cell.cellId && Objects.equals(row, cell.row) && Objects.equals(column, cell.column);
+        return  Objects.equals(row, cell.row) && Objects.equals(column, cell.column);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cellId, row, column);
+        return Objects.hash(row, column);
     }
 }
 

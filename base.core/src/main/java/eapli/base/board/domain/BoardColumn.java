@@ -1,14 +1,15 @@
 package eapli.base.board.domain;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import eapli.framework.domain.model.ValueObject;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-public class BoardColumn {
+@Embeddable
+public class BoardColumn  implements ValueObject {
 
-    @Id
     private int columnId;
     private String columnTitle;
 
@@ -18,6 +19,11 @@ public class BoardColumn {
         this.columnId = columnId;
 
     }
+
+    public void setColumnId(int columnId) {
+        this.columnId = columnId;
+    }
+
     public int getColumnId() {
         return columnId;
     }
@@ -42,6 +48,5 @@ public class BoardColumn {
     public int hashCode() {
         return Objects.hash(columnId, columnTitle);
     }
-
 
 }

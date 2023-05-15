@@ -11,33 +11,37 @@ US 3002 -- Create a Board
 ## Unit tests
 
 1. ensureCellCreation
-2. ensureRowIdsAreAdded
-3. ensureColumnsIdsAreAdded
-4. ensurePostItCreation
-5. ensurePostItCanAlterCell
-6. ensurePostItCanBeMoved
-7. ensureArchiveBoardState
-8. ensureShareBoardState
-9. ensureCreateBoardState
-10. ensureSameAsVerify
-11. ensureBoardSameName
-12. ensureIdentity
-13. ensureToString
-14. ensureGetBoardColumnId
-15. ensureGetBoardColumnTitle
-16. ensureSetBoardColumnTitle
-17. ensureColumnHashCode
-18. ensureGetBoardRowId
-19. ensureGetBoardRowTitle
-20. ensureSetBoardRowTitle
-21. ensureRowHashCode
-22. ensureGetBoardTitle
-23. ensureSetBoardTitle
-24. ensureTitleHashCode
-25. ensureCompareBoardTitle
-26. ensureGetCellId
-27. ensureCellHashCode
-28. ensurePostItHashCode
+2. ensureSetBoardRowId
+3. ensureSetBoardColumnId
+4. ensureGetRow
+5. ensureGetColumn
+6. ensureRowIdsAreAdded
+7. ensureColumnsIdsAreAdded
+8. ensurePostItCreation
+9. ensurePostItCanAlterCell
+10. ensurePostItCanBeMoved
+11. ensureArchiveBoardState
+12. ensureShareBoardState
+13. ensureCreateBoardState
+14. ensureSameAsVerify
+15. ensureBoardSameName
+16. ensureIdentity
+17. ensureToString
+18. ensureGetBoardColumnId
+19. ensureGetBoardColumnTitle
+20. ensureSetBoardColumnTitle
+21. ensureColumnHashCode
+22. ensureGetBoardRowId
+23. ensureGetBoardRowTitle
+24. ensureSetBoardRowTitle
+25. ensureRowHashCode
+26. ensureGetBoardTitle
+27. ensureSetBoardTitle
+28. ensureTitleHashCode
+29. ensureCompareBoardTitle
+30. ensureCellHashCode
+31. ensurePostItHashCode
+
 
 # Design
 

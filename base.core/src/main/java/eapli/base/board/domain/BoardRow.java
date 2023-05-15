@@ -1,13 +1,14 @@
 package eapli.base.board.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import eapli.framework.domain.model.ValueObject;
+
+import javax.persistence.*;
 import java.util.Objects;
 
-@Entity
-public class BoardRow {
+@Embeddable
+public class BoardRow implements ValueObject{
 
-    @Id
+
     private int rowId;
     private String rowTitle;
 
@@ -18,6 +19,10 @@ public class BoardRow {
         this.rowId = rowId;
     }
 
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
+    }
+
     public int getRowId() {
         return rowId;
     }
@@ -25,10 +30,10 @@ public class BoardRow {
     public String getRowTitle() {
         return rowTitle;
     }
-    public void setRowTitle(String rowTitle){
+
+    public void setRowTitle(String rowTitle) {
         this.rowTitle = rowTitle;
     }
-
 
 
     @Override

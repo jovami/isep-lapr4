@@ -4,6 +4,7 @@ import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.Username;
 
 import java.util.Optional;
 
@@ -14,6 +15,11 @@ public class JpaStudentRepository extends BaseJpaRepositoryBase<Student, Long, M
 
     JpaStudentRepository(String identityFieldName) {
         super(identityFieldName, "mecanographicNumber");
+    }
+
+    @Override
+    public Optional<Student> findBySystemUser(Username username) {
+        return matchOne("e.systemUser.username=:username", "username", username);
     }
 
     @Override

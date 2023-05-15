@@ -16,11 +16,11 @@ activate UI
     UI -> Controller : create
     Actor <-- UI : ask user information
     Actor -> UI : boardTitle, maxRows,\n maxColumns
-    UI -> Controller : createBoard(boardTitle,\n maxRows, maxColumns)
+    UI -> Controller : createBoard(boardTitle,\n maxRows, maxColumns, user)
     activate Controller
-    Controller -> Board : board = createBoard(boardTitle,\n maxRows, maxColumns
+    Controller -> Board : board = createBoard(boardTitle,\n maxRows, maxColumns, user)
             activate Board
-            Board -> Board : setUpBoard(cellId, BoardRow,\n BoardColumn)
+            Board -> Board : setUpBoard(BoardRow,\n BoardColumn)
             note right of Board :Board creates all cells with\n the corresponding id from\n the rows and the columns
             activate Board
             deactivate Board

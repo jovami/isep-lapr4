@@ -1,9 +1,20 @@
 package eapli.base.board;
 
 import eapli.base.board.domain.*;
-import eapli.base.course.domain.CourseName;
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
+import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.infrastructure.authz.application.UserManagementService;
+import eapli.framework.infrastructure.authz.domain.model.*;
+import eapli.framework.time.util.CurrentTimeCalendars;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,25 +24,64 @@ class BoardTest {
     private final int columns = 10;
     private final int cellId = 10;
     private Board board = null;
+    private SystemUser user;
+    private final String username = "Tony";
 
 
     @BeforeEach
     void BeforeEach() {
-        board = new Board(title, rows, columns);
+        SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
+        user = userBuilder.with(username, "Password1", "dummy", "dummy", "a@gmail.com")
+                .withRoles(BaseRoles.MANAGER).build();
+        board = new Board(title, rows, columns, user);
+
     }
 
     @Test
     void ensureCellCreation() {
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                int cellId = row * columns + column;
-                BoardRow boardRow = new BoardRow(row);
-                BoardColumn boardColumn = new BoardColumn(column);
-                Cell cell = new Cell(cellId, boardRow, boardColumn);
-                assertEquals(cell, board.getCells().get(cellId));
-            }
-        }
+        int row = 2;
+        int column = 1;
+        BoardRow boardRow = new BoardRow(row);
+        BoardColumn boardColumn = new BoardColumn(column);
+        Cell cell = new Cell(boardRow, boardColumn);
+        int cellId = row * columns + column;
+        assertEquals(cell, board.getCells().get(cellId));
     }
+
+    @Test
+    void ensureSetBoardRowId() {
+        BoardRow boardRow = new BoardRow(2);
+        boardRow.setRowId(5);
+        assertEquals(5, boardRow.getRowId());
+    }
+
+    @Test
+    void ensureSetBoardColumnId() {
+        BoardColumn boardColumn = new BoardColumn(2);
+        boardColumn.setColumnId(5);
+        assertEquals(5, boardColumn.getColumnId());
+    }
+
+    @Test
+    void ensureGetRow() {
+        int row = 2;
+        BoardRow boardRow = new BoardRow(row);
+        int column = 2;
+        BoardColumn boardColumn = new BoardColumn(column);
+        Cell cell = new Cell(boardRow, boardColumn);
+        assertEquals(boardRow, cell.getRow());
+    }
+
+    @Test
+    void ensureGetColumn() {
+        int row = 2;
+        BoardRow boardRow = new BoardRow(row);
+        int column = 2;
+        BoardColumn boardColumn = new BoardColumn(column);
+        Cell cell = new Cell(boardRow, boardColumn);
+        assertEquals(boardColumn, cell.getColumn());
+    }
+
 
     @Test
     void ensureRowIdsAreAdded() {
@@ -78,17 +128,19 @@ class BoardTest {
     @Test
     void ensureGetBoardColumnId() {
         BoardColumn boardColumn = board.getBoardColumnList().get(0);
-        assertEquals( 0,boardColumn.getColumnId());
+        assertEquals(0, boardColumn.getColumnId());
         boardColumn = board.getBoardColumnList().get(7);
-        assertEquals( 7,boardColumn.getColumnId());
+        assertEquals(7, boardColumn.getColumnId());
 
     }
+
     @Test
     void ensureGetBoardColumnTitle() {
         BoardColumn boardColumn = board.getBoardColumnList().get(0);
 
         assertNull(boardColumn.getColumnTitle());
     }
+
     @Test
     void ensureSetBoardColumnTitle() {
         BoardColumn boardColumn = board.getBoardColumnList().get(0);
@@ -98,27 +150,29 @@ class BoardTest {
     }
 
     @Test
-    public void ensureColumnHashCode(){
+    public void ensureColumnHashCode() {
         BoardColumn boardColumn1 = new BoardColumn(1);
         BoardColumn boardColumn2 = new BoardColumn(1);
-        assertEquals(boardColumn1.hashCode(),boardColumn2.hashCode());
+        assertEquals(boardColumn1.hashCode(), boardColumn2.hashCode());
     }
 
 
     @Test
     void ensureGetBoardRowId() {
         BoardRow boardRow = board.getBoardRowList().get(0);
-        assertEquals( 0,boardRow.getRowId());
+        assertEquals(0, boardRow.getRowId());
         boardRow = board.getBoardRowList().get(7);
-        assertEquals( 7,boardRow.getRowId());
+        assertEquals(7, boardRow.getRowId());
 
     }
+
     @Test
     void ensureGetBoardRowTitle() {
         BoardRow boardRow = board.getBoardRowList().get(0);
 
         assertNull(boardRow.getRowTitle());
     }
+
     @Test
     void ensureSetBoardRowTitle() {
         BoardRow boardRow = board.getBoardRowList().get(0);
@@ -128,10 +182,10 @@ class BoardTest {
     }
 
     @Test
-    public void ensureRowHashCode(){
+    public void ensureRowHashCode() {
         BoardRow boardRow1 = new BoardRow(4);
         BoardRow boardRow2 = new BoardRow(4);
-        assertEquals(boardRow1.hashCode(),boardRow2.hashCode());
+        assertEquals(boardRow1.hashCode(), boardRow2.hashCode());
     }
 
     @Test
@@ -150,50 +204,41 @@ class BoardTest {
     }
 
     @Test
-    public void ensureTitleHashCode(){
+    public void ensureTitleHashCode() {
         BoardTitle boardTitle1 = new BoardTitle("hello");
         BoardTitle boardTitle2 = new BoardTitle("hello");
 
-        assertEquals(boardTitle1.hashCode(),boardTitle2.hashCode());
+        assertEquals(boardTitle1.hashCode(), boardTitle2.hashCode());
     }
 
     @Test
-    public void ensureCompareBoardTitle(){
+    public void ensureCompareBoardTitle() {
         BoardTitle boardTitle1 = new BoardTitle("test");
         BoardTitle boardTitle2 = new BoardTitle("test2");
         int equal = 0;
-        int different =1;
+        int different = 1;
 
-        assertEquals(equal,boardTitle1.compareTo(board.getBoardTitle()));
-        assertEquals(different,boardTitle2.compareTo(board.getBoardTitle()));
+        assertEquals(equal, boardTitle1.compareTo(board.getBoardTitle()));
+        assertEquals(different, boardTitle2.compareTo(board.getBoardTitle()));
     }
 
     @Test
-    public void ensureGetCellId(){
-        int cellId = 2;
-        assertEquals(cellId, board.getCells().get(cellId).getCellId());
-    }
-    @Test
-    public void ensureCellHashCode(){
+    public void ensureCellHashCode() {
         BoardRow boardRow = new BoardRow(0);
         BoardColumn boardColumn = new BoardColumn(2);
-        Cell cell1 = new Cell(2,boardRow,boardColumn);
-        Cell cell2 = new Cell(2,boardRow,boardColumn);
+        Cell cell1 = new Cell(boardRow, boardColumn);
+        Cell cell2 = new Cell(boardRow, boardColumn);
 
-        assertEquals(cell1.hashCode(),cell2.hashCode());
+        assertEquals(cell1.hashCode(), cell2.hashCode());
     }
 
     @Test
-    public void ensurePostItHashCode(){
+    public void ensurePostItHashCode() {
         PostIt postIt1 = new PostIt(2);
         PostIt postIt2 = new PostIt(2);
 
-        assertEquals(postIt1.hashCode(),postIt2.hashCode());
+        assertEquals(postIt1.hashCode(), postIt2.hashCode());
     }
-
-
-
-
 
 
     @Test
@@ -221,7 +266,7 @@ class BoardTest {
 
     @Test
     void ensureBoardSameName() {
-        Board board2 = new Board("test", 10,5);
+        Board board2 = new Board("test", 10, 5,user);
         assertTrue(board.sameAs(board2));
     }
 

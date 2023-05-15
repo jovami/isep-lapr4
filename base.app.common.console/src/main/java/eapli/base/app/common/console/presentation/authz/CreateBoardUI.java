@@ -1,9 +1,18 @@
 package eapli.base.app.common.console.presentation.authz;
 
 import eapli.base.board.application.CreateBoardController;
+import eapli.base.clientusermanagement.domain.users.Manager;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.framework.infrastructure.authz.domain.model.Role;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class CreateBoardUI extends AbstractUI {
     @Autowired
@@ -36,9 +45,10 @@ public class CreateBoardUI extends AbstractUI {
                 return false;
             }
 
+
             controller.persistBoard();
+
             System.out.println("Board Created Successfully!!");
-            //controller.listBoards();
             return true;
         }
     }

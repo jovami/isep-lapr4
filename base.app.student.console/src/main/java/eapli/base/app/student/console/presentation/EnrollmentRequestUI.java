@@ -1,5 +1,6 @@
 package eapli.base.app.student.console.presentation;
 
+import eapli.base.course.domain.Course;
 import eapli.base.enrollmentrequest.application.EnrollmentRequestController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;

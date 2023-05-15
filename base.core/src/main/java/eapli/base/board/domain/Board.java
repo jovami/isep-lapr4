@@ -1,6 +1,7 @@
 package eapli.base.board.domain;
 
 import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,37 +19,57 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Column(nullable = false)
     private int num_columns;
 
+    @OneToOne
+    private SystemUser owner;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BoardState state;
 
 
-
-
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Cell> cells = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ElementCollection
     private final List<BoardColumn> boardColumnList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ElementCollection
     private final List<BoardRow> boardRowList = new ArrayList<>();
 
 
+    protected Board() {
+    }
 
+    //TODO protected??
 
-    protected Board(){}
-    public Board(String boardTitle, int rows, int columns) {
+    protected Board(String boardTitle, int rows, int columns) {
         this.boardTitle = new BoardTitle(boardTitle);
         this.num_rows = rows;
         this.num_columns = columns;
         this.state = BoardState.CREATED;
-        setupBoard(rows,columns);
+        setupBoard(rows, columns);
+    }
+    public Board(String boardTitle, int rows, int columns,SystemUser owner) {
+        this.boardTitle = new BoardTitle(boardTitle);
+        this.num_rows = rows;
+        this.num_columns = columns;
+        this.owner = owner;
+        this.state = BoardState.CREATED;
+        setupBoard(rows, columns);
     }
 
-    public void archiveBoard(){this.state= BoardState.ARCHIVED;}
-    public void sharedBoard(){this.state= BoardState.SHARED;}
-    public void createdBoard(){this.state= BoardState.CREATED;}
+    public void archiveBoard() {
+        this.state = BoardState.ARCHIVED;
+    }
+
+    public void sharedBoard() {
+        this.state = BoardState.SHARED;
+    }
+
+    public void createdBoard() {
+        this.state = BoardState.CREATED;
+    }
+
     public BoardState getState() {
         return state;
     }
@@ -61,20 +82,21 @@ public class Board implements AggregateRoot<BoardTitle> {
     public List<BoardRow> getBoardRowList() {
         return boardRowList;
     }
-    public BoardTitle getBoardTitle(){return boardTitle;}
+    public BoardTitle getBoardTitle() {
+        return boardTitle;
+    }
 
 
-
-    public void setupBoard(int rows, int columns){
+    public void setupBoard(int rows, int columns) {
         addRowIds(rows);
         addColumnIds(columns);
-        createCells(rows,columns);
+        createCells(rows, columns);
     }
+
     public void createCells(int rows, int columns) {
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
-                int cellId = row * columns + column;
-                cells.add(new Cell(cellId, boardRowList.get(row), boardColumnList.get(column)));
+                cells.add(new Cell(boardRowList.get(row), boardColumnList.get(column)));
             }
         }
     }
@@ -99,6 +121,7 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     /*public void movePostIt(int newCellId, PostIt postIt) {
         //if newCellId has not a post it assigned
+
         if (!hasCellPostIt(newCellId)) {
             postIt.alterCell(newCellId);
         } else
@@ -108,15 +131,16 @@ public class Board implements AggregateRoot<BoardTitle> {
     }*/
 
 
-
     @Override
     public boolean sameAs(Object other) {
         if (!(other instanceof Board)) {
-            return false;}
+            return false;
+        }
 
         final Board o = (Board) other;
         if (this == o) {
-            return true;}
+            return true;
+        }
         return this.boardTitle.equals(o.boardTitle);
     }
 
@@ -129,7 +153,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     public String toString() {
         return "\nBoard: " +
                 "\nboardTitle: " + boardTitle.getBoardTitle() +
-                "\nwith " + cells.size() + " cells" ;
+                "\nwith " + cells.size() + " cells";
     }
 }
 
