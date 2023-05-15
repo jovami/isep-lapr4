@@ -48,7 +48,10 @@ activate ui
             activate s_repo
             deactivate s_repo
         deactivate rep_fac
+    deactivate ctrl
 
+    ui --> ctrl : availableCourses()
+    activate ctrl
         ctrl --> authreg : authorizationService()
         activate authreg
             authreg --> authsvc : session()
@@ -68,19 +71,15 @@ activate ui
 
             sess --> ctrl : sysUser
         deactivate sess
-    deactivate ctrl
 
-    ui --> ctrl : availableCourses()
-    activate ctrl
         ctrl --> s_repo : findBySystemUser(sysUser)
         activate s_repo
             s_repo --> ctrl : student
         deactivate s_repo
 
-
         ctrl --> svc : studentIsEnrolledOrCanEnroll(student)
         activate svc
-            svc --> c_repo : findByEnrolledStudentOrCanEnroll(student)
+            svc --> c_repo : findByEnrolledStudent(student)
 
             activate c_repo
                 c_repo --> svc : courses
