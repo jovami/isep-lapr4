@@ -84,11 +84,11 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         return state;
     }
 
-    public Course getCourseName() {
+    public Course getCourse() {
         return course;
     }
 
-    public Student getUsername() {
+    public Student getStudent() {
         return student;
     }
 
