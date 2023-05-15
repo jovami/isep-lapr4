@@ -7,5 +7,5 @@ import eapli.framework.domain.repositories.DomainRepository;
 /**
  * ManagerRepository
  */
-public interface ManagerRepository extends DomainRepository<ManagerId, Manager> {
+public interface ManagerRepository extends DomainRepository<Integer, Manager> {
 }

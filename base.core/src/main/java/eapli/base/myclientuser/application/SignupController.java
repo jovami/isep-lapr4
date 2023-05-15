@@ -29,7 +29,7 @@ import eapli.base.clientusermanagement.domain.SignupRequest;
 import eapli.base.clientusermanagement.domain.SignupRequestBuilder;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.usermanagement.domain.UserBuilderHelper;
+import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.time.util.CurrentTimeCalendars;
 

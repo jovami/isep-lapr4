@@ -1,6 +1,5 @@
 package eapli.base.clientusermanagement.domain.users;
 
-import eapli.base.clientusermanagement.domain.MecanographicNumber;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
@@ -18,6 +17,7 @@ public class Student implements AggregateRoot<MecanographicNumber>, Serializable
 
     //TODO: check one to one
     @EmbeddedId
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private MecanographicNumber mecanographicNumber;
 
     @Embedded
@@ -86,13 +86,12 @@ public class Student implements AggregateRoot<MecanographicNumber>, Serializable
 
     @Override
     public String toString() {
-        return "Student{" +
-                "mechanographicNumber=" + mecanographicNumber +
-                ", fullName=" + fullName +
-                ", shortName=" + shortName +
-                ", dateOfBirth=" + dateOfBirth +
-                ", taxPayerNumber=" + taxPayerNumber +
-                '}';
+        return "Teacher" +
+                "\nMecanographic Number: " + mecanographicNumber +
+                "\nFull Name: " + fullName +
+                "\nShort Name: " + shortName +
+                "\nDate Of Birth: " + dateOfBirth +
+                "\nTax Payer Number: " + taxPayerNumber ;
     }
 
     public MecanographicNumber mecanographicNumber() {

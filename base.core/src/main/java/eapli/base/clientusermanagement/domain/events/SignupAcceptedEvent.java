@@ -20,7 +20,7 @@
  */
 package eapli.base.clientusermanagement.domain.events;
 
-import eapli.base.clientusermanagement.domain.MecanographicNumber;
+import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.SignupRequest;
 import eapli.framework.domain.events.DomainEventBase;
 import eapli.framework.general.domain.model.EmailAddress;

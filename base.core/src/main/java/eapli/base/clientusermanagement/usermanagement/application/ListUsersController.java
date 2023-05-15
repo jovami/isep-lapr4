@@ -21,34 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eapli.base.usermanagement.application;
+package eapli.base.clientusermanagement.usermanagement.application;
 
-import eapli.base.usermanagement.domain.BaseRoles;
+import java.util.Optional;
+
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserManagementService;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.Username;
 
 /**
  *
- * @author Fernando
+ * @author losa
  */
 @UseCaseController
-public class DeactivateUserController {
+public class ListUsersController{
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     private final UserManagementService userSvc = AuthzRegistry.userService();
 
-    public Iterable<SystemUser> activeUsers() {
+    public Iterable<SystemUser> allUsers() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-        return userSvc.activeUsers();
+        return userSvc.allUsers();
     }
 
-    public SystemUser deactivateUser(final SystemUser user) {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
-
-        return userSvc.deactivateUser(user);
+    public Optional<SystemUser> find(final Username u) {
+        return userSvc.userOfIdentity(u);
     }
 }

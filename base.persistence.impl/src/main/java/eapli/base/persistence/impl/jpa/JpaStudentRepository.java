@@ -1,6 +1,6 @@
 package eapli.base.persistence.impl.jpa;
 
-import eapli.base.clientusermanagement.domain.MecanographicNumber;
+import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 

@@ -25,8 +25,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eapli.base.usermanagement.application.AddUserController;
-import eapli.base.usermanagement.application.ListUsersController;
+import eapli.base.clientusermanagement.usermanagement.application.AddUserController;
+import eapli.base.clientusermanagement.usermanagement.application.ListUsersController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.infrastructure.authz.domain.model.Role;

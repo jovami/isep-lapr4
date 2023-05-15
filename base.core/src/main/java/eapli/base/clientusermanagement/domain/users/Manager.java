@@ -9,15 +9,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-public class Manager implements AggregateRoot<ManagerId>, Serializable {
+public class Manager implements AggregateRoot<Integer>, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Version
     private Long version;
 
     //TODO: check one to one
-    @EmbeddedId
-    private ManagerId managerId;
+    //@EmbeddedId
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int managerId;
 
     @Embedded
     private FullName fullName;
@@ -34,13 +36,12 @@ public class Manager implements AggregateRoot<ManagerId>, Serializable {
     @OneToOne(optional = false)
     private SystemUser systemUser;
 
-    public Manager(final SystemUser user, final ManagerId managerId,
+    public Manager(final SystemUser user,
                    final FullName fullName, final ShortName shortName, final DateOfBirth dateOfBirth,
                    final TaxPayerNumber taxPayerNumber) {
-        Preconditions.noneNull(user, managerId, fullName, shortName, dateOfBirth, taxPayerNumber);
+        Preconditions.noneNull(user, fullName, shortName, dateOfBirth, taxPayerNumber);
 
         this.systemUser = user;
-        this.managerId = managerId;
         this.fullName = fullName;
         this.shortName = shortName;
         this.dateOfBirth = dateOfBirth;
@@ -75,36 +76,32 @@ public class Manager implements AggregateRoot<ManagerId>, Serializable {
         if (this == that) {
             return true;
         }
-        return managerId.equals(that.managerId) && systemUser.sameAs(that.systemUser);
+        return managerId==(that.managerId) && systemUser.sameAs(that.systemUser);
     }
 
     @Override
-    public int compareTo(ManagerId other) {
+    public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
     }
 
+
     @Override
     public String toString() {
-        return "Manager{" +
-                "managerId=" + managerId +
-                ", fullName=" + fullName +
-                ", shortName=" + shortName +
-                ", dateOfBirth=" + dateOfBirth +
-                ", taxPayerNumber=" + taxPayerNumber +
-                '}';
-    }
-
-    public ManagerId managerId() {
-        return identity();
+        return "Manager" +
+                "\nManager Id: " + managerId +
+                "\nFull Name: " + fullName +
+                "\nShort Name: " + shortName +
+                "\nDate Of Birth: " + dateOfBirth +
+                "\nTax Payer Number: " + taxPayerNumber ;
     }
 
     @Override
-    public ManagerId identity() {
+    public Integer identity() {
         return managerId;
     }
 
     @Override
-    public boolean hasIdentity(ManagerId id) {
+    public boolean hasIdentity(Integer id) {
         return AggregateRoot.super.hasIdentity(id);
     }
 }

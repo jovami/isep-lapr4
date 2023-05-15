@@ -7,7 +7,7 @@ import eapli.base.clientusermanagement.repositories.ManagerRepository;
 /**
  * JpaManagerRepository
  */
-public class JpaManagerRepository extends BaseJpaRepositoryBase<Manager, Long, ManagerId> implements ManagerRepository {
+public class JpaManagerRepository extends BaseJpaRepositoryBase<Manager, Long, Integer> implements ManagerRepository {
 
     JpaManagerRepository(String identityFieldName) {
         super(identityFieldName, "managerId");

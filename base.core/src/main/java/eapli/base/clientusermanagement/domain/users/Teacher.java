@@ -85,13 +85,12 @@ public class Teacher implements AggregateRoot<Acronym>, Serializable {
 
     @Override
     public String toString() {
-        return "Teacher{" +
-                "acronym=" + acronym +
-                ", fullName=" + fullName +
-                ", shortName=" + shortName +
-                ", dateOfBirth=" + dateOfBirth +
-                ", taxPayerNumber=" + taxPayerNumber +
-                '}';
+        return "Teacher" +
+                "\nAcronym: " + acronym +
+                "\nFull Name: " + fullName +
+                "\nShort Name: " + shortName +
+                "\nDate Of Birth: " + dateOfBirth +
+                "\nTax Payer Number: " + taxPayerNumber ;
     }
 
     public Acronym acronym() {

@@ -26,7 +26,7 @@ package eapli.base.app.teacher.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
-import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;

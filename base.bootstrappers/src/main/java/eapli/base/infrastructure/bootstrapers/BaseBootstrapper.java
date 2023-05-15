@@ -23,13 +23,11 @@
  */
 package eapli.base.infrastructure.bootstrapers;
 
-import eapli.base.infrastructure.bootstrapers.demo.BoardBootstrapper;
 import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
 import eapli.base.infrastructure.bootstrapers.demo.ManagerBootstrapper;
-import eapli.base.infrastructure.bootstrapers.demo.RegularExamBootstrapper;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.usermanagement.domain.BaseRoles;
-import eapli.base.usermanagement.domain.UserBuilderHelper;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;
 import eapli.framework.actions.Action;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;

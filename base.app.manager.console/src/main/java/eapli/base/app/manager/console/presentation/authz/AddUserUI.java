@@ -26,7 +26,8 @@ package eapli.base.app.manager.console.presentation.authz;
 import java.util.HashSet;
 import java.util.Set;
 
-import eapli.base.usermanagement.application.AddUserController;
+import eapli.base.clientusermanagement.usermanagement.application.AddUserController;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
@@ -41,7 +42,7 @@ import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
 /**
  * UI for adding a user to the application.
- *
+ * <p>
  * Created by nuno on 22/03/16.
  */
 public class AddUserUI extends AbstractUI {
@@ -56,7 +57,12 @@ public class AddUserUI extends AbstractUI {
         final String password = Console.readLine("Password");
         final String firstName = Console.readLine("First Name");
         final String lastName = Console.readLine("Last Name");
+        final String fullName = Console.readLine("Full Name");
         final String email = Console.readLine("E-Mail");
+        final String dateOfBirth = Console.readLine("Date Of Birth (yyyy-MM-dd Format)");
+        final String taxPayerNumber = Console.readLine("Tax Payer Number");
+        final String shortName = firstName + " " + lastName;
+
 
         final Set<Role> roleTypes = new HashSet<>();
         boolean show;
@@ -66,6 +72,20 @@ public class AddUserUI extends AbstractUI {
 
         try {
             this.theController.addUser(username, password, firstName, lastName, email, roleTypes);
+            if (roleTypes.contains(BaseRoles.TEACHER)) {
+                final String acronym = Console.readLine("Acronym");
+                theController.addTeacher(acronym,fullName,shortName,dateOfBirth,taxPayerNumber);
+            }
+            if (roleTypes.contains(BaseRoles.STUDENT)) {
+                final String mecanographicNumber = Console.readLine("MecanographicNumber");
+                theController.addStudent(mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
+            }
+            if (roleTypes.contains(BaseRoles.MANAGER)) {
+                theController.addManager(fullName,shortName,dateOfBirth,taxPayerNumber);
+            }
+            //TODO Use this to list
+            //System.out.println(theController.listManagers());
+
             System.out.println("\nUser Created Successfully!");
         } catch (final IntegrityViolationException | ConcurrencyException e) {
             System.out.println("That username is already in use.");

@@ -24,8 +24,10 @@
 package eapli.base.app.student.console.presentation;
 
 import eapli.base.Application;
+import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
+import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
-import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
@@ -46,9 +48,14 @@ public class MainMenu extends AbstractUI {
     // ENROLLMENTS
     private static final int ENROLLMENT_REQUEST_OPTION = 1;
 
+    // BOARD
+    private static final int CREATE_BOARD_OPTION = 1;
+    private static final int LIST_BOARD_OPTION = 2;
+
     // SETTINGS
     private static final int MY_USER_OPTION = 1;
     private static final int ENROLLMENTS_OPTION = 2;
+    private static final int BOARD_OPTION =3;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -85,19 +92,21 @@ public class MainMenu extends AbstractUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        /*if (!Application.settings().isMenuLayoutHorizontal()) {
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
+        }*/
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
             final Menu enrollmentsMenu = buildEnrollmentsMenu();
             mainMenu.addSubMenu(ENROLLMENTS_OPTION, enrollmentsMenu);
+            final Menu boardMenu = buildBoardMenu();
+            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
         }
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        /*if (!Application.settings().isMenuLayoutHorizontal()) {
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
         }
-
+*/
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
@@ -107,6 +116,16 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Enrollments");
 
         menu.addItem(ENROLLMENT_REQUEST_OPTION, "Request Enrollment in a Course", new EnrollmentRequestUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
+    private Menu buildBoardMenu() {
+        final Menu menu = new Menu("Boards");
+
+        menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

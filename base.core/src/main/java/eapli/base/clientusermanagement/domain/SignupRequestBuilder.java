@@ -25,6 +25,7 @@ package eapli.base.clientusermanagement.domain;
 
 import java.util.Calendar;
 
+import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

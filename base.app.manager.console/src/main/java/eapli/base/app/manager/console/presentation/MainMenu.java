@@ -30,7 +30,7 @@ import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
 import eapli.base.app.manager.console.presentation.authz.ListUsersAction;
 import eapli.base.app.manager.console.presentation.clientuser.AcceptRefuseSignupRequestAction;
-import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;

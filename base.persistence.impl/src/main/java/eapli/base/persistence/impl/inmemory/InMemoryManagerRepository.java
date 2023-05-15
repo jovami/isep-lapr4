@@ -8,7 +8,7 @@ import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainR
 /**
  * InMemoryManagerRepository
  */
-public class InMemoryManagerRepository extends InMemoryDomainRepository<Manager, ManagerId> implements ManagerRepository {
+public class InMemoryManagerRepository extends InMemoryDomainRepository<Manager, Integer> implements ManagerRepository {
 
     static {
         InMemoryInitializer.init();

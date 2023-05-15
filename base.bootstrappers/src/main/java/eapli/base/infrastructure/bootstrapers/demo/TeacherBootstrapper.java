@@ -1,9 +1,6 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
-import eapli.base.clientusermanagement.application.AcceptRefuseSignupFactory;
-import eapli.base.clientusermanagement.application.AcceptRefuseSignupRequestController;
-import eapli.base.myclientuser.application.SignupController;
-import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Action;
 
 import eapli.base.infrastructure.bootstrapers.UsersBootstrapperBase;
@@ -11,9 +8,6 @@ import eapli.framework.infrastructure.authz.domain.model.Role;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TeacherBootstrapper extends UsersBootstrapperBase implements Action {
 

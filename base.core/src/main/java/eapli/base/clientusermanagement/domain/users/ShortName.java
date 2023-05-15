@@ -11,7 +11,7 @@ public class ShortName implements ValueObject, Comparable<ShortName> {
     private final String name;
 
     // TODO: use regular expressions to verify short name
-    protected ShortName(String shortName) {
+    public ShortName(String shortName) {
         Preconditions.nonEmpty(shortName,
                 "Short name should neither be null nor empty");
 

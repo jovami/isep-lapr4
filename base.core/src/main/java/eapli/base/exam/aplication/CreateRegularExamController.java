@@ -3,7 +3,7 @@ package eapli.base.exam.aplication;
 
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.base.exam.repositories.RegularExamRepository;

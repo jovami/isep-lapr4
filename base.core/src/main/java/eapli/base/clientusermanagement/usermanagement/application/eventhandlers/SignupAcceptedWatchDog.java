@@ -18,40 +18,34 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package eapli.base.clientusermanagement.repositories;
+package eapli.base.clientusermanagement.usermanagement.application.eventhandlers;
 
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import eapli.base.clientusermanagement.domain.ClientUser;
-import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
-import eapli.framework.domain.repositories.DomainRepository;
-import eapli.framework.infrastructure.authz.domain.model.Username;
+import eapli.base.clientusermanagement.domain.events.SignupAcceptedEvent;
+import eapli.framework.domain.events.DomainEvent;
+import eapli.framework.domain.repositories.IntegrityViolationException;
+import eapli.framework.infrastructure.pubsub.EventHandler;
 
 /**
  *
- * @author Jorge Santos ajs@isep.ipp.pt 02/04/2016
  */
-public interface ClientUserRepository
-        extends DomainRepository<MecanographicNumber, ClientUser> {
+public class SignupAcceptedWatchDog implements EventHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SignupAcceptedWatchDog.class);
 
-    /**
-     * returns the client user (utente) whose username is given
-     *
-     * @param name
-     *            the username to search for
-     * @return
-     */
-    Optional<ClientUser> findByUsername(Username name);
+	@Override
+	public void onEvent(final DomainEvent domainevent) {
+		assert domainevent instanceof SignupAcceptedEvent;
 
-    /**
-     * returns the client user (utente) with the given mecanographic number
-     *
-     * @param number
-     * @return
-     */
-    default Optional<ClientUser> findByMecanographicNumber(final MecanographicNumber number) {
-        return ofIdentity(number);
-    }
+		final SignupAcceptedEvent event = (SignupAcceptedEvent) domainevent;
 
-    public Iterable<ClientUser> findAllActive();
+		final AddUserOnSignupAcceptedController controller = new AddUserOnSignupAcceptedController();
+		try {
+			controller.addUser(event);
+		} catch (final IntegrityViolationException e) {
+			// TODO provably should send some warning email...
+			LOGGER.error("Unable to register new user on signup event", e);
+		}
+	}
 }

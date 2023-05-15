@@ -21,40 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eapli.base.usermanagement.domain;
+package eapli.base.clientusermanagement.usermanagement.domain;
 
-import eapli.framework.infrastructure.authz.domain.model.Role;
+import eapli.base.clientusermanagement.domain.SignupRequestBuilder;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import eapli.framework.util.Utility;
 
 /**
- * @author Paulo Gandra Sousa
+ *
+ * @author Paulo Gandra de Sousa 27/05/2019
  *
  */
-public final class BaseRoles {
-    /**
-     * poweruser
-     */
-    public static final Role POWER_USER = Role.valueOf("POWER_USER");
-    /**
-     * Student
-     */
-    public static final Role STUDENT = Role.valueOf("STUDENT");
-
-    /**
-     * Base Administrator
-     */
-    public static final Role MANAGER = Role.valueOf("ADMIN");
-    /**
-     *
-     */
-    public static final Role TEACHER = Role.valueOf("TEACHER");
-
-    /**
-     * get available role types for adding new users
-     *
-     * @return
-     */
-    public static Role[] nonUserValues() {
-        return new Role[] {MANAGER,TEACHER,STUDENT };
+@Utility
+public class UserBuilderHelper {
+    private UserBuilderHelper() {
+        // ensure utility
     }
 
+    public static SystemUserBuilder builder() {
+        return new SystemUserBuilder(new BasePasswordPolicy(), new PlainTextEncoder());
+    }
+
+    public static SignupRequestBuilder signupBuilder() {
+        return new SignupRequestBuilder(new BasePasswordPolicy(), new PlainTextEncoder());
+    }
 }

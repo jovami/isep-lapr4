@@ -12,11 +12,11 @@ public class FullName implements ValueObject {
     private static final long serialVersionUID = 1L;
     private final String[] names;
 
-    protected FullName(String... names) {
+    public FullName(String... names) {
         Preconditions.nonNull(names, "Full name should not be null");
         Preconditions.ensure(names.length > 0, "Full name should not be empty");
 
-        Invariants.ensure(Arrays.stream(names).allMatch(n -> n.matches("[A-Za-z]+")), "Full name contains invalid characters");
+        Invariants.ensure(Arrays.stream(names).allMatch(n -> n.matches("[[A-Za-z]+' '?]+")), "Full name contains invalid characters");
 
         this.names = names;
     }

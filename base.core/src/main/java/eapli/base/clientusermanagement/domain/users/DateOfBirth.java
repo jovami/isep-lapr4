@@ -12,7 +12,7 @@ public class DateOfBirth implements ValueObject, Comparable<DateOfBirth> {
     private static final long serialVersionUID = 1L;
     private final LocalDate dateOfBirth;
 
-    protected DateOfBirth(LocalDate dateOfBirth) {
+    public DateOfBirth(LocalDate dateOfBirth) {
         Preconditions.nonNull(dateOfBirth, "Date of birth should not be null");
         Preconditions.ensure(isDateOfBirthValid(dateOfBirth), "Invalid date of birth");
 

@@ -15,6 +15,10 @@
     <class>eapli.base.board.domain.BoardColumn</class>
     <class>eapli.base.board.domain.Cell</class>
     <class>eapli.base.board.domain.PostIt</class>
+    <class>eapli.base.clientusermanagement.domain.users.Manager</class>
+    <class>eapli.base.clientusermanagement.domain.users.Teacher</class>
+    <class>eapli.base.clientusermanagement.domain.users.Student</class>
+
 
 
     <properties>

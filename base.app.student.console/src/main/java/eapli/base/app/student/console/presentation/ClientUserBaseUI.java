@@ -18,34 +18,32 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package eapli.base.usermanagement.application.eventhandlers;
+package eapli.base.app.student.console.presentation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eapli.base.clientusermanagement.domain.events.SignupAcceptedEvent;
-import eapli.framework.domain.events.DomainEvent;
-import eapli.framework.domain.repositories.IntegrityViolationException;
-import eapli.framework.infrastructure.pubsub.EventHandler;
+import eapli.framework.infrastructure.authz.application.AuthorizationService;
+import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.presentation.console.AbstractUI;
 
 /**
  *
+ * @author mcn
  */
-public class SignupAcceptedWatchDog implements EventHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SignupAcceptedWatchDog.class);
+@SuppressWarnings("squid:S106")
+public abstract class ClientUserBaseUI extends AbstractUI {
 
-	@Override
-	public void onEvent(final DomainEvent domainevent) {
-		assert domainevent instanceof SignupAcceptedEvent;
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
-		final SignupAcceptedEvent event = (SignupAcceptedEvent) domainevent;
+    @Override
+    public String headline() {
 
-		final AddUserOnSignupAcceptedController controller = new AddUserOnSignupAcceptedController();
-		try {
-			controller.addUser(event);
-		} catch (final IntegrityViolationException e) {
-			// TODO provably should send some warning email...
-			LOGGER.error("Unable to register new user on signup event", e);
-		}
-	}
+        return authz.session().map(s -> "Base [ " + s.authenticatedUser().identity() + " ] ")
+                .orElse("Base [ ==Anonymous== ]");
+    }
+
+    @Override
+    protected void drawFormTitle(final String title) {
+        final String titleBorder = BORDER.substring(0, 2) + " " + title;
+        System.out.println(titleBorder);
+        drawFormBorder();
+    }
 }

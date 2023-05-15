@@ -18,9 +18,9 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package eapli.base.clientusermanagement.domain;
+package eapli.base.clientusermanagement.usermanagement.domain;
 
-import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
+import eapli.base.clientusermanagement.domain.users.*;
 import eapli.framework.domain.model.DomainFactory;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
@@ -32,30 +32,42 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
  *
  * @author Jorge Santos ajs@isep.ipp.pt 02/04/2016
  */
-public class ClientUserBuilder implements DomainFactory<ClientUser> {
+public class ManagerBuilder implements DomainFactory<Manager> {
 
     private SystemUser systemUser;
-    private MecanographicNumber mecanographicNumber;
+    private FullName fullName;
+    private ShortName shortName;
+    private DateOfBirth dateOfBirth;
+    private TaxPayerNumber taxPayerNumber;
 
-    public ClientUserBuilder withSystemUser(final SystemUser systemUser) {
+    public ManagerBuilder withSystemUser(final SystemUser systemUser) {
         this.systemUser = systemUser;
         return this;
     }
 
-    public ClientUserBuilder withMecanographicNumber(final MecanographicNumber mecanographicNumber) {
-        this.mecanographicNumber = mecanographicNumber;
+    public ManagerBuilder withFullName(final String fullName) {
+        this.fullName = new FullName(fullName);
+        return this;
+    }
+    public ManagerBuilder withShortName(final String shortName) {
+        this.shortName = new ShortName(shortName);
+        return this;
+    }
+    public ManagerBuilder withDateOfBirth(final String dateOfBirth) {
+        //TODO create console.readLocalDate
+        this.dateOfBirth = DateOfBirth.valueOf(dateOfBirth);
+        return this;
+    }
+    public ManagerBuilder withTaxPayerNumber(final String taxPayerNumber) {
+        this.taxPayerNumber = new TaxPayerNumber(taxPayerNumber);
         return this;
     }
 
-    public ClientUserBuilder withMecanographicNumber(final String mecanographicNumber) {
-        this.mecanographicNumber = new MecanographicNumber(mecanographicNumber);
-        return this;
-    }
 
     @Override
-    public ClientUser build() {
+    public Manager build() {
         // since the factory knows that all the parts are needed it could throw
         // an exception. however, we will leave that to the constructor
-        return new ClientUser(this.systemUser, this.mecanographicNumber);
+        return new Manager(this.systemUser,this.fullName,this.shortName,this.dateOfBirth,this.taxPayerNumber);
     }
 }

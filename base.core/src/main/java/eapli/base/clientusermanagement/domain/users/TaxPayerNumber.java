@@ -11,7 +11,7 @@ public class TaxPayerNumber implements ValueObject, Comparable<TaxPayerNumber> {
     private static final long serialVersionUID = 1L;
     private final String number;
 
-    protected TaxPayerNumber(String number) {
+    public TaxPayerNumber(String number) {
         Preconditions.nonEmpty(number, "Taxpayer number should neither be null nor empty");
         Invariants.ensure(number.matches("\\d{9}"), "Taxpayer number should be a 9-digit number");
 
