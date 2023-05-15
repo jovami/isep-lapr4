@@ -9,9 +9,9 @@ public class RegularExamBuilder implements RegularExamBuilderInterface{
     private RegularExam regularExam;
     public RegularExamBuilder()
     {
-        this.regularExam = new RegularExam();
+        //this.regularExam = new RegularExam();
     }
-
+/*
     @Override
     public void setTitle(String title) {
         regularExam.setTitle(title);
@@ -34,5 +34,5 @@ public class RegularExamBuilder implements RegularExamBuilderInterface{
 
     public RegularExam getRegularExam(){
         return this.regularExam;
-    }
+    }*/
 }

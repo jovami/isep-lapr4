@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 
 @Embeddable
-public class ExamDate implements ValueObject {
+public class RegularExamDate implements ValueObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,19 +20,20 @@ public class ExamDate implements ValueObject {
     @Temporal(TemporalType.DATE)
     private Date closeDate;
 
-    protected ExamDate(Date openDate, Date closeDate) {
+    public RegularExamDate(Date openDate, Date closeDate) {
         Preconditions.nonEmpty((Collection<?>) openDate, "Exam open date should not be empty or null");
         Preconditions.nonEmpty((Collection<?>) closeDate, "Exam close date should not be empty or null");
 
         setIntervalDate(openDate,closeDate);
     }
 
-    //for ORM
-    public ExamDate() {
-        //for ORM only
+    protected RegularExamDate()
+    {
+        this.openDate = null;
+        this.closeDate = null;
     }
 
-    public static ExamDate valueOf(Date openDate, Date closeDate) {return new ExamDate(openDate,closeDate);}
+    public static RegularExamDate valueOf(Date openDate, Date closeDate) {return new RegularExamDate(openDate,closeDate);}
 
     protected boolean setIntervalDate(Date openDate, Date closeDate) {
         if(openDate.before(closeDate)){
@@ -46,7 +47,7 @@ public class ExamDate implements ValueObject {
 
     @Override
     public String toString() {
-        return "ExamDate{" +
+        return "RegularExamDate{" +
                 "openDate=" + openDate +
                 ", closeDate=" + closeDate +
                 '}';

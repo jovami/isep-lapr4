@@ -1,14 +1,15 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.exam.domain.regular_exam.valueobjects.ExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.ExamHeader;
-import eapli.base.exam.domain.regular_exam.valueobjects.ExamTitle;
-import eapli.base.exam.domain.regular_exam.valueobjects.HeaderDescription;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamHeader;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamTitle;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamHeaderDescription;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
+import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,60 +19,59 @@ public class RegularExam implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "IDExam")
+    @Column(name = "IDREGULAREXAM")
     private int id;
 
-    @Column(name = "EXAMTITLE")
-    private ExamTitle examTitle;
+    @Column(name = "REGULAREXAMTITLE")
+    private RegularExamTitle title;
 
-    @Column(name = "EXAMHEADER")
-    private ExamHeader examHeader;
+    @Column(name = "REGULAREXAMHEADER")
+    private RegularExamHeader header;
 
-    @Column(name = "EXAMDESCRIPTION")
-    private HeaderDescription headerDescription;
-    @Column(name = "EXAMDATE")
-    private ExamDate examDate;
+    @Column(name = "REGULAREXAMDESCRIPTION")
+    private RegularExamHeaderDescription description;
+    @Column(name = "REGULAREXAMDATE")
+    private RegularExamDate date;
 
     @OneToMany
     @Column(name = "REGULAREXAMSECTION")
-    private List<RegularExamSection> regularExamSections;
+    private List<RegularExamSection> sections;
 
-    protected RegularExam(ExamTitle examTitle, ExamHeader examHeader,HeaderDescription headerDescription, ExamDate examDate)
+    public RegularExam(RegularExamTitle title, RegularExamHeader header, RegularExamHeaderDescription description, RegularExamDate date,
+                       List<RegularExamSection> sections)
     {
-        this.examTitle = examTitle;
-        this.examHeader = examHeader;
-        this.headerDescription = headerDescription;
-        this.examDate = examDate;
+
+        Preconditions.nonNull(title, "Regular Exam title cannot be null");
+        Preconditions.nonNull(header, "Regular Exam header cannot be null");
+        Preconditions.nonNull(description, "Regular Exam description cannot be null");
+        Preconditions.nonNull(date, "Regular Exam date cannot be null");
+        Preconditions.nonNull(sections, "Regular Exam sections cannot be null");
+        Preconditions.nonEmpty(sections, "Regular Exams must have at least one section");
+
+        this.title = title;
+        this.header = header;
+        this.description = description;
+        this.date = date;
+        this.sections = new ArrayList<>(sections);
     }
 
-    //JPA needs empty constructor
-    public RegularExam() {
-        this.examTitle = new ExamTitle();
-        this.examHeader = new ExamHeader();
-        this.headerDescription = new HeaderDescription();
-        this.examDate = new ExamDate();
+    protected RegularExam() {
+        this.title = null;
+        this.header = null;
+        this.description = null;
+        this.date = null;
+        this.sections = null;
     }
 
-
-    public void setTitle(String examTitle){this.examTitle = this.examTitle.valueOf(examTitle);}
-
-    public void setHeader(String examHeader){this.examHeader = this.examHeader.valueOf(examHeader);}
-
-    public void setHeaderDescription(String headerDescription)
-    {
-        this.headerDescription = this.headerDescription.valueOf(headerDescription);
+    protected List<RegularExamSection> sections() {return this.sections;}
+    protected RegularExamTitle title() {
+        return this.title;
     }
-
-    public void setExamDate(Date openDate, Date closeDate)
-    {
-        this.examDate = this.examDate.valueOf(openDate,closeDate);
+    protected RegularExamHeader header(){return this.header;}
+    protected RegularExamHeaderDescription description() {
+        return this.description;
     }
-
-    public void addListOfSectionsToExam(List<RegularExamSection> regularExamSections)
-    {
-        this.regularExamSections = regularExamSections;
-    }
-
+    protected RegularExamDate date(){return this.date;}
 
 
     @Override
@@ -108,14 +108,5 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Override
     public boolean hasIdentity(Integer id) {return AggregateRoot.super.hasIdentity(id);}
 
-    @Override
-    public String toString() {
-        return "RegularExam{" +
-                "id=" + id +
-                ", examTitle=" + examTitle +
-                ", examHeader=" + examHeader +
-                ", headerDescription=" + headerDescription +
-                ", examDate=" + examDate +
-                '}';
-    }
+
 }

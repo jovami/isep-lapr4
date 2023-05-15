@@ -30,6 +30,7 @@ import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
+import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.base.course.repositories.CourseRepository;
@@ -120,6 +121,7 @@ public interface RepositoryFactory {
     ManagerRepository managers();
 
     QuestionRepository questions();
+    RegularExam regularExams();
     FormativeExamRepository formativeExams();
     FormativeExamSpecificationRepository formativeExamSpecifications();
     EnrollmentRequestRepository enrollmentRequests();

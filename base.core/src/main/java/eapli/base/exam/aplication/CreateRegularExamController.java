@@ -21,16 +21,16 @@ public class CreateRegularExamController {
     public CreateRegularExamController()
     {
         repo = PersistenceContext.repositories().exams();
-        regularExam = new RegularExam();
+        //regularExam = new RegularExam();
     }
 
     public boolean createRegularExam(String title, String header, String headerDescription, Date openDate, Date closeDate)
     {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER,BaseRoles.TEACHER);
-        regularExam.setTitle(title);
+        /*regularExam.setTitle(title);
         regularExam.setHeader(header);
         regularExam.setHeaderDescription(headerDescription);
-        regularExam.setExamDate(openDate,closeDate);
+        regularExam.setExamDate(openDate,closeDate);*/
 
         return true;
     }

@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 
 public class CreateRegularExamUI extends AbstractUI {
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
+
     private CreateRegularExamController ctrl;
     public CreateRegularExamUI(){
         ctrl = new CreateRegularExamController();

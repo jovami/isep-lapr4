@@ -26,7 +26,7 @@ public class RegularExamBootstrapper implements Action{
 
     private void saveExam(String title, String header, String headerDescription, String openDate, String closeDate)
     {
-        RegularExamRepository repo = PersistenceContext.repositories().exams();
+        /*RegularExamRepository repo = PersistenceContext.repositories().exams();
         RegularExam e = new RegularExam();
 
         e.setTitle(title);
@@ -46,7 +46,7 @@ public class RegularExamBootstrapper implements Action{
 
         RegularExam regularExam = new RegularExam();
         e.setExamDate(oDate,cDate);
-        repo.save(regularExam);
+        repo.save(regularExam);*/
 
     }
 }
