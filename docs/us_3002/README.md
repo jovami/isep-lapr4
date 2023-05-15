@@ -23,6 +23,21 @@ US 3002 -- Create a Board
 11. ensureBoardSameName
 12. ensureIdentity
 13. ensureToString
+14. ensureGetBoardColumnId
+15. ensureGetBoardColumnTitle
+16. ensureSetBoardColumnTitle
+17. ensureColumnHashCode
+18. ensureGetBoardRowId
+19. ensureGetBoardRowTitle
+20. ensureSetBoardRowTitle
+21. ensureRowHashCode
+22. ensureGetBoardTitle
+23. ensureSetBoardTitle
+24. ensureTitleHashCode
+25. ensureCompareBoardTitle
+26. ensureGetCellId
+27. ensureCellHashCode
+28. ensurePostItHashCode
 
 # Design
 

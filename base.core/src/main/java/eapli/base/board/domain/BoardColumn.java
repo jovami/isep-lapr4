@@ -1,4 +1,4 @@
-package eapli.base.board.domain.domain;
+package eapli.base.board.domain;
 
 
 import javax.persistence.Entity;
@@ -24,6 +24,9 @@ public class BoardColumn {
 
     public String getColumnTitle() {
         return columnTitle;
+    }
+    public void setColumnTitle(String columnTitle){
+        this.columnTitle = columnTitle;
     }
 
 

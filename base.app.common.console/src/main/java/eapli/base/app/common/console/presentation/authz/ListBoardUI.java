@@ -1,6 +1,6 @@
 package eapli.base.app.common.console.presentation.authz;
 
-import eapli.base.board.domain.application.ListBoardController;
+import eapli.base.board.application.ListBoardController;
 import eapli.framework.presentation.console.AbstractUI;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,7 +1,5 @@
-package eapli.base.board.domain.domain;
+package eapli.base.board.domain;
 
-import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Objects;
@@ -27,6 +25,11 @@ public class BoardRow {
     public String getRowTitle() {
         return rowTitle;
     }
+    public void setRowTitle(String rowTitle){
+        this.rowTitle = rowTitle;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

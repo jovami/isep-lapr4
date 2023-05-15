@@ -1,7 +1,7 @@
-package eapli.base.board.domain.application;
+package eapli.base.board.application;
 
-import eapli.base.board.domain.domain.Board;
-import eapli.base.board.domain.repositories.BoardRepository;
+import eapli.base.board.domain.Board;
+import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 
 public class ListBoardController {
