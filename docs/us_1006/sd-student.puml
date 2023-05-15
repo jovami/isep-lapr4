@@ -1,0 +1,108 @@
+@startuml
+
+actor Student as user
+participant ListAvailableCoursesUI as ui
+participant ListAvailableCoursesController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+
+participant ListCoursesService as svc
+
+participant CouseRepository as c_repo
+participant StudentRepository as s_repo
+
+participant AuthzRegistry as authreg
+participant AuthorizationService as authsvc
+participant Session as sess
+participant SystemUser as sys_usr
+
+
+participant AvailableCourseDTOMapper as mapper
+participant AvailableCourseDTO as dto
+
+' participant Course as course
+
+user --> ui : enter
+
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        ctrl --> ctx : repositories()
+        activate ctx
+            ctx --> rep_fac : create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+        ctrl --> rep_fac : courses()
+        activate rep_fac
+            rep_fac --> c_repo : create()
+            activate c_repo
+            deactivate c_repo
+        deactivate rep_fac
+
+        ctrl --> rep_fac : students()
+        activate rep_fac
+            rep_fac --> s_repo : create()
+            activate s_repo
+            deactivate s_repo
+        deactivate rep_fac
+
+        ctrl --> authreg : authorizationService()
+        activate authreg
+            authreg --> authsvc : session()
+            activate authsvc
+                authsvc --> sess : get()
+                activate sess
+                deactivate sess
+            deactivate authsvc
+        deactivate authreg
+
+        ctrl --> sess : authenticatedUser()
+        activate sess
+            sess --> sys_usr : get()
+            activate sys_usr
+                sys_usr --> sess : sysUser
+            deactivate sys_usr
+
+            sess --> ctrl : sysUser
+        deactivate sess
+    deactivate ctrl
+
+    ui --> ctrl : availableCourses()
+    activate ctrl
+        ctrl --> s_repo : findBySystemUser(sysUser)
+        activate s_repo
+            s_repo --> ctrl : student
+        deactivate s_repo
+
+
+        ctrl --> svc : studentIsEnrolledOrCanEnroll(student)
+        activate svc
+            svc --> c_repo : findByEnrolledStudentOrCanEnroll(student)
+
+            activate c_repo
+                c_repo --> svc : courses
+            deactivate c_repo
+
+            svc --> ctrl : courses
+        deactivate svc
+
+        ctrl --> mapper: toDTO(courses)
+        activate mapper
+            loop for each course in courses
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: courseDTOList
+        deactivate mapper
+
+        ctrl --> ui : courseDTOList
+    deactivate ctrl
+
+    ui --> user : show available courses
+deactivate ui
+
+@enduml

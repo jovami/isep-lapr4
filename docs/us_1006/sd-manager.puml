@@ -1,0 +1,63 @@
+@startuml
+
+actor Manager as user
+participant ListAvailableCoursesUI as ui
+participant ListAvailableCoursesController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+
+participant ListCoursesService as svc
+participant CouseRepository as repo
+
+participant AvailableCourseDTOMapper as mapper
+participant AvailableCourseDTO as dto
+
+user --> ui : enter
+
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        ctrl --> ctx : repositories()
+        activate ctx
+            ctx --> rep_fac : create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+        ctrl --> rep_fac : courses()
+        activate rep_fac
+            rep_fac --> repo : create()
+            activate repo
+            deactivate repo
+        deactivate rep_fac
+    deactivate ctrl
+
+    ui --> ctrl : availableCourses()
+    activate ctrl
+        ctrl --> svc : allCourses()
+        activate svc
+            svc --> repo : findAll()
+            activate repo
+                repo --> svc : courses
+            deactivate repo
+            svc --> ctrl : courses
+        deactivate svc
+
+        ctrl --> mapper: toDTO(courses)
+        activate mapper
+            loop for each course in courses
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: courseDTOList
+        deactivate mapper
+
+        ctrl --> ui : courseDTOList
+    deactivate ctrl
+
+    ui --> user : show available courses
+deactivate ui
+
+@enduml
