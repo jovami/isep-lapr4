@@ -23,9 +23,9 @@ public class EnrollmentRequestUI extends AbstractUI {
 
         if (widget.selectedOption() <= 0)
             return false;
-        var chosen = widget.selectedElement().getCourseName();
+        var chosen = widget.selectedElement();
 
-        System.out.printf("You chose: %s\n", chosen.getName());
+        System.out.printf("You chose: %s\n", chosen);
         if (Console.readBoolean("Is this ok? (y/n)")) {
             try {
                 if (this.ctrl.createEnrollmentRequest(chosen)) {
