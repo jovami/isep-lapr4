@@ -61,6 +61,8 @@ public class MainMenu extends AbstractUI {
     private static final int ADD_COURSE_OPTION = 1;
     private static final int OPEN_COURSE = 2;
     private static final int CLOSE_COURSE = 3;
+    private static final int OPEN_ENROLLMENTS = 4;
+    private static final int CLOSE_ENROLLMENTS = 5;
 
     // SETTINGS
 
@@ -132,6 +134,8 @@ public class MainMenu extends AbstractUI {
         menu.addItem(ADD_COURSE_OPTION, "Add course", new CreateCourseUI()::show);
         menu.addItem(OPEN_COURSE, "Open a course", new OpenCourseUI()::show);
         menu.addItem(CLOSE_COURSE, "Close a course", new CloseCourseUI()::show);
+        menu.addItem(OPEN_ENROLLMENTS, "Open enrollments", new OpenEnrollmentUI()::show);
+        menu.addItem(CLOSE_ENROLLMENTS, "Close enrollments", new CloseEnrollmentUI()::show);
 
         return menu;
     }
