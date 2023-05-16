@@ -1,6 +1,5 @@
 package eapli.base.enrollmentrequest.application;
 
-import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
@@ -20,14 +19,12 @@ public final class EnrollmentRequestController {
     private final EnrollmentRequestRepository enrollmentRequestRepo;
     private final CourseRepository courseRepo;
     private final StudentRepository studentRepo;
-    private EnrollmentRequest enrollmentRequest;
 
 
     public EnrollmentRequestController() {
         this.enrollmentRequestRepo = PersistenceContext.repositories().enrollmentRequests();
         this.courseRepo = PersistenceContext.repositories().courses();
         this.studentRepo = PersistenceContext.repositories().students();
-        enrollmentRequest = null;
     }
 
     public Iterable<Course> getCourses() {
@@ -45,22 +42,8 @@ public final class EnrollmentRequestController {
         if (student.isEmpty()){
             return false;
         }
-        enrollmentRequest = new EnrollmentRequest(course, student.get());
-        return true;
-    }
-
-    // can be used, for example, by a power user to create an enrollment request for a student
-    public boolean createEnrollmentRequest(Course course, Student student){
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER);
-        enrollmentRequest = new EnrollmentRequest(course, student);
-        return true;
-    }
-
-    public boolean saveEnrollmentRequest(){
-        if (enrollmentRequest == null) {
-            return false;
-        }
-        enrollmentRequest = this.enrollmentRequestRepo.save(enrollmentRequest);
+        var enrollmentRequest = new EnrollmentRequest(course, student.get());
+        this.enrollmentRequestRepo.save(enrollmentRequest);
         return true;
     }
 }

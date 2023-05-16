@@ -30,7 +30,6 @@ public class EnrollmentRequestUI extends AbstractUI {
         if (Console.readBoolean("Is this ok? (y/n)")) {
             try {
                 if (this.ctrl.createEnrollmentRequest(chosen)) {
-                    this.ctrl.saveEnrollmentRequest();
                     System.out.println("Enrollment request created successfully");
                 }
 

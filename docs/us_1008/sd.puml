@@ -69,11 +69,11 @@ user --> ui: selects course from list
 activate ui
     ui --> ctrl: createEnrollmentRequest(course)
     activate ctrl
-        ctrl --> student_repo: student = findBySystemUser()
+        ctrl --> student_repo: student = findBySystemUser(systemUser)
         activate student_repo
         deactivate student_repo
 
-        ctrl ---> enrollment_request: EnrollmentRequest = new EnrollmentRequest(course, student)
+        ctrl ---> enrollment_request: enrollmentRequest = new EnrollmentRequest(course, student)
         note bottom: systemUser is taken from user session
         activate enrollment_request
         deactivate enrollment_request
