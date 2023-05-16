@@ -1,0 +1,93 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+
+class CSVLoaderStudentsUI
+class CSVLoaderStudentsController
+{
+   -enum CSVFiles
+   -final Map<CSVHeader, CSVParser> parsers
+   +loadResources()
+
+
+}
+
+class StudentParser
+{
+    -final AddUserController addUserController
+    -enum StudentColumns
+    + parse(List<String[]> data)
+}
+
+class AddUserController
+{
+    -final AuthorizationService authz
+    -UserManagementService userSvc
+    -SystemUser user
+    +SystemUser addUser(final String username, final String password, final String firstName, final String lastName, final String email, final Set<Role> roles, final Calendar createdOn)
+    +SystemUser addUser(final String username, final String password, final String firstName, final String lastName, final String email, final Set<Role> roles)
+    +Student addStudent(final String mecanographicNumber, final String fullName, final String shortName, final String dateOfBirth, final String taxPayerNumber)
+}
+
+class Role
+{
+    +valueOf(final String role)
+}
+
+class CSVHeader
+{
+    +enum CSVHeader
+    +int getColumnCount()
+    +String getDelimiter()
+
+
+}
+
+interface CSVParser
+{
+    +parse(List<String[]> data)
+}
+
+class CSVReader
+{
+    -static CSVHeader HEADER
+    -static int EXPECTED_COLUMNS
+    -static String DEFAULT_DELIMITER
+    -static final char BOM = '\ufeff'
+    +List<String[]> readFromResources(String bundle, CSVHeader header)
+    -static List<String[]> readCSV(InputStream stream, CSVHeader header)
+    -static boolean isHeader(String line)
+    -static void maybeSkipBOM(Reader reader)
+
+}
+
+class InvalidCSVHeaderException{
+    +InvalidCSVHeaderException()
+    }
+
+
+
+
+
+CSVLoaderStudentsUI ..> CSVLoaderStudentsController
+CSVLoaderStudentsController --> StudentParser
+StudentParser --> AddUserController
+StudentParser --> Role
+CSVLoaderStudentsController ..> CSVHeader
+CSVLoaderStudentsController ..> CSVParser
+CSVLoaderStudentsController ..> CSVReader
+CSVReader --> InvalidCSVHeaderException
+
+
+
+
+
+
+
+
+@enduml
