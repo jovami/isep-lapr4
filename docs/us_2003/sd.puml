@@ -1,0 +1,102 @@
+@startuml
+
+actor Teacher as user
+participant ListExamsInCourseUI as ui
+participant ListExamsInCourseController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+participant CourseRepository as course_repo
+participant ExamRepository as exam_repo
+participant TeacherRepository as teacher_repo
+
+participant CourseAndDescriptionDTOMapper as course_mapper
+participant CourseAndDescriptionDTO as course_dto
+
+participant ExamAndDateDTOMapper as exam_mapper
+participant ExamAndDateDTO as exam_dto
+
+user --> ui: enter
+activate ui
+ui --> ctrl: create()
+    activate ctrl
+        ctrl --> ctx: repositories()
+        activate ctx
+            ctx --> rep_fac: create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+        ctrl --> rep_fac: courses()
+        activate rep_fac
+            rep_fac --> course_repo: create()
+            activate course_repo
+            deactivate course_repo
+        deactivate rep_fac
+
+        ctrl --> rep_fac : exams()
+        activate rep_fac
+            rep_fac --> exam_repo: create()
+            activate exam_repo
+            deactivate exam_repo
+        deactivate rep_fac
+
+        ctrl --> rep_fac: teachers()
+        activate rep_fac
+            rep_fac --> teacher_repo: create()
+            activate teacher_repo
+            deactivate teacher_repo
+        deactivate rep_fac
+    deactivate ctrl
+
+    ui --> ctrl: getCourses()
+    activate ctrl
+        ctrl --> teacher_repo: teacher = findBySystemUser(systemUser)
+        activate teacher_repo
+        note bottom: systemUser is taken from user session
+        deactivate teacher_repo
+
+        ctrl --> course_repo: taughtBy(teacher)
+
+        activate course_repo
+        deactivate course_repo
+
+        ctrl --> course_mapper: toDto(courses)
+        activate course_mapper
+            loop for each course in courses
+                course_mapper --> course_dto: create()
+                activate course_dto
+                deactivate course_dto
+            end loop
+            course_mapper --> ctrl: courseDTOList
+        deactivate course_mapper
+        ctrl --> ui: courses
+
+    deactivate ctrl
+    ui --> user: show courses
+deactivate ui
+
+user --> ui: selects course from list
+activate ui
+    ui --> ctrl: listExams(course)
+    activate ctrl
+        ctrl --> exam_repo: findByCourse(course)
+        activate exam_repo
+        deactivate exam_repo
+
+        ctrl --> exam_mapper: toDto(exams)
+        activate exam_mapper
+            loop for each exam in exams
+                exam_mapper --> exam_dto: create()
+                activate exam_dto
+                deactivate exam_dto
+            end loop
+            exam_mapper --> ctrl: examDTOList
+        deactivate exam_mapper
+        ctrl --> ui: exams
+    deactivate ctrl
+    ui --> user: show exams
+deactivate ui
+
+@enduml
+

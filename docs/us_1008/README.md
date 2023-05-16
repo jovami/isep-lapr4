@@ -47,9 +47,6 @@ This further enhances the service's usability and makes it more efficient.
 - Repository:
     + **CourseRepository**
     + **EnrollmentRequestRepository**
-- DTO:
-    + **CourseAndStateDTO**
-    + **CourseAndStateDTOMapper**
 
 ## Sequence Diagram
 
