@@ -1,0 +1,80 @@
+@startuml
+
+actor Manager as user
+participant OpenEnrollmentUI_or_CloseEnrollmentUI as ui
+participant OpenCloseEnrollmentController as ctrl
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as rep_fac
+participant CourseRepository as repo
+
+participant ListCoursesService as svc
+
+participant CourseAndStateDTOMapper as mapper
+participant CourseAndStateDTO as dto
+
+participant Course as course
+
+user --> ui: enter
+
+activate ui
+    ui --> ctrl: create()
+    activate ctrl
+        ctrl --> ctx: repositories()
+        activate ctx
+            ctx --> rep_fac: create()
+            activate rep_fac
+            deactivate rep_fac
+        deactivate ctx
+
+        ctrl --> rep_fac: courses()
+        activate rep_fac
+            rep_fac --> repo: create()
+            activate repo
+            deactivate repo
+        deactivate rep_fac
+    deactivate ctrl
+
+
+    ui --> ctrl: enrollableCourses()
+    activate ctrl
+        ctrl --> svc: enrollable(repository)
+        activate svc
+            svc --> repo: findByState()
+            activate repo
+            deactivate repo
+        deactivate svc
+
+        ctrl --> mapper: toDto(courses)
+        activate mapper
+            loop for each course in courses
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: courseDTOList
+        deactivate mapper
+
+        ctrl --> ui: courseDTOList
+    deactivate ctrl
+
+    ui --> user: show courses
+deactivate ui
+
+user --> ui: selects course from list
+activate ui
+    ui --> ctrl: chosen course (dto)
+    activate ctrl
+        ctrl --> course: openEnrollments()/closeEnrollments()
+
+        activate course
+            course --> course: openEnrollments()/closeEnrollments()
+
+    deactivate ctrl
+
+
+    ui --> user: show result
+    deactivate course
+deactivate ui
+
+@enduml
