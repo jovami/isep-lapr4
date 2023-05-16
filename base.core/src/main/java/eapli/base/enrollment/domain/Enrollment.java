@@ -1,56 +1,47 @@
 package eapli.base.enrollment.domain;
 
-import eapli.base.course.domain.CourseName;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
-import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ENROLLMENT",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSENAME", "USERNAME" }) })
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSE", "STUDENT" }) })
 public class Enrollment implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="IDENROLLMENTREQUEST")
     private int code;
 
-    @Column(name="COURSENAME",nullable = false)
-    private CourseName courseName;
+    @Column(name="COURSE",nullable = false)
+    @ManyToOne
+    private Course course;
 
-    // TODO: username vs mecanographicNumber
-    @Column(name="USERNAME",nullable = false)
-    private Username username;
+    @Column(name="STUDENT",nullable = false)
+    @ManyToOne
+    private Student student;
 
     public Enrollment(){
         //empty constructor for JPA
     }
 
-    public Enrollment(CourseName courseName, Username username){
-        Preconditions.nonNull(courseName, "Course name cannot be null");
-        Preconditions.nonNull(username, "Username cannot be null");
+    public Enrollment(Course course, Student student){
+        Preconditions.nonNull(course, "Course name cannot be null");
+        Preconditions.nonNull(student, "Username cannot be null");
 
-        this.courseName = courseName;
-        this.username = username;
+        this.course = course;
+        this.student = student;
     }
 
-    public void changeCourseName(CourseName courseName){
-        Preconditions.nonNull(courseName, "Course name cannot be null");
-        this.courseName = courseName;
+    public Course course(){
+        return this.course;
     }
 
-    public String obtainCourseName(){
-        return this.courseName.getName();
-    }
-
-    public void changeUsername(Username username){
-        Preconditions.nonNull(username, "Username cannot be null");
-        this.username = username;
-    }
-
-    public String obtainUsername(){
-        return this.username.toString();
+    public Student student(){
+        return this.student;
     }
 
     @Override
@@ -61,8 +52,8 @@ public class Enrollment implements AggregateRoot<Integer> {
         final Enrollment o = (Enrollment) other;
         if (this == o) {
             return true;}
-        return this.courseName.equals(o.courseName)
-                && this.username.equals(o.username);
+        return this.course.sameAs(o.course)
+                && this.student.sameAs(o.student);
     }
 
     @Override
@@ -79,8 +70,8 @@ public class Enrollment implements AggregateRoot<Integer> {
     public String toString() {
         return "Enrollment{" +
                 "code=" + code +
-                ", courseName=" + courseName +
-                ", username=" + username +
+                ", course=" + course +
+                ", student=" + student +
                 '}';
     }
 }

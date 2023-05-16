@@ -73,22 +73,22 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         }
     }
 
-    public Either<String, String> getDeniedReason() {
+    public Either<String, DeniedReason> deniedReason() {
         if (this.state == EnrollmentRequestState.DENIED) {
-            return Either.right(this.deniedReason.getDenyingReason());
+            return Either.right(this.deniedReason);
         }
         return Either.left("Enrollment request was not denied");
     }
 
-    public EnrollmentRequestState getEnrollmentRequestState() {
+    public EnrollmentRequestState enrollmentRequestState() {
         return state;
     }
 
-    public Course getCourse() {
+    public Course course() {
         return course;
     }
 
-    public Student getStudent() {
+    public Student student() {
         return student;
     }
 
@@ -100,8 +100,8 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         final EnrollmentRequest o = (EnrollmentRequest) other;
         if (this == o) {
             return true;}
-        return this.course.equals(o.course)
-                && this.student.equals(o.student);
+        return this.course.sameAs(o.course)
+                && this.student.sameAs(o.student);
     }
 
     @Override

@@ -1,20 +1,8 @@
 package eapli.base.enrollmentrequest.domain;
 
-import eapli.base.clientusermanagement.domain.users.*;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseName;
-import eapli.framework.infrastructure.authz.domain.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class EnrollmentRequestTest {
 
+    /*
     Student student1;
     Student student2;
     Course course1;

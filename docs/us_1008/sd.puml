@@ -12,9 +12,6 @@ participant StudentRepository as student_repo
 
 participant ListCoursesService as courses_svc
 
-participant CourseAndStateDTOMapper as mapper
-participant CourseAndStateDTO as dto
-
 participant EnrollmentRequest as enrollment_request
 
 user --> ui: enter
