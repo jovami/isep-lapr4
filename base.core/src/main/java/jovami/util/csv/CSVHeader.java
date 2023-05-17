@@ -11,10 +11,10 @@ public enum CSVHeader {
         }
     },
 
-    STUDENTS(9, ",") {
+    ENROLLMENTS(2, ",") {
         @Override
         public String toString() {
-            return "username,password,firstname,lastname,fullname,email,dateofbirth,taxpayernumber,mecanographicnumber";
+            return "mecanographicnumber,courseID";
         }
     };
 

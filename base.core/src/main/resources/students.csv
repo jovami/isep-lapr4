@@ -1,6 +1,4 @@
-username,password,firstname,lastname,fullname,email,dateofbirth,taxpayernumber,mecanographicnumber
-jons,pw1,jonas,antunes,jonasfilipetrindadeantunes,1181478@isep.ipp.pt,1994-07-12,231805805,1181478
-johnny,pw2,joao,teixeira,joaoxxteixeira,1210957@isep.ipp.pt,2000-07-12,231805000,1210957
-uzo,pw3,marco,maia,marcoxxmaia,1210951@isep.ipp.pt,2001-07-12,231805001,1210951
-mira,pw4,ruben,ferreira,rubenxxferreira,1210954@isep.ipp.pt,2002-07-12,231805002,1210954
-blave,pw5,jose,rente,josexxrente,1211155@isep.ipp.pt,2003-07-12,231805003,1211155
+mecanographicnumber,courseID
+isep959,JAVA-1
+isep958,
+isep957,

@@ -1,34 +1,37 @@
 package eapli.base.app.manager.console.presentation;
 
+import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
-import jovami.util.csv.aplication.CSVLoaderStudentsController;
-import jovami.util.csv.InputReader;
+import eapli.base.enrollment.aplication.CSVLoaderStudentsController;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 
 
 public class CSVLoaderStudentsUI extends AbstractUI {
 
     private final CSVLoaderStudentsController ctrl;
 
-    public CSVLoaderStudentsUI()
-    {
+    public CSVLoaderStudentsUI() {
         super();
         this.ctrl = new CSVLoaderStudentsController();
     }
 
     @Override
-    public boolean doShow()
-    {
+    public boolean doShow() {
+        String filePath = Console.readLine("Type file path:");
+        File file = new File(filePath);
+
         try {
-            if (InputReader.confirm("Load default file?[YES/NO]", true))
-                this.ctrl.loadResources();
-        } catch (RuntimeException e) {
-            System.err.println("Aborting...");
-            throw e;
+            if (file.exists() && file.canRead())
+                this.ctrl.file(file);
+            else
+                System.out.println("File doesnt exist");
+        } catch (FileNotFoundException e) {
+            System.out.println("File doesnt exist");
         }
 
         System.out.println("Data loaded with success!!");
-
         return false;
     }
 
@@ -36,7 +39,6 @@ public class CSVLoaderStudentsUI extends AbstractUI {
     public String headline() {
         return "Import csv student file";
     }
-
 
 
 }
