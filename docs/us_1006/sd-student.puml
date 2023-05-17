@@ -4,18 +4,22 @@ actor Student as user
 participant ListAvailableCoursesUI as ui
 participant ListAvailableCoursesController as ctrl
 
-participant PersistenceContext as ctx
-participant RepositoryFactory as rep_fac
+' participant PersistenceContext as ctx
+' participant RepositoryFactory as rep_fac
+
+participant SystemUser as sys_usr
+
+participant StudentRepository as s_repo
 
 participant ListCoursesService as svc
 
 participant CouseRepository as c_repo
-participant StudentRepository as s_repo
+participant EnrollmentRepositry as e_repo
 
-participant AuthzRegistry as authreg
-participant AuthorizationService as authsvc
-participant Session as sess
-participant SystemUser as sys_usr
+
+' participant AuthzRegistry as authreg
+' participant AuthorizationService as authsvc
+' participant Session as sess
 
 
 participant AvailableCourseDTOMapper as mapper
@@ -28,49 +32,15 @@ user --> ui : enter
 activate ui
     ui --> ctrl : create()
     activate ctrl
-        ctrl --> ctx : repositories()
-        activate ctx
-            ctx --> rep_fac : create()
-            activate rep_fac
-            deactivate rep_fac
-        deactivate ctx
-
-        ctrl --> rep_fac : courses()
-        activate rep_fac
-            rep_fac --> c_repo : create()
-            activate c_repo
-            deactivate c_repo
-        deactivate rep_fac
-
-        ctrl --> rep_fac : students()
-        activate rep_fac
-            rep_fac --> s_repo : create()
-            activate s_repo
-            deactivate s_repo
-        deactivate rep_fac
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
     deactivate ctrl
 
     ui --> ctrl : availableCourses()
     activate ctrl
-        ctrl --> authreg : authorizationService()
-        activate authreg
-            authreg --> authsvc : session()
-            activate authsvc
-                authsvc --> sess : get()
-                activate sess
-                deactivate sess
-            deactivate authsvc
-        deactivate authreg
-
-        ctrl --> sess : authenticatedUser()
-        activate sess
-            sess --> sys_usr : get()
-            activate sys_usr
-                sys_usr --> sess : sysUser
-            deactivate sys_usr
-
-            sess --> ctrl : sysUser
-        deactivate sess
+        ctrl --> sys_usr : get()
+        activate sys_usr
+            note right : sysUser is obtained via\nthe framework's Authz package
+        deactivate sys_usr
 
         ctrl --> s_repo : findBySystemUser(sysUser)
         activate s_repo
@@ -79,11 +49,21 @@ activate ui
 
         ctrl --> svc : studentIsEnrolledOrCanEnroll(student)
         activate svc
-            svc --> c_repo : findByEnrolledStudent(student)
+            svc --> c_repo : enrollable()
 
             activate c_repo
                 c_repo --> svc : courses
             deactivate c_repo
+
+            svc --> svc : add(courses)
+
+            svc --> e_repo : coursesOfEnrolledStudent(student)
+            activate e_repo
+                e_repo --> svc : courses
+            deactivate e_repo
+
+            svc --> svc : add(courses)
+            note right : ensure no duplicate\ncourses are added
 
             svc --> ctrl : courses
         deactivate svc

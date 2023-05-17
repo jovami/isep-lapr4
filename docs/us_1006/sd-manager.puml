@@ -7,7 +7,6 @@ participant ListAvailableCoursesController as ctrl
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 
-participant ListCoursesService as svc
 participant CouseRepository as repo
 
 participant AvailableCourseDTOMapper as mapper
@@ -35,14 +34,10 @@ activate ui
 
     ui --> ctrl : availableCourses()
     activate ctrl
-        ctrl --> svc : allCourses()
-        activate svc
-            svc --> repo : findAll()
-            activate repo
-                repo --> svc : courses
-            deactivate repo
-            svc --> ctrl : courses
-        deactivate svc
+        ctrl --> repo : allCourses()
+        activate repo
+            repo --> ctrl : courses
+        deactivate repo
 
         ctrl --> mapper: toDTO(courses)
         activate mapper
