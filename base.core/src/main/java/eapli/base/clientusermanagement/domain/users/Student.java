@@ -86,7 +86,7 @@ public class Student implements AggregateRoot<MecanographicNumber>, Serializable
 
     @Override
     public String toString() {
-        return "Teacher" +
+        return "Student" +
                 "\nMecanographic Number: " + mecanographicNumber +
                 "\nFull Name: " + fullName +
                 "\nShort Name: " + shortName +

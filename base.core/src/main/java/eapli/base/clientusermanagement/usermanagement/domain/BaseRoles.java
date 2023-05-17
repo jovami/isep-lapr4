@@ -42,7 +42,7 @@ public final class BaseRoles {
     /**
      * Base Administrator
      */
-    public static final Role MANAGER = Role.valueOf("ADMIN");
+    public static final Role MANAGER = Role.valueOf("MANAGER");
     /**
      *
      */

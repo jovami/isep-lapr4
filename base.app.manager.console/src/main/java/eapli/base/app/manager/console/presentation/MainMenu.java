@@ -54,6 +54,8 @@ public class MainMenu extends AbstractUI {
     private static final int LIST_USERS_OPTION = 2;
     private static final int DEACTIVATE_USER_OPTION = 3;
     private static final int ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION = 4;
+    private static final int LIST_TEACHERS_STUDENTS_MANAGERS = 5;
+
 
     // Boards
     private static final int CREATE_BOARD_OPTION = 1;
@@ -157,6 +159,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(DEACTIVATE_USER_OPTION, "Deactivate User", new DeactivateUserAction());
         menu.addItem(ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION, "Accept/Refuse Signup Request",
                 new AcceptRefuseSignupRequestAction());
+        menu.addItem(LIST_TEACHERS_STUDENTS_MANAGERS, "List Teachers,Students and Managers", new ListTeachersStudentsManagersUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

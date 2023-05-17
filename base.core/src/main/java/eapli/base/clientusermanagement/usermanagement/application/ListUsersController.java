@@ -23,8 +23,11 @@
  */
 package eapli.base.clientusermanagement.usermanagement.application;
 
-import java.util.Optional;
+import java.util.*;
 
+import eapli.base.clientusermanagement.domain.users.Manager;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -42,6 +45,12 @@ public class ListUsersController{
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     private final UserManagementService userSvc = AuthzRegistry.userService();
+    private final ListUsersService svc;
+
+    public ListUsersController()
+    {
+        this.svc = new ListUsersService();
+    }
 
     public Iterable<SystemUser> allUsers() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
@@ -52,4 +61,21 @@ public class ListUsersController{
     public Optional<SystemUser> find(final Username u) {
         return userSvc.userOfIdentity(u);
     }
+
+    public Iterable<Manager> listManagers (){
+        return svc.listManagers();
+    }
+
+    public Iterable<Student> listStudents() {return svc.listStudents();}
+
+    public Iterable<Teacher> listTeachers(){return svc.listTeachers();}
+
+    public Iterable<SystemUser> allUsersExceptPowerUser()
+    {
+        return svc.allUsersExceptPowerUser(allUsers());
+    }
+
+    public Iterable<SystemUser> userTeachers(){return svc.userTeachers(allUsers());}
+    public Iterable<SystemUser> userStudents(){return svc.userStudents(allUsers());}
+    public Iterable<SystemUser> userManagers(){return svc.userManagers(allUsers());}
 }
