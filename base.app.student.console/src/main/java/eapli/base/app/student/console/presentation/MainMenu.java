@@ -27,6 +27,7 @@ import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
@@ -45,8 +46,9 @@ public class MainMenu extends AbstractUI {
 
     private static final int EXIT_OPTION = 0;
 
-    // ENROLLMENTS
+    // Course
     private static final int ENROLLMENT_REQUEST_OPTION = 1;
+    private static final int LIST_COURSES = 2;
 
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
@@ -97,7 +99,7 @@ public class MainMenu extends AbstractUI {
         }*/
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
-            final Menu enrollmentsMenu = buildEnrollmentsMenu();
+            final Menu enrollmentsMenu = buildCourseMenu();
             mainMenu.addSubMenu(ENROLLMENTS_OPTION, enrollmentsMenu);
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
@@ -112,10 +114,11 @@ public class MainMenu extends AbstractUI {
         return mainMenu;
     }
 
-    private Menu buildEnrollmentsMenu() {
-        final Menu menu = new Menu("Enrollments");
+    private Menu buildCourseMenu() {
+        final Menu menu = new Menu("Course");
 
         menu.addItem(ENROLLMENT_REQUEST_OPTION, "Request Enrollment in a Course", new EnrollmentRequestUI()::show);
+        menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

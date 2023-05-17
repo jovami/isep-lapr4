@@ -26,6 +26,7 @@ package eapli.base.app.teacher.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
@@ -44,6 +45,9 @@ public class MainMenu extends AbstractUI {
 
     private static final int EXIT_OPTION = 0;
 
+    // Course
+    private static final int LIST_COURSES = 1;
+
     // REGULAR EXAM
 
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
@@ -55,8 +59,9 @@ public class MainMenu extends AbstractUI {
     // SETTINGS
 
     private static final int MY_USER_OPTION = 1;
-    private static final int REGULAR_EXAM_OPTION = 2;
-    private static final int BOARD_OPTION = 3;
+    private static final int COURSE_OPTION = 2;
+    private static final int REGULAR_EXAM_OPTION = 3;
+    private static final int BOARD_OPTION = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -98,6 +103,7 @@ public class MainMenu extends AbstractUI {
         }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER)) {
+            mainMenu.addSubMenu(COURSE_OPTION, buildCourseMenu());
             final Menu regularExamMenu = buildRegularExamMenu();
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
             final Menu boardMenu = buildBoardMenu();
@@ -112,6 +118,16 @@ public class MainMenu extends AbstractUI {
 
         return mainMenu;
     }
+
+    private Menu buildCourseMenu() {
+        final Menu menu = new Menu("Course");
+
+        menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
 
     private Menu buildRegularExamMenu() {
         final Menu menu = new Menu("Regular Exam");

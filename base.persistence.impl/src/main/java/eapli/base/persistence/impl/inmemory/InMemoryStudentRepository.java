@@ -30,6 +30,6 @@ public class InMemoryStudentRepository extends InMemoryDomainRepository<Student,
 
     @Override
     public Optional<Student> findBySystemUser(SystemUser systemUser) {
-        return matchOne(student -> student.user().equals(systemUser));
+        return matchOne(student -> student.user().sameAs(systemUser));
     }
 }

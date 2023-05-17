@@ -2,6 +2,7 @@ package eapli.base.persistence.impl.inmemory;
 
 import java.util.Set;
 
+import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseState;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;

@@ -8,6 +8,10 @@ import eapli.framework.domain.repositories.DomainRepository;
 
 public interface CourseRepository extends DomainRepository<Integer, Course> {
 
-    public Iterable<Course> ofState(CourseState state);
-    public Iterable<Course> ofStates(Set<CourseState> states);
+    Iterable<Course> ofState(CourseState state);
+    Iterable<Course> ofStates(Set<CourseState> states);
+
+    default Iterable<Course> enrollable() {
+        return ofState(CourseState.ENROLL);
+    }
 }

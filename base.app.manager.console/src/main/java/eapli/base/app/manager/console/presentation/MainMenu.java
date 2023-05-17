@@ -26,6 +26,7 @@ package eapli.base.app.manager.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
 import eapli.base.app.manager.console.presentation.authz.ListUsersAction;
@@ -59,11 +60,12 @@ public class MainMenu extends AbstractUI {
 
     //COURSE
     private static final int ADD_COURSE_OPTION = 1;
-    private static final int OPEN_COURSE = 2;
-    private static final int CLOSE_COURSE = 3;
-    private static final int OPEN_ENROLLMENTS = 4;
-    private static final int CLOSE_ENROLLMENTS = 5;
-    private static final int SET_COURSE_TEACHERS = 6;
+    private static final int LIST_COURSES = 2;
+    private static final int OPEN_COURSE = 3;
+    private static final int CLOSE_COURSE = 4;
+    private static final int OPEN_ENROLLMENTS = 5;
+    private static final int CLOSE_ENROLLMENTS = 6;
+    private static final int SET_COURSE_TEACHERS = 7;
 
     // SETTINGS
 
@@ -137,6 +139,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Courses");
 
         menu.addItem(ADD_COURSE_OPTION, "Add course", new CreateCourseUI()::show);
+        menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesUI()::show);
         menu.addItem(OPEN_COURSE, "Open a course", new OpenCourseUI()::show);
         menu.addItem(CLOSE_COURSE, "Close a course", new CloseCourseUI()::show);
         menu.addItem(OPEN_ENROLLMENTS, "Open enrollments", new OpenEnrollmentUI()::show);

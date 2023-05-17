@@ -110,7 +110,7 @@ public class Course implements AggregateRoot<Integer> {
         return name;
     }
 
-    protected String  getDescription() {
+    public String  getDescription() {
         return description.getDescription();
     }
 
