@@ -49,18 +49,10 @@ public class StudentBootstrapper implements Action {
 				TestDataConstants.USER_TEST1);
 		signupAndApprove("mary","Password1", "Mary", "Smith", "mary@student.com",
 				"isep959");
-		signupAndApprove("mary2","Password1", "Mary2", "Smith2", "mary2@student.com",
-				"isep958");
-		signupAndApprove("mary3","Password1", "Mary3", "Smith3", "mary3@student.com",
-				"isep957");
 
 		// some users that signup but the approval is pending. use the backoffice
 		// application to approve these
 		signup("mary23","Password1", "Mary", "Smith One", "mary1@student.com", "isep111");
-		/*signup("Password1", "Mary", "Smith Two", "mary2@student.com", "isep222");
-		signup("Password1", "Mary", "Smith Three", "mary3@student.com", "isep333");
-		signup("Password1", "Mary", "Smith Four", "mary4@student.com", "isep444");
-*/
 		return true;
 	}
 
