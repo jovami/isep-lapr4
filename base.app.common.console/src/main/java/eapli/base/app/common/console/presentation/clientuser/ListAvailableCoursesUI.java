@@ -1,15 +1,14 @@
 package eapli.base.app.common.console.presentation.clientuser;
 
 import eapli.base.course.application.ListAvailableCoursesController;
-import eapli.framework.presentation.console.AbstractUI;
-import eapli.framework.presentation.console.ListUI;
-import eapli.framework.presentation.console.ListWidget;
+import eapli.base.course.dto.AvailableCourseDTO;
+import eapli.framework.presentation.console.AbstractListUI;
+import eapli.framework.visitor.Visitor;
 
 /**
  * ListAvailableCoursesUI
  */
-// TODO: use ListUI?
-public class ListAvailableCoursesUI extends AbstractUI {
+public class ListAvailableCoursesUI extends AbstractListUI<AvailableCourseDTO> {
     private final ListAvailableCoursesController ctrl;
 
     public ListAvailableCoursesUI() {
@@ -19,14 +18,32 @@ public class ListAvailableCoursesUI extends AbstractUI {
     }
 
     @Override
-    protected boolean doShow() {
-        new ListWidget<>("All currently registered courses:", this.ctrl.availableCourses())
-                .show();
-        return false;
+    public String headline() {
+        return "List available courses";
     }
 
     @Override
-    public String headline() {
-        return "List available courses";
+    protected String elementName() {
+        return "Course";
+    }
+
+    @Override
+    protected Visitor<AvailableCourseDTO> elementPrinter() {
+        return System.out::println;
+    }
+
+    @Override
+    protected Iterable<AvailableCourseDTO> elements() {
+        return this.ctrl.availableCourses();
+    }
+
+    @Override
+    protected String emptyMessage() {
+        return "No courses.";
+    }
+
+    @Override
+    protected String listHeader() {
+        return "All currently registered courses:";
     }
 }
