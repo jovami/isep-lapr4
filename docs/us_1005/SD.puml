@@ -1,0 +1,85 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor Manager as Actor
+participant SetCourseTeachersUI as UI <<presentation>> order 1
+participant SetCourseTeachersController as Controller <<application>> order 2
+participant "course:Course" as Course <<domain>> order 3
+participant "member:StaffMember" as STAFF <<domain>> order 4
+participant PersistenceContext as Persistence <<persistence>> order 5
+participant RepositoryFactory as Fact <<factory>> order 6
+participant "courseRepository:\nCourseRepository" as Repo <<repository>> order 7
+participant "teacherRepository:\nTeacherRepository" as TeacherRepo <<repository>> order 8
+participant "staffRepository:\nStaffRepository" as StaffRepo <<repository>> order 9
+
+Actor -> UI : set course teachers
+activate UI
+    UI -> Controller : create
+    activate Controller
+        Controller -> Persistence : repositories()
+            activate Persistence
+                Persistence -> Fact : courses()
+                activate Fact
+                    Fact -> Repo : create
+                    Controller <-- Persistence: courseRepository
+                    deactivate Fact
+                    deactivate Persistence
+            'Controller -> UI : courses
+            Controller -> Persistence : repositories()
+            activate Persistence
+                            Persistence -> Fact : teachers()
+                            activate Fact
+                                Fact -> TeacherRepo : create
+                                Controller <-- Persistence: teacherRepository
+                                deactivate Fact
+                                deactivate Persistence
+                        'Controller -> UI : teachers
+            deactivate Controller
+
+        UI -> Controller : chooseCourse()
+        activate Controller
+            Controller -> Repo : findAll
+            Controller <-- Repo : courses
+            Controller --> UI : courses
+            deactivate Controller
+
+        Actor <-- UI : show courses, \nand asks to choose one
+        Actor -> UI : choose course
+        UI -> Controller : chooseCourse(course)
+        UI -> Controller : teachers
+        activate Controller
+
+         Controller -> TeacherRepo : findAll
+            activate TeacherRepo
+            Controller <-- TeacherRepo : teachers
+         deactivate TeacherRepo
+        Controller --> UI : teachers
+        deactivate Controller
+        Actor <-- UI : show teachers\nasks for Head Teacher
+        Actor -> UI : choose teacher
+        UI -> Controller : chooseHeadTeacher(teacher))
+
+        activate Controller
+            deactivate TeacherRepo
+            Controller -> Course : setHeadTeacher(teacher)
+            Controller -> Repo : save(course)
+        UI <-- Controller : result
+        deactivate Controller
+        loop while wants to add
+        Actor <-- UI : show teachers \nasks for staffMember
+        Actor -> UI : username
+        UI -> Controller : chooosestaffMember(teacher))
+        activate Controller
+
+            Controller -> STAFF : create(course,teacher)
+            Controller <-- STAFF : staffMember
+            Controller -> StaffRepo : save(staffMember)
+            UI <-- Controller : result
+        deactivate Controller
+        end
+Actor <-- UI : displayStaffInfo
+deactivate UI
+
+@enduml
