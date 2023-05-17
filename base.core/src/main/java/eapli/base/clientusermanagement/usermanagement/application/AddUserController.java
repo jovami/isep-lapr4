@@ -76,7 +76,7 @@ public class AddUserController {
     }
 
 
-    public Teacher addTeacher(final String acronym, final String fullName, final String shortName,
+    public Teacher addTeacher(final SystemUser user ,final String acronym, final String fullName, final String shortName,
                               final String dateOfBirth, final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
@@ -88,7 +88,7 @@ public class AddUserController {
         return PersistenceContext.repositories().teachers().save(teacherBuilder.build());
     }
 
-    public Student addStudent(final String mecanographicNumber, final String fullName, final String shortName,
+    public Student addStudent(final SystemUser user ,final String mecanographicNumber, final String fullName, final String shortName,
                               final String dateOfBirth, final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
@@ -100,7 +100,7 @@ public class AddUserController {
         return PersistenceContext.repositories().students().save(studentBuilder.build());
     }
 
-    public Manager addManager(final String fullName, final String shortName, final String dateOfBirth,
+    public Manager addManager(final SystemUser user ,final String fullName, final String shortName, final String dateOfBirth,
                               final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);

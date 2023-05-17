@@ -34,6 +34,7 @@ import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.infrastructure.authz.domain.model.Role;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.menu.MenuItemRenderer;
@@ -71,20 +72,19 @@ public class AddUserUI extends AbstractUI {
         } while (!show);
 
         try {
-            this.theController.addUser(username, password, firstName, lastName, email, roleTypes);
+            SystemUser user = this.theController.addUser(username, password, firstName, lastName, email, roleTypes);
             if (roleTypes.contains(BaseRoles.TEACHER)) {
                 final String acronym = Console.readLine("Acronym");
-                theController.addTeacher(acronym,fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addTeacher(user, acronym,fullName,shortName,dateOfBirth,taxPayerNumber);
             }
             if (roleTypes.contains(BaseRoles.STUDENT)) {
                 final String mecanographicNumber = Console.readLine("MecanographicNumber");
-                theController.addStudent(mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addStudent(user, mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
             }
             if (roleTypes.contains(BaseRoles.MANAGER)) {
-                theController.addManager(fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addManager(user,fullName,shortName,dateOfBirth,taxPayerNumber);
             }
-            //TODO Use this to list
-            //System.out.println(theController.listManagers());
+
 
             System.out.println("\nUser Created Successfully!");
         } catch (final IntegrityViolationException | ConcurrencyException e) {

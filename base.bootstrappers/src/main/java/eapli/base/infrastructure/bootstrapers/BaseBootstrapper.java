@@ -25,6 +25,8 @@ package eapli.base.infrastructure.bootstrapers;
 
 import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
 import eapli.base.infrastructure.bootstrapers.demo.ManagerBootstrapper;
+import eapli.base.infrastructure.bootstrapers.demo.StudentBootstrapper;
+import eapli.base.infrastructure.bootstrapers.demo.TeacherBootstrapper;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;
@@ -59,7 +61,7 @@ public class BaseBootstrapper implements Action {
 	@Override
 	public boolean execute() {
 		// declare bootstrap actions
-		final Action[] actions = { new ManagerBootstrapper(),new CourseBootstrapper()/*, new BoardBootstrapper()*//*  new RegularExamBootstrapper() */};
+		final Action[] actions = { new CourseBootstrapper()/*, new BoardBootstrapper()*//*  new RegularExamBootstrapper() */};
 
 
 		registerPowerUser();
@@ -80,8 +82,8 @@ public class BaseBootstrapper implements Action {
 	 */
 	private boolean registerPowerUser() {
 		final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
-		userBuilder.withUsername(TestDataConstants.POWERUSER_USERNAME).withPassword(TestDataConstants.POWERUSER_PWD).withName("power", "user")
-				.withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
+		userBuilder.withUsername(TestDataConstants.POWERUSER_USERNAME).withPassword(TestDataConstants.POWERUSER_PWD).
+				withName("power", "user").withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
 		final SystemUser newUser = userBuilder.build();
 
 		SystemUser poweruser;

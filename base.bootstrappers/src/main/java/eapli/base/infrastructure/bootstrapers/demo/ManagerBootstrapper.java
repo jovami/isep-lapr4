@@ -23,6 +23,7 @@ package eapli.base.infrastructure.bootstrapers.demo;
 import java.util.HashSet;
 import java.util.Set;
 
+import eapli.base.clientusermanagement.usermanagement.application.AddUserController;
 import eapli.base.infrastructure.bootstrapers.UsersBootstrapperBase;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Action;
@@ -38,21 +39,28 @@ public class ManagerBootstrapper extends UsersBootstrapperBase implements Action
     private static final String PASSWORD = "Password1";
     private static final String EMAIL = "ruben@manager.com";
     private static final String EMAIL2 = "diogo@manager.com";
+
+    AddUserController controller = new AddUserController();
     
     
 
     @Override
     public boolean execute() {
-        registerManager("ruben", PASSWORD, "Ruben", "Ferreira", EMAIL);
-        registerManager("diogo", PASSWORD, "Diogo", "Napoles", EMAIL2);
+        registerManager("ruben", PASSWORD, "Ruben", "Ferreira", EMAIL,
+                "Ruben tiago Ferreira", "Ruben Ferreira", "1998-01-01","123456789");
+        registerManager("diogo", PASSWORD, "Diogo", "Napoles", EMAIL2,
+                "Diogo jose Napoles", "Diogo Napoles", "1997-01-01","345456789");
         return true;
     }
 
-    private void registerManager(final String username, final String password,
-            final String firstName, final String lastName, final String email) {
+    private void registerManager(final String username, final String password, final String firstName,
+                                 final String lastName, final String email, final String fullName,
+                                 final String shortName, final String dateOfBirth,final String taxPayerNumber) {
         final Set<Role> roles = new HashSet<>();
         roles.add(BaseRoles.MANAGER);
 
-        registerUser(username, password, firstName, lastName, email, roles);
+
+        var user = registerUser(username, password, firstName, lastName, email, roles);
+        registerManagerRepo(user, fullName,shortName,dateOfBirth,taxPayerNumber);
     }
 }
