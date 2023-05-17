@@ -27,15 +27,19 @@ Instead, integration tests should be performed.
 
 The user interface will be split into 3: one for each user type.
 
-The **ListCoursesService** will have some more methods added to it:
+The **ListCoursesService** will have the following method added to it:
 
-1. `taughtBy(Teacher t)` --- courses taught by a given teacher
-2. `studentIsEnrolledOrCanEnroll(Student s)` --- courses a given student is enrolled in or can enroll
+1. `studentIsEnrolledOrCanEnroll(Student s)` --- courses a given student is enrolled in or can enroll
+
+This method, at the repository level, will be broken down into two:
+
+1. `enrollable()` --- courses the student can enroll in
+2. `coursesOfEnrolledStudent` --- courses a given student is enrolled in
+
+The **StaffMemberRepository** will have a `taughtBy` method to compute the courses that a given teacher
+is a member of; i.e they're a teacher for that course.
+
 3. `allCourses()` --- self-explanatory
-
-**Note:** the method to obtain a list of all courses is already implemented; so
-there is no need to create a new one.
-The `enrollable` simply be a convenient alias to the *strategy pattern* `ofState()` method already implemented.
 
 The **DTO pattern** will be used to display the courses in the UI.
 
@@ -47,17 +51,19 @@ The **DTO pattern** will be used to display the courses in the UI.
     + **Student**
     + **Enrollment**
     + **Teacher**
-    + **Staff** <!--TODO: name not final? -->
+    + **StaffMember**
 - Controller:
     + **ListAvailableCoursesController**
     + **ListCoursesService**
 - Repository:
     + **CourseRepository**
+
+    + **EnrollmentRepository**
     + **StudentRepository**
+
+    + **StaffRepository**
     + **TeacherRepository**
 
-    <!-- + **EnrollmentRepository** -->
-    <!-- + **StaffRepository** -->
 - DTO:
     + **AvailableCourseDTO**
     + **AvailableCourseDTOMapper**
