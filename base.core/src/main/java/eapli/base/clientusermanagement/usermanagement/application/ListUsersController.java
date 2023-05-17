@@ -70,12 +70,4 @@ public class ListUsersController{
 
     public Iterable<Teacher> listTeachers(){return svc.listTeachers();}
 
-    public Iterable<SystemUser> allUsersExceptPowerUser()
-    {
-        return svc.allUsersExceptPowerUser(allUsers());
-    }
-
-    public Iterable<SystemUser> userTeachers(){return svc.userTeachers(allUsers());}
-    public Iterable<SystemUser> userStudents(){return svc.userStudents(allUsers());}
-    public Iterable<SystemUser> userManagers(){return svc.userManagers(allUsers());}
 }

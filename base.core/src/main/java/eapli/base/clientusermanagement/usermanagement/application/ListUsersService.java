@@ -29,65 +29,10 @@ public class ListUsersService {
         this.managerRepository = repos.managers();
     }
 
-
-
     public Iterable<Teacher> listTeachers(){return this.teacherRepository.findAll();}
     public Iterable<Student> listStudents() {return this.studentRepository.findAll();}
-    public Iterable<Manager> listManagers (){
+    public Iterable<Manager> listManagers(){
         return this.managerRepository.findAll();
     }
 
-
-
-    public Iterable<SystemUser> allUsersExceptPowerUser(Iterable<SystemUser> systemUsers) {
-
-        /*for(SystemUser s: systemUsers)
-        {
-            if(!s.roleTypes().contains(BaseRoles.POWER_USER))
-                System.out.println("Username: " + s.username().toString() +
-                        " Name:" + s.name() + " Role: "+ s.roleTypes().toString());
-
-        }*/
-
-        Iterator<SystemUser> iterator = systemUsers.iterator();
-        while (iterator.hasNext()) {
-            SystemUser user = iterator.next();
-            if (user.roleTypes().contains(BaseRoles.POWER_USER))
-                iterator.remove();
-        }
-        return systemUsers;
-    }
-
-    public Iterable<SystemUser> userTeachers(Iterable<SystemUser> systemUsers)
-    {
-        Iterator<SystemUser> iterator = systemUsers.iterator();
-        while (iterator.hasNext()) {
-            SystemUser user = iterator.next();
-            if (!user.roleTypes().contains(BaseRoles.TEACHER))
-                iterator.remove();
-        }
-        return systemUsers;
-    }
-
-    public Iterable<SystemUser> userStudents(Iterable<SystemUser> systemUsers)
-    {
-        Iterator<SystemUser> iterator = systemUsers.iterator();
-        while (iterator.hasNext()) {
-            SystemUser user = iterator.next();
-            if (!user.roleTypes().contains(BaseRoles.STUDENT))
-                iterator.remove();
-        }
-        return systemUsers;
-    }
-
-    public Iterable<SystemUser> userManagers(Iterable<SystemUser> systemUsers)
-    {
-        Iterator<SystemUser> iterator = systemUsers.iterator();
-        while (iterator.hasNext()) {
-            SystemUser user = iterator.next();
-            if (!user.roleTypes().contains(BaseRoles.MANAGER))
-                iterator.remove();
-        }
-        return systemUsers;
-    }
 }
