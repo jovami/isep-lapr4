@@ -62,7 +62,7 @@ public class ListUsersController{
         return userSvc.userOfIdentity(u);
     }
 
-    public Iterable<Manager> listManagers (){
+    public Iterable<Manager> listManagers(){
         return svc.listManagers();
     }
 
