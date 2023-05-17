@@ -1,39 +1,35 @@
 US1005 - Set Course Teachers
 ========================================================
 
+# Requirements
+Choose course to:
+- Set head teacher
+- Set staff members
+
 # Analysis
 ## Business rules
-- Only the manager must be able to choose the course teachers
 
-## Unit tests
-
-In order to accurately test this functionality, we need to interact
-with the Aggregate Root repositories, meaning unit tests aren't the best approach here.
-
-Instead, integration tests should be performed.
-
-# Design
-
-The event(meeting) scheduled will be mostly handle by the **TimeTableService** which will implement:
-
-1. `checkAvailabilityByUser(SystemUser user, RecurringPattern pattern)` --- check user availability for a given pattern
-2. `checkAvailability(Iterable users, RecurringPattern pattern)` --- check a list of user availability for a given pattern
-3. `createEvent(Iterable users, RecuringPattern pattern)` --- adds the given pattern to the timeTable of all users
-
+- HeadTeacher can't be a staff member
+- There must be no duplicated teachers in the staff 
 
 ## Classes
 - Domain:
-    + **Course**
-    + **StaffMember**
-    + **Teacher**
+  + **Course**
+  + **StaffMember**
+  + **Teacher**
 - Controller:
-    + **SetCourseTeacher**
+  + **SetCourseTeacherController**
 - Repository:
-    + **TeacherRepository**
-    + **StaffRepository**
-    + **CourseRepository**
+  + **TeacherRepository**
+  + **StaffRepository**
+  + **CourseRepository**
 
+
+##  Unit tests - PLANNING
+
+- `ensureNoDuplicateTeachers()` --- there are no duplicated members in the staff
+- `ensureHeadTeacherIsNotStaffMember()` --- head teacher can't be parte of staff
+- `ensureStaffMembersAdded` --- teachers choosed are staffMembers
 
 ## Sequence diagram
-
 ![SD-US1005](./SD.svg)
