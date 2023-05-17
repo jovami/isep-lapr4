@@ -1,5 +1,6 @@
 package eapli.base.course.domain;
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.functional.Either;
 
@@ -9,7 +10,6 @@ import java.util.Date;
 @Entity
 @Table(name="COURSE")
 public class Course implements AggregateRoot<Integer> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="IDCOURSE")
@@ -30,11 +30,11 @@ public class Course implements AggregateRoot<Integer> {
 
     //TODO: HEAD-TEACHER
     //@Column(name="HEADTEACHER",nullable = false)
-    //private Teacher headTeacher;
+    @OneToOne
+    private Teacher headTeacher;
 
     //TODO: STAFF(implementation)
     //@OneToOne(fetch = FetchType.LAZY)
-    //private Staff staff;
 
     //TODO: ENROLLMENT
 
@@ -123,6 +123,14 @@ public class Course implements AggregateRoot<Integer> {
     }
     protected CourseCapacity getCapacity() {
         return capacity;
+    }
+
+    public Teacher HeadTeacher() {
+        return headTeacher;
+    }
+
+    public void setHeadTeacher(Teacher headTeacher) {
+        this.headTeacher = headTeacher;
     }
 
     public  void setDescription(String description) {

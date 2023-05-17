@@ -10,6 +10,7 @@
     <class>eapli.base.clientusermanagement.domain.ClientUser</class>
     <class>eapli.base.clientusermanagement.domain.SignupRequest</class>
     <class>eapli.base.course.domain.Course</class>
+    <class>eapli.base.course.domain.StaffMember</class>
       <class>eapli.base.board.domain.Board</class>
    <!-- <class>eapli.base.board.domain.BoardRow</class>
     <class>eapli.base.board.domain.BoardColumn</class>-->
@@ -18,8 +19,6 @@
     <class>eapli.base.clientusermanagement.domain.users.Manager</class>
     <class>eapli.base.clientusermanagement.domain.users.Teacher</class>
     <class>eapli.base.clientusermanagement.domain.users.Student</class>
-
-
 
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->

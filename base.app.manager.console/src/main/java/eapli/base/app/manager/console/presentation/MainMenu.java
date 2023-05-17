@@ -63,6 +63,7 @@ public class MainMenu extends AbstractUI {
     private static final int CLOSE_COURSE = 3;
     private static final int OPEN_ENROLLMENTS = 4;
     private static final int CLOSE_ENROLLMENTS = 5;
+    private static final int SET_COURSE_TEACHERS = 6;
 
     // SETTINGS
 
@@ -70,6 +71,9 @@ public class MainMenu extends AbstractUI {
     private static final int USERS_OPTION = 2;
     private static final int BOARD_OPTION = 3;
     private static final int COURSE_OPTION = 4;
+    //MEETING
+    private static final int MEETING_OPTION = 5;
+    private static final int SCHEDULE_MEETING = 1;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -117,6 +121,7 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu courseMenu = buildCourseMenu();
             mainMenu.addSubMenu(COURSE_OPTION,courseMenu );
+
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -136,6 +141,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(CLOSE_COURSE, "Close a course", new CloseCourseUI()::show);
         menu.addItem(OPEN_ENROLLMENTS, "Open enrollments", new OpenEnrollmentUI()::show);
         menu.addItem(CLOSE_ENROLLMENTS, "Close enrollments", new CloseEnrollmentUI()::show);
+        menu.addItem(SET_COURSE_TEACHERS, "Set Staff", new SetCourseTeacherUI()::show);
 
         return menu;
     }
