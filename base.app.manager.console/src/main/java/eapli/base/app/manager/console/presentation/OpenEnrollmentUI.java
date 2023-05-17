@@ -16,7 +16,7 @@ public class OpenEnrollmentUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        var widget = new SelectWidget<>("Choose a course to open is enrollments:", this.ctrl.enrollableCourses());
+        var widget = new SelectWidget<>("Choose a course to open is enrollments:", this.ctrl.openableToEnrollmentsCourses());
         widget.show();
 
         if (widget.selectedOption() <= 0)
@@ -26,7 +26,7 @@ public class OpenEnrollmentUI extends AbstractUI {
         System.out.printf("You chose: %s\n", chosen);
         if (Console.readBoolean("Is this ok? (y/n)")) {
             this.ctrl.openEnrollments(chosen);
-            System.out.printf("Enrollments opened with success! (previous state was %s)\n");
+            System.out.printf("Enrollments opened with success! \n");
         } else {
             System.out.println("Operation canceled with success!");
         }

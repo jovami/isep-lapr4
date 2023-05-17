@@ -26,7 +26,7 @@ public class CloseEnrollmentUI extends AbstractUI {
         System.out.printf("You chose: %s\n", chosen);
         if (Console.readBoolean("Is this ok? (y/n)")) {
             this.ctrl.closeEnrollments(chosen);
-            System.out.printf("Enrollments closed with success! (previous state was %s)\n");
+            System.out.printf("Enrollments closed with success!\n");
         } else {
             System.out.println("Operation canceled with success!");
         }
