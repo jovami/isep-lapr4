@@ -15,7 +15,7 @@ participant CourseAndStateDTO as dto
 
 participant Course as course
 
-user --> ui: enter
+user -> ui: enter
 
 activate ui
     ui --> ctrl: create()
@@ -62,7 +62,7 @@ activate ui
     ui --> user: show courses
 deactivate ui
 
-user --> ui: selects course from list
+user -> ui: selects course from list
 activate ui
     ui --> ctrl: chosen course (dto)
     activate ctrl

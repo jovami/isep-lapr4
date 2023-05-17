@@ -20,7 +20,7 @@ participant Enrollment as enroll <<domain>>
 
 
 
-Actor --> UI: Import csv student file
+Actor -> UI: Import csv student file
 activate Actor
 activate UI
     UI -> controller: create
@@ -50,7 +50,7 @@ activate UI
                 deactivate erepo
         deactivate service
     deactivate controller
-    UI -> Actor : asks manager to type file path
+    UI --> Actor : asks manager to type file path
 deactivate UI
     Actor -> UI : types file path
 activate UI
@@ -112,7 +112,7 @@ activate UI
 
     deactivate controller
 
-    UI -> Actor : informs sucess of the operation
+    UI --> Actor : informs sucess of the operation
 deactivate UI
 deactivate Actor
 @enduml

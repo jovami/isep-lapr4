@@ -1,0 +1,79 @@
+@startuml
+'http://plantuml.com/skinparam.html
+
+actor Manager as Actor
+participant ListTeachersStudentsManagersUI as UI <<presentation>>
+participant ListUsersController as controller <<application>>
+participant ListUsersService as lstservice <<application>>
+participant UserManagementService as userservice <<application>>
+database UserRepository as repo <<repository>>
+
+
+Actor -> UI: List user of the system\n(Teachers, Students \nand Managers)
+activate UI
+    UI -> controller : create
+    activate controller
+        controller -> lstservice : create
+        activate lstservice
+
+        deactivate lstservice
+
+
+deactivate UI
+
+
+    deactivate controller
+    UI -> controller : userTeachers()
+activate UI
+        activate controller
+
+            controller -> controller : allUsers()
+            controller -> lstservice : userTeachers(allUsers)
+            activate lstservice
+                lstservice -> controller : userTeachers
+
+            deactivate lstservice
+
+            controller -> UI: userTeachers
+        deactivate controller
+
+    UI --> Actor : shows list of users teachers
+deactivate UI
+
+    UI -> controller : userStudents()
+    activate UI
+            activate controller
+
+                controller -> controller : allUsers()
+                controller -> lstservice : userStudents(allUsers)
+                activate lstservice
+                    lstservice -> controller : userStudents
+
+                deactivate lstservice
+
+                controller -> UI: userStudents
+            deactivate controller
+
+        UI --> Actor : shows list of users userStudents
+    deactivate UI
+
+    UI -> controller : userManagers()
+        activate UI
+                activate controller
+
+                    controller -> controller : allUsers()
+                    controller -> lstservice : userManagers(allUsers)
+                    activate lstservice
+                        lstservice -> controller : userManagers
+
+                    deactivate lstservice
+
+                    controller -> UI: userManagers
+                deactivate controller
+
+            UI --> Actor : shows list of users userManagers
+        deactivate UI
+
+
+deactivate UI
+@enduml
