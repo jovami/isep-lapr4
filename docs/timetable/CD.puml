@@ -2,7 +2,7 @@
 
 class TimeTable <<domain>>{
 - UserName : user
-- List<RecurringPattern> : patterns
+- RecurringPattern : pattern
 }
 
 class RecurringPattern <<domain>>{
@@ -19,14 +19,18 @@ class RecurringFrequency<<enum>>{
 
 class RecurringPatternRepository <<repository>>
 class TimeTableRepository <<repository>>
-class CheckAvailabilityService <<service>>
+class TimeTableService <<service>>{
+- checkAvailabilityByUser(RecurringPattern),SystemUser)
++ checkAvailability(RecurringPattern, List<SystemUser>)
++ schedule(List<SystemUser>,(RecurringPattern))
+}
 
 TimeTable --> RecurringPattern : patterns
 TimeTable : checkAvailability(RecurringPattern)
 
-CheckAvailabilityService : checkAvailability(RecurringPattern, List<UserName>)
-CheckAvailabilityService --> RecurringPatternRepository :patternRepo
-CheckAvailabilityService --> TimeTableRepository :timeTableRepo
+
+TimeTableService --> RecurringPatternRepository :patternRepo
+TimeTableService --> TimeTableRepository :timeTableRepo
 
 RecurringPatternRepository --> RecurringPattern : the recurringPattern
 RecurringPattern --> RecurringFrequency : frequency
