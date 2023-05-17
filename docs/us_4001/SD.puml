@@ -1,0 +1,73 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor User as Actor
+participant ScheduleMeetingUI as UI <<presentation>> order 1
+participant ScheduleMeetingController as Controller <<application>> order 2
+participant "meeting:\nMeeting" as Meeting <<domain>> order 3
+participant "recurringPattern:\nRecurringPattern" as Pattern <<domain>> order 4
+participant "participant:\nMeetingParticipant" as MeetingParticipant <<domain>> order 4
+participant UserRepository as UserRepo <<repository>> order 8
+participant MeetingRepository as MeetingRepo <<repository>> order 9
+participant CheckAvailabiltyService as AvailService <<application>> order 11
+participant SystemUserEmailDTOMapper as Mapper <<application>> order 12
+participant SystemUserEmailDTOMapper as DTO <<application>> order 13
+
+Actor -> UI : create Meeting
+activate UI
+    UI -> Controller : create
+            note right of Controller : meetingRepository and userRepository using PersistenceContext
+
+    deactivate Controller
+    Actor <-- UI : ask user information
+    Actor -> UI : description,date,startTime,durationMinutes
+    UI -> Controller : createMeeting(description,date,\nstartTime,durationMinutes)
+    activate Controller
+            Controller -> Meeting : createMeeting(description,date,\nstartTime,durationMinutes)
+            activate Meeting
+                Meeting -> Pattern : buildPattern(startDate,startTime,durationMinutes)
+            Controller <-- Meeting : meeting
+            deactivate Meeting
+            Controller --> Mapper : toDto(users)
+            loop for each user in users
+            activate Mapper
+            Mapper --> DTO : create(user)
+            activate DTO
+
+            deactivate DTO
+            end
+            Controller <-- Mapper : usersDto
+            deactivate Mapper
+            UI <-- Controller : usersDto
+            Actor <-- UI : users
+
+    loop [invite==true]
+            Actor -> UI : user
+            UI -> Controller : invite(user)
+        Controller -> Meeting : addParticipant(user);
+        Controller --> MeetingRepo: save(meeting)
+        activate MeetingRepo
+            Controller <-- MeetingRepo: meeting
+        deactivate MeetingRepo
+        deactivate UserRepo
+    deactivate UserRepo
+    Actor <-- UI : asks if wants to add new participant
+    end
+
+    UI -> Controller : schedule()
+
+    Controller -> AvailService : checkAvailability(participants,recurringPattern)
+    activate AvailService
+    Controller <-- AvailService : returns availability
+    Controller -> AvailService : schedule(participants,recurringPattern
+    deactivate AvailService
+
+    UI <-- Controller : meeting
+    deactivate Controller
+Actor <-- UI : displayCourseInfo
+deactivate UI
+
+@enduml
+

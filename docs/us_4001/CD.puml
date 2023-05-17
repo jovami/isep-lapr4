@@ -1,0 +1,93 @@
+@startuml
+
+class Meeting <<domain>>{
+- UserName : user
+- RecurringPattern : patterns
+- List<MeetingParticipant> : participants
+}
+
+class MeetingParticipant <<domain>>{
+- Meeting : meeting
+- SystemUser : user
+- ParticipantStatus : status
+}
+
+class SystemUser <<domain>>{
+
+}
+
+enum ParticipantStatus<<domain>>{
+- pending
+- accepted
+- denied
++ checkAvailability(RecurringPattern)
+}
+
+
+class ScheduleMeetingUI<<presentation>>{
++ doShow()
+}
+
+class ScheduleMeetingController<<application>>{
++ createMeeting()
++ chooseUsetToInvite()
+- buildPattern(LocalDate,LocalTime,int)
++ persistMeeting()
+}
+
+class MeetingRepository <<repository>>{
+
+}
+
+class UserRepository <<repository>>{
+
+}
+
+class MeetingParticipantRepository <<repository>>{
+
+}
+
+class RecurringPattern <<domain>>{
+- LocalDate: startDate
+- LocalDate: startDate
+- LocalTime: endTime
+- LocalTime: startTime
++ overLap(RecurringPattern)
+}
+
+class RecurringFrequency<<enum>>{
+- WEEKLY
+- ONCE
+}
+
+'class TimeTable<<domain>>{
+'+ checkAvailability(RecurringPattern)
+'}
+
+
+
+
+class CheckAvailabilityService <<service>>{
++ checkAvailability(RecurringPattern, List<UserName>)
+}
+
+
+Meeting --> RecurringPattern : pattern
+Meeting --> MeetingParticipant : participants
+MeetingParticipant --> ParticipantStatus : status
+MeetingParticipant --> SystemUser : user
+
+ScheduleMeetingUI --> ScheduleMeetingController : controller
+ScheduleMeetingUI ..> Meeting : meeting
+
+ScheduleMeetingController --> MeetingRepository : meetingRepo
+ScheduleMeetingController --> UserRepository : userRepo
+ScheduleMeetingController --> Meeting : theMeeting
+ScheduleMeetingController --> CheckAvailabilityService : checkAvailabilityService
+ScheduleMeetingController --> MeetingParticipantRepository :meetingParticipantRepo
+
+RecurringPattern --> RecurringFrequency : frequency
+
+
+
+@enduml
