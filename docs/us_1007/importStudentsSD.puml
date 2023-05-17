@@ -3,128 +3,116 @@
 
 actor Manager as Actor
 participant CSVLoaderStudentsUI as UI <<presentation>>
-participant CSVLoaderStudentsController as ControllerLoader <<application>>
-participant ":List<String[]> data" as data
-participant StudentParser as parser <<application>>
-participant AddUserController as Controller <<application>>
-participant UserBuilder as Builder <<builder>>
-participant "user:User" as Domain <<domain>>
-participant PersistenceContext as Persistence <<persistence>>
-participant RepositoryFactory as Factory <<factory>>
-database UserRepository as Repository <<repository>>
+participant CSVLoaderStudentsController as controller <<application>>
+participant PersistenceContext as persistence <<persistence>>
+participant Repositoryfactory as factory <<factory>>
+participant BulkEnrollStudentsService as service <<service>>
+database StudentRepository as srepo <<repository>>
+database CourseRepository as crepo <<repository>>
+database EnrollmentRepository as erepo <<repository>>
+participant CSVHeader as csvheader <<enum,utils>>
+participant CSVReader as csvreader <<utils>>
+participant FileInputStream as fileinput
+participant EnrollmentParser as parser <<application>>
+participant MecanographicNumber as meca <<domain>>
+participant CourseID as courseid <<domain>>
+participant Enrollment as enroll <<domain>>
 
-participant StudentBuilder as StudentBuilder <<builder>>
-participant "student:Student" as DomainStudent <<domain>>
-database StudentRepository as StudentRepository <<repository>>
 
 
 Actor --> UI: Import csv student file
+activate Actor
 activate UI
-    UI -> ControllerLoader: create
-    activate ControllerLoader
-    ControllerLoader -> parser : create
-    deactivate ControllerLoader
-    activate parser
-    parser -> Controller : create
-
-    activate Controller
-    deactivate parser
-    deactivate Controller
-
-    UI --> Actor: ask user if he/she wants to\n "Load default file?[YES/NO]"
-
-    Actor --> UI: answers the question
-
-    UI -> ControllerLoader : loadResources()
-    activate ControllerLoader
-    ControllerLoader -> parser : parse(data)
-    activate parser
-    deactivate ControllerLoader
+    UI -> controller: create
+    activate controller
+        controller -> persistence : repositories()
+        activate persistence
+            persistence -> factory : create
+            activate factory
+            deactivate factory
+            persistence -> controller : factory
+        deactivate persistence
 
 
-
-
-
-
-
-    parser -> Controller: addUser(username, \npassword, firstName,\nlastName, email, \nroles)
-
-    activate Controller
-        note right of Builder: UserBuilder is used to create\n a user with a valid state
-        Controller -> Builder: create
-        Controller -> Builder:setUsername(username)
-
-        note right of Controller: Set the rest of the information
-
-        'Controller -> Builder:setPassword(password)
-        'Controller -> Builder:setFirstName(firstName)
-        'Controller -> Builder:setLastName(lastName)
-        'Controller -> Builder:setEmail(email)
-        'Controller -> Builder:setRoles(roles)
-
-        Controller -> Builder:createUser()
-        activate Builder
-            Builder -> Domain: create (username,\npassword, firstName,\nlastName,email, roles)
-            Domain->Builder: user
-            Builder -> Controller:user
-        deactivate Builder
-
-        Controller -> Persistence: repositories()
-        activate Persistence
-            note right of Persistence: pode criar repositório em memória ou JPA
-            Persistence -> Factory: create
-            Persistence -> Controller: factory
-        deactivate Persistence
-
-        Controller -> Factory: users()
-        activate Factory
-            Factory -> Repository: create
-            Factory -> Controller: userRepository
-        deactivate Factory
-
-        Controller->Repository:save(user)
-
-    deactivate Controller
-
-    deactivate parser
-
-
-    parser -> Controller : addStudent(mecanographicNumber,\nfullName,shortName\n,dateOfBirth,taxPayerNumber)
-    activate parser
-    activate Controller
-
-     note right of Builder: StudentBuilder is used to create\n a student with a valid state
-
-     Controller -> StudentBuilder: create
-     Controller -> StudentBuilder: setMecanographicNumber(mecanographicNumber)
-
-     note right of Controller: Set the rest of the information
-
-     Controller -> StudentBuilder:createStudent()
-             activate StudentBuilder
-                 StudentBuilder -> DomainStudent: create (username,\npassword, firstName,\nlastName,email, roles)
-                 DomainStudent->StudentBuilder: student
-                 StudentBuilder -> Controller:student
-             deactivate StudentBuilder
-
-     Controller -> Persistence: repositories()
-             activate Persistence
-                 note right of Persistence: pode criar repositório em memória ou JPA
-                 Persistence -> Factory: create
-                 Persistence -> Controller: factory
-             deactivate Persistence
-
-     Controller -> Factory: students()
-             activate Factory
-                 Factory -> Repository: create
-                 Factory -> Controller: StudentRepository
-             deactivate Factory
-
-     Controller->StudentRepository:save(student)
-
-
-    deactivate Controller
-    deactivate parser
-        UI-->Actor: display success of the operation
+        controller -> service : create(factory)
+        activate service
+            service -> srepo : create
+                activate srepo
+                    srepo ->service : studentRepository
+                deactivate srepo
+            service -> crepo : create
+                activate crepo
+                    crepo ->service : courseRepository
+                deactivate crepo
+            service -> erepo : create
+                activate erepo
+                    erepo ->service : enrollmentRepository
+                deactivate erepo
+        deactivate service
+    deactivate controller
+    UI -> Actor : asks manager to type file path
 deactivate UI
+    Actor -> UI : types file path
+activate UI
+    UI -> controller: file(file)
+    activate controller
+        controller -> csvheader : CSVHeader.ENROLLMENTS
+        activate csvheader
+        deactivate csvheader
+        controller -> csvreader : readCSV(file,CSVHeader.ENROLLMENTS)
+        activate csvreader
+            csvreader -> fileinput : create
+            activate fileinput
+            deactivate fileinput
+
+            csvreader -> csvreader : readCSV(stream,header)
+            csvreader -> controller : ListOfArrayOfStrings
+
+        deactivate csvreader
+
+        controller -> parser : create
+        activate parser
+
+        controller ->parser : parse(ListOfArrayOfStrings)
+
+            parser -> meca : create(mecanographicnumber)
+            activate meca
+            deactivate meca
+            parser -> courseid : create(courseid)
+
+            activate courseid
+            deactivate courseid
+            parser -> controller : parsedList
+
+        deactivate parser
+
+        controller -> service : bulkEnroll(parsedList)
+        activate service
+
+            service -> srepo : ofIdentity(mecanographicnumber)
+            activate srepo
+                srepo -> service : student
+            deactivate srepo
+
+            service -> crepo : ofIdentity(courseID)
+            activate crepo
+                 crepo -> service : course
+            deactivate crepo
+
+            service -> enroll : create(course,student)
+            activate enroll
+            deactivate enroll
+
+            service -> erepo : save(enrollment)
+            activate erepo
+            deactivate erepo
+        deactivate service
+
+
+
+    deactivate controller
+
+    UI -> Actor : informs sucess of the operation
+deactivate UI
+deactivate Actor
 @enduml

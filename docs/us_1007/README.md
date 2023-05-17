@@ -5,16 +5,19 @@ US 1007 -- As Manager, I want to enroll students in bulk by importing their data
 
 ## Business rules
 
-- The username is Unique.
+- The csv file is composed by the following structure : (mecanographicnumber,courseID).
 
 
 ## Unit tests
 
-- Implemented by the framework and for that reason, no tests where developed
+- No tests needed for csv import.
 
 # Design
 
-- A system user must have a different username in different applications.
+- Used a parser to save all information inside csv file.
+- Find students in the student repository using mecanographicnumber, and find courses in course repository using courseID,
+  after that a new enrollment is created using the student and course founded("new Enrollment(course,student)").
+- The new enrollment created is saved in enrollment repository.
 - A more complicated approach was taken, the group made this think about the next sprint, and the
   possibility of the application growing in size and more CSV files needed to be imported, considering
   different roles, with csv files with different headers.
@@ -22,31 +25,30 @@ US 1007 -- As Manager, I want to enroll students in bulk by importing their data
 ## Classes
 
 - Domain:
-    + **UserManagementService**
-    + **SystemUser**
-    + **Student**
+    + **MecanographicNumber**
+    + **CourseID**
+    + **Enrollment**
 - UI:
     + **CSVLoaderStudentsUI**
 - Application:
-    + **AddUserController**
     + **CSVLoaderStudentsController**
-    + **UserManagementService**
-    + **SystemUserBuilder**
-    + **StudentBuilder**
-    + **StudentParser**
-    + **CSVHeader**
-    + **CSVParser**
-    + **CSVReader**
-    + **InputReader**
-    + **InvalidCSVHeaderException**
+    + **EnrollmentParser**
+    + **BulkEnrollStudentsService**
 - Repository:
-    + **UserRepository**
     + **StudentRepository**
+    + **CourseRepository**
+    + **EnrollmentRepository**
+- Utils:
+    + **CSVHeader**
+    + **CSVReader**
+    + **InvalidCSVHeaderException**
+- Factory:
+    + **RepositoryFactory**
+- Persistence:
+    + **PersistenceContext**
 
 ## Sequence Diagram
 
 ![diagram](./importStudentsSD.svg)
 
-## Class Diagram
 
-![diagram](./importStudentsCD.svg)
