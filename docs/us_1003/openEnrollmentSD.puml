@@ -1,7 +1,7 @@
 @startuml
 
 actor Manager as user
-participant OpenEnrollmentUI_or_CloseEnrollmentUI as ui
+participant OpenEnrollmentUI as ui
 participant OpenCloseEnrollmentController as ctrl
 
 participant PersistenceContext as ctx
@@ -36,12 +36,14 @@ activate ui
     deactivate ctrl
 
 
-    ui --> ctrl: enrollableCourses()
+    ui --> ctrl: openableToEnrollmentsCourses()
     activate ctrl
-        ctrl --> svc: enrollable(repository)
+        ctrl --> svc: openableToEnrollments()
         activate svc
             svc --> repo: findByState()
             activate repo
+
+            ctrl -> ctrl: getCourses(repositories)
             deactivate repo
         deactivate svc
 
@@ -65,10 +67,10 @@ user --> ui: selects course from list
 activate ui
     ui --> ctrl: chosen course (dto)
     activate ctrl
-        ctrl --> course: openEnrollments()/closeEnrollments()
+        ctrl --> course: openEnrollments()
 
         activate course
-            course --> course: openEnrollments()/closeEnrollments()
+            course --> course: openEnrollments()
 
     deactivate ctrl
 

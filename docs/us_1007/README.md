@@ -24,13 +24,15 @@ US 1007 -- As Manager, I want to enroll students in bulk by importing their data
 - Domain:
     + **UserManagementService**
     + **SystemUser**
+    + **Student**
 - UI:
     + **CSVLoaderStudentsUI**
 - Application:
     + **AddUserController**
+    + **CSVLoaderStudentsController**
     + **UserManagementService**
     + **SystemUserBuilder**
-    + **CSVLoaderStudentsController**
+    + **StudentBuilder**
     + **StudentParser**
     + **CSVHeader**
     + **CSVParser**
@@ -38,7 +40,8 @@ US 1007 -- As Manager, I want to enroll students in bulk by importing their data
     + **InputReader**
     + **InvalidCSVHeaderException**
 - Repository:
-    + **ClientUserRepository**
+    + **UserRepository**
+    + **StudentRepository**
 
 ## Sequence Diagram
 

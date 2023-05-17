@@ -5,7 +5,7 @@ US 1004 -- Open/Close enrollments
 
 ## Business rules
 
-- Any course enrollments can be in state "ENROLL" or "INPROGESS".
+- Any course enrollments can be in state "ENROLL" or "OPEN".
 - When a course is in state "ENROLL", meaning that the enrollments for that course are open.
 - When a course is in state "INPROGESS", meaning that the enrollments for that course are close.
 
@@ -28,15 +28,15 @@ the domain classes.
 Both UIs will require the manager to select a course from the existing ones, so a **service**
 to **List Courses** will be created.
 
-In order to facilitate the user experience, **OpenEnrollmentUI** will only display courses that
-can actually be enrollable (c.f. Business rules); the same applies to **CloseEnrollmentUI**.
+In order to facilitate the user experience, **OpenEnrollmentUI** will display courses that
+can actually be enrollable (c.f. Business rules).
 
 To avoid code duplication, the **strategy pattern** will be applied in the **ListCoursesService**,
 by creating a `ofStates(states)` that will provide a list of courses whose `state` matches any
 in `states`. This makes this service very flexible as it can be repurposed for any other use
 case that requires a list of courses with certain states.
 
-For ease of use, the service will provide `enrollable()` method, that internally
+For ease of use, the service will provide `enrollable()` and `openableToEnrollments()` methods, that internally
 call `ofState()`.
 
 ## Classes
@@ -59,7 +59,5 @@ call `ofState()`.
 
 ## Sequence Diagram
 
-Unlike the UIs, the same sequence diagram will be used for the open and close case,
-as they are 99% similar; the only difference being the method names.
-
-![diagram](./sd.svg)
+![diagram](./openEnrollmentSD.svg)
+![diagram](./closeEnrollmentSD.svg)
