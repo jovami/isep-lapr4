@@ -9,6 +9,7 @@ participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant ExamRepository as exam_repo
 participant TeacherRepository as teacher_repo
+participant StaffRepository as staff_repo
 
 participant CourseAndDescriptionDTOMapper as course_mapper
 participant CourseAndDescriptionDTO as course_dto
@@ -47,6 +48,13 @@ ui --> ctrl: create()
             activate teacher_repo
             deactivate teacher_repo
         deactivate rep_fac
+
+        ctrl --> rep_fac: staff()
+        activate rep_fac
+            rep_fac --> staff_repo: create()
+            activate staff_repo
+            deactivate staff_repo
+        deactivate rep_fac
     deactivate ctrl
 
     ui --> ctrl: getCourses()
@@ -56,10 +64,10 @@ ui --> ctrl: create()
         note bottom: systemUser is taken from user session
         deactivate teacher_repo
 
-        ctrl --> course_repo: taughtBy(teacher)
+        ctrl --> staff_repo: taughtBy(teacher)
 
-        activate course_repo
-        deactivate course_repo
+        activate staff_repo
+        deactivate staff_repo
 
         ctrl --> course_mapper: toDto(courses)
         activate course_mapper
@@ -83,16 +91,6 @@ activate ui
         ctrl --> exam_repo: findByCourse(course)
         activate exam_repo
         deactivate exam_repo
-
-        ctrl --> exam_mapper: toDto(exams)
-        activate exam_mapper
-            loop for each exam in exams
-                exam_mapper --> exam_dto: create()
-                activate exam_dto
-                deactivate exam_dto
-            end loop
-            exam_mapper --> ctrl: examDTOList
-        deactivate exam_mapper
         ctrl --> ui: exams
     deactivate ctrl
     ui --> user: show exams

@@ -1,4 +1,4 @@
-US 1008 -- List exams in a course
+US 2003 -- List exams in a course
 ==============================
 
 # Analysis
@@ -10,6 +10,8 @@ A teacher can list the exams of a course if:
 
 ## Unit tests
 
+- ensureExamsAreCorrect (integration test)
+
 # Design
 
 The system consists of two primary components, namely the **ListExamsInCourseUI** and the 
@@ -20,32 +22,29 @@ the system's business logic and interacting with the domain classes.
 In order to ensure a user-friendly experience, the **ListExamsInCourseUI** provides a list of courses that are available
 for listing exams, thereby enabling the user to select the course of their choice and list the exams of that course.
 
-In order to find the courses taught by a specific user (teacher), the **CourseRepository** implements a 
-`taughtBy()` method. 
+In order to find the courses taught by a specific user (teacher), the **StaffRepository** implements a 
+`taughtBy()` method that returns an iterable of courses. 
 
 Both **CourseAndDescriptionDTO** and **CourseAndDescriptionDTOMapper** are used to map the **Course** domain class to a
-DTO, which is then used by the **ListExamsInCourseUI** to display the courses to the user. Additionally, 
-**ExamAndDateDTO** and **ExamAndDateDTOMapper** are used to map the **Exam** domain class to a DTO, which is, then, also
-used by the **ListExamsInCourseUI** to display the exams to the user.
+DTO, which is then used by the **ListExamsInCourseUI** to display the courses to the user.
 
 ## Classes
 
 - Domain:
     + **Course**
     + **CourseState**
-    + **Exam**
+    + **RegularExam**
     + **Teacher**
 - Controller:
     + **ListExamsInCourseController**
 - Repository:
     + **CourseRepository**
-    + **ExamRepository**
+    + **RegularExamRepository**
     + **TeacherRepository**
+    + **StaffRepository**
 - DTO:
     + **CourseAndStateDTO**
     + **CourseAndStateDTOMapper**
-    + **ExamAndDateDTO**
-    + **ExamAndDateDTOMapper**
 
 ## Sequence Diagram
 
