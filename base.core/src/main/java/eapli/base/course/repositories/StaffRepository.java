@@ -7,6 +7,6 @@ import eapli.framework.domain.repositories.DomainRepository;
 
 
 public interface StaffRepository extends DomainRepository<Integer, StaffMember> {
-    Iterable<StaffMember> findByCourse(Course course);
+    Iterable<Teacher> findByCourse(Course course);
     Iterable<Course> taughtBy(Teacher t);
 }

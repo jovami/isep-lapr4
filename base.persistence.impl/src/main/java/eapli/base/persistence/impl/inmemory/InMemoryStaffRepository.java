@@ -1,12 +1,12 @@
 package eapli.base.persistence.impl.inmemory;
 
-import java.util.stream.Collectors;
-
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.StaffMember;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
+
+import java.util.stream.Collectors;
 
 public class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMember,Integer> implements StaffRepository {
 
@@ -19,8 +19,11 @@ public class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMembe
     }
 
     @Override
-    public Iterable<StaffMember> findByCourse(Course course) {
-        return match((staffMember -> course.equals(staffMember.course())));
+    public Iterable<Teacher> findByCourse(Course course) {
+        return valuesStream()
+                .filter(staff -> staff.course().sameAs(course))
+                .map(StaffMember::member)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -3,7 +3,6 @@ package eapli.base.app.manager.console.presentation;
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.application.SetCourseTeachersController;
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.StaffMember;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 
@@ -28,18 +27,24 @@ public class SetCourseTeacherUI extends AbstractUI {
                 System.out.println("There was an error choosing the head teacher");
             }
         }
-        SelectWidget<Teacher> selecMember = new SelectWidget<>("Choose new staff member", ctrl.teachers());
-        selecMember.show();
 
-        if(selecMember.selectedOption()!=0) {
-            if (ctrl.addStaffMember(selecMember.selectedElement())) {
-                System.out.println("There was an error with the new staff member");
-            } else {
-                System.out.println("Staff member added with succes");
+
+        SelectWidget<Teacher> selecMember = new SelectWidget<>("Choose new staff member", ctrl.teachers());
+        do{
+            selecMember.show();
+            if(selecMember.selectedOption()!=0){
+                if (ctrl.addStaffMember(selecMember.selectedElement()) ) {
+                    System.out.println("Staff member added with succes");
+                } else {
+                    System.out.println("There was an error with the new staff member");
+                }
             }
-        }
-        for (StaffMember member: ctrl.staff()) {
-            System.out.println(member);
+
+        }while (selecMember.selectedOption()!=0);
+
+        System.out.println("\n\tSTAFF MEMBERS:");
+        for (Teacher member: ctrl.staff()) {
+            System.out.println(" - "+member.acronym());
         };
         return true;
     }

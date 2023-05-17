@@ -1,5 +1,11 @@
 package eapli.base.course.domain;
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -395,10 +401,26 @@ class CourseTest {
                 course.getCapacity().toString());
     }
     @Test
-    void courseDescription() {
+    void courseDescriptionNull() {
         CourseDescription courseDescription = new CourseDescription();
         Assertions.assertNull(courseDescription.getDescription());
     }
 
-    
+    @Test
+    void courseName() {
+        CourseName name = new CourseName("curso");
+        assertEquals(name,course.getCourseName());
+    }
+
+    @Test
+    void headTeacher(){
+        SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
+        userBuilder.with("teacher","Password1","first","last","email@teacher.com").withRoles(BaseRoles.TEACHER);
+        TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(userBuilder.build()).
+                withAcronym("TCH").withDateOfBirth("2003-10-10").withFullName("full").withTaxPayerNumber("123123123").
+                withShortName("short");
+        Teacher teacher = teacherBuilder.build();
+        course.setHeadTeacher(teacher);
+        assertEquals(teacher,course.headTeacher());
+    }
 }

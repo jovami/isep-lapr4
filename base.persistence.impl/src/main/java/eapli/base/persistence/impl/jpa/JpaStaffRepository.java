@@ -15,8 +15,12 @@ public class JpaStaffRepository extends BaseJpaRepositoryBase<StaffMember,Long,I
     }
 
     @Override
-    public Iterable<StaffMember> findByCourse(Course course) {
-        return match("e.course=:course","course",course);
+    public Iterable<Teacher> findByCourse(Course course) {
+        final var query = entityManager().createQuery(
+                "SELECT sm.member FROM StaffMember sm WHERE sm.course = :course",
+                Teacher.class);
+        query.setParameter("course", course);
+        return query.getResultList();
     }
 
     @Override

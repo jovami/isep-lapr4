@@ -8,10 +8,14 @@ import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SetCourseTeachersController {
     private final CourseRepository repo;
     private final TeacherRepository teacherRepo;
     private final StaffRepository staffRepo;
+    private final Set<Teacher> staff = new HashSet<>();
     private Course course;
 
     public SetCourseTeachersController(){
@@ -30,7 +34,6 @@ public class SetCourseTeachersController {
 
     public boolean chooseHeadTeacher(Teacher teacher){
         course.setHeadTeacher(teacher);
-
         return repo.save(course)!=null;
     }
 
@@ -39,11 +42,14 @@ public class SetCourseTeachersController {
     }
 
     public boolean addStaffMember(Teacher teacher) {
-        StaffMember newMember = new StaffMember(course,teacher);
-        return staffRepo.save(newMember) != null;
+        if(staff.add(teacher) && course.headTeacher()!=teacher){
+            StaffMember newMember = new StaffMember(course,teacher);
+            return staffRepo.save(newMember) != null;
+        }
+        return false;
     }
 
-    public Iterable<StaffMember> staff() {
+    public Iterable<Teacher> staff() {
         return staffRepo.findByCourse(course);
 
     }

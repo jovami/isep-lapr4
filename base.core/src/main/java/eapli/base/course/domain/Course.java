@@ -33,9 +33,6 @@ public class Course implements AggregateRoot<Integer> {
     @OneToOne
     private Teacher headTeacher;
 
-    //TODO: STAFF(implementation)
-    //@OneToOne(fetch = FetchType.LAZY)
-
     //TODO: ENROLLMENT
 
     //TODO: FORMATIVE/REGULAR EXAMS
@@ -43,7 +40,7 @@ public class Course implements AggregateRoot<Integer> {
     //TODO: LECTURE--COURSE MUST BE REFERENCED IN THE LECTURE
 
     //JPA needs empty constructor
-    public Course(){
+    private Course(){
 
     }
 
@@ -125,7 +122,7 @@ public class Course implements AggregateRoot<Integer> {
         return capacity;
     }
 
-    public Teacher HeadTeacher() {
+    public Teacher headTeacher() {
         return headTeacher;
     }
 

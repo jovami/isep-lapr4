@@ -3,15 +3,14 @@ package eapli.base.course.domain;
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.AggregateRoot;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class StaffMember implements AggregateRoot<Integer> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int staffMemberId;
     @ManyToOne
     private Course course;
