@@ -14,9 +14,6 @@ participant StaffRepository as staff_repo
 participant CourseAndDescriptionDTOMapper as course_mapper
 participant CourseAndDescriptionDTO as course_dto
 
-participant ExamAndDateDTOMapper as exam_mapper
-participant ExamAndDateDTO as exam_dto
-
 user --> ui: enter
 activate ui
 ui --> ctrl: create()
