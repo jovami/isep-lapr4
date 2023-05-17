@@ -22,6 +22,10 @@ public final class ListCoursesService {
         return this.repo.ofState(CourseState.CLOSE);
     }
 
+    public Iterable<Course> openableToEnrollments() {
+        return this.repo.ofState(CourseState.OPEN);
+    }
+
     public Iterable<Course> enrollable() {
         return this.repo.ofState(CourseState.ENROLL);
     }

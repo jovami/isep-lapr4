@@ -28,7 +28,7 @@ public final class EnrollmentRequestController {
     }
 
     public Iterable<Course> getCourses() {
-        return new ListCoursesService(courseRepo).enrollable();
+        return new ListCoursesService(courseRepo).openableToEnrollments();
     }
 
     public boolean createEnrollmentRequest(Course course){

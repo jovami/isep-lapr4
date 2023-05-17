@@ -6,7 +6,6 @@ import eapli.base.course.domain.Course;
 import eapli.base.course.dto.CourseAndStateDTO;
 import eapli.base.course.dto.CourseAndStateDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
-import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.domain.repositories.ConcurrencyException;
 
@@ -34,10 +33,13 @@ public final class OpenCloseEnrollmentController {
                 .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
     }
 
+    public List<CourseAndStateDTO> openableToEnrollmentsCourses() {
+        return this.getCourses(this.svc::openableToEnrollments);
+    }
+
     public List<CourseAndStateDTO> enrollableCourses() {
         return this.getCourses(this.svc::enrollable);
     }
-
 
 
     public void openEnrollments(CourseAndStateDTO chosen)
