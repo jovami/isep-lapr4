@@ -17,8 +17,6 @@ public class ListExamsInCourseUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        boolean keepGoing = false;
-
         var widget = new SelectWidget<>("Choose a course to list exams from:", this.ctrl.listCourses());
         widget.show();
 
@@ -28,14 +26,11 @@ public class ListExamsInCourseUI extends AbstractUI {
 
         try {
             new ListWidget<>("Available exams:", this.ctrl.listExams(chosen)).show();
-
-            keepGoing = Console.readBoolean("Do you wish to list exams from another course? (y/n)");
         } catch (ConcurrencyException e) {
             System.out.println(e.getMessage());
-            keepGoing = false;
         }
 
-        return keepGoing;
+        return false;
     }
 
     @Override

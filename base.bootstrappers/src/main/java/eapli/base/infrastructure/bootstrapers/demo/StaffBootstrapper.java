@@ -10,10 +10,6 @@ import eapli.base.course.repositories.StaffRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.actions.Action;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class StaffBootstrapper implements Action {
     @Override
     public boolean execute() {

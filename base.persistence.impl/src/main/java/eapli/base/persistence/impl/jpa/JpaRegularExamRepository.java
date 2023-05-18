@@ -7,12 +7,16 @@ import eapli.base.exam.repositories.RegularExamRepository;
 
 public class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam,Long,Integer> implements RegularExamRepository {
     JpaRegularExamRepository(String persistenceUnitName){
-        super(persistenceUnitName,"examid");
+        super(persistenceUnitName,"IDREGULAREXAM");
     }
 
     @Override
     public Iterable<RegularExam> findByCourse(Course course) {
-        return match("e.course=:course","course",course);
+        final var query = entityManager().createQuery(
+                "SELECT e FROM RegularExam e WHERE e.course = :course",
+                RegularExam.class);
+        query.setParameter("course", course);
+        return query.getResultList();
     }
 
     //TODO: implement

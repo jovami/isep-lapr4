@@ -23,6 +23,7 @@
     <class>eapli.base.event.timetable.domain.TimeTable</class>
     <class>eapli.base.event.Meeting.domain.Meeting</class>
     <class>eapli.base.event.Meeting.domain.MeetingParticipant</class>
+    <class>eapli.base.exam.domain.regular_exam.RegularExam</class>
 
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->

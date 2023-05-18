@@ -25,7 +25,7 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Column(name = "REGULAREXAMDATE")
     private RegularExamDate regularExamDate;
 
-    @Column(name = "COURSE")
+    @JoinColumn(name = "COURSE")
     @ManyToOne
     private Course course;
 
