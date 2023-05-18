@@ -3,6 +3,7 @@ package eapli.base.app.teacher.console.presentation;
 import eapli.base.exam.aplication.CreateRegularExamController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+import eapli.framework.presentation.console.ListWidget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -26,8 +27,8 @@ public class CreateRegularExamUI extends AbstractUI {
             examHeader = Console.readNonEmptyLine("Exam header:", "Value can't be null");
             headerDescription = Console.readNonEmptyLine("Header description:", "Value can't be null");
 
-            openDate = Console.readDate("Open date(DD/MM/YYYY)","dd/MM/yyyy");
-            closeDate = Console.readDate("Close date(DD/MM/YYYY)","dd/MM/yyyy");
+            openDate = Console.readDate("Open date(yyyy/MM/dd)","yyyy/MM/dd");
+            closeDate = Console.readDate("Close date(yyyy/MM/dd)","yyyy/MM/ddy");
 
             if(ctrl.createRegularExam(examTitle,examHeader,headerDescription,openDate,closeDate)){
                 created=true;
@@ -39,6 +40,7 @@ public class CreateRegularExamUI extends AbstractUI {
 
         if (ctrl.saveRegularExam()){
             System.out.println("\n\n\tRegular Exam created and saved with success\n:"+ctrl.regularExamString());
+            new ListWidget<>("Teachers", this.ctrl.lstRegularExams()).show();
         }
         return false;
 

@@ -2,16 +2,13 @@ package eapli.base.exam.domain.regular_exam;
 
 import eapli.base.course.domain.Course;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamHeader;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamTitle;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamHeaderDescription;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Table(name="REGULAREXAM")
@@ -23,63 +20,30 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Column(name = "IDREGULAREXAM")
     private int id;
 
-    @Column(name = "REGULAREXAMTITLE")
-    private RegularExamTitle title;
-
-    @Column(name = "REGULAREXAMHEADER")
-    private RegularExamHeader header;
-
     @Column(name = "REGULAREXAMDESCRIPTION")
-    private RegularExamHeaderDescription description;
+    private RegularExamSpecification regularExamSpecification;
     @Column(name = "REGULAREXAMDATE")
-    private RegularExamDate date;
+    private RegularExamDate regularExamDate;
 
-    @Column(name = "COURSE")
-    @ManyToOne
-    private Course course;
-
-    @OneToMany
-    @Column(name = "REGULAREXAMSECTION")
-    private List<RegularExamSection> sections;
-
-    public RegularExam(RegularExamTitle title, RegularExamHeader header, RegularExamHeaderDescription description, RegularExamDate date,
-                       List<RegularExamSection> sections, Course course)
+    public RegularExam(String regularExamSpecification, Date openDate, Date closeDate)
     {
+        Preconditions.nonNull(regularExamSpecification, "Regular Exam description cannot be null");
+        //Preconditions.nonNull(date, "Regular Exam date cannot be null");
 
-        Preconditions.nonNull(title, "Regular Exam title cannot be null");
-        Preconditions.nonNull(header, "Regular Exam header cannot be null");
-        Preconditions.nonNull(description, "Regular Exam description cannot be null");
-        Preconditions.nonNull(date, "Regular Exam date cannot be null");
-        Preconditions.nonNull(sections, "Regular Exam sections cannot be null");
-        Preconditions.nonEmpty(sections, "Regular Exams must have at least one section");
-        Preconditions.noneNull(course, "Course cannot be null");
-
-        this.title = title;
-        this.header = header;
-        this.description = description;
-        this.date = date;
-        this.sections = new ArrayList<>(sections);
-        this.course = course;
+        this.regularExamSpecification = new RegularExamSpecification(regularExamSpecification);
+        this.regularExamDate = new RegularExamDate(openDate, closeDate);
     }
 
     protected RegularExam() {
-        this.title = null;
-        this.header = null;
-        this.description = null;
-        this.date = null;
-        this.sections = null;
+        this.regularExamSpecification = null;
+        this.regularExamDate = null;
     }
 
-    protected List<RegularExamSection> sections() {return this.sections;}
-    protected RegularExamTitle title() {
-        return this.title;
+
+    protected RegularExamSpecification regularExamSpecification() {
+        return this.regularExamSpecification;
     }
-    protected RegularExamHeader header(){return this.header;}
-    protected RegularExamHeaderDescription description() {
-        return this.description;
-    }
-    public RegularExamDate date(){return this.date;}
-    public Course course() { return this.course; }
+    protected RegularExamDate regularExamDate(){return this.regularExamDate;}
 
 
     @Override

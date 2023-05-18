@@ -2,7 +2,6 @@ package eapli.base.exam.domain.exam_result;
 
 import eapli.base.exam.domain.exam_result.valueobjects.ExamFeedback;
 import eapli.base.exam.domain.exam_result.valueobjects.ExamGrade;
-import eapli.base.exam.domain.regular_exam.RegularExamSection;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 

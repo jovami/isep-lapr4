@@ -87,7 +87,9 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	}
 
 	@Override
-	public RegularExamRepository exams() { return new InMemoryRegularExamRepository();}
+	public RegularExamRepository regularExams() {
+		return new InMemoryRegularExamRepository();
+	}
 
 	@Override
 	public SignupRequestRepository signupRequests(final TransactionalContext tx) {

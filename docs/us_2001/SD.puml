@@ -1,23 +1,34 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
-autonumber
+actor Teacher as Actor
+participant CreateRegularExamUI as UI <<presentation>>
+participant CreateRegularExamController as controller <<application>>
+participant PersistenceContext as persistence <<persistence>>
+participant RepositoryFactory as factory <<factory>>
 
-DishExportController -> DishRepository:allDishes
-            DishExportController <-- DishRepository: dishes
-           DishExportController -> DishExporterFactory:build(fmt)
-            participant DishExporter <<interface>>
-            create DishExporter
-            DishExporterFactory -> DishExporter: new
-            DishExportController -> DishExportService : export(dishes, filename, fmt)
-            activate DishExportService
-            group loop [dishes]
-            DishExportService -> DishExporter : begin(filename)
-            DishExportService -> DishExporter : element(aDish)
-            group alt [has next]
-            DishExportService -> DishExporter : separator
-            end group
-            DishExportService -> DishExporter : end
-            end group
-            deactivate DishExportService
+Actor -> UI : create regular exam
+
+activate UI
+
+    UI -> controller : create
+    activate controller
+        controller -> persistence : repositories()
+        activate persistence
+            persistence -> factory : create
+            activate factory
+            persistence -> controller : factory
+            deactivate factory
+        deactivate persistence
+
+
+
+    deactivate controller
+
+
+
+deactivate UI
+
+
+
 @enduml

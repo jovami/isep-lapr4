@@ -117,7 +117,7 @@ public interface RepositoryFactory {
     ManagerRepository managers();
 
     QuestionRepository questions();
-    RegularExamRepository exams();
+    RegularExamRepository regularExams();
     FormativeExamRepository formativeExams();
     FormativeExamSpecificationRepository formativeExamSpecifications();
     EnrollmentRequestRepository enrollmentRequests();

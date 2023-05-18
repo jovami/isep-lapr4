@@ -111,7 +111,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 		return new JpaCourseRepository(Application.settings().getPersistenceUnitName());
 	}
 
-	public RegularExamRepository exams() {
+	public RegularExamRepository regularExams() {
 		return new JpaRegularExamRepository(Application.settings().getPersistenceUnitName());
 	}
 
