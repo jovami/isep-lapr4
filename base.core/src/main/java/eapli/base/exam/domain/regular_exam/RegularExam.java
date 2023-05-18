@@ -25,13 +25,18 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Column(name = "REGULAREXAMDATE")
     private RegularExamDate regularExamDate;
 
-    public RegularExam(String regularExamSpecification, Date openDate, Date closeDate)
+    @Column(name = "COURSE")
+    @ManyToOne
+    private Course course;
+
+    public RegularExam(String regularExamSpecification, Date openDate, Date closeDate, Course course)
     {
         Preconditions.nonNull(regularExamSpecification, "Regular Exam description cannot be null");
         //Preconditions.nonNull(date, "Regular Exam date cannot be null");
 
         this.regularExamSpecification = new RegularExamSpecification(regularExamSpecification);
         this.regularExamDate = new RegularExamDate(openDate, closeDate);
+        this.course = course;
     }
 
     protected RegularExam() {
@@ -43,7 +48,8 @@ public class RegularExam implements AggregateRoot<Integer> {
     protected RegularExamSpecification regularExamSpecification() {
         return this.regularExamSpecification;
     }
-    protected RegularExamDate regularExamDate(){return this.regularExamDate;}
+    public RegularExamDate regularExamDate(){return this.regularExamDate;}
+    public Course course(){return this.course;}
 
 
     @Override

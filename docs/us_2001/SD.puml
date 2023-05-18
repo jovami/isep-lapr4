@@ -4,8 +4,13 @@
 actor Teacher as Actor
 participant CreateRegularExamUI as UI <<presentation>>
 participant CreateRegularExamController as controller <<application>>
+participant "regularExam: RegularExam" as exam <<domain>>
 participant PersistenceContext as persistence <<persistence>>
 participant RepositoryFactory as factory <<factory>>
+database RegularExamRepository as repo <<repository>>
+
+
+
 
 Actor -> UI : create regular exam
 
@@ -21,14 +26,45 @@ activate UI
             deactivate factory
         deactivate persistence
 
+        controller ->factory :regularExams()
+        activate factory
+            factory -> repo : create
+            activate repo
+            deactivate repo
+            factory -> controller : regularExamsRepository
 
-
+        deactivate factory
     deactivate controller
 
-
-
+UI -->  Actor : ask user information
 deactivate UI
 
+Actor -> UI : title,header,headerdescription\nopenDate,closeDate
+activate UI
+
+    UI -> controller : createRegularExam(title,\nheader,headerdescription\nopenDate,closeDate)
+    activate controller
+        controller -> exam : regularExam= RegularExam(regularExamSpecification,\nopenDate,closeDate,Course)
+        note right of controller: Set the all the information
+
+        UI -> controller : saveRegularExam()
+        controller -> repo : save(regularExam)
+        activate repo
+        deactivate repo
+    deactivate controller
+    UI --> Actor : informs regular exam created and saved
+
+    UI -> controller : lstRegularExams()
+    activate controller
+        controller -> repo : findAll()
+        activate repo
+        repo -> controller : lstRegularExams
+        deactivate repo
+        controller -> UI: lstRegularExams
+    deactivate controller
+    UI -> Actor: show list of exams
+
+deactivate UI
 
 
 @enduml
