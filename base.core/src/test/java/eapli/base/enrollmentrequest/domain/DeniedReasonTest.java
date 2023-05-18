@@ -9,14 +9,14 @@ class DeniedReasonTest {
     @Test
     public void testConstructorAndGetDenyingReason() {
         DeniedReason deniedReason = new DeniedReason("You do not meet the eligibility criteria");
-        assertEquals("You do not meet the eligibility criteria", deniedReason.getDenyingReason());
+        assertEquals("You do not meet the eligibility criteria", deniedReason.obtainDenyingReason());
     }
 
     @Test
     public void testSetAndGetDenyingReason() {
         DeniedReason deniedReason = new DeniedReason();
-        deniedReason.setDenyingReason("You have an incomplete application");
-        assertEquals("You have an incomplete application", deniedReason.getDenyingReason());
+        deniedReason.specifyDeniedReason("You have an incomplete application");
+        assertEquals("You have an incomplete application", deniedReason.obtainDenyingReason());
     }
 
     @Test

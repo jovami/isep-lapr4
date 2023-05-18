@@ -66,7 +66,7 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
         switch (this.state) {
             case PENDING:
                 this.state = EnrollmentRequestState.DENIED;
-                this.deniedReason.setDenyingReason(deniedReason);
+                this.deniedReason.specifyDeniedReason(deniedReason);
                 return Either.right(EnrollmentRequestState.PENDING);
             case APPROVED:
                 return Either.left("Enrollment request was already approved");

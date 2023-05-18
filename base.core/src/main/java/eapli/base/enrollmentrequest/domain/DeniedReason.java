@@ -18,11 +18,11 @@ public class DeniedReason implements ValueObject {
         this.description = description;
     }
 
-    public void setDenyingReason(String description){
+    public void specifyDeniedReason(String description){
         this.description = description;
     }
 
-    public String getDenyingReason(){
+    public String obtainDenyingReason(){
         return this.description;
     }
 
