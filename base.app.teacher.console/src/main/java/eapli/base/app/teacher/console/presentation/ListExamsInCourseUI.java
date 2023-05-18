@@ -9,7 +9,8 @@ import eapli.framework.presentation.console.SelectWidget;
 
 public class ListExamsInCourseUI extends AbstractUI {
     private final ListExamsInCourseController ctrl;
-    public ListExamsInCourseUI(){
+
+    public ListExamsInCourseUI() {
         super();
         ctrl = new ListExamsInCourseController();
     }
@@ -25,18 +26,13 @@ public class ListExamsInCourseUI extends AbstractUI {
             return false;
         var chosen = widget.selectedElement();
 
-        System.out.printf("You chose: %s\n", chosen);
-        if (Console.readBoolean("Is this ok? (y/n)")) {
-            try {
-                new ListWidget<>("Available exams:", this.ctrl.listExams(chosen)).show();
+        try {
+            new ListWidget<>("Available exams:", this.ctrl.listExams(chosen)).show();
 
-                keepGoing = Console.readBoolean("Do you wish to list exams from another course? (y/n)");
-            } catch (ConcurrencyException e) {
-                System.out.println(e.getMessage());
-                keepGoing = false;
-            }
-        } else {
-            keepGoing = !Console.readBoolean("Exit? (y/n)");
+            keepGoing = Console.readBoolean("Do you wish to list exams from another course? (y/n)");
+        } catch (ConcurrencyException e) {
+            System.out.println(e.getMessage());
+            keepGoing = false;
         }
 
         return keepGoing;

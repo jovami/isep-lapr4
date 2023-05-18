@@ -16,7 +16,6 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class ListExamsInCourseController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
@@ -29,6 +28,7 @@ public class ListExamsInCourseController {
         courseRepository = PersistenceContext.repositories().courses();
         regularExamRepository = PersistenceContext.repositories().regularExams();
         teacherRepository = PersistenceContext.repositories().teachers();
+        staffRepository = PersistenceContext.repositories().staffs();
     }
 
     private List<CourseAndDescriptionDTO> getCourses(Iterable<Course> courses) {
