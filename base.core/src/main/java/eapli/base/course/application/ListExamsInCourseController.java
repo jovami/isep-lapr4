@@ -27,7 +27,7 @@ public class ListExamsInCourseController {
 
     public ListExamsInCourseController() {
         courseRepository = PersistenceContext.repositories().courses();
-        regularExamRepository = PersistenceContext.repositories().exams();
+        regularExamRepository = PersistenceContext.repositories().regularExams();
         teacherRepository = PersistenceContext.repositories().teachers();
     }
 

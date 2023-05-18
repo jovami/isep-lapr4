@@ -35,7 +35,7 @@ public class CreateRegularExamController {
 
 
         try{
-            regularExam = new RegularExam(regularExamSpecification, openDate,closeDate);
+            //regularExam = new RegularExam(regularExamSpecification, openDate,closeDate);
             return true;
         }catch (IllegalArgumentException e){
             return false;
