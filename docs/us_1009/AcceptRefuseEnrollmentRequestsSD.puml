@@ -1,0 +1,78 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor Manager as Actor
+participant AcceptRefuseEnrollmentRequestsUI as UI <<presentation>> order 1
+participant AcceptRefuseEnrollmentRequestController as controller <<application>> order 2
+participant AcceptRefuseEnrollmentRequestControllerEventfullImpl as controllerE <<application>> order 2
+participant EnrollmentRequest as enrollR<<domain>> order 3
+participant EventPublisher as event<<application>> order 5
+participant EnrollmentRequestAcceptedEvent as eventAcc<<domain>> order 4
+database EnrollmentRequestRepositry as enroRRepo <<repository>> order 6
+database EnrollmentRepositry as enroRepo <<repository>> order 7
+
+
+
+Actor -> UI : Accept/Refuse \nEnrollment Request
+activate UI
+    UI -> controller : create()
+    activate controller
+    controller -> controllerE : listPendingEnrollmentRequests()
+    activate controllerE
+    controllerE -> enroRRepo : pendingEnrollmentRequests()
+    deactivate controllerE
+    UI --> Actor : show Pending \nEnrollment Requests
+    deactivate controller
+    Actor -> UI : select \nEnrollment Request
+
+        alt Accept
+            UI -> controller : accept(enrollmentRequest)
+            activate controller
+
+            controller -> controllerE : acceptEnrollmentRequest (\nenrollmentRequest)
+            activate controllerE
+            controllerE -> enrollR : enrollmentRequest = approveEnrollmentRequest()
+            controllerE -> enroRRepo : save(enrollmentRequest)
+            activate enroRRepo
+            deactivate enroRRepo
+            controllerE -> enroRepo : createEnrollment()
+            activate enroRepo
+            deactivate enroRepo
+
+
+
+        
+            controllerE -> eventAcc : event = createAcceptedEnrollmentRequestEvent (\nenrollmentRequest)
+
+            controllerE -> event : publish(event)
+            activate event
+            deactivate event
+            note right: implemented by the framework
+
+
+
+            deactivate controllerE
+            UI --> Actor : show success
+            deactivate controller
+        else Refuse
+            UI -> controller : refuse(enrollmentRequest,\ndenialReason)
+            activate controller
+            controller -> controllerE : refuseEnrollmentRequest (\nenrollmentRequest, denialReason)
+            activate controllerE
+            controllerE -> enroRRepo : enrollmentRequest = denyEnrollmentRequest (\nenrollmentRequest, denialReason)
+            controllerE -> enroRRepo : save(enrollmentRequest)
+            activate enroRRepo
+            deactivate enroRRepo
+            deactivate controllerE
+            UI --> Actor : show success
+            deactivate controller
+        end
+
+
+
+
+deactivate UI
+
+@enduml
