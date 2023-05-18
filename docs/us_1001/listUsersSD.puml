@@ -5,10 +5,14 @@ actor Manager as Actor
 participant ListTeachersStudentsManagersUI as UI <<presentation>>
 participant ListUsersController as controller <<application>>
 participant ListUsersService as lstservice <<application>>
-participant UserManagementService as userservice <<application>>
-database UserRepository as repo <<repository>>
+participant PersistenceContext as persistence <<persistence>>
+participant RepositoryFactory as factory <<factory>>
+database TeacherRepository as repoTeacher <<repository>>
+database StudentRepository as repoStudent <<repository>>
+database ManagerRepository as repoManager <<repository>>
 
 
+activate Actor
 Actor -> UI: List user of the system\n(Teachers, Students \nand Managers)
 activate UI
     UI -> controller : create
@@ -16,64 +20,97 @@ activate UI
         controller -> lstservice : create
         activate lstservice
 
-        deactivate lstservice
 
+    lstservice -> persistence : repositories()
+    activate persistence
+        persistence -> factory : create
+        activate factory
+        persistence -> lstservice : factory
+        deactivate factory
+    deactivate persistence
 
-deactivate UI
+        lstservice -> factory : teachers()
+        activate factory
+            factory -> repoTeacher :create
+            activate repoTeacher
+                factory -> lstservice : teacherRepository
+            deactivate repoTeacher
+        deactivate factory
+
+        lstservice -> factory : students()
+        activate factory
+            factory -> repoStudent :create
+            activate repoStudent
+                factory -> lstservice : studentRepository
+            deactivate repoStudent
+        deactivate factory
+
+         lstservice -> factory : managers()
+         activate factory
+             factory -> repoManager :create
+             activate repoManager
+                 factory -> lstservice : managerRepository
+             deactivate repoManager
+         deactivate factory
+    deactivate lstservice
+
 
 
     deactivate controller
-    UI -> controller : userTeachers()
+deactivate UI
+
+    UI -> controller : listTeachers()
+activate UI
+
+    activate controller
+        controller -> lstservice : listTeachers()
+        activate lstservice
+            lstservice -> repoTeacher :findAll()
+            activate repoTeacher
+                repoTeacher -> lstservice :listTeachers
+            deactivate repoTeacher
+            lstservice -> controller : listTeachers
+        deactivate lstservice
+        controller -> UI : listTeachers
+    deactivate controller
+        UI --> Actor : shows list of teachers
+deactivate UI
+
+     UI -> controller : listStudents()
 activate UI
         activate controller
-
-            controller -> controller : allUsers()
-            controller -> lstservice : userTeachers(allUsers)
+            controller -> lstservice : listStudents()
             activate lstservice
-                lstservice -> controller : userTeachers
-
+                lstservice -> repoStudent :findAll()
+                activate repoStudent
+                    repoStudent -> lstservice :listStudents
+                deactivate repoStudent
+                lstservice -> controller : listStudents
             deactivate lstservice
-
-            controller -> UI: userTeachers
+            controller -> UI : listStudents
         deactivate controller
-
-    UI --> Actor : shows list of users teachers
+            UI --> Actor : shows list of students
 deactivate UI
 
-    UI -> controller : userStudents()
+    UI -> controller : listManagers()
     activate UI
             activate controller
-
-                controller -> controller : allUsers()
-                controller -> lstservice : userStudents(allUsers)
+                controller -> lstservice : listManagers()
                 activate lstservice
-                    lstservice -> controller : userStudents
-
+                    lstservice -> repoManager :findAll()
+                    activate repoManager
+                        repoManager -> lstservice :listManagers
+                    deactivate repoManager
+                    lstservice -> controller : listManagers
                 deactivate lstservice
-
-                controller -> UI: userStudents
+                controller -> UI : listManagers
             deactivate controller
-
-        UI --> Actor : shows list of users userStudents
+                UI --> Actor : shows list of managers
     deactivate UI
 
-    UI -> controller : userManagers()
-        activate UI
-                activate controller
-
-                    controller -> controller : allUsers()
-                    controller -> lstservice : userManagers(allUsers)
-                    activate lstservice
-                        lstservice -> controller : userManagers
-
-                    deactivate lstservice
-
-                    controller -> UI: userManagers
-                deactivate controller
-
-            UI --> Actor : shows list of users userManagers
-        deactivate UI
 
 
 deactivate UI
+
+deactivate Actor
 @enduml

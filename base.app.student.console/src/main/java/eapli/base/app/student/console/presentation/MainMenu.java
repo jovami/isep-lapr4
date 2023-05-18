@@ -101,8 +101,8 @@ public class MainMenu extends AbstractUI {
         }*/
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
-            final Menu enrollmentsMenu = buildCourseMenu();
-            mainMenu.addSubMenu(ENROLLMENTS_OPTION, enrollmentsMenu);
+            final Menu courseMenu = buildCourseMenu();
+            mainMenu.addSubMenu(ENROLLMENTS_OPTION, courseMenu);
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu meetingMenu = buildMeetingMenu();

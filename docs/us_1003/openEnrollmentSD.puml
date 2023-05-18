@@ -15,6 +15,7 @@ participant CourseAndStateDTO as dto
 
 participant Course as course
 
+activate user
 user -> ui: enter
 
 activate ui
@@ -78,5 +79,5 @@ activate ui
     ui --> user: show result
     deactivate course
 deactivate ui
-
+deactivate user
 @enduml

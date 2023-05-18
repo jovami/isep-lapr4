@@ -1,7 +1,7 @@
 US 1001 -- Add/Register System User
 ==============================
 
-# Analysi
+# Analysis
 
 ## Business rules
 

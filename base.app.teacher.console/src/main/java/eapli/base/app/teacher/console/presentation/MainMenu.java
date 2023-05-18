@@ -52,6 +52,7 @@ public class MainMenu extends AbstractUI {
     // REGULAR EXAM
 
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
+    private static final int LIST_EXAMS_COURSE = 2;
 
     // BOARD
 
@@ -108,7 +109,8 @@ public class MainMenu extends AbstractUI {
         }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER)) {
-            mainMenu.addSubMenu(COURSE_OPTION, buildCourseMenu());
+            final Menu courseMenu = buildCourseMenu();
+            mainMenu.addSubMenu(COURSE_OPTION, courseMenu);
             final Menu regularExamMenu = buildRegularExamMenu();
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
             final Menu boardMenu = buildBoardMenu();
@@ -140,6 +142,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Regular Exam");
 
         menu.addItem(CREATE_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
+        menu.addItem(LIST_EXAMS_COURSE, "List exams in a course", new ListExamsInCourseUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
