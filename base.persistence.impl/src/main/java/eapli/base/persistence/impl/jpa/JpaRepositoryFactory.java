@@ -28,6 +28,8 @@ import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
+import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.Meeting.repositories.MeetingRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
@@ -133,6 +135,15 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 		return new JpaStaffRepository(Application.settings().getPersistenceUnitName());
 	}
 
+	@Override
+	public MeetingRepository meetings() {
+		return new JpaMeetingRepository(Application.settings().getPersistenceUnitName());
+	}
+
+	@Override
+	public MeetingParticipantRepository meetingParticipants() {
+		return new JpaMeetingParticipantRepository(Application.settings().getPersistenceUnitName());
+	}
 
 	@Override
     public QuestionRepository questions() {

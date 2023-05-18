@@ -26,6 +26,8 @@ import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
+import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.Meeting.repositories.MeetingRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.domain.question.QuestionRepository;
@@ -125,4 +127,6 @@ public interface RepositoryFactory {
 
     TimeTableRepository timeTables();
     StaffRepository staffs();
+    MeetingRepository meetings();
+    MeetingParticipantRepository meetingParticipants();
 }

@@ -17,45 +17,40 @@ public class RecurringPattern implements AggregateRoot<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int code;
 
-    public RecurringFrequency getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(RecurringFrequency frequency) {
-        this.frequency = frequency;
-    }
 
     @Enumerated(EnumType.STRING)
     private RecurringFrequency frequency;
+
     private LocalDate startDate;
+
+    @Override
+    public String toString() {
+        return "RecurringPattern{" +
+                "code=" + code +
+                ", frequency=" + frequency +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", dayOfWeek=" + dayOfWeek +
+                ", startTime=" + startTime +
+                ", durationMinutes=" + durationMinutes +
+                '}';
+    }
+
     private LocalDate endDate;
     private DayOfWeek dayOfWeek;
     private LocalTime startTime;
     private int durationMinutes;
+    @ElementCollection(targetClass= LocalDate.class)
     private List<LocalDate> exceptions;
 
     public RecurringPattern() {
         exceptions = new ArrayList<>();
     }
 
-    /*BUILDER:WEEKLY and ONCE
-    public RecurringPattern(LocalDate startDate,LocalDate endDate,DayOfWeek dayOfWeek,RecurringFrequency frequency,LocalTime startTime,int durationMinutes) {
-        this.frequency=frequency;
-        if(frequency == RecurringFrequency.ONCE){
-            setStartDate(startDate);
-            setEndDate(endDate);
-        }else{
-            if (!setDateInterval(startDate,endDate)){
-                throw new IllegalArgumentException();
-            }
-        }
-        if(!setTime(startTime,durationMinutes)){
-            throw new IllegalArgumentException();
-        }
-        setDayOfWeek(dayOfWeek);
-        exceptions=new ArrayList<>();
-    }*/
 
+    public RecurringFrequency getFrequency() {
+        return frequency;
+    }
     public boolean setTime(LocalTime startTime, int durationMinutes) {
         if(setDurationMinutes(durationMinutes)){
             setStartTime(startTime);
@@ -91,10 +86,6 @@ public class RecurringPattern implements AggregateRoot<Integer> {
             return false;
         }
 
-        //TODO: exceptions?
-        // all exceptions must fulfill that pattern that is
-        // between the start and end dates there is overlap -> return true
-
         if(that.frequency==RecurringFrequency.ONCE){
             for (LocalDate ex : exceptions) {
                 if(that.betweenDates(ex)){
@@ -107,6 +98,9 @@ public class RecurringPattern implements AggregateRoot<Integer> {
 
     public boolean betweenDates(LocalDate ex) {
         return (startDate.isBefore(ex) || startDate.isEqual(ex)) && (endDate.isAfter(ex) || endDate.isEqual(ex));
+    }
+    public void setFrequency(RecurringFrequency frequency) {
+        this.frequency = frequency;
     }
 
     public boolean overLapTime(RecurringPattern that) {

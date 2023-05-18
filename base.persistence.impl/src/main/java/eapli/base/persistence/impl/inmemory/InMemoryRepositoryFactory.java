@@ -21,22 +21,28 @@
 package eapli.base.persistence.impl.inmemory;
 
 import eapli.base.board.repositories.BoardRepository;
-import eapli.base.clientusermanagement.repositories.*;
-import eapli.base.course.repositories.CourseRepository;
+import eapli.base.clientusermanagement.repositories.ClientUserRepository;
+import eapli.base.clientusermanagement.repositories.ManagerRepository;
+import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
+import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.Meeting.repositories.MeetingRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
-import eapli.base.exam.domain.question.QuestionRepository;
-import eapli.base.exam.repositories.RegularExamRepository;
-import eapli.base.formativeexam.repositories.FormativeExamRepository;
-import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 import eapli.base.infrastructure.bootstrapers.BaseBootstrapper;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryUserRepository;
+import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 
 /**
  *
@@ -77,13 +83,11 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 
 	@Override
 	public CourseRepository courses() {
-		return new InMemoryCourseRepository();
+		return new InMemoryCourseRepository() ;
 	}
 
 	@Override
-	public RegularExamRepository exams() {
-		return new InMemoryRegularExamRepository();
-	}
+	public RegularExamRepository exams() { return new InMemoryRegularExamRepository();}
 
 	@Override
 	public SignupRequestRepository signupRequests(final TransactionalContext tx) {
@@ -107,36 +111,36 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 		return null;
 	}
 
-	@Override
-	public StudentRepository students() {
-		return new InMemoryStudentRepository();
-	}
+    @Override
+    public StudentRepository students() {
+        return new InMemoryStudentRepository();
+    }
 
-	@Override
-	public TeacherRepository teachers() {
-		return new InMemoryTeacherRepository();
-	}
+    @Override
+    public TeacherRepository teachers() {
+        return new InMemoryTeacherRepository();
+    }
 
-	@Override
-	public ManagerRepository managers() {
-		return new InMemoryManagerRepository();
-	}
+    @Override
+    public ManagerRepository managers() {
+        return new InMemoryManagerRepository();
+    }
 
 
-	@Override
-	public QuestionRepository questions() {
+    @Override
+    public QuestionRepository questions() {
 		return new InMemoryQuestionRepository();
-	}
+    }
 
-	@Override
-	public FormativeExamRepository formativeExams() {
+    @Override
+    public FormativeExamRepository formativeExams() {
 		return new InMemoryFormativeExamRepository();
-	}
+    }
 
-	@Override
-	public FormativeExamSpecificationRepository formativeExamSpecifications() {
+    @Override
+    public FormativeExamSpecificationRepository formativeExamSpecifications() {
 		return new InMemoryFormativeExamSpecificationRepository();
-	}
+    }
 
 	@Override
 	public EnrollmentRequestRepository enrollmentRequests() {
@@ -157,10 +161,18 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	public TimeTableRepository timeTables() {
 		return new InMemoryTimeTableRepository();
 	}
-
 	@Override
 	public StaffRepository staffs() {
 		return new InMemoryStaffRepository();
 	}
-}
 
+	@Override
+	public MeetingRepository meetings() {
+		return new InMemoryMeetingRepository();
+	}
+
+	@Override
+	public MeetingParticipantRepository meetingParticipants() {
+		return new InMemoryMeetingParticipantRepository();
+	}
+}

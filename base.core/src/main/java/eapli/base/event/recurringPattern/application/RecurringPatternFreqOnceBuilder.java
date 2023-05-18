@@ -22,7 +22,7 @@ public class RecurringPatternFreqOnceBuilder implements RecurringPatternBuilderI
         pattern.setDateOnce(date);
     }
 
-    public RecurringPattern getPattern(){
+    public RecurringPattern build(){
         pattern.setFrequency(RecurringFrequency.ONCE);
         return pattern;
     }

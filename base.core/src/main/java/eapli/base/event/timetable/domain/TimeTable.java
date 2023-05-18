@@ -2,45 +2,44 @@ package eapli.base.event.timetable.domain;
 
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.domain.model.AggregateRoot;
-import eapli.framework.infrastructure.authz.domain.model.Username;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name="TIMETABLE")
-public class TimeTable implements AggregateRoot<Username> {
-    @EmbeddedId
-    private Username username;
-    private List<RecurringPattern> patterns = new ArrayList<>();
+public class TimeTable implements AggregateRoot<Integer> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int timeTableId;
+
+    @ManyToOne
+    private SystemUser user;
+
+    @ManyToOne
+    private RecurringPattern pattern;
 
     private TimeTable(){
     }
 
-    public TimeTable(Username userName){
-        this.username = userName;
-        patterns = new ArrayList<>();
+
+    public TimeTable(SystemUser user,RecurringPattern pattern){
+        this.user = user;
+        this.pattern = pattern;
     }
 
-    public List<RecurringPattern> getPatterns() {
-        return patterns;
+    @Override
+    public String toString() {
+        return "TimeTable{" +
+                "timeTableId=" + timeTableId +
+                "\n user=" + user.username().toString() +
+                "\n pattern =" + pattern +
+                '}';
     }
-
-    public void addPatterns(RecurringPattern patterns) {
-        this.patterns.add(patterns);
-    }
-
-    public boolean checkAvailability(RecurringPattern patternToCompare){
-        for (RecurringPattern pattern: patterns) {
-            if(pattern.overLap(patternToCompare)){
-                return false;
-            }
-        }
-        return true;
+    public RecurringPattern pattern() {
+        return pattern;
     }
 
     @Override
@@ -48,22 +47,26 @@ public class TimeTable implements AggregateRoot<Username> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimeTable timeTable = (TimeTable) o;
-        return Objects.equals(username, timeTable.username);
+        return Objects.equals(user, timeTable.user) && this.pattern.equals(timeTable.pattern);
     }
 
-
     @Override
-    public int compareTo(Username other) {
+    public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
     }
 
+
     @Override
-    public Username identity() {
-        return this.username;
+    public Integer identity() {
+        return timeTableId;
     }
 
     @Override
-    public boolean hasIdentity(Username id) {
+    public boolean hasIdentity(Integer id) {
         return AggregateRoot.super.hasIdentity(id);
+    }
+
+    public SystemUser getUser() {
+        return this.user;
     }
 }

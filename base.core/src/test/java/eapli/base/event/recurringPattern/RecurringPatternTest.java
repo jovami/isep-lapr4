@@ -399,7 +399,7 @@ public class RecurringPatternTest {
         RecurringPatternFreqOnceBuilder builder = new RecurringPatternFreqOnceBuilder();
         builder.withDuration(startTime,duration);
         builder.withDate(startDate);
-        RecurringPattern pCompare=builder.getPattern();
+        RecurringPattern pCompare=builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -428,7 +428,7 @@ public class RecurringPatternTest {
         RecurringPatternFreqOnceBuilder builder = new RecurringPatternFreqOnceBuilder();
         builder.withDuration(startTime,duration);
         builder.withDate(startDate);
-        RecurringPattern pCompare=builder.getPattern();
+        RecurringPattern pCompare=builder.build();
 
         LocalDate exDate = LocalDate.of(2000,2,7);
         pattern.addException(exDate);
@@ -445,7 +445,7 @@ public class RecurringPatternTest {
         RecurringPatternFreqOnceBuilder builder = new RecurringPatternFreqOnceBuilder();
         builder.withDuration(startTime,duration);
         builder.withDate(startDate);
-        RecurringPattern pCompare=builder.getPattern();
+        RecurringPattern pCompare=builder.build();
         LocalDate exDate = LocalDate.of(2000,2,14);
         pattern.addException(exDate);
         Assertions.assertTrue(pattern.overLap(pCompare));

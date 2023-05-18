@@ -52,15 +52,7 @@ public class Course implements AggregateRoot<Integer> {
         this.duration = new CourseDuration(startDate,endDate);
         this.capacity = new CourseCapacity();
     }
-/*
-    public  Course(String name,String description){
-        this.name = new CourseName(name);
-        createdCourse();
-        this.description = new CourseDescription(description);
-        this.capacity = new CourseCapacity();
-        this.duration = new CourseDuration();
-    }
-*/
+
     protected void setName(String name) {
         this.name = new CourseName(name);
     }
@@ -176,13 +168,11 @@ public class Course implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "Course:"+
-                "\ncode=" + code +
-                "\nname=" + name +
-                "\ndescription=" + description +
-                "\nstate=" + state +
-                "\nduration=" + duration +
-                "\ncapacity=" + capacity;
+        return "Course: "+
+                "\ncode: " + code +
+                "\nname: " + name.getName() +
+                "\ndescription: " + description.getDescription() +
+                "\nduration: " + duration.getStartDate() + " - " + duration.getEndDate();
     }
 
 }
