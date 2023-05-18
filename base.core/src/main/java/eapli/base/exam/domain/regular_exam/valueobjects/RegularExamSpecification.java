@@ -1,6 +1,7 @@
 package eapli.base.exam.domain.regular_exam.valueobjects;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 import javax.persistence.Embeddable;
 import java.util.Optional;
@@ -9,16 +10,18 @@ import java.util.Optional;
 public class RegularExamSpecification implements ValueObject {
 
     private static final long serialVersionUID = 1L;
-    private Optional<String> regularExamSpecification;
+    private String specification;
 
-    public RegularExamSpecification(String description)
+    public RegularExamSpecification(String specification)
     {
-        this.regularExamSpecification = Optional.ofNullable(description);
+        Preconditions.noneNull(specification, "Regular Exam specification cannot be null");
+        Preconditions.nonEmpty(specification, "Regular Exam specification cannot be empty");
+        this.specification = specification;
     }
 
     //for ORM
     protected RegularExamSpecification() {
-        regularExamSpecification = null;
+        specification = null;
     }
 
     public static RegularExamSpecification valueOf(final String regularExamSpecification) {
@@ -26,7 +29,7 @@ public class RegularExamSpecification implements ValueObject {
     }
 
     @Override
-    public String toString() {return this.regularExamSpecification.orElse("");}
+    public String toString() { return this.specification; }
 
 
 }
