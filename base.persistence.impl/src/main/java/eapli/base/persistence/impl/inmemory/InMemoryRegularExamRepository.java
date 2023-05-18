@@ -1,5 +1,7 @@
 package eapli.base.persistence.impl.inmemory;
 
+import eapli.base.course.domain.Course;
+import eapli.base.course.domain.StaffMember;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
@@ -12,5 +14,10 @@ public class InMemoryRegularExamRepository extends InMemoryDomainRepository<Regu
 
     public InMemoryRegularExamRepository(){
 
+    }
+
+    @Override
+    public Iterable<RegularExam> findByCourse(Course course) {
+        return match((regularExam -> course.equals(regularExam.course())));
     }
 }

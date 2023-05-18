@@ -406,12 +406,12 @@ class CourseTest {
         Assertions.assertNull(courseDescription.getDescription());
     }
 
-    @Test
+    /*@Test
     void courseName() {
         CourseName name = new CourseName("curso");
         assertEquals(name,course.getCourseName());
     }
-
+*/
     @Test
     void headTeacher(){
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());

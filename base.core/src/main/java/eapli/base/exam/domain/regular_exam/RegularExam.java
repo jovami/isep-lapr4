@@ -1,5 +1,6 @@
 package eapli.base.exam.domain.regular_exam;
 
+import eapli.base.course.domain.Course;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamHeader;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamTitle;
@@ -33,12 +34,16 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Column(name = "REGULAREXAMDATE")
     private RegularExamDate date;
 
+    @Column(name = "COURSE")
+    @ManyToOne
+    private Course course;
+
     @OneToMany
     @Column(name = "REGULAREXAMSECTION")
     private List<RegularExamSection> sections;
 
     public RegularExam(RegularExamTitle title, RegularExamHeader header, RegularExamHeaderDescription description, RegularExamDate date,
-                       List<RegularExamSection> sections)
+                       List<RegularExamSection> sections, Course course)
     {
 
         Preconditions.nonNull(title, "Regular Exam title cannot be null");
@@ -47,12 +52,14 @@ public class RegularExam implements AggregateRoot<Integer> {
         Preconditions.nonNull(date, "Regular Exam date cannot be null");
         Preconditions.nonNull(sections, "Regular Exam sections cannot be null");
         Preconditions.nonEmpty(sections, "Regular Exams must have at least one section");
+        Preconditions.noneNull(course, "Course cannot be null");
 
         this.title = title;
         this.header = header;
         this.description = description;
         this.date = date;
         this.sections = new ArrayList<>(sections);
+        this.course = course;
     }
 
     protected RegularExam() {
@@ -71,7 +78,8 @@ public class RegularExam implements AggregateRoot<Integer> {
     protected RegularExamHeaderDescription description() {
         return this.description;
     }
-    protected RegularExamDate date(){return this.date;}
+    public RegularExamDate date(){return this.date;}
+    public Course course() { return this.course; }
 
 
     @Override

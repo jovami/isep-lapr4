@@ -2,6 +2,7 @@ package eapli.base.course.repositories;
 
 import java.util.Set;
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseState;
 import eapli.framework.domain.repositories.DomainRepository;

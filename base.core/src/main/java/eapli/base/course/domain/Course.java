@@ -103,12 +103,16 @@ public class Course implements AggregateRoot<Integer> {
         return name.getName();
     }
 
-    public CourseName getCourseName(){
+    public CourseName courseName(){
         return name;
     }
 
     public String  getDescription() {
         return description.getDescription();
+    }
+
+    public CourseDescription description() {
+        return description;
     }
 
     public CourseState state() {

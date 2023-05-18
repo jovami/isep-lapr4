@@ -2,6 +2,7 @@ package eapli.base.persistence.impl.jpa;
 
 import java.util.Set;
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseState;
 import eapli.base.course.repositories.CourseRepository;
