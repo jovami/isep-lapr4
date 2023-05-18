@@ -23,7 +23,7 @@
  */
 package eapli.base.app.student.console.presentation;
 
-import eapli.base.Application;
+import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
@@ -31,7 +31,6 @@ import eapli.base.app.common.console.presentation.clientuser.ListAvailableCourse
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
-import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.presentation.console.AbstractUI;
@@ -53,6 +52,9 @@ public class MainMenu extends AbstractUI {
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
+    //MEETING
+    private static final int MEETING_OPTION = 5;
+    private static final int SCHEDULE_MEETING = 1;
 
     // SETTINGS
     private static final int MY_USER_OPTION = 1;
@@ -103,6 +105,8 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(ENROLLMENTS_OPTION, enrollmentsMenu);
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
+            final Menu meetingMenu = buildMeetingMenu();
+            mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
         }
 
         /*if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -119,6 +123,14 @@ public class MainMenu extends AbstractUI {
 
         menu.addItem(ENROLLMENT_REQUEST_OPTION, "Request Enrollment in a Course", new EnrollmentRequestUI()::show);
         menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+    private Menu buildMeetingMenu() {
+        final Menu menu = new Menu("Meeting");
+
+        menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

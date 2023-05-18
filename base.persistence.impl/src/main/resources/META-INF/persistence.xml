@@ -19,6 +19,10 @@
     <class>eapli.base.clientusermanagement.domain.users.Manager</class>
     <class>eapli.base.clientusermanagement.domain.users.Teacher</class>
     <class>eapli.base.clientusermanagement.domain.users.Student</class>
+    <class>eapli.base.event.recurringPattern.domain.RecurringPattern</class>
+    <class>eapli.base.event.timetable.domain.TimeTable</class>
+    <class>eapli.base.event.Meeting.domain.Meeting</class>
+    <class>eapli.base.event.Meeting.domain.MeetingParticipant</class>
 
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->

@@ -11,6 +11,7 @@ participant "recurringPattern:\nRecurringPattern" as Pattern <<domain>> order 4
 participant "participant:\nMeetingParticipant" as MeetingParticipant <<domain>> order 4
 participant UserRepository as UserRepo <<repository>> order 8
 participant MeetingRepository as MeetingRepo <<repository>> order 9
+participant MeetingParticipantRepo as participantRepo <<repository>> order 10
 participant CheckAvailabiltyService as AvailService <<application>> order 11
 participant SystemUserEmailDTOMapper as Mapper <<application>> order 12
 participant SystemUserEmailDTOMapper as DTO <<application>> order 13
@@ -46,10 +47,8 @@ activate UI
     loop [invite==true]
             Actor -> UI : user
             UI -> Controller : invite(user)
-        Controller -> Meeting : addParticipant(user);
-        Controller --> MeetingRepo: save(meeting)
-        activate MeetingRepo
-            Controller <-- MeetingRepo: meeting
+            Controller -> Controller : addInvited(user);
+
         deactivate MeetingRepo
         deactivate UserRepo
     deactivate UserRepo
@@ -60,8 +59,13 @@ activate UI
 
     Controller -> AvailService : checkAvailability(participants,recurringPattern)
     activate AvailService
-    Controller <-- AvailService : returns availability
-    Controller -> AvailService : schedule(participants,recurringPattern
+     Controller <-- AvailService : returns a vailability
+    loop for each invited
+            Controller --> MeetingParticipant: createParticipant(user,meeting)
+            Controller --> participantRepo: save(participant)
+            activate MeetingRepo
+    end
+    Controller -> AvailService : schedule(invited,recurringPattern
     deactivate AvailService
 
     UI <-- Controller : meeting

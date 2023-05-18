@@ -24,6 +24,7 @@
 package eapli.base.app.manager.console.presentation;
 
 import eapli.base.Application;
+import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
@@ -125,7 +126,8 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu courseMenu = buildCourseMenu();
             mainMenu.addSubMenu(COURSE_OPTION,courseMenu );
-
+            final Menu meetingMenu = buildMeetingMenu();
+            mainMenu.addSubMenu(MEETING_OPTION,meetingMenu );
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -169,6 +171,14 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+    private Menu buildMeetingMenu() {
+        final Menu menu = new Menu("Meeting");
+
+        menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

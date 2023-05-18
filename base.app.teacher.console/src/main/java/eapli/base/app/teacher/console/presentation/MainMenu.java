@@ -24,6 +24,7 @@
 package eapli.base.app.teacher.console.presentation;
 
 import eapli.base.Application;
+import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
@@ -59,9 +60,13 @@ public class MainMenu extends AbstractUI {
     // SETTINGS
 
     private static final int MY_USER_OPTION = 1;
+
     private static final int COURSE_OPTION = 2;
     private static final int REGULAR_EXAM_OPTION = 3;
     private static final int BOARD_OPTION = 4;
+    //MEETING
+    private static final int MEETING_OPTION = 5;
+    private static final int SCHEDULE_MEETING = 1;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -108,6 +113,8 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
+            final Menu meetingMenu = buildMeetingMenu();
+            mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -142,6 +149,14 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+    private Menu buildMeetingMenu() {
+        final Menu menu = new Menu("Meeting");
+
+        menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
