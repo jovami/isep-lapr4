@@ -82,6 +82,16 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 	}
 
 	@Override
+	public EnrollmentRequestRepository enrollmentRequests(TransactionalContext autoTx) {
+		return new InMemoryEnrollmentRequestsRepository();
+	}
+
+	@Override
+	public EnrollmentRepository enrollments(TransactionalContext autoTx) {
+		return new InMemoryEnrollmentRepository();
+	}
+
+	@Override
 	public CourseRepository courses() {
 		return new InMemoryCourseRepository() ;
 	}

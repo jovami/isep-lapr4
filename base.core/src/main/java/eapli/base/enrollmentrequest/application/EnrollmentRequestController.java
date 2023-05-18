@@ -1,5 +1,7 @@
 package eapli.base.enrollmentrequest.application;
 
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
@@ -10,6 +12,11 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.Username;
+import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+
+import java.util.Optional;
 
 /**
  * EnrollmentRequestController
@@ -19,16 +26,21 @@ public final class EnrollmentRequestController {
     private final EnrollmentRequestRepository enrollmentRequestRepo;
     private final CourseRepository courseRepo;
     private final StudentRepository studentRepo;
+    private final UserRepository userRepository;
 
 
     public EnrollmentRequestController() {
         this.enrollmentRequestRepo = PersistenceContext.repositories().enrollmentRequests();
         this.courseRepo = PersistenceContext.repositories().courses();
         this.studentRepo = PersistenceContext.repositories().students();
+        this.userRepository = PersistenceContext.repositories().users();
     }
 
-    public Iterable<Course> getCourses() {
+    public Iterable<Course> getEnrollableCourses() {
         return new ListCoursesService(courseRepo).openableToEnrollments();
+    }
+    public Iterable<EnrollmentRequest> findAllRequests() {
+        return this.enrollmentRequestRepo.findAll();
     }
 
     public boolean createEnrollmentRequest(Course course){
@@ -40,6 +52,7 @@ public final class EnrollmentRequestController {
 
         var student = studentRepo.findBySystemUser(session.get().authenticatedUser());
         if (student.isEmpty()){
+            System.out.println("Student not found");
             return false;
         }
         var enrollmentRequest = new EnrollmentRequest(course, student.get());

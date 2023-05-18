@@ -43,7 +43,7 @@ activate UI
 
 
 
-        
+
             controllerE -> eventAcc : event = createAcceptedEnrollmentRequestEvent (\nenrollmentRequest)
 
             controllerE -> event : publish(event)

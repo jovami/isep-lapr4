@@ -23,14 +23,13 @@
  */
 package eapli.base.clientusermanagement.application;
 
-import eapli.base.clientusermanagement.repositories.StudentRepository;
-import org.springframework.transaction.annotation.Transactional;
-
-import eapli.base.clientusermanagement.domain.SignupRequest;
-import eapli.base.clientusermanagement.domain.events.SignupAcceptedEvent;
-import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
-import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.base.clientusermanagement.domain.events.EnrollmentRequestAcceptedEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.enrollment.domain.Enrollment;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
+import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
+import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.events.DomainEvent;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -40,6 +39,9 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
 import eapli.framework.validations.Preconditions;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * the controller for the use case "Accept or refuse signup request"
@@ -47,58 +49,67 @@ import eapli.framework.validations.Preconditions;
  * this implementation makes use of domain events to (1) follow the rule that
  * one controller should only modify one aggregate, and (2) notify other parts
  * of the system to react accordingly. For an alternative transactional approach
- * see {@link AcceptRefuseSignupRequestControllerTxImpl}
+ * see {@link AcceptRefuseEnrollmentRequestControllerTxImpl}
  *
  * @author Paulo Gandra de Sousa
  */
 @UseCaseController
-public class AcceptRefuseSignupRequestControllerEventfullImpl implements AcceptRefuseSignupRequestController {
+public class AcceptRefuseEnrollmentRequestControllerEventfullImpl implements AcceptRefuseEnrollmentRequestController {
 
-	private final SignupRequestRepository signupRequestsRepository = PersistenceContext.repositories().signupRequests();
+	private final EnrollmentRequestRepository enrollmentRequestRepository = PersistenceContext.repositories().enrollmentRequests();
 	private final AuthorizationService authorizationService = AuthzRegistry.authorizationService();
 	private final EventPublisher dispatcher = InProcessPubSub.publisher();
+	private final EnrollmentRepository enrollmentRepository = PersistenceContext.repositories().enrollments();
 
 	@Override
 	@SuppressWarnings("squid:S1226")
-	public SignupRequest acceptSignupRequest(SignupRequest theSignupRequest) {
+	public EnrollmentRequest acceptCourseApplication(EnrollmentRequest theCourseApplication) {
 		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-		Preconditions.nonNull(theSignupRequest);
+		Preconditions.nonNull(theCourseApplication);
 
-		theSignupRequest = markSignupRequestAsAccepted(theSignupRequest);
-		return theSignupRequest;
+		theCourseApplication = markCourseApplicationAsAccepted(theCourseApplication);
+		return theCourseApplication;
 	}
+
+
 
 	/**
 	 * modify Signup Request to accepted
 	 *
-	 * @param theSignupRequest
+	 * @param theCourseApplication
 	 * @return
 	 * @throws ConcurrencyException
 	 * @throws IntegrityViolationException
 	 */
 	@SuppressWarnings("squid:S1226")
-	private SignupRequest markSignupRequestAsAccepted(SignupRequest theSignupRequest) {
+	private EnrollmentRequest markCourseApplicationAsAccepted(EnrollmentRequest theCourseApplication) {
+		Enrollment enrollment;
 		// do just what is needed in the scope of this use case
-		theSignupRequest.accept();
-		theSignupRequest = signupRequestsRepository.save(theSignupRequest);
+		theCourseApplication.approveEnrollmentRequest();
+
+		enrollment = new Enrollment(theCourseApplication.course(), theCourseApplication.student());
+		enrollmentRepository.save(enrollment);
+		theCourseApplication.approveEnrollmentRequest();
+		theCourseApplication = enrollmentRequestRepository.save(theCourseApplication);
 
 		// notify interested parties (if any)
-		final DomainEvent event = new SignupAcceptedEvent(theSignupRequest);
+		final DomainEvent event = new EnrollmentRequestAcceptedEvent(theCourseApplication);
 		dispatcher.publish(event);
+		System.out.println(enrollmentRepository.findAll());
 
-		return theSignupRequest;
+		return theCourseApplication;
 	}
 
 	@Override
 	@Transactional
-	public SignupRequest refuseSignupRequest(final SignupRequest theSignupRequest) {
+	public EnrollmentRequest refuseCourseApplication(final EnrollmentRequest theCourseApplication, final String deniedReason) {
 		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-		Preconditions.nonNull(theSignupRequest);
+		Preconditions.nonNull(theCourseApplication);
 
-		theSignupRequest.refuse();
-		return signupRequestsRepository.save(theSignupRequest);
+		theCourseApplication.denyEnrollmentRequest(deniedReason);
+		return enrollmentRequestRepository.save(theCourseApplication);
 	}
 
 	/**
@@ -106,7 +117,12 @@ public class AcceptRefuseSignupRequestControllerEventfullImpl implements AcceptR
 	 * @return
 	 */
 	@Override
-	public Iterable<SignupRequest> listPendingSignupRequests() {
-		return signupRequestsRepository.pendingSignupRequests();
+	public Iterable<EnrollmentRequest> listPendingEnrollmentRequests() {
+		return enrollmentRequestRepository.pendingEnrollmentRequests();
+	}
+
+	@Override
+	public Optional<EnrollmentRequest> findFirstPendingEnrollmentRequest() {
+		return enrollmentRequestRepository.findFirstPendingEnrollmentRequest();
 	}
 }

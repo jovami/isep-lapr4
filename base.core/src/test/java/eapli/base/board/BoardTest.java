@@ -1,20 +1,10 @@
 package eapli.base.board;
 
 import eapli.base.board.domain.*;
-import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
-import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.application.UserManagementService;
 import eapli.framework.infrastructure.authz.domain.model.*;
-import eapli.framework.time.util.CurrentTimeCalendars;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.core.userdetails.User;
-
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 

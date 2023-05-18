@@ -101,6 +101,22 @@ public interface RepositoryFactory {
      *            the transactional context to enroll
      * @return
      */
+    EnrollmentRequestRepository enrollmentRequests(TransactionalContext autoTx);
+    /**
+     *
+     * @param autoTx
+     *            the transactional context to enroll
+     * @return
+     */
+    EnrollmentRepository enrollments(TransactionalContext autoTx);
+
+
+    /**
+     *
+     * @param autoTx
+     *            the transactional context to enroll
+     * @return
+     */
     BoardRepository boards(TransactionalContext autoTx);
 
     /**

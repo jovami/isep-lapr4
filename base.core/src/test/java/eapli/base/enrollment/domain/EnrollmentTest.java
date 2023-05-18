@@ -1,19 +1,55 @@
 package eapli.base.enrollment.domain;
 
 
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
+import eapli.base.course.domain.Course;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.framework.infrastructure.authz.domain.model.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class EnrollmentTest {
 
-    /*
-    private CourseName courseName;
-    private Username username;
+
+    private Course course;
+    private Student student;
+    private String startDate="20/05/2020";
+    private String endDate="20/09/2020";
+    private SystemUser user;
+    private final String username = "Tony";
+    private final String mecanographicNumber = "isep567";
+    private final String fullName = "Tony Stark";
+    private final String shortName = "Tony";
+    private final String dateOfBirth = "2001-01-01";
+    private final String taxPayerNumber = "123756789";
 
     @BeforeEach
-    public void setUp() {
-        courseName = new CourseName("JAVA-2");
-        username = Username.valueOf("testUser");
+    public void setUp() throws ParseException {
+        SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        Date sDate = df.parse(startDate);
+        Date eDate = df.parse(endDate);
+        course = new Course("Fisics", "Fisics dos materiais", sDate, eDate);
+        user = userBuilder.with(username, "Password1", "dummy", "dummy", "a@gmail.com")
+                .withRoles(BaseRoles.MANAGER).build();
+        final var studentBuilder = new StudentBuilder();
+        studentBuilder.withSystemUser(user).withMecanographicNumber(mecanographicNumber).withFullName(fullName).
+                withShortName(shortName).withDateOfBirth(dateOfBirth).withTaxPayerNumber(taxPayerNumber);
+        student = studentBuilder.build();
     }
 
-    @Test
+
+
+   /* @Test
     public void testCreateEnrollment() {
         Enrollment enrollment = new Enrollment(courseName, username);
 
@@ -94,6 +130,6 @@ public class EnrollmentTest {
         Enrollment enrollment = new Enrollment(courseName, username);
         Enrollment enrollment2 = new Enrollment(courseName, Username.valueOf("testUser2"));
         assertFalse(enrollment.sameAs(enrollment2));
-    }
-    */
+    }*/
+
 }

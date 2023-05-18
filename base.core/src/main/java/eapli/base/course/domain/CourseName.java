@@ -1,6 +1,7 @@
 package eapli.base.course.domain;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.infrastructure.authz.domain.model.Username;
 
 import javax.persistence.Embeddable;
 import java.util.Objects;
@@ -12,6 +13,10 @@ public class CourseName implements ValueObject {
 
     public CourseName(){
         name=null;
+    }
+
+    public static CourseName valueOf(final String courseName) {
+        return new CourseName(courseName);
     }
 
     @Override

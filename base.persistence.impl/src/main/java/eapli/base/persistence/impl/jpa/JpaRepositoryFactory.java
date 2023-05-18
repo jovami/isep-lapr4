@@ -26,6 +26,7 @@ import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.course.repositories.StaffRepository;
+import eapli.base.clientusermanagement.repositories.*;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
@@ -80,6 +81,17 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 	public SignupRequestRepository signupRequests() {
 		return new JpaSignupRequestRepository(Application.settings().getPersistenceUnitName());
 	}
+
+	@Override
+	public EnrollmentRequestRepository enrollmentRequests(TransactionalContext autoTx) {
+		return new JpaEnrollmentRequestsRepository(autoTx);
+	}
+
+	@Override
+	public EnrollmentRepository enrollments(TransactionalContext autoTx) {
+		return new JpaEnrollmentRepository(autoTx);
+	}
+
 
 	@Override
 	public BoardRepository boards(TransactionalContext autoTx) {

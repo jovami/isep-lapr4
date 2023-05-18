@@ -19,7 +19,7 @@ public class EnrollmentRequestUI extends AbstractUI {
     protected boolean doShow() {
         boolean keepGoing = false;
 
-        var widget = new SelectWidget<>("Choose a course to enroll:", this.ctrl.getCourses());
+        var widget = new SelectWidget<>("Choose a course to enroll:", this.ctrl.getEnrollableCourses());
         widget.show();
 
         if (widget.selectedOption() <= 0)
@@ -31,6 +31,9 @@ public class EnrollmentRequestUI extends AbstractUI {
             try {
                 if (this.ctrl.createEnrollmentRequest(chosen)) {
                     System.out.println("Enrollment request created successfully");
+                }else {
+                    System.out.println("Error creating enrollment request");
+                    return false;
                 }
 
                 keepGoing = Console.readBoolean("Do you wish to open enroll in another course? (y/n)");

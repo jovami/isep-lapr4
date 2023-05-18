@@ -6,6 +6,7 @@ import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "ENROLLMENT",
@@ -16,11 +17,13 @@ public class Enrollment implements AggregateRoot<Integer> {
     @Column(name="IDENROLLMENTREQUEST")
     private int code;
 
-    @Column(name="COURSE",nullable = false)
+    //@Column(name="COURSE",nullable = false)
+    @JoinColumn(name = "COURSE")
     @ManyToOne
     private Course course;
 
-    @Column(name="STUDENT",nullable = false)
+    //@Column(name="STUDENT",nullable = false)
+    @JoinColumn(name = "STUDENT")
     @ManyToOne
     private Student student;
 
@@ -30,7 +33,7 @@ public class Enrollment implements AggregateRoot<Integer> {
 
     public Enrollment(Course course, Student student){
         Preconditions.nonNull(course, "Course name cannot be null");
-        Preconditions.nonNull(student, "Username cannot be null");
+        Preconditions.nonNull(student, "Student cannot be null");
 
         this.course = course;
         this.student = student;
@@ -68,10 +71,9 @@ public class Enrollment implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "Enrollment{" +
-                "code=" + code +
-                ", course=" + course +
-                ", student=" + student +
-                '}';
+        return "Enrollment " +
+                "code: " + code +
+                ", from Course: " + course.getName() +
+                ", with Student: " + student.identity();
     }
 }

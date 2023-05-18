@@ -26,11 +26,13 @@ package eapli.base.app.manager.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
+import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
 import eapli.base.app.manager.console.presentation.authz.ListUsersAction;
+import eapli.base.app.manager.console.presentation.clientuser.AcceptRefuseEnrollmentRequestAction;
 import eapli.base.app.manager.console.presentation.clientuser.AcceptRefuseSignupRequestAction;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
@@ -56,10 +58,12 @@ public class MainMenu extends AbstractUI {
     private static final int DEACTIVATE_USER_OPTION = 3;
     private static final int ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION = 4;
     private static final int LIST_TEACHERS_STUDENTS_MANAGERS = 5;
+    private static final int ACCEPT_REFUSE_COURSE_APPLICATION_OPTION = 6;
 
 
     // Boards
     private static final int CREATE_BOARD_OPTION = 1;
+    private static final int LIST_BOARD_OPTION = 2;
 
     //COURSE
     private static final int ADD_COURSE_OPTION = 1;
@@ -162,6 +166,8 @@ public class MainMenu extends AbstractUI {
         menu.addItem(ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION, "Accept/Refuse Signup Request",
                 new AcceptRefuseSignupRequestAction());
         menu.addItem(LIST_TEACHERS_STUDENTS_MANAGERS, "List Teachers,Students and Managers", new ListTeachersStudentsManagersUI()::show);
+        menu.addItem(ACCEPT_REFUSE_COURSE_APPLICATION_OPTION, "Accept/Refuse Course Application",
+                new AcceptRefuseEnrollmentRequestAction());
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
@@ -171,6 +177,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

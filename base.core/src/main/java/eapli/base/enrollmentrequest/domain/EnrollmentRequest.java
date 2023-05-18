@@ -18,12 +18,14 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     @Column(name="IDENROLLMENTREQUEST")
     private int code;
 
-    @Column(name="COURSE",nullable = false)
+    //@Column(name="COURSE",nullable = false)
+    @JoinColumn(name="COURSE")
     @ManyToOne
     private Course course;
 
     // TODO: username vs mecanographicNumber
-    @Column(name="STUDENT",nullable = false)
+    //@Column(name="STUDENT",nullable = false)
+    @JoinColumn(name="STUDENT")
     @ManyToOne
     private Student student;
 
@@ -40,7 +42,7 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
 
     public EnrollmentRequest(Course course, Student student){
         Preconditions.nonNull(course, "Course name cannot be null");
-        Preconditions.nonNull(student, "Username cannot be null");
+        Preconditions.nonNull(student, "Student cannot be null");
         this.state = EnrollmentRequestState.PENDING;
         this.deniedReason = new DeniedReason(); // starts with null description value
 
@@ -83,7 +85,9 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     public EnrollmentRequestState enrollmentRequestState() {
         return state;
     }
-
+    public boolean isPending() {
+        return state == EnrollmentRequestState.PENDING;
+    }
     public Course course() {
         return course;
     }
@@ -116,12 +120,12 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "EnrollmentRequest{" +
-                "code=" + code +
-                ", course=" + course +
-                ", student=" + student +
-                ", state=" + state +
-                ", deniedReason=" + deniedReason +
-                '}';
+        return "EnrollmentRequest: " +
+                "\ncode: " + code +
+                "\ncourse: " + course.toString() +
+                "\nstudent: " + student.toString() +
+                "\nstate: " + state.toString();
     }
+
+
 }

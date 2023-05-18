@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import eapli.base.course.domain.CourseName;
 import org.eclipse.collections.impl.factory.HashingStrategySets;
 
 import eapli.base.clientusermanagement.domain.users.Student;
@@ -41,7 +42,7 @@ public final class ListCoursesService {
 
     @Deprecated
     public Iterable<Course> openableToEnrollments() {
-        return this.courseRepo.ofState(CourseState.OPEN);
+        return this.courseRepo.ofState(CourseState.ENROLL);
     }
 
     @Deprecated

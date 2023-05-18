@@ -15,38 +15,21 @@ public class JpaBoardRepository extends BaseJpaRepositoryBase<Board,Long,Integer
         super(persistenceUnitName, "BoardTitle");
     }
 
-    @PersistenceContext
-    EntityManager manager;
-    /*protected EntityManager entityManager() {
-        if (this.manager == null || !this.manager.isOpen()) {
-            this.manager = this.entityManagerFactory().createEntityManager();
-        }
 
-        return this.manager;
-    }*/
-
-    public boolean hasCellPostIt(int id){
-        return false;
-        /*Query queryHasPostIt= entityManager().createQuery(
-                "select count(c) from Cell c where c.postIt = :cellId",Board.class
+    public boolean hasCellPostIt(int cellId){
+        Optional<Board> findIfCellHasPostIt = matchOne(
+                "e.cellId = :cellId",cellId
         );
-        queryHasPostIt.setParameter("cellId",id);
-        Object result = queryHasPostIt.getSingleResult();
+        return findIfCellHasPostIt.isPresent();
 
-        manager.close();
-        return result == null;*/
     }
 
     public boolean isBoardTitleUnique(String otherBoardTitle){
-        return false;
-        /*Query queryHasPostIt= manager.createQuery(
-                "select count(b.boardTitle) from Board b where b.boardTitle = :boardTitle",Board.class
+        Optional<Board> findIfBoardTitleIsUnique = matchOne(
+                "e.title = :otherBoardTitle",otherBoardTitle
         );
-        queryHasPostIt.setParameter("boardTitle",otherBoardTitle);
-        Object result = queryHasPostIt.getSingleResult();
+        return findIfBoardTitleIsUnique.isEmpty();
 
-        manager.close();
-        return result == null;*/
     }
 
     @Override

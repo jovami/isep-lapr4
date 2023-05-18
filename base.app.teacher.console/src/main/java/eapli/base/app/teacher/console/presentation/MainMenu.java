@@ -26,6 +26,7 @@ package eapli.base.app.teacher.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
+import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -57,6 +58,7 @@ public class MainMenu extends AbstractUI {
     // BOARD
 
     private static final int CREATE_BOARD_OPTION = 1;
+    private static final int LIST_BOARD_OPTION = 2;
 
     // SETTINGS
 
@@ -152,6 +154,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
+        menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

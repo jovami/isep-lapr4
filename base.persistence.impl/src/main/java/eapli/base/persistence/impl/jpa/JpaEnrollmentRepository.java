@@ -4,8 +4,13 @@ import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.course.domain.Course;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
+import eapli.framework.domain.repositories.TransactionalContext;
 
 public class JpaEnrollmentRepository extends BaseJpaRepositoryBase<Enrollment,Long,Integer> implements EnrollmentRepository {
+
+    public JpaEnrollmentRepository(final TransactionalContext autoTx) {
+        super(autoTx.toString(), "code");
+    }
     public JpaEnrollmentRepository(String persistenceUnitName) {
         super(persistenceUnitName, "code");
     }

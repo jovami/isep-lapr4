@@ -12,7 +12,7 @@ import java.util.Optional;
  * StudentRepository
  */
 public interface StudentRepository extends DomainRepository<MecanographicNumber, Student> {
-    Optional<Student> findBySystemUser(Username username);
+    Optional<Student> findByUsername(Username username);
 
     Optional<Student> findBySystemUser(SystemUser systemUser);
 }

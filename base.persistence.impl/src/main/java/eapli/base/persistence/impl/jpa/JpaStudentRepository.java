@@ -18,7 +18,7 @@ public class JpaStudentRepository extends BaseJpaRepositoryBase<Student, Long, M
     }
 
     @Override
-    public Optional<Student> findBySystemUser(Username username) {
+    public Optional<Student> findByUsername(Username username) {
         return matchOne("e.systemUser.username=:username", "username", username);
     }
 

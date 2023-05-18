@@ -24,7 +24,7 @@ public class InMemoryStudentRepository extends InMemoryDomainRepository<Student,
 
 
     @Override
-    public Optional<Student> findBySystemUser(Username username) {
+    public Optional<Student> findByUsername(Username username) {
         return matchOne(student -> student.user().username().equals(username));
     }
 
