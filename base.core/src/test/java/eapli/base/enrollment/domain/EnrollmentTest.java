@@ -1,11 +1,9 @@
 package eapli.base.enrollment.domain;
 
-
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
 import eapli.base.course.domain.Course;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,122 +12,78 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnrollmentTest {
-
-
-    private Course course;
-    private Student student;
-    private String startDate="20/05/2020";
-    private String endDate="20/09/2020";
-    private SystemUser user;
-    private final String username = "Tony";
-    private final String mecanographicNumber = "isep567";
-    private final String fullName = "Tony Stark";
-    private final String shortName = "Tony";
-    private final String dateOfBirth = "2001-01-01";
-    private final String taxPayerNumber = "123756789";
+    private Course course1;
+    private Course course2;
+    private Student student1;
+    private Student student2;
 
     @BeforeEach
     public void setUp() throws ParseException {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Date sDate = df.parse(startDate);
-        Date eDate = df.parse(endDate);
-        course = new Course("Fisics", "Fisics dos materiais", sDate, eDate);
-        user = userBuilder.with(username, "Password1", "dummy", "dummy", "a@gmail.com")
+        Date sDate = df.parse("20/05/2020");
+        Date eDate = df.parse("20/09/2020");
+        course1 = new Course("PYTHON-1", "Python for beginners :)", sDate, eDate);
+        course2 = new Course("JAVA-3", "Java advanced!", sDate, eDate);
+
+        var user1 = userBuilder.with("alexandre", "Password1", "Alexandre", "Moreira", "alexmoreira@gmail.com")
                 .withRoles(BaseRoles.MANAGER).build();
+        var user2 = userBuilder.with("miguel", "Password1", "Miguel", "Novais", "mnovais672@gmail.com")
+                .withRoles(BaseRoles.MANAGER).build();
+
         final var studentBuilder = new StudentBuilder();
-        studentBuilder.withSystemUser(user).withMecanographicNumber(mecanographicNumber).withFullName(fullName).
-                withShortName(shortName).withDateOfBirth(dateOfBirth).withTaxPayerNumber(taxPayerNumber);
-        student = studentBuilder.build();
-    }
-
-
-
-   /* @Test
-    public void testCreateEnrollment() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-
-        assertEquals(courseName.getName(), enrollment.obtainCourseName());
-        assertEquals(username.toString(), enrollment.obtainUsername());
+        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira").
+                withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        student1 = studentBuilder.build();
+        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais").
+                withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        student2 = studentBuilder.build();
     }
 
     @Test
-    void testShouldNotCreateEnrollmentWithNullCourseName() {
-        assertThrows(IllegalArgumentException.class, () -> new Enrollment(null, username));
+    public void createEnrollmentShouldWork() {
+        Enrollment enrollment = new Enrollment(course1, student1);
+
+        assertEquals(course1, enrollment.course());
+        assertEquals(student1, enrollment.student());
+    }
+
+    @Test
+    void shouldNotCreateEnrollmentWithNullCourseName() {
+        assertThrows(IllegalArgumentException.class, () -> new Enrollment(null, student1));
     }
 
     @Test
     void shouldNotCreateEnrollmentWithNullUsername() {
-        assertThrows(IllegalArgumentException.class, () -> new Enrollment(courseName, null));
+        assertThrows(IllegalArgumentException.class, () -> new Enrollment(course1, null));
     }
 
     @Test
-    public void testChangeCourseName() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-
-        CourseName newCourseName = new CourseName("Web Development");
-        enrollment.changeCourseName(newCourseName);
-
-        assertEquals(newCourseName.getName(), enrollment.obtainCourseName());
-    }
-
-    @Test
-    void shouldNotChangeCourseNameToNull() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        assertThrows(IllegalArgumentException.class, () -> enrollment.changeCourseName(null));
-    }
-
-    @Test
-    public void testChangeUsername() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-
-        var newUsername = Username.valueOf("testUser2");
-        enrollment.changeUsername(newUsername);
-
-        assertEquals(newUsername.toString(), enrollment.obtainUsername());
-    }
-
-    @Test
-    void shouldNotChangeUsernameToNull() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        assertThrows(IllegalArgumentException.class, () -> enrollment.changeUsername(null));
-    }
-
-    @Test
-    void testSameAsWithDifferentEnrollment() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        Enrollment enrollment2 = new Enrollment(new CourseName("JAVA-3"), username);
-        assertFalse(enrollment.sameAs(enrollment2));
-    }
-
-    @Test
-    void testSameAsWithNull() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        assertFalse(enrollment.sameAs(null));
-    }
-
-    @Test
-    void testSameAsWithSameEnrollment() {
-        Enrollment enrollment = new Enrollment(courseName, username);
+    void sameAsWithSameEnrollmentShouldReturnTrue() {
+        Enrollment enrollment = new Enrollment(course1, student1);
         assertTrue(enrollment.sameAs(enrollment));
     }
 
     @Test
-    void testSameAsWithDifferentCourseName() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        Enrollment enrollment2 = new Enrollment(new CourseName("JAVA-3"), username);
+    void sameAsWithDifferentCourseShouldReturnFalse() {
+        Enrollment enrollment = new Enrollment(course1, student1);
+        Enrollment enrollment2 = new Enrollment(course2, student1);
         assertFalse(enrollment.sameAs(enrollment2));
     }
 
     @Test
-    void testSameAsWithDifferentUsername() {
-        Enrollment enrollment = new Enrollment(courseName, username);
-        Enrollment enrollment2 = new Enrollment(courseName, Username.valueOf("testUser2"));
+    void sameAsWithDifferentStudentShouldReturnFalse() {
+        Enrollment enrollment = new Enrollment(course1, student1);
+        Enrollment enrollment2 = new Enrollment(course1, student2);
         assertFalse(enrollment.sameAs(enrollment2));
-    }*/
+    }
 
+    @Test
+    void sameAsWithNullShouldReturnFalse() {
+        Enrollment enrollment = new Enrollment(course1, student1);
+        assertFalse(enrollment.sameAs(null));
+    }
 }
