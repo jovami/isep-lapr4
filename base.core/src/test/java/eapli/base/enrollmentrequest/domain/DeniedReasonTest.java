@@ -1,11 +1,10 @@
 package eapli.base.enrollmentrequest.domain;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class DeniedReasonTest {
-
+public class DeniedReasonTest {
     @Test
     public void testConstructorAndGetDenyingReason() {
         DeniedReason deniedReason = new DeniedReason("You do not meet the eligibility criteria");

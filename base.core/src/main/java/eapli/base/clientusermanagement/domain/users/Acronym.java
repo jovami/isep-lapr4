@@ -1,6 +1,5 @@
 package eapli.base.clientusermanagement.domain.users;
 
-import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;

@@ -26,8 +26,10 @@ public class DateOfBirth implements ValueObject, Comparable<DateOfBirth> {
 
     public static DateOfBirth valueOf(final String dateOfBirthString) {
         Preconditions.nonEmpty(dateOfBirthString, "Date of birth should not be empty");
+        Preconditions.nonNull(dateOfBirthString, "Date of birth should not be null");
 
         LocalDate dateOfBirth = LocalDate.parse(dateOfBirthString, DateTimeFormatter.ISO_LOCAL_DATE);
+        Preconditions.ensure(isDateOfBirthValid(dateOfBirth), "Invalid date of birth");
 
         return new DateOfBirth(dateOfBirth);
     }

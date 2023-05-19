@@ -7,22 +7,22 @@ import eapli.base.course.domain.Course;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.Before;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class EnrollmentRequestTest {
+public class EnrollmentRequestTest {
     private Course course1;
     private Course course2;
     private Student student1;
     private Student student2;
 
-    @BeforeEach
+    @Before
     public void setUp() throws ParseException {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -46,21 +46,17 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void courseEmptyThrowsIllegalArgumentException(){
-        assertThrows(IllegalArgumentException.class, () -> {
-            new EnrollmentRequest(null, student1);
-        });
+    public void courseEmptyThrowsIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, () -> new EnrollmentRequest(null, student1));
     }
 
     @Test
-     void studentEmptyThrowsIllegalArgumentException(){
-        assertThrows(IllegalArgumentException.class, () -> {
-            new EnrollmentRequest(course1, null);
-        });
+    public void studentEmptyThrowsIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, () -> new EnrollmentRequest(course1, null));
     }
 
     @Test
-     void createEnrollmentRequestShouldWork(){
+    public void createEnrollmentRequestShouldWork(){
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             assertEquals(student1, request.student());
@@ -84,7 +80,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void sameAsReturnsTrueWhenComparedToItself() {
+    public void sameAsReturnsTrueWhenComparedToItself() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             assertTrue(request.sameAs(request));
@@ -104,7 +100,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void sameAsReturnsTrueWhenComparedToIdenticalRequest() {
+    public void sameAsReturnsTrueWhenComparedToIdenticalRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student2);
             EnrollmentRequest identicalRequest = new EnrollmentRequest(course1, student2);
@@ -118,7 +114,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void sameAsReturnsFalseWhenComparedToRequestWithDifferentCourse() {
+    public void sameAsReturnsFalseWhenComparedToRequestWithDifferentCourse() {
         EnrollmentRequest differentCourse = new EnrollmentRequest(course1, student1);
         EnrollmentRequest request = new EnrollmentRequest(course2, student1);
         assertFalse(request.sameAs(differentCourse));
@@ -126,21 +122,21 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void sameAsReturnsFalseWhenComparedToRequestWithDifferentStudent() {
+    public void sameAsReturnsFalseWhenComparedToRequestWithDifferentStudent() {
         EnrollmentRequest request = new EnrollmentRequest(course1, student1);
         EnrollmentRequest differentStudent = new EnrollmentRequest(course1, student2);
         assertFalse(request.sameAs(differentStudent));
     }
 
     @Test
-     void sameAsReturnsFalseWhenComparedToNonEnrollmentRequestObject() {
+    public void sameAsReturnsFalseWhenComparedToNonEnrollmentRequestObject() {
         EnrollmentRequest request = new EnrollmentRequest(course1, student1);
         Object notAnEnrollmentRequest = new Object();
         assertFalse(request.sameAs(notAnEnrollmentRequest));
     }
 
     @Test
-     void newEnrollmentRequestHasPendingState() {
+    public void newEnrollmentRequestHasPendingState() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             assertEquals(EnrollmentRequestState.PENDING, request.enrollmentRequestState());
@@ -160,7 +156,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void approveEnrollmentRequestChangesStateToApproved() {
+    public void approveEnrollmentRequestChangesStateToApproved() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.approveEnrollmentRequest();
@@ -184,7 +180,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void denyEnrollmentRequestChangesStateToDenied() {
+    public void denyEnrollmentRequestChangesStateToDenied() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.denyEnrollmentRequest("No available seats in the course");
@@ -224,7 +220,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void cannotApproveDeniedEnrollmentRequest() {
+    public void cannotApproveDeniedEnrollmentRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.denyEnrollmentRequest("No available seats in the course");
@@ -260,7 +256,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void cannotApproveApprovedEnrollmentRequest() {
+    public void cannotApproveApprovedEnrollmentRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.approveEnrollmentRequest();
@@ -296,7 +292,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void cannotDenyApprovedEnrollmentRequest() {
+    public void cannotDenyApprovedEnrollmentRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.approveEnrollmentRequest();
@@ -306,7 +302,7 @@ class EnrollmentRequestTest {
                         return null;
                     });
         }
-{
+        {
             EnrollmentRequest request = new EnrollmentRequest(course2, student1);
             request.approveEnrollmentRequest();
             request.denyEnrollmentRequest("No available seats in the course")
@@ -336,7 +332,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void cannotDenyDeniedEnrollmentRequest() {
+    public void cannotDenyDeniedEnrollmentRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.denyEnrollmentRequest("No available seats in the course");
@@ -376,7 +372,7 @@ class EnrollmentRequestTest {
     }
 
     @Test
-     void cannotGetDeniedReasonFromNotDeniedEnrollmentRequest(){
+    public void cannotGetDeniedReasonFromNotDeniedEnrollmentRequest(){
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.deniedReason().left().map(enrollmentRequest -> {
@@ -407,4 +403,3 @@ class EnrollmentRequestTest {
         }
     }
 }
-

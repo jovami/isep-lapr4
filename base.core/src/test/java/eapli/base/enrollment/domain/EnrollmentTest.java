@@ -5,14 +5,15 @@ import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
 import eapli.base.course.domain.Course;
 import eapli.framework.infrastructure.authz.domain.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 public class EnrollmentTest {
     private Course course1;
@@ -20,7 +21,7 @@ public class EnrollmentTest {
     private Student student1;
     private Student student2;
 
-    @BeforeEach
+    @Before
     public void setUp() throws ParseException {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -30,9 +31,9 @@ public class EnrollmentTest {
         course2 = new Course("JAVA-3", "Java advanced!", sDate, eDate);
 
         var user1 = userBuilder.with("alexandre", "Password1", "Alexandre", "Moreira", "alexmoreira@gmail.com")
-                .withRoles(BaseRoles.MANAGER).build();
+                .withRoles(BaseRoles.STUDENT).build();
         var user2 = userBuilder.with("miguel", "Password1", "Miguel", "Novais", "mnovais672@gmail.com")
-                .withRoles(BaseRoles.MANAGER).build();
+                .withRoles(BaseRoles.STUDENT).build();
 
         final var studentBuilder = new StudentBuilder();
         studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira").
@@ -52,37 +53,37 @@ public class EnrollmentTest {
     }
 
     @Test
-    void shouldNotCreateEnrollmentWithNullCourseName() {
+    public void shouldNotCreateEnrollmentWithNullCourseName() {
         assertThrows(IllegalArgumentException.class, () -> new Enrollment(null, student1));
     }
 
     @Test
-    void shouldNotCreateEnrollmentWithNullUsername() {
+    public void shouldNotCreateEnrollmentWithNullUsername() {
         assertThrows(IllegalArgumentException.class, () -> new Enrollment(course1, null));
     }
 
     @Test
-    void sameAsWithSameEnrollmentShouldReturnTrue() {
+    public void sameAsWithSameEnrollmentShouldReturnTrue() {
         Enrollment enrollment = new Enrollment(course1, student1);
         assertTrue(enrollment.sameAs(enrollment));
     }
 
     @Test
-    void sameAsWithDifferentCourseShouldReturnFalse() {
+    public void sameAsWithDifferentCourseShouldReturnFalse() {
         Enrollment enrollment = new Enrollment(course1, student1);
         Enrollment enrollment2 = new Enrollment(course2, student1);
         assertFalse(enrollment.sameAs(enrollment2));
     }
 
     @Test
-    void sameAsWithDifferentStudentShouldReturnFalse() {
+    public void sameAsWithDifferentStudentShouldReturnFalse() {
         Enrollment enrollment = new Enrollment(course1, student1);
         Enrollment enrollment2 = new Enrollment(course1, student2);
         assertFalse(enrollment.sameAs(enrollment2));
     }
 
     @Test
-    void sameAsWithNullShouldReturnFalse() {
+    public void sameAsWithNullShouldReturnFalse() {
         Enrollment enrollment = new Enrollment(course1, student1);
         assertFalse(enrollment.sameAs(null));
     }

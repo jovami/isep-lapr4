@@ -56,6 +56,22 @@ public class Manager implements AggregateRoot<Integer>, Serializable {
         return systemUser;
     }
 
+    public FullName fullName() {
+        return fullName;
+    }
+
+    public ShortName shortName() {
+        return shortName;
+    }
+
+    public DateOfBirth dateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public TaxPayerNumber taxPayerNumber() {
+        return taxPayerNumber;
+    }
+
     @Override
     public boolean equals(final Object o) {
         return DomainEntities.areEqual(this, o);
