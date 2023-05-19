@@ -24,9 +24,6 @@
 package eapli.base.infrastructure.bootstrapers;
 
 import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
-import eapli.base.infrastructure.bootstrapers.demo.ManagerBootstrapper;
-import eapli.base.infrastructure.bootstrapers.demo.StudentBootstrapper;
-import eapli.base.infrastructure.bootstrapers.demo.TeacherBootstrapper;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;

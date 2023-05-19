@@ -1,10 +1,17 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
+import eapli.base.course.domain.Course;
+import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.framework.actions.Action;
 import eapli.base.exam.repositories.RegularExamRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,41 +19,49 @@ import java.util.Date;
 public class RegularExamBootstrapper implements Action{
 
     @Override
-    public boolean execute()
-    {
-        saveExam("Eapli","Engenharia de aplicacoes","exame de eapli","10/07/2022","10/07/2020");
-        saveExam("RCOMP","Redes de computadores","exame de redes","11/07/2022","11/07/2020");
-        saveExam("SCOMP","Sistemas de computadores","exame de scomp","12/07/2022","12/07/2020");
-        saveExam("LAPR4","Laboratorio de projecto","exame de lapr","13/07/2022","13/07/2020");
-        saveExam("LPROG","Linguagens de programacao","exame de lprog","14/07/2022","14/07/2020");
+    public boolean execute() {
+        CourseRepository courseRepository = PersistenceContext.repositories().courses();
+        var course = courseRepository.findAll();
 
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String grammar = Files.readString(Path.of("docs/us_2001/grammar_test_example.txt"));
+            var specification = new RegularExamSpecification(grammar);
 
-        return true;
+            for (Course c : course) {
+                String name = c.courseName().getName();
+                switch (name) {
+                    case "Fisica":
+                        var openDate1 = df.parse("01/01/2025");
+                        var closeDate1 = df.parse("02/01/2025");
+                        var date1 = new RegularExamDate(openDate1, closeDate1);
+                        saveExam(specification, date1, c);
+                        break;
+                    case "Quimica":
+                        var openDate2 = df.parse("15/01/2025");
+                        var closeDate2 = df.parse("17/01/2025");
+                        var date2 = new RegularExamDate(openDate2, closeDate2);
+                        saveExam(specification, date2, c);
+                        break;
+                    case "Matematica":
+                        var openDate3 = df.parse("20/01/2025");
+                        var closeDate3 = df.parse("22/01/2025");
+                        var date3 = new RegularExamDate(openDate3, closeDate3);
+                        saveExam(specification, date3, c);
+                        break;
+                }
+            }
+
+            return true;
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void saveExam(String title, String header, String headerDescription, String openDate, String closeDate)
-    {
-        /*RegularExamRepository repo = PersistenceContext.repositories().exams();
-        RegularExam e = new RegularExam();
+    private void saveExam(RegularExamSpecification specification, RegularExamDate date, Course course) {
+        RegularExamRepository repo = PersistenceContext.repositories().regularExams();
+        RegularExam regularExam = new RegularExam(specification, date, course);
 
-        e.setTitle(title);
-        e.setHeader(header);
-        e.setHeaderDescription(headerDescription);
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date oDate = null;
-        Date cDate = null;
-        try {
-            oDate = df.parse(openDate);
-            cDate = df.parse(closeDate);
-        } catch (ParseException pe) {
-            throw new RuntimeException(pe);
-        }
-
-        RegularExam regularExam = new RegularExam();
-        e.setExamDate(oDate,cDate);
-        repo.save(regularExam);*/
-
+        repo.save(regularExam);
     }
 }
