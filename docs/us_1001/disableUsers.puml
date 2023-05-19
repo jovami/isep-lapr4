@@ -1,0 +1,56 @@
+@startuml
+'http://plantuml.com/skinparam.html
+
+actor Manager as Actor
+participant DisableUserUI as UI <<presentation>>
+participant DisableUserController as controller <<application>>
+participant UserManagementService as SRVC <<application>>
+participant "user:SystemUser" as USER <<domain>>
+participant PersistenceContext as persistence <<persistence>>
+participant RepositoryFactory as factory <<factory>>
+database UserRepository as REPO <<repository>>
+
+
+Actor -> UI:enable users
+activate UI
+    UI -> controller : create
+
+    UI -> controller : enabledUsers()
+    activate controller
+        controller -> SRVC : activatedUsers()
+        activate SRVC
+            SRVC -> REPO :findByActive(true)
+            activate REPO
+                REPO -> SRVC : enabledUsers
+            deactivate REPO
+            SRVC -> controller : enabledUsers
+        deactivate SRVC
+        controller -> UI : enabledUsers
+            note right: parse systemUsers on to SystemUserDto
+    deactivate controller
+        UI --> Actor : shows enabledUsers
+deactivate UI
+
+    Actor -> UI : chooses user to disable
+    UI -> controller : enableUser()
+    activate controller
+        controller -> REPO : ofIdentity(username)
+        activate REPO
+            controller <-- REPO : user
+            deactivate REPO
+            controller -> SRVC :deactivate(user)
+            activate SRVC
+            SRVC -> USER : deactivate()
+            SRVC -> REPO :save(user)
+            activate REPO
+            SRVC <-- REPO :user
+        deactivate REPO
+            controller <-- SRVC : user
+            deactivate SRVC
+    UI <-- controller : operation success
+    deactivate controller
+    Actor <-- UI : informs operation success
+deactivate UI
+
+deactivate Actor
+@enduml
