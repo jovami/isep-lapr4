@@ -15,11 +15,14 @@ public class Acronym implements ValueObject, Comparable<Acronym> {
 
     public Acronym(String acronym) {
         Preconditions.nonEmpty(acronym, "Acronym should not be empty or null");
-
-        //TODO: this is just a sample regex, discuss this later
-        Invariants.ensure(acronym.matches("[A-Z]{2,10}"), "Invalid acronym format");
+        Invariants.ensure(acronym.matches("[A-Z]+"), "Invalid acronym format");
 
         this.acronym = acronym;
+    }
+
+    // for ORM
+    protected Acronym() {
+        acronym = null;
     }
 
     @Override
@@ -33,11 +36,6 @@ public class Acronym implements ValueObject, Comparable<Acronym> {
     @Override
     public int hashCode() {
         return Objects.hash(acronym);
-    }
-
-    // for ORM
-    protected Acronym() {
-        acronym = null;
     }
 
     public static Acronym valueOf(final String acronym) {
