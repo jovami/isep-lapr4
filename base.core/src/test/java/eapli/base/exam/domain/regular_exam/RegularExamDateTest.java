@@ -1,25 +1,23 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.course.domain.Course;
+
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RegularExamDateTest {
+public class RegularExamDateTest {
 
     private RegularExamDate regularExamDate;
 
 
-    @BeforeEach
-    void BeforeEach(){
+    @Before
+    public void BeforeEach(){
         String openDateString = "2023-10-10 16:00";
         String closeDateString = "2023-10-10 18:00";
 
@@ -35,7 +33,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void valueOf() {
+    public void valueOf() {
         String startDateString = "2023-10-10 16:00";
         String endDateString = "2023-10-10 18:00";
 
@@ -54,7 +52,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void setIntervalDate_InvalidDates_ReturnsFalse() {
+    public void setIntervalDate_InvalidDates_ReturnsFalse() {
         String startDateString = "2023-10-10 16:00";
         String endDateString = "2023-10-10 14:00";
 
@@ -71,7 +69,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void testEquals_SameDates_ReturnsTrue() {
+    public void testEquals_SameDates_ReturnsTrue() {
         String startDateString = "2023-10-10 16:00";
         String endDateString = "2023-10-10 18:00";
 
@@ -89,7 +87,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void openDate_ReturnsCorrectValue() {
+    public void openDate_ReturnsCorrectValue() {
         String expectedDateString = "2023-10-10 16:00";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -103,7 +101,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void closeDate_ReturnsCorrectValue() {
+    public void closeDate_ReturnsCorrectValue() {
         String expectedDateString = "2023-10-10 18:00";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -117,7 +115,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void testEquals_DifferentDates_ReturnsFalse() {
+    public void testEquals_DifferentDates_ReturnsFalse() {
         String startDateString1 = "2023-10-10 16:00";
         String endDateString1 = "2023-10-10 18:00";
         String startDateString2 = "2023-10-10 19:00";
@@ -139,7 +137,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void testHashCode_SameDates_ReturnsSameHashCode() {
+    public void testHashCode_SameDates_ReturnsSameHashCode() {
         String startDateString = "2023-10-10 16:00";
         String endDateString = "2023-10-10 18:00";
 
@@ -157,7 +155,7 @@ class RegularExamDateTest {
     }
 
     @Test
-    void testHashCode_DifferentDates_ReturnsDifferentHashCode() {
+    public void testHashCode_DifferentDates_ReturnsDifferentHashCode() {
         String startDateString1 = "2023-10-10 16:00";
         String endDateString1 = "2023-10-10 18:00";
         String startDateString2 = "2023-10-10 19:00";
@@ -179,13 +177,13 @@ class RegularExamDateTest {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         String expectedString = "RegularExamDate{openDate=Tue Oct 10 16:00:00 WEST 2023, closeDate=Tue Oct 10 18:00:00 WEST 2023}";
         Assertions.assertEquals(expectedString, regularExamDate.toString());
     }
 
     @Test
-    void defaultConstructor_OpenDateAndCloseDateAreNull() throws NoSuchFieldException, IllegalAccessException {
+    public void defaultConstructor_OpenDateAndCloseDateAreNull() throws NoSuchFieldException, IllegalAccessException {
         // Create an instance of RegularExamDate using the protected constructor
         RegularExamDate regularExamDate = createRegularExamDateWithDefaultConstructor();
 
@@ -203,7 +201,7 @@ class RegularExamDateTest {
 
     }
 
-    private RegularExamDate createRegularExamDateWithDefaultConstructor() {
+    public RegularExamDate createRegularExamDateWithDefaultConstructor() {
         return new RegularExamDate() {
             // A subclass with an empty body is created to access the protected constructor
         };

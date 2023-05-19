@@ -3,7 +3,7 @@ package eapli.base.exam.domain.regular_exam;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegularExamSpecificationTest {
+public class RegularExamSpecificationTest {
 
     @Test
-    void valueOf() {
+    public void valueOf() {
         // Prepare
         String specification = "This is a test specification";
         RegularExamSpecification expected = new RegularExamSpecification(specification);
@@ -34,7 +34,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void testValueOf() throws IOException {
+    public void testValueOf() throws IOException {
         // Prepare
         String filePath = "path/to/specification.txt";
         String specification = "This is a test specification";
@@ -53,7 +53,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void specificationString() {
+    public void specificationString() {
         // Prepare
         String specification = "This is a test specification";
         RegularExamSpecification regularExamSpecification = new RegularExamSpecification(specification);
@@ -66,7 +66,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void testEquals() {
+    public void testEquals() {
         // Prepare
         RegularExamSpecification spec1 = new RegularExamSpecification("Specification 1");
         RegularExamSpecification spec2 = new RegularExamSpecification("Specification 1");
@@ -79,7 +79,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void equalsSameInstance() {
+    public void equalsSameInstance() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
 
@@ -88,7 +88,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void equalsNullObject() {
+    public void equalsNullObject() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
 
@@ -97,7 +97,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void equalsDifferentClass() {
+    public void equalsDifferentClass() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         String differentClass = "This is a different class";
@@ -107,7 +107,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         // Prepare
         RegularExamSpecification spec1 = new RegularExamSpecification("Specification 1");
         RegularExamSpecification spec2 = new RegularExamSpecification("Specification 1");
@@ -117,7 +117,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         // Prepare
         String specification = "This is a test specification";
         RegularExamSpecification regularExamSpecification = new RegularExamSpecification(specification);
@@ -131,7 +131,7 @@ class RegularExamSpecificationTest {
     }
 
     @Test
-    void protectedConstructor() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void protectedConstructor() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         // Obtain the constructor
         Constructor<RegularExamSpecification> constructor = RegularExamSpecification.class.getDeclaredConstructor();
 

@@ -3,8 +3,8 @@ package eapli.base.exam.domain.regular_exam;
 import eapli.base.course.domain.Course;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,13 +12,13 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegularExamTest {
+public class RegularExamTest {
 
     private RegularExamDate regularExamDate;
     private Course course;
 
-    @BeforeEach
-    void BeforeEach(){
+    @Before
+    public void BeforeEach(){
         String openDateString = "2023-10-10 16:00";
         String closeDateString = "2023-10-10 18:00";
 
@@ -46,7 +46,7 @@ class RegularExamTest {
         }
     }
     @Test
-    void testEquals() {
+    public void testEquals() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
@@ -60,7 +60,7 @@ class RegularExamTest {
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
@@ -71,7 +71,7 @@ class RegularExamTest {
     }
 
     @Test
-    void sameAs() {
+    public void sameAs() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
@@ -88,7 +88,7 @@ class RegularExamTest {
     }
 
     @Test
-    void compareTo() {
+    public void compareTo() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
@@ -99,7 +99,7 @@ class RegularExamTest {
     }
 
     @Test
-    void identity() {
+    public void identity() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
@@ -109,7 +109,7 @@ class RegularExamTest {
     }
 
     @Test
-    void hasIdentity() {
+    public void hasIdentity() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
@@ -120,7 +120,7 @@ class RegularExamTest {
     }
 
     @Test
-    void course() {
+    public void course() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
@@ -133,7 +133,7 @@ class RegularExamTest {
     }
 
     @Test
-    void regularExamDate() {
+    public void regularExamDate() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
@@ -146,7 +146,7 @@ class RegularExamTest {
     }
 
     @Test
-    void regularExamSpecification() {
+    public void regularExamSpecification() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
@@ -159,7 +159,7 @@ class RegularExamTest {
     }
 
     @Test
-    void testProtectedConstructor() {
+    public void testProtectedConstructor() {
         // Execute
         RegularExam exam = new RegularExam();
 
