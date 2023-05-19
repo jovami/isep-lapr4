@@ -10,6 +10,9 @@ import eapli.framework.validations.Preconditions;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -74,7 +77,10 @@ public class RegularExamDate implements ValueObject {
 
     @Override
     public String toString() {
-        return "Opening: " + openDate +
-                " | Closing: " + closeDate;
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        String open = dateFormat.format(openDate);
+        String close = dateFormat.format(closeDate);
+        return "Opening: " + open +
+                " | Closing: " + close;
     }
 }
