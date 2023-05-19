@@ -60,7 +60,7 @@ public class RegularExamSpecification implements ValueObject {
 
     @Override
     public String toString() {
-        return String.format("Specification:\n%s", this.specification);
+        return String.format(this.specification);
     }
 
 

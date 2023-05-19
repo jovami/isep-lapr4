@@ -121,7 +121,7 @@ public class RegularExamSpecificationTest {
         // Prepare
         String specification = "This is a test specification";
         RegularExamSpecification regularExamSpecification = new RegularExamSpecification(specification);
-        String expected = String.format("Specification:\n%s", specification);
+        String expected = String.format(specification);
 
         // Execute
         String result = regularExamSpecification.toString();
