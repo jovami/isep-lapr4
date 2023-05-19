@@ -5,10 +5,8 @@ import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
-import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name="REGULAREXAM")
@@ -20,7 +18,8 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Column(name = "IDREGULAREXAM")
     private int id;
 
-    @Column(name = "REGULAREXAMDESCRIPTION")
+    @Embedded
+    @Column(unique = true, nullable = false)
     private RegularExamSpecification regularExamSpecification;
     @Column(name = "REGULAREXAMDATE")
     private RegularExamDate regularExamDate;
@@ -29,28 +28,19 @@ public class RegularExam implements AggregateRoot<Integer> {
     @ManyToOne
     private Course course;
 
-    public RegularExam(String regularExamSpecification, Date openDate, Date closeDate, Course course)
-    {
-        Preconditions.nonNull(regularExamSpecification, "Regular Exam description cannot be null");
-        //Preconditions.nonNull(date, "Regular Exam date cannot be null");
-
-        this.regularExamSpecification = new RegularExamSpecification(regularExamSpecification);
-        this.regularExamDate = new RegularExamDate(openDate, closeDate);
-        this.course = course;
-    }
-
     protected RegularExam() {
         this.regularExamSpecification = null;
         this.regularExamDate = null;
+        this.course = null;
     }
 
+    public RegularExam(RegularExamSpecification regularExamSpecification, RegularExamDate regularExamDate, Course course)
+    {
 
-    protected RegularExamSpecification regularExamSpecification() {
-        return this.regularExamSpecification;
+        this.regularExamSpecification = regularExamSpecification;
+        this.regularExamDate = regularExamDate;
+        this.course = course;
     }
-    public RegularExamDate regularExamDate(){return this.regularExamDate;}
-    public Course course(){return this.course;}
-
 
     @Override
     public boolean equals(final Object o) {
@@ -85,6 +75,20 @@ public class RegularExam implements AggregateRoot<Integer> {
 
     @Override
     public boolean hasIdentity(Integer id) {return AggregateRoot.super.hasIdentity(id);}
+
+
+    public Course course() {
+        return this.course;
+    }
+
+    public RegularExamDate regularExamDate(){
+        return this.regularExamDate;
+    }
+
+    public RegularExamSpecification regularExamSpecification()
+    {
+        return this.regularExamSpecification;
+    }
 
 
 }

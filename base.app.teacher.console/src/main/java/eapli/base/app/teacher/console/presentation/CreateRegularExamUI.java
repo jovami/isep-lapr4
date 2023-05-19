@@ -1,11 +1,16 @@
 package eapli.base.app.teacher.console.presentation;
 
 import eapli.base.exam.aplication.CreateRegularExamController;
+import eapli.framework.domain.repositories.ConcurrencyException;
+import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ListWidget;
+import eapli.framework.presentation.console.SelectWidget;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 public class CreateRegularExamUI extends AbstractUI {
@@ -18,30 +23,42 @@ public class CreateRegularExamUI extends AbstractUI {
     @Override
     protected boolean doShow() {
 
-        String examTitle, examHeader, headerDescription;
+
         Date openDate,closeDate;
         boolean created=false;
+        var widget = new SelectWidget<>("Choose a course to create a exam:", ctrl.listCoursesTeacherTeaches());
+        widget.show();
 
-        do {
-            examTitle = Console.readNonEmptyLine("Exam title:", "Value can't be null");
-            examHeader = Console.readNonEmptyLine("Exam header:", "Value can't be null");
-            headerDescription = Console.readNonEmptyLine("Header description:", "Value can't be null");
+        if (widget.selectedOption() <= 0)
+            return false;
+        var chosen = widget.selectedElement();
 
-            openDate = Console.readDate("Open date(yyyy/MM/dd)","yyyy/MM/dd");
-            closeDate = Console.readDate("Close date(yyyy/MM/dd)","yyyy/MM/ddy");
+        var filePath = Console.readLine("Regular Exam Specification file path: ");
 
-            if(ctrl.createRegularExam(examTitle,examHeader,headerDescription,openDate,closeDate)){
-                created=true;
-            }else {
-                System.out.println("There was a error creating the specified course");
-            }
-
-        }while (!created);
-
-        if (ctrl.saveRegularExam()){
-            System.out.println("\n\n\tRegular Exam created and saved with success\n:"+ctrl.regularExamString());
-            new ListWidget<>("Teachers", this.ctrl.lstRegularExams()).show();
+        var file = new File(filePath);
+        if (file == null || !file.exists() || !file.canRead()) {
+            System.out.println("File does not exist or does not have read permitions");
+            return false;
         }
+
+        try {
+            openDate = Console.readDate("Open date(yyyy-MM-dd HH:mm)","yyyy-MM-dd HH:mm");
+            closeDate = Console.readDate("Close date(yyyy-MM-dd HH:mm)","yyyy-MM-dd HH:mm");
+
+            if (this.ctrl.createRegularExam(file,openDate,closeDate,chosen))
+                System.out.println("Regular exam created with success");
+            else
+                System.out.println("Error parsing the Specification file");
+        } catch (IOException e) {
+            System.out.println("Error reading file contents");
+        } catch (IntegrityViolationException e) {
+            System.out.println("Integrity violation");
+        } catch (ConcurrencyException e) {
+            System.out.println(
+                    "Unfortunatelly there was an unexpected error in the application.\n" +
+                            "Please try again and if the problem persists, contact your system admnistrator.");
+        }
+
         return false;
 
     }

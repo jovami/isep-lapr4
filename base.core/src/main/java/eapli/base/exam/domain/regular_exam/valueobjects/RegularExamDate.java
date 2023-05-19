@@ -1,5 +1,9 @@
 package eapli.base.exam.domain.regular_exam.valueobjects;
 
+import eapli.base.course.domain.CourseName;
+import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
 
@@ -8,6 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 @Embeddable
 public class RegularExamDate implements ValueObject {
@@ -20,18 +25,16 @@ public class RegularExamDate implements ValueObject {
     @Temporal(TemporalType.DATE)
     private Date closeDate;
 
-    public RegularExamDate(Date openDate, Date closeDate) {
-        Preconditions.nonEmpty((Collection<?>) openDate, "Exam open date should not be empty or null");
-        Preconditions.nonEmpty((Collection<?>) closeDate, "Exam close date should not be empty or null");
-
-        setIntervalDate(openDate,closeDate);
-    }
-
     protected RegularExamDate()
     {
         this.openDate = null;
         this.closeDate = null;
     }
+
+    public RegularExamDate(Date openDate, Date closeDate) {
+        setIntervalDate(openDate,closeDate);
+    }
+
 
     public static RegularExamDate valueOf(Date openDate, Date closeDate) {return new RegularExamDate(openDate,closeDate);}
 
@@ -44,6 +47,30 @@ public class RegularExamDate implements ValueObject {
         return false;
     }
 
+    public Date openDate()
+    {
+        return this.openDate;
+    }
+
+    public Date closeDate()
+    {
+        return this.closeDate;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RegularExamDate that = (RegularExamDate) o;
+        return this.openDate.equals(that.openDate) && this.closeDate.equals(that.closeDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(openDate);
+    }
 
     @Override
     public String toString() {
