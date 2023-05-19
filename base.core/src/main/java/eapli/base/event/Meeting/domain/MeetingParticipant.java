@@ -3,15 +3,15 @@ package eapli.base.event.Meeting.domain;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class MeetingParticipant implements AggregateRoot<Integer> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="MEETINGPARTICIPANTID")
     private int id;
     @ManyToOne
     private Meeting meeting;

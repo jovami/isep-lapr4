@@ -1,7 +1,8 @@
-package eapli.base.app.common.console;
+package eapli.base.app.teacher.console.presentation;
 
+import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
-import eapli.base.event.Meeting.application.ScheduleMeetingController;
+import eapli.base.event.lecture.application.ScheduleLectureController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
@@ -12,40 +13,42 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 
-public class ScheduleMeetingUI extends AbstractUI {
+public class ScheduleLectureUI extends AbstractUI {
 
-    private ScheduleMeetingController ctrl;
+    private ScheduleLectureController ctrl;
 
-    public ScheduleMeetingUI(){
-        ctrl = new ScheduleMeetingController();
+    public ScheduleLectureUI(){
+        ctrl = new ScheduleLectureController();
 
     }
 
     @Override
     protected boolean doShow() {
-        String description = Console.readLine("Meeting subject");
-        LocalDate date = readDate("Scheduling for");
-        LocalTime time = readTime("The meeting will start at:");
+
+
+        LocalDate startDate = readDate("Scheduling for");
+        LocalDate endDate = readDate("Scheduling until");
+        LocalTime time = readTime("The Lecture will start at:");
         int duration;
         do{
-            duration=Console.readInteger("Meeting duration: (Minutes)");
+            duration=Console.readInteger("Lecture duration: (Minutes)");
         }while (duration<10);
 
-        if(!ctrl.createMeeting(description,date,time,duration)){
+        if(!ctrl.createLecture(startDate,endDate,time,duration)){
             System.out.println("There was a problem with the specified parameters");
         }
 
         boolean invite = true;
-        //INVITE users
+        //INVITE
         try {
 
         do{
-            SelectWidget<SystemUserNameEmailDTO> opt = new SelectWidget<>("Choose User",ctrl.Users());
+            SelectWidget<StudentUsernameMecanographicNumberDTO> opt = new SelectWidget<>("Choose User",ctrl.students());
 
             opt.show();
 
             if(opt.selectedElement()!=null){
-                if(!ctrl.invite(opt.selectedElement())){
+                if(!ctrl.inviteStudent(opt.selectedElement())){
                     System.out.println("\n\tThis user is already invited\n");
                 }
             }else {
@@ -58,9 +61,9 @@ public class ScheduleMeetingUI extends AbstractUI {
         }
 
         if(ctrl.schedule()){
-            System.out.println("Meeting scheduled with success");
+            System.out.println("Lecture scheduled with success");
         }else {
-            System.out.println("There was a problem scheduling a meeting:\n\tSome of the user may have another shcedule for the given time");
+            System.out.println("There was a problem while scheduling the lecture, Teacher not available");
         }
         return true;
 
@@ -97,6 +100,6 @@ public class ScheduleMeetingUI extends AbstractUI {
 
     @Override
     public String headline() {
-        return "Scheduling a meeting";
+        return "Scheduling a Lecture";
     }
 }

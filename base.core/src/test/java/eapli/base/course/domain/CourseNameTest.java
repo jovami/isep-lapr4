@@ -1,10 +1,11 @@
 package eapli.base.course.domain;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class CourseNameTest {
+public class CourseNameTest {
 
     @Test
     public void testNameEmpty(){

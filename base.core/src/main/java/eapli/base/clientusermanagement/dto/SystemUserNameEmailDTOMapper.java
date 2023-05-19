@@ -1,5 +1,6 @@
 package eapli.base.clientusermanagement.dto;
 
+import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import jovami.util.dto.Mapper;
 

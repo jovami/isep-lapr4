@@ -25,13 +25,12 @@ package eapli.base.clientusermanagement.domain;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import eapli.base.board.domain.BoardState;
 import org.junit.Test;
+
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;

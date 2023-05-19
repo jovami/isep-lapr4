@@ -1,5 +1,7 @@
 package eapli.base.event.timetable.application;
 
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;

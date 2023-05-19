@@ -31,6 +31,8 @@ import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
 import eapli.base.event.Meeting.repositories.MeetingRepository;
+import eapli.base.event.lecture.repositories.LectureParticipantRepository;
+import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.domain.question.QuestionRepository;
@@ -176,8 +178,18 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
         return new InMemoryMeetingRepository();
     }
 
-    @Override
-    public MeetingParticipantRepository meetingParticipants() {
-        return new InMemoryMeetingParticipantRepository();
-    }
+	@Override
+	public MeetingParticipantRepository meetingParticipants() {
+		return new InMemoryMeetingParticipantRepository();
+	}
+
+	@Override
+	public LectureRepository lectures() {
+		return new InMemoryLectureRepository();
+	}
+
+	@Override
+	public LectureParticipantRepository lectureParticipants() {
+		return null;
+	}
 }

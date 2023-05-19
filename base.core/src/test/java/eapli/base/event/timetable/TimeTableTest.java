@@ -39,7 +39,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
         patternGlobal = builder.getPattern();
 
         timeTable= new TimeTable(userGlobal,patternGlobal);
@@ -55,7 +55,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
 
         RecurringPattern pattern = timeTable.pattern();
         Assertions.assertTrue(pattern.sameAs(builder.getPattern()));
@@ -72,7 +72,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
         ///assertFalse(timeTable.checkAvailability(builder.getPattern()));
     }
 
@@ -86,7 +86,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
         //assertTrue(timeTable.checkAvailability(builder.getPattern()));
     }
 
@@ -100,7 +100,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
         //assertTrue(timeTable.checkAvailability(builder.getPattern()));
     }
 
@@ -164,7 +164,7 @@ public class TimeTableTest {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDuration(startTime,duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
-        builder.setDateInterval(startDate,endDate);
+        builder.withDateInterval(startDate,endDate);
         RecurringPattern pattern = builder.getPattern();
 
         TimeTable diff = new TimeTable(userGlobal,pattern);

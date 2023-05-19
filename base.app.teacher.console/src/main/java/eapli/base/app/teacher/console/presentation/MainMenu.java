@@ -50,8 +50,11 @@ public class MainMenu extends AbstractUI {
     // Course
     private static final int LIST_COURSES = 1;
 
-    // REGULAR EXAM
+    // LECTURE
+    private static final int SCHEDULE_LECTURE_OPTION = 1;
+    private static final int LECTURE_OPTION = 6;
 
+    // REGULAR EXAM
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
     private static final int LIST_EXAMS_COURSE = 2;
 
@@ -126,6 +129,8 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu meetingMenu = buildMeetingMenu();
             mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
+            final Menu lectureMenu = buildLectureMenu();
+            mainMenu.addSubMenu(LECTURE_OPTION, lectureMenu);
         }
 
         if (!Application.settings().isMenuLayoutHorizontal()) {
@@ -179,6 +184,14 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Meeting");
 
         menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+    private Menu buildLectureMenu() {
+        final Menu menu = new Menu("Lecture");
+
+        menu.addItem(SCHEDULE_LECTURE_OPTION, "Schedule a Lecture", new ScheduleLectureUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

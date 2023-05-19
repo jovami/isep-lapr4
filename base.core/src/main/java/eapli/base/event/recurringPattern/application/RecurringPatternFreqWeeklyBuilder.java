@@ -15,7 +15,7 @@ public class RecurringPatternFreqWeeklyBuilder implements RecurringPatternBuilde
 
     }
 
-    public boolean setDateInterval(LocalDate startDate,LocalDate endDate) {
+    public boolean withDateInterval(LocalDate startDate, LocalDate endDate) {
         return pattern.setDateInterval(startDate,endDate);
     }
     public void withDayOfWeek(DayOfWeek dayOfWeek) {

@@ -28,6 +28,8 @@ import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
 import eapli.base.event.Meeting.repositories.MeetingRepository;
+import eapli.base.event.lecture.repositories.LectureParticipantRepository;
+import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.exam.domain.question.QuestionRepository;
@@ -143,4 +145,6 @@ public interface RepositoryFactory {
     StaffRepository staffs();
     MeetingRepository meetings();
     MeetingParticipantRepository meetingParticipants();
+    LectureRepository lectures();
+    LectureParticipantRepository lectureParticipants();
 }

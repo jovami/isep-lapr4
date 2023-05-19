@@ -1,5 +1,6 @@
 package eapli.base.persistence.impl.inmemory;
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;

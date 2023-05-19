@@ -32,11 +32,10 @@ public class TimeTable implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "TimeTable{" +
-                "timeTableId=" + timeTableId +
-                "\n user=" + user.username().toString() +
-                "\n pattern =" + pattern +
-                '}';
+        return "TimeTable" +
+                "\n timeTableId: " + timeTableId +
+                "\n user: " + user.username().toString() +
+                "\n pattern: " + pattern ;
     }
     public RecurringPattern pattern() {
         return pattern;
