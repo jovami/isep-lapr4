@@ -74,9 +74,7 @@ public class RegularExamDate implements ValueObject {
 
     @Override
     public String toString() {
-        return "RegularExamDate{" +
-                "openDate=" + openDate +
-                ", closeDate=" + closeDate +
-                '}';
+        return "Opening: " + openDate +
+                " | Closing: " + closeDate;
     }
 }

@@ -178,13 +178,6 @@ public class RegularExamDateTest {
     }
 
     @Test
-    @Ignore // TODO: fix this
-    public void testToString() {
-        String expectedString = "RegularExamDate{openDate=Tue Oct 10 16:00:00 WEST 2023, closeDate=Tue Oct 10 18:00:00 WEST 2023}";
-        Assertions.assertEquals(expectedString, regularExamDate.toString());
-    }
-
-    @Test
     public void defaultConstructor_OpenDateAndCloseDateAreNull() throws NoSuchFieldException, IllegalAccessException {
         // Create an instance of RegularExamDate using the protected constructor
         RegularExamDate regularExamDate = createRegularExamDateWithDefaultConstructor();

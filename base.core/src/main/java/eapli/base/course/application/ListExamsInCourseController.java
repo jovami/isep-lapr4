@@ -59,5 +59,4 @@ public class ListExamsInCourseController {
 
         return regularExamRepository.findByCourse(course);
     }
-
 }
