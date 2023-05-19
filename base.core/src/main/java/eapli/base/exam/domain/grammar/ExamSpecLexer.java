@@ -1,4 +1,7 @@
 // Generated from ExamSpec.g4 by ANTLR 4.12.0
+
+package eapli.base.exam.domain.grammar;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

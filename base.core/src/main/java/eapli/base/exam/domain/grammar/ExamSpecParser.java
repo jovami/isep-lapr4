@@ -1,4 +1,7 @@
 // Generated from ExamSpec.g4 by ANTLR 4.12.0
+
+package eapli.base.exam.domain.grammar;
+
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -135,12 +138,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_exam; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterExam(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitExam(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitExam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -197,12 +197,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_title; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterTitle(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitTitle(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitTitle(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -249,12 +246,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_header; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterHeader(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitHeader(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitHeader(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -307,12 +301,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_description; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterDescription(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitDescription(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitDescription(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -349,12 +340,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_feedback; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterFeedback(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitFeedback(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitFeedback(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -400,12 +388,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_grading; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterGrading(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitGrading(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitGrading(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -462,12 +447,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_section; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterSection(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitSection(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitSection(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -548,12 +530,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_question; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterQuestion(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitQuestion(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitQuestion(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -651,12 +630,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_matching; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterMatching(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitMatching(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitMatching(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -740,12 +716,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_subquestion; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterSubquestion(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitSubquestion(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitSubquestion(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -786,12 +759,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_answer; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterAnswer(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitAnswer(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitAnswer(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -837,12 +807,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_matching_solution; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterMatching_solution(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitMatching_solution(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitMatching_solution(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -891,12 +858,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_match; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterMatch(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitMatch(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitMatch(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -952,12 +916,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_multiple_choice; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterMultiple_choice(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitMultiple_choice(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitMultiple_choice(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1034,12 +995,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_numerical_solution; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterNumerical_solution(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitNumerical_solution(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitNumerical_solution(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1101,12 +1059,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_choice_type; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterChoice_type(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitChoice_type(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitChoice_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1165,12 +1120,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_short_answer; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterShort_answer(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitShort_answer(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitShort_answer(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1231,12 +1183,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_string_solution; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterString_solution(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitString_solution(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitString_solution(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1281,12 +1230,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_case_sensitive; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterCase_sensitive(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitCase_sensitive(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitCase_sensitive(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1334,12 +1280,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_numerical; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterNumerical(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitNumerical(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitNumerical(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1404,12 +1347,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_error; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterError(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitError(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitError(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1462,12 +1402,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_missing_words; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterMissing_words(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitMissing_words(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitMissing_words(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1544,12 +1481,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_group; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterGroup(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitGroup(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitGroup(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1613,12 +1547,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_item; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitItem(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitItem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1668,12 +1599,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_choice; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterChoice(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitChoice(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitChoice(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1731,12 +1659,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_from_group; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterFrom_group(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitFrom_group(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitFrom_group(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1789,12 +1714,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_true_false; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterTrue_false(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitTrue_false(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitTrue_false(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1840,12 +1762,9 @@ public class ExamSpecParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_boolean_solution; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).enterBoolean_solution(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExamSpecListener ) ((ExamSpecListener)listener).exitBoolean_solution(this);
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExamSpecVisitor ) return ((ExamSpecVisitor<? extends T>)visitor).visitBoolean_solution(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

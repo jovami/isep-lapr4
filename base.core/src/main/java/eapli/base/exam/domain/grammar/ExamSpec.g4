@@ -4,6 +4,10 @@ grammar ExamSpec;
  * Parser Rules
  */
 
+@header{
+package eapli.base.exam.domain.grammar;
+}
+
 // Entry point
 exam: 'EXAM' LEFT_BRACE title header section+ RIGHT_BRACE ;
 
