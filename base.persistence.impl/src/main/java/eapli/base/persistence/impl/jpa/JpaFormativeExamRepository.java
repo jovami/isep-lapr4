@@ -1,7 +1,5 @@
 package eapli.base.persistence.impl.jpa;
 
-import java.util.Optional;
-
 import eapli.base.formativeexam.domain.FormativeExam;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
 
@@ -11,6 +9,6 @@ import eapli.base.formativeexam.repositories.FormativeExamRepository;
 public class JpaFormativeExamRepository extends BaseJpaRepositoryBase<FormativeExam, Long, Long> implements FormativeExamRepository {
 
     JpaFormativeExamRepository(String identityFieldName) {
-        super(identityFieldName, "formativeExamId");
+        super(identityFieldName, "id");
     }
 }

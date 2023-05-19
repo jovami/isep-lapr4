@@ -1,14 +1,15 @@
 package eapli.base.formativeexam.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.validations.Preconditions;
 
@@ -17,42 +18,46 @@ import eapli.framework.validations.Preconditions;
  */
 @Entity
 public class FormativeExam implements AggregateRoot<Long> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "formativeExamId")
     private Long id;
 
-    private FormativeExamTitle title;
-    private FormativeExamDescription description;
-    private List<FormativeExamSection> sections;
+    @Embedded
+    @Column(unique = true, nullable = false)
+    private final FormativeExamSpecification spec;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private final Course course;
+
+    // For ORM
     protected FormativeExam() {
-        this.title = null;
-        this.description = null;
-        this.sections = null;
+        this.spec = null;
+        this.course = null;
     }
 
-    public FormativeExam(FormativeExamTitle title, FormativeExamDescription description,
-            List<FormativeExamSection> sections) {
-        Preconditions.nonNull(title, "Formative Exam title cannot be null");
-        Preconditions.nonNull(description, "Formative Exam description cannot be null");
-        Preconditions.nonNull(sections, "Formative Exam sections cannot be null");
-        Preconditions.nonEmpty(sections, "Formative Exams must have at least one section");
+    protected FormativeExam(Course course, FormativeExamSpecification spec) {
+        Preconditions.noneNull(course, spec);
 
-        this.title = title;
-        this.description = description;
-        this.sections = new ArrayList<>(sections);
+        this.course = course;
+        this.spec = spec;
     }
 
     @Override
     public boolean sameAs(Object other) {
-        // TODO
-        throw new UnsupportedOperationException("Unimplemented method 'sameAs'");
+        if (this == other)
+            return true;
+        else if (!(other instanceof FormativeExam))
+            return false;
+
+        var o = (FormativeExam) other;
+        return this.spec.equals(o.spec)
+            && this.course.sameAs(o.course);
     }
 
     @Override
     public Long identity() {
         return this.id;
     }
-
 }

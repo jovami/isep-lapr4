@@ -13,7 +13,7 @@
     <class>eapli.base.enrollmentrequest.domain.EnrollmentRequest</class>
     <class>eapli.base.course.domain.Course</class>
     <class>eapli.base.course.domain.StaffMember</class>
-      <class>eapli.base.board.domain.Board</class>
+    <class>eapli.base.board.domain.Board</class>
     <class>eapli.base.board.domain.Cell</class>
     <class>eapli.base.board.domain.PostIt</class>
     <class>eapli.base.clientusermanagement.domain.users.Manager</class>
@@ -24,6 +24,7 @@
     <class>eapli.base.event.Meeting.domain.Meeting</class>
     <class>eapli.base.event.Meeting.domain.MeetingParticipant</class>
     <class>eapli.base.exam.domain.regular_exam.RegularExam</class>
+    <class>eapli.base.formativeexam.domain.FormativeExam</class>
 
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->

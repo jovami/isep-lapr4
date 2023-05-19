@@ -2,6 +2,7 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseState;
 import eapli.base.course.domain.StaffMember;
 import eapli.base.course.repositories.StaffRepository;
 
@@ -29,6 +30,15 @@ public class JpaStaffRepository extends BaseJpaRepositoryBase<StaffMember,Long,I
                 "SELECT sm.course FROM StaffMember sm WHERE sm.member = :teacher",
                 Course.class);
         query.setParameter("teacher", t);
+        return query.getResultList();
+    }
+
+    @Override
+    public Iterable<Course> nonClosedAndTaughtBy(Teacher t) {
+        final var query = entityManager().createQuery(
+                "SELECT sm.course FROM StaffMember sm WHERE sm.member = :teacher AND sm.course.state <> :state", Course.class);
+        query.setParameter("teacher", t);
+        query.setParameter("state", CourseState.CLOSED);
         return query.getResultList();
     }
 }

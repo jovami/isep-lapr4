@@ -43,7 +43,6 @@ import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.exam.domain.question.QuestionRepository;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
-import eapli.base.formativeexam.repositories.FormativeExamSpecificationRepository;
 
 /**
  *
@@ -165,11 +164,6 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     @Override
     public FormativeExamRepository formativeExams() {
 		return new JpaFormativeExamRepository(Application.settings().getPersistenceUnitName());
-    }
-
-    @Override
-    public FormativeExamSpecificationRepository formativeExamSpecifications() {
-		return new JpaFormativeExamSpecificationRepository(Application.settings().getPersistenceUnitName());
     }
 
 	@Override

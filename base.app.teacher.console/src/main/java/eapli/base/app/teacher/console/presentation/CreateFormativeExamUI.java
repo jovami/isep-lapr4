@@ -1,15 +1,17 @@
 package eapli.base.app.teacher.console.presentation;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eapli.base.formativeexam.appliacation.CreateFormativeExamController;
+import eapli.base.formativeexam.application.CreateFormativeExamController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+import eapli.framework.presentation.console.SelectWidget;
 
 /**
  * CreateFormativeExamUI
@@ -21,6 +23,15 @@ public class CreateFormativeExamUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
+        var widget = new SelectWidget<>("Choose a course to add the Formative Exam to:", this.ctrl.courses());
+        widget.show();
+
+        if (widget.selectedOption() <= 0)
+            return false;
+        var chosen = widget.selectedElement();
+
+        System.out.println();
+
         var filePath = Console.readLine("Formative Exam Specification file path: ");
 
         var file = new File(filePath);
@@ -30,15 +41,19 @@ public class CreateFormativeExamUI extends AbstractUI {
         }
 
         try {
-            this.ctrl.createFormativeExam(filePath); // TODO: show something
+            if (this.ctrl.createFormativeExam(chosen, file))
+                System.out.println("Formative exam created with success");
+            else
+                System.out.println("Error parsing the Specification file");
+        } catch (IOException e) {
+            System.out.println("Error reading file contents");
         } catch (IntegrityViolationException e) {
-            // TODO
-            System.out.println("integrity violation");
+            System.out.println("Integrity violation");
         } catch (ConcurrencyException e) {
             logger.error("This should've never happened; yet it did :^)", e);
             System.out.println(
                     "Unfortunatelly there was an unexpected error in the application.\n" +
-                    "Please try again and if the problem persists, contact your system admnistrator.");
+                            "Please try again and if the problem persists, contact your system admnistrator.");
         }
 
         return false;

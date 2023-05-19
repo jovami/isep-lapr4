@@ -9,14 +9,20 @@ import eapli.base.course.domain.CourseState;
  */
 public final class AvailableCourseDTO {
 
+    private final int id;
     private final CourseName name;
     private final CourseDescription desc;
     private final CourseState state;
 
-    public AvailableCourseDTO(String name, String desc, CourseState state) {
+    public AvailableCourseDTO(int courseId, String name, String desc, CourseState state) {
+        this.id = courseId;
         this.name = new CourseName(name);
         this.desc = new CourseDescription(desc);
         this.state = state;
+    }
+
+    public int courseId() {
+        return this.id;
     }
 
     public CourseName name() {

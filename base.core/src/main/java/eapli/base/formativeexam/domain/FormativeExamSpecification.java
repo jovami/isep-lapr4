@@ -1,69 +1,68 @@
 package eapli.base.formativeexam.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
-import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
 
 /**
  * FormativeExamSpecification
  */
-@Entity
-public class FormativeExamSpecification implements AggregateRoot<Long> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "formativeExamSpecificationId")
-    private Long id;
+@Embeddable
+public class FormativeExamSpecification implements ValueObject {
 
-    private FormativeExamTitle title;
-    private FormativeExamDescription description;
-    private List<FormativeExamSpecificationSection> sections;
+    @Column(columnDefinition = "CLOB") // store strings larger than VARCHAR(255)
+    private final String spec;
 
+    // for ORM
     protected FormativeExamSpecification() {
-        this.title = null;
-        this.description = null;
-        this.sections = null;
+        this.spec = null;
     }
 
-    public FormativeExamSpecification(FormativeExamTitle title, FormativeExamDescription description,
-            List<FormativeExamSpecificationSection> sections) {
-        Preconditions.nonNull(title, "Formative Exam title cannot be null");
-        Preconditions.nonNull(description, "Formative Exam description cannot be null");
-        Preconditions.nonNull(sections, "Formative Exam sections cannot be null");
-        Preconditions.nonEmpty(sections, "Formative Exams must have at least one section");
+    /**
+     * Creates a FormativeExamSpecification from a given string
+     *
+     * @param spec specification string
+     *
+     * @apiNote INTERNAL USAGE ONLY!!
+     *          As the specification must follow a very specific grammar
+     */
+    protected FormativeExamSpecification(String spec) {
+        Preconditions.nonNull(spec, "Specification cannot be null");
+        Preconditions.nonEmpty(spec, "Specification cannot be empty");
 
-        this.title = title;
-        this.description = description;
-        this.sections = new ArrayList<>(sections);
+        // not covered by Preconditions
+        if (spec.isBlank())
+            throw new IllegalArgumentException("Specification cannot be blank");
+
+        this.spec = spec;
     }
 
-    @Override
-    public boolean sameAs(Object other) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sameAs'");
-    }
-
-    protected List<FormativeExamSpecificationSection> sections() {
-        return this.sections;
-    }
-
-    protected FormativeExamTitle title() {
-        return this.title;
-    }
-    protected FormativeExamDescription description() {
-        return this.description;
+    public String specification() {
+        return this.spec;
     }
 
     @Override
-    public Long identity() {
-        return this.id;
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        else if (obj == null || this.getClass() != obj.getClass())
+            return false;
+
+        var o = (FormativeExamSpecification) obj;
+        return this.spec.equals(o.spec);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.spec);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Specification:\n%s", this.spec);
+    }
 }

@@ -55,6 +55,10 @@ public class MainMenu extends AbstractUI {
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
     private static final int LIST_EXAMS_COURSE = 2;
 
+    // FORMATIVE EXAM
+
+    private static final int CREATE_FORMATIVE_EXAM = 1;
+
     // BOARD
 
     private static final int CREATE_BOARD_OPTION = 1;
@@ -66,9 +70,11 @@ public class MainMenu extends AbstractUI {
 
     private static final int COURSE_OPTION = 2;
     private static final int REGULAR_EXAM_OPTION = 3;
-    private static final int BOARD_OPTION = 4;
+    private static final int FORMATIVE_EXAM_OPTION = 4;
+    private static final int BOARD_OPTION = 5;
+    private static final int MEETING_OPTION = 6;
+
     //MEETING
-    private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
 
     private static final String SEPARATOR_LABEL = "--------------";
@@ -115,6 +121,7 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(COURSE_OPTION, courseMenu);
             final Menu regularExamMenu = buildRegularExamMenu();
             mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
+            mainMenu.addSubMenu(FORMATIVE_EXAM_OPTION, buildFormativeExamMenu());
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu meetingMenu = buildMeetingMenu();
@@ -145,6 +152,15 @@ public class MainMenu extends AbstractUI {
 
         menu.addItem(CREATE_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
         menu.addItem(LIST_EXAMS_COURSE, "List exams in a course", new ListExamsInCourseUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
+    private Menu buildFormativeExamMenu() {
+        final Menu menu = new Menu("Formative Exam");
+
+        menu.addItem(CREATE_FORMATIVE_EXAM, "Create formative exam", new CreateFormativeExamUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

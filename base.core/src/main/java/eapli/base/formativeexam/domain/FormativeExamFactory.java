@@ -1,62 +1,71 @@
 package eapli.base.formativeexam.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
+import static org.apache.commons.io.FileUtils.readFileToString;
 
-import eapli.base.exam.domain.question.Question;
-import eapli.base.exam.domain.question.QuestionType;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import eapli.base.course.domain.Course;
+import eapli.base.formativeexam.application.ValidateFormativeExamSpecificationService;
 
 /**
  * FormativeExamFactory
  */
 public final class FormativeExamFactory {
 
-    private Map<QuestionType, LinkedList<Question>> groupByType(Iterable<Question> questions) {
-        var map = new EnumMap<QuestionType, LinkedList<Question>>(QuestionType.class);
+    private final ValidateFormativeExamSpecificationService svc;
 
-        for (final var question : questions) {
-            var type = question.type();
-            map.putIfAbsent(type, new LinkedList<>());
-            map.get(type).push(question);
-        }
-
-        var random = new Random(ProcessHandle.current().pid() * System.currentTimeMillis());
-
-        map.forEach((__, list) -> Collections.shuffle(list, random));
-        return map;
+    public FormativeExamFactory() {
+        super();
+        this.svc = new ValidateFormativeExamSpecificationService();
     }
 
-    public FormativeExam build(FormativeExamSpecification specification,
-            Iterable<Question> questions) {
-        var questionsByType = groupByType(questions);
+    /**
+     * Attempts to create a FormativeExam for a Course with a specification
+     * read from a File
+     *
+     * @param c        course to create the FormativeExam for
+     * @param specFile file to read the specification from
+     *
+     * @return FormativeExam if specification complies with the grammar
+     *
+     * @throws IOException if an error occurs when reading the file contents
+     */
+    public Optional<FormativeExam> build(Course c, File specFile) throws IOException {
+        if (!this.svc.validate(specFile))
+            return Optional.empty();
 
-        var specSections = specification.sections();
-        var sections = new ArrayList<FormativeExamSection>(specSections.size());
+        var spec = new FormativeExamSpecification(readFileToString(specFile, StandardCharsets.UTF_8));
 
-        for (final var specSection : specSections) {
-            var finalQuestions = new ArrayList<FormativeExamQuestion>();
+        return Optional.of(new FormativeExam(c, spec));
 
-            for (final var questionInfo : specSection.questionInfos()) {
-                final var typeQuestions = questionsByType.get(questionInfo.getKey());
-
-                if (typeQuestions == null || typeQuestions.isEmpty())
-                    throw new RuntimeException(
-                            "not enough questions of type" + questionInfo.getKey());
-
-                final var q = System.currentTimeMillis() % 2 == 0
-                    ? typeQuestions.poll()
-                    : typeQuestions.pollLast();
-
-                finalQuestions.add(new FormativeExamQuestion(q, questionInfo.getValue()));
-            }
-
-            sections.add(new FormativeExamSection(finalQuestions, specSection.description()));
-        }
-
-        return new FormativeExam(specification.title(), specification.description(), sections);
     }
+
+    /**
+     * Attempts to create a FormativeExam for a Course from a specification
+     * provided in a list, where each of the elements corresponds to a line
+     * of a hypothetical File.
+     *
+     * @param c         course to create the FormativeExam for
+     * @param specLines list containing the specification lines
+     *
+     * @return FormativeExam if specification complies with the grammar
+     *
+     * @apiNote The strings contained in the list need not be terminated
+     *          by a new line
+     */
+    public Optional<FormativeExam> build(Course c, List<String> specLines) {
+        var fullSpec = specLines.stream()
+                .collect(Collectors.joining("\n"));
+
+        if (!this.svc.validate(fullSpec))
+            return Optional.empty();
+
+        return Optional.of(new FormativeExam(c, new FormativeExamSpecification(fullSpec)));
+    }
+
 }
