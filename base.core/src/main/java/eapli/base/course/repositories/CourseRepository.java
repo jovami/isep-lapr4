@@ -13,9 +13,13 @@ public interface CourseRepository extends DomainRepository<Integer, Course> {
 
     Iterable<Course> ofStates(Set<CourseState> states);
 
+    Course findCourseByName(CourseName courseName);
+
+    default Iterable<Course> openableToEnrollments() {
+        return ofState(CourseState.OPEN);
+    }
+
     default Iterable<Course> enrollable() {
         return ofState(CourseState.ENROLL);
     }
-
-    Course findCourseByName(CourseName courseName);
 }

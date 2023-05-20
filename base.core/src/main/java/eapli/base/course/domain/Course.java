@@ -48,15 +48,13 @@ public class Course implements AggregateRoot<Integer> {
     // TODO: LECTURE--COURSE MUST BE REFERENCED IN THE LECTURE
 
     // JPA needs empty constructor
-    private Course() {
-
+    protected Course() {
     }
 
     public Course(String name, String description, Date startDate, Date endDate) {
         this.state = CourseState.CLOSE;
         this.name = new CourseName(name);
         this.description = new CourseDescription(description);
-        // throws IllegalArgumentException
         this.duration = new CourseDuration(startDate, endDate);
         this.capacity = new CourseCapacity();
     }
@@ -73,8 +71,16 @@ public class Course implements AggregateRoot<Integer> {
         return old;
     }
 
-    public void openEnrollments() {
-        this.state = CourseState.ENROLL;
+    public Either<String, CourseState> openEnrollments() {
+        switch (this.state) {
+            case OPEN:
+                this.state = CourseState.ENROLL;
+                return Either.right(CourseState.OPEN);
+            case ENROLL:
+                return Either.left("Course is already open to enrollments");
+            default:
+                return Either.left("Course cannot be opened to enrollments in its current state");
+        }
     }
 
     public Either<String, CourseState> open() {
@@ -89,11 +95,19 @@ public class Course implements AggregateRoot<Integer> {
         }
     }
 
-    public void closeEnrollments() {
-        this.state = CourseState.INPROGRESS;
+    public Either<String, CourseState> closeEnrollments() {
+        switch (this.state) {
+            case ENROLL:
+                this.state = CourseState.INPROGRESS;
+                return Either.right(CourseState.ENROLL);
+            case INPROGRESS:
+                return Either.left("Course is already in progress");
+            default:
+                return Either.left("Course cannot be opened to enrollments in its current state");
+        }
     }
 
-    public void createdCourse() {
+    protected void createdCourse() {
         this.state = CourseState.CLOSE;
     }
 

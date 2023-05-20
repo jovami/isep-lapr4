@@ -1,6 +1,6 @@
 package eapli.base.app.manager.console.presentation;
 
-import eapli.base.enrollment.aplication.OpenCloseEnrollmentController;
+import eapli.base.enrollment.application.OpenCloseEnrollmentController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;

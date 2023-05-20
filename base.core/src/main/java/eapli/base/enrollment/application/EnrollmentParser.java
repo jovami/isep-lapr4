@@ -1,4 +1,4 @@
-package eapli.base.enrollment.aplication;
+package eapli.base.enrollment.application;
 
 import java.util.List;
 import java.util.stream.Collectors;

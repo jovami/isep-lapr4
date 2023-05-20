@@ -8,8 +8,6 @@ participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 participant CourseRepository as repo
 
-participant ListCoursesService as svc
-
 participant CourseAndStateDTOMapper as mapper
 participant CourseAndStateDTO as dto
 
@@ -40,13 +38,10 @@ activate ui
 
     ui --> ctrl: enrollableCourses()
     activate ctrl
-        ctrl --> svc: enrollable()
-        activate svc
-            svc --> repo: findByState()
+        ctrl --> repo: enrollable()
             activate repo
-            ctrl -> ctrl: getCourses(repositories)
+            repo --> ctrl: courses
             deactivate repo
-        deactivate svc
 
         ctrl --> mapper: toDto(courses)
         activate mapper

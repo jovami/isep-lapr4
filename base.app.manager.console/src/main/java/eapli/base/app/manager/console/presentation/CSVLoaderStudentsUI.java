@@ -1,11 +1,11 @@
 package eapli.base.app.manager.console.presentation;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
-import eapli.base.enrollment.aplication.CSVLoaderStudentsController;
+import eapli.base.enrollment.application.CSVLoaderStudentsController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class CSVLoaderStudentsUI extends AbstractUI {
 

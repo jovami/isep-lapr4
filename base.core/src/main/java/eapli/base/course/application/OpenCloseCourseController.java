@@ -10,12 +10,14 @@ import eapli.base.course.dto.CourseAndStateDTO;
 import eapli.base.course.dto.CourseAndStateDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.functional.Either;
 
 /**
  * OpenCourseController
  */
+@UseCaseController
 public final class OpenCloseCourseController {
     private final CourseRepository repo;
     private final ListCoursesService svc;

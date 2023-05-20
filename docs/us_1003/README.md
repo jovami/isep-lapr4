@@ -31,7 +31,7 @@ to **List Courses** will be created.
 In order to facilitate the user experience, **OpenEnrollmentUI** will display courses that
 can actually be enrollable (c.f. Business rules).
 
-To avoid code duplication, the **strategy pattern** will be applied in the **ListCoursesService**,
+To avoid code duplication, the **strategy pattern** will be applied in the **CourseRepository**,
 by creating a `ofStates(states)` that will provide a list of courses whose `state` matches any
 in `states`. This makes this service very flexible as it can be repurposed for any other use
 case that requires a list of courses with certain states.
@@ -49,7 +49,6 @@ call `ofState()`.
     + **CloseEnrollmentUI**
 - Controller:
     + **OpenCloseEnrollmentController**
-    + **ListCoursesService**
 - Repository:
     + **CourseRepository**
 - DTO:

@@ -25,7 +25,7 @@ class CourseTest {
     private Course course;
 
     @BeforeEach
-    void BeforeEach() {
+    void setUp(){
         String startDateString = "1/1/2020";
         String endDateString = "1/1/2023";
 
@@ -55,6 +55,7 @@ class CourseTest {
 
     @Test
     void openEnrollments() {
+        course.open();
         course.openEnrollments();
         assertEquals(CourseState.ENROLL, course.state());
     }
@@ -63,11 +64,12 @@ class CourseTest {
     void openCourse() {
         course.open();
         assertEquals(CourseState.OPEN, course.state());
-
     }
 
     @Test
     void closeEnrollments() {
+        course.open();
+        course.openEnrollments();
         course.closeEnrollments();
         assertEquals(CourseState.INPROGRESS, course.state());
     }
