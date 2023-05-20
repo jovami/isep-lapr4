@@ -26,10 +26,10 @@ import eapli.framework.actions.Action;
  *
  * @author Fernando
  */
-public class DeactivateUserAction implements Action {
+public class DisableUserAction implements Action {
 
     @Override
     public boolean execute() {
-        return new DeactivateUserUI().show();
+        return new DisableUserUI().show();
     }
 }

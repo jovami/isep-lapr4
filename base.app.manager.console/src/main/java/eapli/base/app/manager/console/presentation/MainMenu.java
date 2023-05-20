@@ -30,7 +30,8 @@ import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
-import eapli.base.app.manager.console.presentation.authz.DeactivateUserAction;
+import eapli.base.app.manager.console.presentation.authz.DisableUserAction;
+import eapli.base.app.manager.console.presentation.authz.EnableUserAction;
 import eapli.base.app.manager.console.presentation.authz.ListUsersAction;
 import eapli.base.app.manager.console.presentation.clientuser.AcceptRefuseEnrollmentRequestAction;
 import eapli.base.app.manager.console.presentation.clientuser.AcceptRefuseSignupRequestAction;
@@ -55,7 +56,9 @@ public class MainMenu extends AbstractUI {
     // USERS
     private static final int ADD_USER_OPTION = 1;
     private static final int LIST_USERS_OPTION = 2;
-    private static final int DEACTIVATE_USER_OPTION = 3;
+    private static final int DISABLE_USER_OPTION = 3;
+
+    private static final int ENABLE_USER_OPTION = 7;
     private static final int ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION = 4;
     private static final int LIST_TEACHERS_STUDENTS_MANAGERS = 5;
     private static final int ACCEPT_REFUSE_COURSE_APPLICATION_OPTION = 6;
@@ -160,14 +163,17 @@ public class MainMenu extends AbstractUI {
     private Menu buildUsersMenu() {
         final Menu menu = new Menu("Users");
 
+        //TODO: CLEAN SOME OF THE OPTIONS
+
         menu.addItem(ADD_USER_OPTION, "Add User", new AddUserUI()::show);
         menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
-        menu.addItem(DEACTIVATE_USER_OPTION, "Deactivate User", new DeactivateUserAction());
+        menu.addItem(DISABLE_USER_OPTION, "Deactivate User", new DisableUserAction());
         menu.addItem(ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION, "Accept/Refuse Signup Request",
                 new AcceptRefuseSignupRequestAction());
         menu.addItem(LIST_TEACHERS_STUDENTS_MANAGERS, "List Teachers,Students and Managers", new ListTeachersStudentsManagersUI()::show);
         menu.addItem(ACCEPT_REFUSE_COURSE_APPLICATION_OPTION, "Accept/Refuse Course Application",
                 new AcceptRefuseEnrollmentRequestAction());
+        menu.addItem(ENABLE_USER_OPTION, "Enable User", new EnableUserAction());
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
