@@ -65,6 +65,7 @@ public class MainMenu extends AbstractUI {
     // FORMATIVE EXAM
 
     private static final int CREATE_FORMATIVE_EXAM = 1;
+    private static final int ADD_QUESTION = 2;
 
     // BOARD
 
@@ -163,6 +164,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Formative Exam");
 
         menu.addItem(CREATE_FORMATIVE_EXAM, "Create formative exam", new CreateFormativeExamUI()::show);
+        menu.addItem(ADD_QUESTION, "Add formative exam questions", new AddExamQuestionsUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
