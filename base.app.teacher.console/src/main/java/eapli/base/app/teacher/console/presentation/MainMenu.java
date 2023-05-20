@@ -52,7 +52,6 @@ public class MainMenu extends AbstractUI {
 
     // LECTURE
     private static final int SCHEDULE_LECTURE_OPTION = 1;
-    private static final int LECTURE_OPTION = 6;
 
     // REGULAR EXAM
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
@@ -76,6 +75,7 @@ public class MainMenu extends AbstractUI {
     private static final int FORMATIVE_EXAM_OPTION = 4;
     private static final int BOARD_OPTION = 5;
     private static final int MEETING_OPTION = 6;
+    private static final int LECTURE_OPTION = 7;
 
     //MEETING
     private static final int SCHEDULE_MEETING = 1;
