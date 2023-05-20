@@ -1,0 +1,74 @@
+@startuml
+
+actor Student as user
+participant ListFutureExamsUI as ui
+participant ListFutureExamsController as ctrl
+
+' participant PersistenceContext as ctx
+' participant RepositoryFactory as rep_fac
+
+participant SystemUser as sys_usr
+
+participant StudentRepository as s_repo
+
+participant EnrollmentRepositry as e_repo
+participant RegularExamRepository as ex_repo
+
+
+' participant AuthzRegistry as authreg
+' participant AuthorizationService as authsvc
+' participant Session as sess
+
+
+participant FutureExamDTOMapper as mapper
+participant FutureExamDTO as dto
+
+' participant Course as course
+
+user --> ui : enter
+
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui --> ctrl : futureExams(currentTime)
+    activate ctrl
+        ctrl --> sys_usr : get()
+        activate sys_usr
+            note right : sysUser is obtained via\nthe framework's Authz package
+        deactivate sys_usr
+
+        ctrl --> s_repo : findBySystemUser(sysUser)
+        activate s_repo
+            s_repo --> ctrl : student
+        deactivate s_repo
+
+        ctrl --> e_repo : coursesOfEnrolledStudent(student)
+        activate e_repo
+            e_repo --> ctrl : courses
+        deactivate e_repo
+
+        ctrl --> ex_repo : examsOfCoursesAfterTime(currentTime, courses)
+        activate ex_repo
+            ex_repo --> ctrl : exams
+        deactivate ex_repo
+
+        ctrl --> mapper : toDTO(exams)
+        activate mapper
+            loop for each exam in exams
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: examDTOList
+        deactivate mapper
+
+        ctrl --> ui : examDTOList
+    deactivate ctrl
+
+    ui --> user : show future exams
+deactivate ui
+
+@enduml

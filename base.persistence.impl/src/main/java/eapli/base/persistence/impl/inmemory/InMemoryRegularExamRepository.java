@@ -1,23 +1,40 @@
 package eapli.base.persistence.impl.inmemory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.StaffMember;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
 
-public class InMemoryRegularExamRepository extends InMemoryDomainRepository<RegularExam,Integer> implements RegularExamRepository {
+public class InMemoryRegularExamRepository extends InMemoryDomainRepository<RegularExam, Integer>
+        implements RegularExamRepository {
 
     static {
         InMemoryInitializer.init();
     }
 
-    public InMemoryRegularExamRepository(){
+    public InMemoryRegularExamRepository() {
 
     }
 
     @Override
     public Iterable<RegularExam> findByCourse(Course course) {
         return match((regularExam -> course.equals(regularExam.course())));
+    }
+
+    @Override
+    public Iterable<RegularExam> examsOfCoursesAfterTime(LocalDateTime time, Set<Course> courses) {
+        return valuesStream()
+                .filter(exam -> {
+                    var date = LocalDateTime.ofInstant(exam.regularExamDate().openDate().toInstant(),
+                            ZoneId.systemDefault());
+
+                    return courses.contains(exam.course()) && date.isAfter(time);
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -9,9 +9,8 @@ import eapli.framework.domain.model.DomainEntities;
 import javax.persistence.*;
 
 @Entity
-@Table(name="REGULAREXAM")
+@Table(name = "REGULAREXAM")
 public class RegularExam implements AggregateRoot<Integer> {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,8 +33,8 @@ public class RegularExam implements AggregateRoot<Integer> {
         this.course = null;
     }
 
-    public RegularExam(RegularExamSpecification regularExamSpecification, RegularExamDate regularExamDate, Course course)
-    {
+    public RegularExam(RegularExamSpecification regularExamSpecification, RegularExamDate regularExamDate,
+            Course course) {
 
         this.regularExamSpecification = regularExamSpecification;
         this.regularExamDate = regularExamDate;
@@ -52,7 +51,6 @@ public class RegularExam implements AggregateRoot<Integer> {
         return DomainEntities.hashCode(this);
     }
 
-
     @Override
     public boolean sameAs(Object other) {
         if (!(other instanceof RegularExam)) {
@@ -68,25 +66,29 @@ public class RegularExam implements AggregateRoot<Integer> {
     }
 
     @Override
-    public int compareTo(Integer other) {return AggregateRoot.super.compareTo(other);}
+    public int compareTo(Integer other) {
+        return AggregateRoot.super.compareTo(other);
+    }
 
     @Override
-    public Integer identity() {return this.id;}
+    public Integer identity() {
+        return this.id;
+    }
 
     @Override
-    public boolean hasIdentity(Integer id) {return AggregateRoot.super.hasIdentity(id);}
-
+    public boolean hasIdentity(Integer id) {
+        return AggregateRoot.super.hasIdentity(id);
+    }
 
     public Course course() {
         return this.course;
     }
 
-    public RegularExamDate regularExamDate(){
+    public RegularExamDate regularExamDate() {
         return this.regularExamDate;
     }
 
-    public RegularExamSpecification regularExamSpecification()
-    {
+    public RegularExamSpecification regularExamSpecification() {
         return this.regularExamSpecification;
     }
 

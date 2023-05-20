@@ -23,6 +23,7 @@
  */
 package eapli.base.app.student.console.presentation;
 
+import eapli.base.Application;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
@@ -31,6 +32,7 @@ import eapli.base.app.common.console.presentation.clientuser.ListAvailableCourse
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
+import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.presentation.console.AbstractUI;
@@ -49,17 +51,21 @@ public class MainMenu extends AbstractUI {
     private static final int ENROLLMENT_REQUEST_OPTION = 1;
     private static final int LIST_COURSES = 2;
 
+    // EXAM
+    private static final int LIST_FUTURE_EXAMS = 1;
+
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
-    //MEETING
+    // MEETING
     private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
 
     // SETTINGS
     private static final int MY_USER_OPTION = 1;
     private static final int ENROLLMENTS_OPTION = 2;
-    private static final int BOARD_OPTION =3;
+    private static final int EXAM_OPTION = 3;
+    private static final int BOARD_OPTION = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -96,23 +102,22 @@ public class MainMenu extends AbstractUI {
         final Menu myUserMenu = new MyUserMenu();
         mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
 
-        /*if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }*/
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
             final Menu courseMenu = buildCourseMenu();
             mainMenu.addSubMenu(ENROLLMENTS_OPTION, courseMenu);
+            mainMenu.addSubMenu(EXAM_OPTION, buildExamMenu());
             final Menu boardMenu = buildBoardMenu();
             mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
             final Menu meetingMenu = buildMeetingMenu();
             mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
         }
 
-        /*if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
-*/
+
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
         return mainMenu;
@@ -127,6 +132,16 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
+
+    private Menu buildExamMenu() {
+        final Menu menu = new Menu("Exam");
+
+        menu.addItem(LIST_FUTURE_EXAMS, "List future exams", new ListFutureExamsUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
     private Menu buildMeetingMenu() {
         final Menu menu = new Menu("Meeting");
 
