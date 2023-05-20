@@ -26,6 +26,4 @@ public class RecurringPatternFreqOnceBuilder implements RecurringPatternBuilderI
         pattern.setFrequency(RecurringFrequency.ONCE);
         return pattern;
     }
-
-
 }

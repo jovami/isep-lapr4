@@ -27,6 +27,7 @@ public class TimeTableService {
         }
         return true;
     }
+
     public boolean checkAvailability(Collection<SystemUser> names, RecurringPattern pattern) {
         for (SystemUser name: names) {
             if (!checkAvailabilityByUser(name,pattern)){
@@ -35,6 +36,7 @@ public class TimeTableService {
         }
         return true;
     }
+
     public boolean schedule(Collection<SystemUser> users, RecurringPattern pattern) {
         for (SystemUser user: users) {
             TimeTable table = new TimeTable(user,pattern);

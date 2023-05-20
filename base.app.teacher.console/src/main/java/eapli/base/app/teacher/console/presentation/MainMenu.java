@@ -52,6 +52,7 @@ public class MainMenu extends AbstractUI {
 
     // LECTURE
     private static final int SCHEDULE_LECTURE_OPTION = 1;
+    private static final int SCHEDULE_EXTRAORDINARY_LECTURE_OPTION = 2;
 
     // REGULAR EXAM
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
@@ -195,6 +196,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Lecture");
 
         menu.addItem(SCHEDULE_LECTURE_OPTION, "Schedule a Lecture", new ScheduleLectureUI()::show);
+        menu.addItem(SCHEDULE_EXTRAORDINARY_LECTURE_OPTION, "Schedule an Extraordinary Lecture", new ScheduleExtraLectureUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
