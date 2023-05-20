@@ -14,7 +14,7 @@ Project eCourse
 
 # Planning and Technical Documentation
 
-[Planning and Technical Documentation](docs/readme.md)
+[Planning and Technical Documentation](docs/README.md)
 
 # How to Build
 
