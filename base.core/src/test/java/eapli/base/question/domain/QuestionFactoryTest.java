@@ -1,17 +1,16 @@
 package eapli.base.question.domain;
 
-import eapli.base.course.domain.Course;
-import eapli.base.formativeexam.domain.FormativeExamFactory;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.course.domain.Course;
 
 /**
  * FormativeExamFactoryTest
@@ -50,7 +49,7 @@ public class QuestionFactoryTest {
     }
 
     @Test
-    public void ensureMatching() {
+    public void ensureMatchingMustHaveSolution() {
         // @formatter:off
         var spec = List.of("MATCHING {" ,
             "DESCRIPTION: \"Match the countries with their capital cities\"",
@@ -95,9 +94,8 @@ public class QuestionFactoryTest {
         assertTrue(question.isPresent(), "Matching Question had everything but still failed");
     }
 
-
     @Test
-    public void ensureMultipleChoiceSingleAnswer() {
+    public void ensureMultipleChoiceMustHaveDescription() {
         // @formatter:off
         var spec = List.of("MULTIPLE_CHOICE {",
             "CHOICE_TYPE: single-answer",
@@ -133,7 +131,7 @@ public class QuestionFactoryTest {
     }
 
     @Test
-    public void ensureMultipleChoiceMultipleAnswer() {
+    public void ensureMultipleChoiceMustHaveAnswer() {
         // @formatter:off
         var spec = List.of("MULTIPLE_CHOICE {" ,
                 "CHOICE_TYPE: multiple-answer",
@@ -177,7 +175,7 @@ public class QuestionFactoryTest {
     }
 
     @Test
-    public void ensureShortAnswer() {
+    public void ensureShortAnswerMustSpecifyCaseSensitivity() {
         // @formatter:off
         var spec = List.of("SHORT_ANSWER {",
                 "DESCRIPTION: \"Where is Casa da Música located?\"",
@@ -204,9 +202,8 @@ public class QuestionFactoryTest {
         assertTrue(fexam.isPresent(), "Short Answer Question had everything but still failed");
     }
 
-
     @Test
-    public void ensureNumerical() {
+    public void ensureNumericalMustHaveSolution() {
         // @formatter:off
         var spec = List.of("NUMERICAL {",
                 "DESCRIPTION: \"What is the value of 1+1?\"",
@@ -230,9 +227,8 @@ public class QuestionFactoryTest {
         assertTrue(fexam.isPresent(), "Numerical Question had everything but still failed");
     }
 
-
     @Test
-    public void ensureMissingWords() {
+    public void ensureMissingWordsMustSpecifyGroup() {
         // @formatter:off
         var spec = List.of("MISSING_WORDS {",
                 "DESCRIPTION: \"The Wright brothers were the first to successfully [1] an airplane.\"",
@@ -269,7 +265,7 @@ public class QuestionFactoryTest {
     }
 
     @Test
-    public void ensureTrueFalse() {
+    public void ensureTrueFalseMustHaveSolution() {
         // @formatter:off
         var spec = List.of("TRUE_FALSE {",
                 "DESCRIPTION: \"Water boils at 100 degrees Celsius.\"",

@@ -16,21 +16,30 @@ The **ANTLR** tool should be used to design the specification grammar
 <!-- TODO?? -->
 
 ## Unit Tests
-
-Per question:
 ### Question
 
 1. ensureMustHaveCourse
 2. ensureMustHaveSpecification
-
-### Per type
+3. ensureSpecificationCannotBeNull
+4. ensureSpecificationCannotBeEmpty
+### Per question type
 #### Matching
+1. ensureMatchingMustHaveSolution
+#### Multiple Choice
 
-<!-- TODO -->
-#### Multiple choice
+1. ensureMultipleChoiceMustHaveDescription
+2. ensureMultipleChoiceMustHaveAnswer() {
 
+#### Short Answer
+1. ensureShortAnswerMustSpecifyCaseSensitivity
+#### Numerical
+1. ensureNumericalMustHaveSolution
 
-<!-- TODO: other types too -->
+#### Missing Words
+1. ensureMissingWordsMustSpecifyGroup
+#### True/False
+1. ensureTrueFalseMustHaveSolution
+
 
 # Design
 
@@ -69,7 +78,7 @@ a **Factory** class will be used to abstract the process.
 The following [sequence diagram](./sd.svg) was created to answer this Use Case:
 ![Sequence diagram](./sd.svg)
 
-## Grammar
+<!-- TODO: is this needed? -->
+<!-- ## Grammar -->
 
-Refer to [the following document](./grammar-reference.md) for information on the formative exam grammar.
-<!-- # Test Plan -->
+<!-- Refer to [the following document](./grammar-reference.md) for information on the formative exam grammar. -->

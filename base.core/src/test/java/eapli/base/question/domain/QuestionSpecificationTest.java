@@ -1,11 +1,10 @@
 package eapli.base.question.domain;
 
-import eapli.base.formativeexam.domain.FormativeExamSpecification;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.Test;
 
 /**
  * FormativeExamSpecificationTest

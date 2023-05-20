@@ -50,11 +50,7 @@ public class QuestionTest {
     }
 
     @Test
-    public void ensureMustHaveSpecifiaction() {
+    public void ensureMustHaveSpecification() {
         assertThrows(IllegalArgumentException.class, () -> new Question(MATEMATICA, null));
     }
-
-
-
-
 }
