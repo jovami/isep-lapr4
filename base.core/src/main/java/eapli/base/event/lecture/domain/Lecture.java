@@ -67,6 +67,7 @@ public class Lecture implements AggregateRoot<Integer> {
         return Objects.hash(lectureId, teacher, pattern);
     }
 
+
     @Override
     public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
@@ -80,6 +81,14 @@ public class Lecture implements AggregateRoot<Integer> {
     @Override
     public boolean hasIdentity(Integer id) {
         return this.lectureId==id;
+    }
+
+    @Override
+    public String toString() {
+        return "Lecture: " +
+                "Id: " + lectureId +
+                ", teacher: " + teacher.acronym() +
+                ", pattern: " + pattern.startTime() +" to "+ pattern.endTime();
     }
 
 }

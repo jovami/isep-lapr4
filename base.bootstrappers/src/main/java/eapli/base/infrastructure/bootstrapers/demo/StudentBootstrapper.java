@@ -22,12 +22,17 @@ package eapli.base.infrastructure.bootstrapers.demo;
 
 
 import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseName;
+import eapli.base.course.repositories.CourseRepository;
+import eapli.base.enrollment.domain.Enrollment;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.application.EnrollmentRequestController;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.base.infrastructure.bootstrapers.UsersBootstrapperBase;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.domain.model.Role;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
@@ -54,17 +59,24 @@ public class StudentBootstrapper extends UsersBootstrapperBase implements Action
 	private static final Logger LOGGER = LoggerFactory.getLogger(StudentBootstrapper.class);
 
 	private final SignupController signupController = new SignupController();
-	private final AcceptRefuseSignupRequestController acceptController = AcceptRefuseSignupFactory.build();
+	private final EnrollmentRepository enrollmentRepository = PersistenceContext.repositories().enrollments();
+	private final CourseRepository courseRepository = PersistenceContext.repositories().courses();
+	private final StudentRepository studentRepository = PersistenceContext.repositories().students();
+
 
 	@Override
 	public boolean execute() {
-		registerStudent("johnny","Password1", "Johnny", "Skrillex",
+		 registerStudent("johnny","Password1", "Johnny", "Skrillex",
 				"johnny@student.com", "isep192", "Johnny Skrillex", "Johnny",
 				"1999-01-01", "123123125");
 
 		registerStudent("mary","Password1", "Mary", "Smith",
 				"mary@student.com", "isep232", "Mary Smith", "Mary",
 				"1999-01-01", "123123123");
+		registerStudent("tiago","Password1", "Mary", "Smith",
+				"mary@student.com", "isep237", "Mary Smith", "Mary",
+				"1999-01-01", "123123129");
+		enrollStudents();
 		return true;
 	}
 
@@ -76,6 +88,14 @@ public class StudentBootstrapper extends UsersBootstrapperBase implements Action
 
 		var user = registerUser(username, password, firstName, lastName, email, roles);
 		registerStudent(user,mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
+
+	}
+	private void enrollStudents() {
+		Course course = courseRepository.findCourseByName(CourseName.valueOf("Fisica"));
+		Student student = studentRepository.findByUsername(Username.valueOf("mary")).get();
+		enrollmentRepository.save(new Enrollment(course, student));
+		Student student1 = studentRepository.findByUsername(Username.valueOf("tiago")).get();
+		enrollmentRepository.save(new Enrollment(course, student1));
 
 	}
 

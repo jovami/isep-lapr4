@@ -17,4 +17,7 @@ public interface CourseRepository extends DomainRepository<Integer, Course> {
     default Iterable<Course> enrollable() {
         return ofState(CourseState.ENROLL);
     }
+    Course findCourseByName(CourseName courseName);
+
+
 }

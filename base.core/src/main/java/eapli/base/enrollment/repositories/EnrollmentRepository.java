@@ -8,4 +8,6 @@ import eapli.framework.domain.repositories.DomainRepository;
 public interface EnrollmentRepository extends DomainRepository<Integer, Enrollment> {
 
     Iterable<Course> coursesOfEnrolledStudent(Student s);
+    Iterable<Enrollment> enrollmentsByCourse(Course c);
+
 }

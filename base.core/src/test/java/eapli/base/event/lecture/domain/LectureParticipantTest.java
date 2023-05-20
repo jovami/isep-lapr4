@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-class LectureParticipantTest {
+public class LectureParticipantTest {
 
     private LectureParticipant participant;
     private Lecture lecture;
@@ -29,7 +29,7 @@ class LectureParticipantTest {
     private StudentBuilder studentBuilder = new StudentBuilder();
 
     @BeforeEach
-    void setUp(){
+    public void setUp(){
 
         //Teacher
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
@@ -64,54 +64,54 @@ class LectureParticipantTest {
     }
 
     @Test
-    void sameAsEqualValues() {
+    public void sameAsEqualValues() {
         LectureParticipant newParticipant = new LectureParticipant(student,lecture);
         Assertions.assertTrue(participant.sameAs(newParticipant));
     }
     @Test
-    void sameAsSameObject() {
+    public void sameAsSameObject() {
         Assertions.assertTrue(participant.sameAs(participant));
     }
 
     @Test
-    void sameAsNull() {
+    public void sameAsNull() {
         Assertions.assertFalse(participant.sameAs(null));
     }
 
     @Test
-    void sameAsOtherObject() {
+    public void sameAsOtherObject() {
         Assertions.assertFalse(participant.sameAs(new Object()));
     }
 
     @Test
-    void compareTo() {
+    public void compareTo() {
         Assertions.assertEquals(0,participant.compareTo(0));
     }
     @Test
-    void compareToBigger() {
+    public void compareToBigger() {
         Assertions.assertEquals(-1,participant.compareTo(10));
     }
     @Test
-    void compareToLower() {
+    public void compareToLower() {
         Assertions.assertEquals(1,participant.compareTo(-10));
     }
 
     @Test
-    void identity() {
+    public void identity() {
         Assertions.assertEquals(0,participant.identity());
     }
 
     @Test
-    void hasIdentityFalse() {
+    public void hasIdentityFalse() {
         Assertions.assertFalse(participant.hasIdentity(-10));
     }
     @Test
-    void hasIdentityTrue() {
+    public void hasIdentityTrue() {
         Assertions.assertTrue(participant.hasIdentity(0));
     }
 
     @Test
-    void sameAsDiffUser() {
+    public void sameAsDiffUser() {
         //Student
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         var user2 = userBuilder.with("newUser", "duMMy1", "dummy", "dummy",
@@ -138,7 +138,7 @@ class LectureParticipantTest {
     }
 
     @Test
-    void sameAsDiffLecture() {
+    public void sameAsDiffLecture() {
         //Student
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         var user2 = userBuilder.with("newUser", "duMMy1", "dummy", "dummy",
@@ -167,7 +167,7 @@ class LectureParticipantTest {
 
 
     @Test
-    void lecture(){
+    public void lecture(){
         Assertions.assertEquals(lecture,participant.lecture());
     }
 }

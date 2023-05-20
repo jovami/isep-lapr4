@@ -30,4 +30,9 @@ public class InMemoryCourseRepository extends InMemoryDomainRepository<Course, I
         return match((course) -> states.contains(course.state()));
     }
 
+    @Override
+    public Course findCourseByName(CourseName courseName) {
+        return matchOne((course) -> course.courseName().equals(courseName)).get();
+    }
+
 }

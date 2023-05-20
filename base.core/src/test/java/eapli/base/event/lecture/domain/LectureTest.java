@@ -9,22 +9,23 @@ import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-class LectureTest {
+public class LectureTest {
     private Lecture lecture;
     private RecurringPattern pattern;
     private Teacher teacher ;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         //Teacher
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         var user1 = userBuilder.with("alexandre", "Password1", "Alexandre", "Moreira", "alexmoreira@gmail.com")
@@ -45,70 +46,70 @@ class LectureTest {
     }
 
     @Test
-    void teacher() {
+    public void teacher() {
         Assertions.assertEquals(teacher,lecture.teacher());
     }
 
     @Test
-    void getPattern() {
+    public void getPattern() {
         assertEquals(pattern,lecture.pattern());
 
     }
 
     @Test
-    void sameAsObject() {
+    public void sameAsObject() {
         assertFalse(lecture.sameAs(new Object()));
     }
     @Test
-    void sameAsNull() {
+    public void sameAsNull() {
         assertFalse(lecture.sameAs(null));
     }
     @Test
-    void sameAsSelf() {
+    public void sameAsSelf() {
         assertTrue(lecture.sameAs(lecture));
     }
     @Test
-    void sameAsSameId() {
+    public void sameAsSameId() {
         Lecture newLecture= new Lecture(teacher,pattern);
         assertTrue(lecture.sameAs(newLecture));
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         assertEquals(Objects.hash(0,teacher,pattern),lecture.hashCode());
     }
 
     @Test
-    void compareToBigger() {
+    public void compareToBigger() {
         assertEquals(-1,lecture.compareTo(10));
     }
 
 
     @Test
-    void compareToEqual() {
+    public void compareToEqual() {
         assertEquals(0,lecture.compareTo(0));
     }
 
     @Test
-    void compareToLower() {
+    public void compareToLower() {
         assertEquals(1,lecture.compareTo(-10));
     }
 
     @Test
-    void hasIdentity() {
+    public void hasIdentity() {
         assertTrue(lecture.hasIdentity(0));
     }
     @Test
-    void hasIdentityFalse() {
+    public void hasIdentityFalse() {
         assertFalse(lecture.hasIdentity(10));
     }
     @Test
-    void testRegular(){
+    public void testRegular(){
         lecture.regular();
         Assertions.assertEquals(LectureType.REGULAR,lecture.type());
     }
     @Test
-    void testExtra(){
+    public void testExtra(){
         lecture.extra();
         Assertions.assertEquals(LectureType.EXTRA,lecture.type());
     }

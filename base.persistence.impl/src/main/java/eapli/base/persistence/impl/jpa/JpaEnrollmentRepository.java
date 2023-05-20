@@ -23,4 +23,9 @@ public class JpaEnrollmentRepository extends BaseJpaRepositoryBase<Enrollment,Lo
         query.setParameter("student", s);
         return query.getResultList();
     }
+
+    @Override
+    public Iterable<Enrollment> enrollmentsByCourse(Course c) {
+        return match("e.course=:course", "course", c);
+    }
 }

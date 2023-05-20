@@ -20,9 +20,13 @@ public class JpaCourseRepository extends BaseJpaRepositoryBase<Course, Long, Int
         return match("e.state IN :states", "states", states);
     }
 
-
     @Override
     public Iterable<Course> ofState(CourseState state) {
         return match("e.state = :state", "state", state);
+    }
+
+    @Override
+    public Course findCourseByName(CourseName courseName) {
+        return matchOne("e.name = :courseName", "courseName", courseName).get();
     }
 }

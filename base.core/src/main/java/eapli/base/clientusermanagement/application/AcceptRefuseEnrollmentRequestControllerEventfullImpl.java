@@ -86,7 +86,7 @@ public class AcceptRefuseEnrollmentRequestControllerEventfullImpl implements Acc
 	private EnrollmentRequest markCourseApplicationAsAccepted(EnrollmentRequest theCourseApplication) {
 		Enrollment enrollment;
 		// do just what is needed in the scope of this use case
-		theCourseApplication.approveEnrollmentRequest();
+		//theCourseApplication.approveEnrollmentRequest();
 
 		enrollment = new Enrollment(theCourseApplication.course(), theCourseApplication.student());
 		enrollmentRepository.save(enrollment);

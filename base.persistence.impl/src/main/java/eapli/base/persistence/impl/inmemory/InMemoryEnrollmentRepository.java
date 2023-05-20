@@ -25,4 +25,11 @@ public class InMemoryEnrollmentRepository extends InMemoryDomainRepository<Enrol
             .map(Enrollment::course)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public Iterable<Enrollment> enrollmentsByCourse(Course c) {
+        return valuesStream()
+            .filter(enr -> enr.course().sameAs(c))
+            .collect(Collectors.toList());
+    }
 }

@@ -1,7 +1,6 @@
 package eapli.base.event.lecture.domain;
 
 import eapli.base.clientusermanagement.domain.users.Student;
-import eapli.base.event.Meeting.domain.Meeting;
 import eapli.framework.domain.model.AggregateRoot;
 
 import javax.persistence.*;
@@ -47,6 +46,7 @@ public class LectureParticipant implements AggregateRoot<Integer> {
         return AggregateRoot.super.compareTo(other);
     }
 
+
     @Override
     public Integer identity() {
         return this.id;
@@ -55,5 +55,13 @@ public class LectureParticipant implements AggregateRoot<Integer> {
     @Override
     public boolean hasIdentity(Integer id) {
         return AggregateRoot.super.hasIdentity(id);
+    }
+
+    @Override
+    public String toString() {
+        return "\nLectureParticipant: " +
+                "with id: " + id +
+                ", with " + lecture.toString() +
+                ", with student: " + student.identity();
     }
 }
