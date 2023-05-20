@@ -1,4 +1,4 @@
-package eapli.base.exam.aplication;
+package eapli.base.exam.application;
 
 import static org.eclipse.collections.impl.block.factory.HashingStrategies.fromFunction;
 

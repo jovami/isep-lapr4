@@ -1,5 +1,4 @@
-package eapli.base.exam.aplication;
-
+package eapli.base.exam.application;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
-
 public class CreateRegularExamController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
@@ -35,9 +33,7 @@ public class CreateRegularExamController {
 
     private final CourseRepository repoCourse;
 
-
-    public CreateRegularExamController()
-    {
+    public CreateRegularExamController() {
         this.repositoryFactory = PersistenceContext.repositories();
         this.repoRegularExam = repositoryFactory.regularExams();
         this.repoStaff = repositoryFactory.staffs();
@@ -45,24 +41,22 @@ public class CreateRegularExamController {
         this.repoCourse = repositoryFactory.courses();
     }
 
-
-    public boolean createRegularExam(File file, Date openDate, Date closeDate,Course chosen) throws IOException
-    {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER,BaseRoles.TEACHER);
+    public boolean createRegularExam(File file, Date openDate, Date closeDate, Course chosen) throws IOException {
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         var course = this.repoCourse.ofIdentity(chosen.identity());
 
         if (!new ValidateRegularExamSpecificationService().validate(file))
             return false;
 
-        var rexam = new RegularExam(RegularExamSpecification.valueOf(file), RegularExamDate.valueOf(openDate,closeDate),chosen);
+        var rexam = new RegularExam(RegularExamSpecification.valueOf(file),
+                RegularExamDate.valueOf(openDate, closeDate), chosen);
 
         this.repoRegularExam.save(rexam);
 
         return true;
     }
 
-    public Iterable<Course> listCoursesTeacherTeaches()
-    {
+    public Iterable<Course> listCoursesTeacherTeaches() {
         SystemUser userTeacher = authz.session().get().authenticatedUser();
         Optional<Teacher> teacher = repoTeacher.findBySystemUser(userTeacher);
 

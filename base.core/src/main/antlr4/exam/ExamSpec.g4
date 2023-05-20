@@ -1,3 +1,5 @@
+// vim: ft=antlr
+
 grammar ExamSpec;
 
 /*
@@ -5,7 +7,7 @@ grammar ExamSpec;
  */
 
 @header{
-package eapli.base.exam.domain.grammar;
+package eapli.base.exam.application.parser.autogen;
 }
 
 // Entry point
@@ -22,11 +24,11 @@ grading: 'GRADING' COLON  ('none' | 'on-submission' | 'after-closing');
 
 // Grammar rules for the sections of the exam
 section: 'SECTION' INT LEFT_BRACE description? question+ RIGHT_BRACE;
-question: matching 
-        | multiple_choice 
-        | short_answer 
-        | numerical 
-        | missing_words 
+question: matching
+        | multiple_choice
+        | short_answer
+        | numerical
+        | missing_words
         | true_false;
 
 // Grammar rules for matching questions
@@ -38,7 +40,7 @@ match: INT DASH INT;
 
 // Grammar rules for multiple choice questions
 multiple_choice: 'MULTIPLE_CHOICE' LEFT_BRACE choice_type description answer+ numerical_solution+ RIGHT_BRACE;
-numerical_solution: 'SOLUTION' INT COLON INT (',' INT)* LEFT_BRACKET FLOAT RIGHT_BRACKET;     
+numerical_solution: 'SOLUTION' INT COLON INT (',' INT)* LEFT_BRACKET FLOAT RIGHT_BRACKET;
 choice_type: 'CHOICE_TYPE' COLON ('single-answer' | 'multiple-answer');
 
 // Grammar rules for short answer questions
@@ -80,4 +82,4 @@ FLOAT: [0-9]+ (('.') [0-9]+);
 INT: [0-9]+;
 BOOL: ('true' | 'false');
 STRING: '"' ~[\n"]* '"';
-WS: [ \t\r\n]+ -> skip; // Ignore whitespace 
+WS: [ \t\r\n]+ -> skip; // Ignore whitespace

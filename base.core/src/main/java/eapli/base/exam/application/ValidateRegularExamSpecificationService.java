@@ -1,12 +1,18 @@
-package eapli.base.exam.aplication;
-
-import eapli.base.exam.domain.grammar.ExamSpecLexer;
-import eapli.base.exam.domain.grammar.ExamSpecParser;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
+package eapli.base.exam.application;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+
+import eapli.base.exam.application.parser.autogen.ExamSpecLexer;
+import eapli.base.exam.application.parser.autogen.ExamSpecParser;
 
 public class ValidateRegularExamSpecificationService {
 

@@ -1,6 +1,6 @@
 // Generated from ExamSpec.g4 by ANTLR 4.12.0
 
-package eapli.base.exam.domain.grammar;
+package eapli.base.exam.application.parser.autogen;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

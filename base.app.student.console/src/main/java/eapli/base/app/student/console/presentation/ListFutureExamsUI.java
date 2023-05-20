@@ -2,7 +2,7 @@ package eapli.base.app.student.console.presentation;
 
 import java.time.LocalDateTime;
 
-import eapli.base.exam.aplication.ListFutureExamsController;
+import eapli.base.exam.application.ListFutureExamsController;
 import eapli.base.exam.dto.FutureExamDTO;
 import eapli.framework.presentation.console.AbstractListUI;
 import eapli.framework.visitor.Visitor;
