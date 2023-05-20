@@ -2,30 +2,29 @@
 'https://plantuml.com/sequence-diagram
 
 actor Teacher as Actor
-participant CreateRegularExamUI as UI <<presentation>>
-participant CreateRegularExamController as controller <<application>>
+participant UpdateRegularExamUI as UI <<presentation>>
+participant UpdateRegularExamController as controller <<application>>
+participant RegularExam as regularExam <<domain>>
+participant RegularExamDate as regularExamDate <<domain>>
+participant RegularExamSpecification as regularSpec<<domain>>
+participant ValidateRegularExamSpecificationService as service <<service>>
+
 participant PersistenceContext as persistence <<persistence>>
 participant RepositoryFactory as factory <<factory>>
 database RegularExamRepository as repoRegularExam <<repository>>
 database StaffRepository as repoStaff <<repository>>
 database TeacherRepository as repoTeacher <<repository>>
 database CourseRepository as repoCourse <<repository>>
-participant AuthzRegistry as authz <<application>>
-participant AuthorizationService as authzService <<application>>
-participant UserSession as userSession <<application>>
-participant ValidateRegularExamSpecificationService as resservice <<application>>
-participant BailErrorListener as listener <<application>>
-participant ExamSpecLexer as lexer <<domain>>
-participant ExamSpecParser as parser <<domain>>
-participant CommonTokenStream as token
-participant RegularExamSpecification as specification <<domain>>
-participant RegularExamDate as examdate <<domain>>
-participant RegularExam as exam <<domain>>
+
+
+
+participant CourseAndDescriptionDTOMapper as course_mapper
+participant CourseAndDescriptionDTO as course_dto
 
 
 
 
-Actor -> UI : create regular exam
+Actor -> UI : update regular exam
 activate Actor
 activate UI
 
@@ -73,139 +72,111 @@ activate UI
         deactivate factory
 
     deactivate controller
-deactivate UI
 
-UI-> controller : listCoursesTeacherTeaches()
-activate UI
+
+UI --> controller: getCourses()
+
+
     activate controller
-        controller -> authz : authorizationService()
-        activate authz
-        authz -> authzService : create
-        activate authzService
-        deactivate authzService
-        authz -> controller : authorizationService
-        deactivate authz
-
-        controller -> authzService : session()
-        activate authzService
-            authzService -> userSession : authenticatedUser()
-            activate userSession
-                userSession -> authzService : systemUser
-            deactivate userSession
-            authzService -> controller : systemUser
-        deactivate authzService
-
-        controller -> repoTeacher :findBySystemUser(systemUser)
+        controller --> repoTeacher: teacher = findBySystemUser(systemUser)
         activate repoTeacher
-            repoTeacher -> controller : teacher
+        note bottom: systemUser is taken from user session
         deactivate repoTeacher
 
-        controller -> repoStaff : taughtBy(teacher)
+        controller --> repoStaff: taughtBy(teacher)
+
         activate repoStaff
-            repoStaff -> controller : courses
         deactivate repoStaff
 
-        controller -> UI : listCoursesTeacherTeaches
+        controller --> course_mapper: toDto(courses)
+        activate course_mapper
+            loop for each course in courses
+                course_mapper --> course_dto: create()
+                activate course_dto
+                deactivate course_dto
+            end loop
+            course_mapper --> controller: courseDTOList
+        deactivate course_mapper
+        controller --> UI: courses
+
     deactivate controller
-UI --> Actor : show list courses teacher teaches\n and asks him to select one
+    UI --> Actor: show courses
 deactivate UI
 
-Actor -> UI : selects a course
+Actor -> UI: selects course from list
 activate UI
-    UI --> Actor : aks the teacher to enter\n regular exam specification file path
-
-    Actor -> UI : enters the file path
-
-    UI --> Actor : asks the teacher to enter an open date to exam\n with format (yyyy-MM-dd HH:mm)
-
-    Actor -> UI : enters the open date
-
-    UI --> Actor : asks the teacher to enter an close date to exam\n with format (yyyy-MM-dd HH:mm)
-
-    Actor -> UI : enters the close date
-
-    UI -> controller :createRegularExam(file,openDate,closeDate,chosenCourse)
+    UI --> controller: listExams(course)
     activate controller
+        controller --> repoRegularExam: findByCourse(course)
+        activate repoRegularExam
+        deactivate repoRegularExam
+        controller --> UI: exams
+    deactivate controller
+    UI --> Actor: show exams
 
-        controller -> authzService : ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER,BaseRoles.TEACHER)
-        activate authzService
-        deactivate authzService
 
-        controller -> repoCourse : ofIdentity(chosenCourseIdentity)
-        activate repoCourse
-            repoCourse -> controller : Course
-        deactivate repoCourse
 
-        controller -> resservice : create
-        activate resservice
-            resservice -> resservice : validate(file)
-            resservice -> resservice : isValid(stream)
 
-                resservice -> lexer :create(stream)
-                activate lexer
-                lexer -> resservice : lexer
-                resservice -> listener :create
-                activate listener
-                    listener -> resservice : listener
-                deactivate listener
-                resservice -> lexer : addErrorListener(listener)
-                deactivate lexer
+deactivate UI
 
-                resservice -> token : create(lexer)
-                activate token
-                    token -> resservice : tokenstream
-                deactivate token
+Actor -> UI : Choose an exam from the list of exams
+activate UI
+loop
+    Actor -> UI : Choose update exam date or \n exam specification
 
-                resservice -> parser :create(tokenstrean)
-                activate parser
-                parser -> resservice : parser
-                resservice -> listener :create
-                      activate listener
-                        listener -> resservice : listener
-                      deactivate listener
-                resservice -> parser :addErrorListener(listener)
-                deactivate parser
+    UI -> controller : updateRegularExamDate\n(regularExam,openDate,closeDate)
+    activate controller
+        controller -> regularExamDate : valueOf(openDate,closeDate)
+        activate regularExamDate
+            regularExamDate -> controller : regularExamDate
+        deactivate regularExamDate
 
-                resservice -> parser : exam()
-                activate parser
-                deactivate parser
+        controller -> regularExam : updateRegularExamDate(regularExamDate)
+        activate regularExam
+        deactivate regularExam
 
-            resservice -> controller : boolean
-        deactivate resservice
-
-        controller -> specification : valueOf(file)
-        activate specification
-        specification -> specification :create(file)
-        specification -> controller : RegularExamSpecification
-        deactivate specification
-
-        controller -> examdate : valueOf(openDate,closeDate)
-        activate examdate
-        examdate -> examdate :create(openDate,closeDate)
-        examdate -> examdate : setIntervalDate(openDate,closeDate)
-        note right : checks if opendate is \nbefore closeDate
-        examdate -> controller : RegularExamDate
-        deactivate examdate
-
-        controller -> exam : create(RegularExamSpecification,RegularExamDate,Course)
-        activate exam
-            exam -> controller: RegularExam
-        deactivate exam
-
-        controller -> repoRegularExam : save(RegularExam)
+        controller -> repoRegularExam : save(regularExam)
         activate repoRegularExam
         deactivate repoRegularExam
 
-    controller -> UI : boolean
+        UI -->Actor : informs success of operation
+        UI --> Actor : asks if teacher wants to \n update anything else(yes/no)
+
     deactivate controller
+end loop
 
-    UI --> Actor : informs success of the operation
+loop
+    Actor -> UI : Choose update exam date or \n exam specification
+
+        UI -> controller : updateRegularExamSpecification\n(regularExam,file)
+        activate controller
+            controller -> service : validate(file)
+            activate service
+            deactivate service
+            controller -> regularSpec : valueOf(file)
+
+
+            activate regularSpec
+                regularSpec -> controller : regularSpecification
+            deactivate regularSpec
+
+            controller -> regularExam : updateRegularExamSpecification(regularSpecification)
+            activate regularExam
+            deactivate regularExam
+
+            controller -> repoRegularExam : save(regularExam)
+            activate repoRegularExam
+            deactivate repoRegularExam
+
+            UI -->Actor : informs success of operation
+            UI --> Actor : asks if teacher wants to \n update anything else(yes/no)
+
+        deactivate controller
+
+
+
+end loop
 deactivate UI
-
-
-
-
-
 
 
 

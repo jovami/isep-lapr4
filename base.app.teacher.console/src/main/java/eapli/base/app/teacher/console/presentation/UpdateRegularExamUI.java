@@ -33,7 +33,7 @@ public class UpdateRegularExamUI extends AbstractUI {
             return false;
         var chosenCourse = widgetCourse.selectedElement();
 
-        var widgetExam = new SelectWidget<>("Choose a exam from the list of exams:", ctrl.listExams(chosenCourse));
+        var widgetExam = new SelectWidget<>("Choose an exam from the list of exams:", ctrl.listExams(chosenCourse));
         widgetExam.show();
 
         if (widgetExam.selectedOption() <= 0)

@@ -1,7 +1,7 @@
-US 2002 -- As Teacher, I want to create/update an exam
+US 2002 -- As Teacher, I want to create an exam
 ==============================
 
-# Analysi
+# Analysis
 
 ## Business rules
 
@@ -56,5 +56,4 @@ US 2002 -- As Teacher, I want to create/update an exam
 ## Sequence Diagram
 
 ![diagram](./createRegularExamSD.svg)
-
 
