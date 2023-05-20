@@ -2,19 +2,12 @@ package eapli.base.course.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.functional.Either;
+import eapli.framework.validations.Preconditions;
 
 @Entity
 @Table(name = "COURSE")
@@ -23,7 +16,6 @@ public class Course implements AggregateRoot<Integer> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "IDCOURSE")
     private int code;
-
     @Column(name = "COURSENAME", nullable = false, unique = true)
     private CourseName name;
     @Column(name = "COURSEDESCRIPTION")
@@ -35,32 +27,21 @@ public class Course implements AggregateRoot<Integer> {
     private CourseDuration duration;
     @Column(name = "COURSECAPACITY")
     private CourseCapacity capacity;
-
-    // TODO: HEAD-TEACHER
-    // @Column(name="HEADTEACHER",nullable = false)
-    @OneToOne
+    @ManyToOne
     private Teacher headTeacher;
-
-    // TODO: ENROLLMENT
-
-    // TODO: FORMATIVE/REGULAR EXAMS
-
-    // TODO: LECTURE--COURSE MUST BE REFERENCED IN THE LECTURE
 
     // JPA needs empty constructor
     protected Course() {
     }
 
-    public Course(String name, String description, Date startDate, Date endDate) {
+    public Course(CourseName name, CourseDescription description, Date startDate, Date endDate) {
+        Preconditions.noneNull(name, description, startDate, endDate);
+
         this.state = CourseState.CLOSE;
-        this.name = new CourseName(name);
-        this.description = new CourseDescription(description);
+        this.name = name;
+        this.description = description;
         this.duration = new CourseDuration(startDate, endDate);
         this.capacity = new CourseCapacity();
-    }
-
-    protected void setName(String name) {
-        this.name = new CourseName(name);
     }
 
     public Either<String, CourseState> close() {
@@ -111,63 +92,41 @@ public class Course implements AggregateRoot<Integer> {
         this.state = CourseState.CLOSE;
     }
 
-    /*
-     * public void setHeadTeacher(Teacher headTeacher){
-     * this.headTeacher=headTeacher;
-     * }
-     */
-
-    public String getName() {
-        return name.getName();
-    }
-
-    public CourseName courseName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description.getDescription();
+    public CourseName name() {
+        return this.name;
     }
 
     public CourseDescription description() {
-        return description;
+        return this.description;
     }
 
     public CourseState state() {
-        return state;
+        return this.state;
     }
 
-    protected CourseDuration getDuration() {
-        return duration;
+    protected CourseDuration duration() {
+        return this.duration;
     }
 
-    protected CourseCapacity getCapacity() {
-        return capacity;
+    protected CourseCapacity capacity() {
+        return this.capacity;
     }
 
     public Teacher headTeacher() {
-        return headTeacher;
+        return this.headTeacher;
     }
 
     public void setHeadTeacher(Teacher headTeacher) {
         this.headTeacher = headTeacher;
     }
 
-    public void setDescription(String description) {
-        this.description = new CourseDescription(description);
-    }
-
-    public boolean setCapacity(int minCacapity, int maxCapacity) {
+    public boolean setCapacity(int min, int max) {
         try {
-            capacity = new CourseCapacity(minCacapity, maxCapacity);
+            capacity = new CourseCapacity(min, max);
             return true;
         } catch (IllegalArgumentException e) {
             return false;
         }
-    }
-
-    public boolean setDuration(Date startDate, Date endDate) {
-        return this.duration.setIntervalDate(startDate, endDate);
     }
 
     @Override
@@ -204,8 +163,8 @@ public class Course implements AggregateRoot<Integer> {
     public String toString() {
         return "Course: " +
                 "\ncode: " + code +
-                "\nname: " + name.getName() +
-                "\ndescription: " + description.getDescription() +
+                "\nname: " + name +
+                "\ndescription: " + description +
                 "\nduration: " + duration.getStartDate() + " - " + duration.getEndDate();
     }
 

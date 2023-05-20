@@ -28,8 +28,7 @@ public class RegularExamBootstrapper implements Action {
             var specification = new RegularExamSpecification(grammar);
 
             for (Course c : course) {
-                String name = c.courseName().getName();
-                switch (name) {
+                switch (c.name().name()) {
                     case "Fisica":
                         var openDate1 = df.parse("01/01/2025");
                         var closeDate1 = df.parse("02/01/2025");

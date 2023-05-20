@@ -33,6 +33,8 @@ public class Lecture implements AggregateRoot<Integer> {
     @Enumerated(EnumType.STRING)
     private LectureType type;
 
+    // TODO: LECTURE--COURSE MUST BE REFERENCED
+
     protected Lecture() {
     }
 

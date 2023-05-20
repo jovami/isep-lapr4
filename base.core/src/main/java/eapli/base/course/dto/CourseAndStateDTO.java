@@ -14,9 +14,9 @@ public class CourseAndStateDTO {
     private final CourseState state;
     private final int courseId;
 
-    public CourseAndStateDTO(int id, String name, CourseState state) {
+    public CourseAndStateDTO(int id, CourseName name, CourseState state) {
         this.courseId = id;
-        this.name = new CourseName(name);
+        this.name = name;
         this.state = state;
     }
 

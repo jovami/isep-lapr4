@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +46,7 @@ public class RegularExamTest {
         try {
             Date startDate = dfx.parse(startDateString);
             Date endDate = dfx.parse(endDateString);
-            course = new Course("curso", "descrição", startDate, endDate);
+            course = new Course(CourseName.valueOf("curso") , CourseDescription.valueOf("descrição"), startDate, endDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

@@ -4,6 +4,8 @@ import java.util.Date;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
@@ -26,15 +28,15 @@ public class CreateCourseController {
     public boolean createCourse(String name, String description, Date startDate, Date endDate) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
         try {
-            course = new Course(name, description, startDate, endDate);
+            course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
             return true;
         } catch (IllegalArgumentException e) {
             return false;
         }
     }
 
-    public boolean addCapacity(int minCacapity, int maxCapacity) {
-        return course.setCapacity(minCacapity, maxCapacity);
+    public boolean addCapacity(int min, int max) {
+        return course.setCapacity(min, max);
     }
 
     public boolean saveCourse() {

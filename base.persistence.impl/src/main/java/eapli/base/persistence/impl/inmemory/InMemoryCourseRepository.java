@@ -30,6 +30,6 @@ class InMemoryCourseRepository extends InMemoryDomainRepository<Course, Integer>
 
     @Override
     public Course findCourseByName(CourseName courseName) {
-        return matchOne((course) -> course.courseName().equals(courseName)).get();
+        return matchOne((course) -> course.name().equals(courseName)).get();
     }
 }

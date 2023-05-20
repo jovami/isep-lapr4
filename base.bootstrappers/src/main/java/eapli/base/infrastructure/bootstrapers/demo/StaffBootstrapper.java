@@ -23,8 +23,7 @@ public class StaffBootstrapper implements Action {
                 .orElseThrow(IllegalStateException::new);
 
         for (Course c : course) {
-            String name = c.courseName().getName();
-            switch (name) {
+            switch (c.name().name()) {
                 case "Fisica":
                     saveStaff(c, teacherJFA);
                     saveStaff(c, teacherMAM);

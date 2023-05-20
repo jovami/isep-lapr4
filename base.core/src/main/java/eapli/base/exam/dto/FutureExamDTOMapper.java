@@ -10,6 +10,6 @@ public final class FutureExamDTOMapper implements Mapper<RegularExam, FutureExam
 
     @Override
     public FutureExamDTO toDTO(final RegularExam exam) {
-        return new FutureExamDTO(exam.course().courseName(), exam.regularExamDate());
+        return new FutureExamDTO(exam.course().name(), exam.regularExamDate());
     }
 }

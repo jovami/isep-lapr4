@@ -29,7 +29,7 @@ public final class FutureExamDTO {
     }
 
     public FutureExamDTO(final CourseName name, final RegularExamDate date) {
-        this.courseName = CourseName.valueOf(name.getName());
+        this.courseName = name;
         this.startTime = toLocalDateTime(date.openDate());
         this.endTime = toLocalDateTime(date.closeDate());
     }

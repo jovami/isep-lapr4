@@ -1,9 +1,7 @@
 package eapli.base.course.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,17 +32,10 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            course = new Course("curso", "descrição", startDate, endDate);
+            course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("description"), startDate, endDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    void testSetName() {
-        String test = "TestName";
-        course.setName(test);
-        assertEquals(test, course.getName());
     }
 
     @Test
@@ -80,18 +71,10 @@ class CourseTest {
         assertEquals(CourseState.CLOSE, course.state());
     }
 
-    @Test
-    void setDescription() {
-        String test = "TestDescription";
-        course.setDescription(test);
-        assertEquals(test, course.getDescription());
-    }
 
     @Test
     void setCourseDescription() {
-        String test = "TestDescription";
-        CourseDescription course = new CourseDescription(test);
-        assertEquals(test, course.toString());
+        assertDoesNotThrow(() -> new CourseDescription("TestDescription"));
     }
 
     @Test
@@ -99,9 +82,9 @@ class CourseTest {
         int testMin = -5;
         int testMax = -10;
 
-        assertEquals(false, course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
+        assertFalse(course.setCapacity(testMin, testMax));
+        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
     }
 
     @Test
@@ -109,9 +92,9 @@ class CourseTest {
         int testMin = 40;
         int testMax = 10;
 
-        assertEquals(false, course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
+        assertFalse(course.setCapacity(testMin, testMax));
+        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
 
     }
 
@@ -131,8 +114,8 @@ class CourseTest {
         int testMax = 20;
 
         course.setCapacity(testMin, testMax);
-        assertEquals(testMin, course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(testMax, course.getCapacity().getMaxStudentsEnrolled());
+        assertEquals(testMin, course.capacity().getMinStudentsEnrolled());
+        assertEquals(testMax, course.capacity().getMaxStudentsEnrolled());
     }
 
     @Test
@@ -141,8 +124,8 @@ class CourseTest {
         int testMax = 10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
     }
 
     @Test
@@ -151,24 +134,8 @@ class CourseTest {
         int testMax = -10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
-    }
-
-    @Test
-    void setDuration() throws ParseException {
-
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date startDate = df.parse(startDateString);
-        Date endDate = df.parse(endDateString);
-
-        assertTrue(course.setDuration(startDate, endDate));
-        assertEquals(startDate, course.getDuration().startDate());
-        assertEquals(endDate, course.getDuration().endDate());
+        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
     }
 
     @Test
@@ -218,34 +185,11 @@ class CourseTest {
         AtomicReference<CourseDuration> duration = new AtomicReference<>(new CourseDuration());
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> {
-                    duration.set(new CourseDuration(startDate, endDate));
-                });
-        /*
-         * assertEquals(startDate, duration.get().getStartDate());
-         * assertEquals(endDate, duration.get().getEndDate());
-         * assertEquals("Start date: " + startDate.toString() + "\tEnd date: " +
-         * endDate.toString(), duration.toString());
-         */
-    }
-
-    @Test
-    void setInvertedDatesDuration() throws ParseException {
-
-        String startDateString = "1/1/2023";
-        String endDateString = "1/1/2020";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date startDate = df.parse(startDateString);
-        Date endDate = df.parse(endDateString);
-        assertFalse(course.setDuration(startDate, endDate));
-
+                () -> duration.set(new CourseDuration(startDate, endDate)));
     }
 
     @Test
     void testSameCourse() {
-        course.setName("course");
         assertTrue(course.sameAs(course));
     }
 
@@ -259,7 +203,7 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            c2 = new Course("curso", "descrição", startDate, endDate);
+            c2 = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), startDate, endDate);
             assertTrue(course.sameAs(c2));
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -282,7 +226,7 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            c2 = new Course("different", "descrição", startDate, endDate);
+            c2 = new Course(CourseName.valueOf("Different"), CourseDescription.valueOf("descrição"), startDate, endDate);
             assertFalse(course.sameAs(c2));
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -399,15 +343,16 @@ class CourseTest {
 
     @Test
     void CapacityToString() {
-        assertEquals("Min students enrolled: " + course.getCapacity().getMinStudentsEnrolled()
-                + "\nMax students enrolled: " + course.getCapacity().getMaxStudentsEnrolled(),
-                course.getCapacity().toString());
+        assertEquals("Min students enrolled: " + course.capacity().getMinStudentsEnrolled()
+                + "\nMax students enrolled: " + course.capacity().getMaxStudentsEnrolled(),
+                course.capacity().toString());
     }
 
     @Test
     void courseDescriptionNull() {
-        CourseDescription courseDescription = new CourseDescription();
-        Assertions.assertNull(courseDescription.getDescription());
+        assertThrows(IllegalArgumentException.class, () -> {
+            new CourseDescription(null);
+        });
     }
 
     /*

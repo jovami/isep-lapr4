@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import eapli.base.course.domain.CourseState;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -40,7 +42,7 @@ public class CourseBootstrapper implements Action {
         }
 
         try {
-            Course c = new Course(name, description, sDate, eDate);
+            Course c = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), sDate, eDate);
             setCourseState(c, state);
             repo.save(c);
         } catch (IllegalArgumentException e) {

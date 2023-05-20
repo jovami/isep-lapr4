@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.validations.Preconditions;
 
 @Entity
 @Table(name = "BOARD")
@@ -27,7 +28,6 @@ public class Board implements AggregateRoot<BoardTitle> {
     private int num_rows;
     @Column(nullable = false)
     private int num_columns;
-
     @OneToOne
     private SystemUser owner;
 
@@ -49,16 +49,10 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     // TODO protected??
 
-    protected Board(String boardTitle, int rows, int columns) {
-        this.boardTitle = new BoardTitle(boardTitle);
-        this.num_rows = rows;
-        this.num_columns = columns;
-        this.state = BoardState.CREATED;
-        setupBoard(rows, columns);
-    }
+    public Board(BoardTitle boardTitle, int rows, int columns, SystemUser owner) {
+        Preconditions.noneNull(boardTitle, rows, columns, owner);
 
-    public Board(String boardTitle, int rows, int columns, SystemUser owner) {
-        this.boardTitle = new BoardTitle(boardTitle);
+        this.boardTitle = boardTitle;
         this.num_rows = rows;
         this.num_columns = columns;
         this.owner = owner;
@@ -162,7 +156,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Override
     public String toString() {
         return "\nBoard: " +
-                "\nboardTitle: " + boardTitle.getBoardTitle() +
+                "\nboardTitle: " + boardTitle.title() +
                 "\nwith " + cells.size() + " cells";
     }
 }

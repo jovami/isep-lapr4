@@ -14,10 +14,10 @@ public final class AvailableCourseDTO {
     private final CourseDescription desc;
     private final CourseState state;
 
-    public AvailableCourseDTO(int courseId, String name, String desc, CourseState state) {
+    public AvailableCourseDTO(int courseId, CourseName name, CourseDescription description, CourseState state) {
         this.id = courseId;
-        this.name = new CourseName(name);
-        this.desc = new CourseDescription(desc);
+        this.name = name;
+        this.desc = description;
         this.state = state;
     }
 

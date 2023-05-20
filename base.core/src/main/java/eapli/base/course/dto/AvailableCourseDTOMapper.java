@@ -10,6 +10,6 @@ public class AvailableCourseDTOMapper implements Mapper<Course, AvailableCourseD
 
     @Override
     public AvailableCourseDTO toDTO(Course c) {
-        return new AvailableCourseDTO(c.identity(), c.getName(), c.getDescription(), c.state());
+        return new AvailableCourseDTO(c.identity(), c.name(), c.description(), c.state());
     }
 }

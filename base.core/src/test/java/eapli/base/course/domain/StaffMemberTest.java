@@ -63,7 +63,7 @@ class StaffMemberTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            course = new Course(name, description, startDate, endDate);
+            course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

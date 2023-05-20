@@ -3,38 +3,32 @@ package eapli.base.course.domain;
 import javax.persistence.Embeddable;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class CourseDescription implements ValueObject {
-    // TODO: verify max length??
-    private final int MAXLENGTH = 100;
-
-    public String getDescription() {
-        return description;
-    }
 
     private String description;
 
-    public CourseDescription() {
+    protected CourseDescription() {
         description = null;
     }
 
-    public CourseDescription(String description) {
-        setDescription(description);
+    protected CourseDescription(String description) {
+        Preconditions.nonNull(description, "Course description should not be null");
+        Preconditions.nonEmpty(description, "Course description should not be empty");
+
+        this.description = description;
     }
 
-    /*
-     * protected boolean checkDescription(String description){
-     * return description.length()<=MAXLENGTH;
-     * }
-     */
+    public static CourseDescription valueOf(String description) {
+        return new CourseDescription(description);
+    }
+
 
     @Override
     public String toString() {
         return description;
     }
 
-    protected void setDescription(String description) {
-        this.description = description;
-    }
 }

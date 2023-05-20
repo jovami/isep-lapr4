@@ -32,7 +32,7 @@ class EnrollmentRequestPrinter implements Visitor<EnrollmentRequest> {
 
     @Override
     public void visit(final EnrollmentRequest visitee) {
-        System.out.printf("%-10s%-20s%-20s%n", visitee.identity(), visitee.course().getName(),
+        System.out.printf("%-10s%-20s%-20s%n", visitee.identity(), visitee.course().name(),
                 visitee.student().identity());
     }
 }

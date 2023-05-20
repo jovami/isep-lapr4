@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +33,7 @@ public class FormativeExamTest {
             final var startDate = sdf.parse("20/03/2020");
             final var endDate = sdf.parse("20/09/2020");
 
-            final var course = new Course(name, description, startDate, endDate);
+            final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
             course.setCapacity(minStudents, maxStudents);
 
             MATEMATICA = course;

@@ -6,6 +6,6 @@ import jovami.util.dto.Mapper;
 public class CourseAndDescriptionDTOMapper implements Mapper<Course, CourseAndDescriptionDTO> {
     @Override
     public CourseAndDescriptionDTO toDTO(Course course) {
-        return new CourseAndDescriptionDTO(course.identity(), course.courseName(), course.description());
+        return new CourseAndDescriptionDTO(course.identity(), course.name(), course.description());
     }
 }

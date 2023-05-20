@@ -32,8 +32,6 @@ public class CreateBoardUI extends AbstractUI {
                 return false;
             }
 
-            controller.persistBoard();
-
             System.out.println("Board Created Successfully!!");
             return true;
         }

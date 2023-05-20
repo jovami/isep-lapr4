@@ -79,7 +79,7 @@ public class Enrollment implements AggregateRoot<Integer> {
     public String toString() {
         return "Enrollment " +
                 "code: " + code +
-                ", from Course: " + course.getName() +
+                ", from Course: " + course.name() +
                 ", with Student: " + student.identity();
     }
 }

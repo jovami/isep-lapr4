@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,8 +34,8 @@ public class EnrollmentRequestTest {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Date sDate = df.parse("20/05/2020");
         Date eDate = df.parse("20/09/2020");
-        course1 = new Course("PYTHON-1", "Python for beginners :)", sDate, eDate);
-        course2 = new Course("JAVA-3", "Java advanced!", sDate, eDate);
+        course1 = new Course(CourseName.valueOf("PYTHON-1"), CourseDescription.valueOf("Python for beginners :)"), sDate, eDate);
+        course2 = new Course(CourseName.valueOf("JAVA-3"), CourseDescription.valueOf("Java advanced!"), sDate, eDate);
 
         var user1 = userBuilder.with("alexandre", "Password1", "Alexandre", "Moreira", "alexmoreira@gmail.com")
                 .withRoles(BaseRoles.MANAGER).build();

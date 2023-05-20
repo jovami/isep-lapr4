@@ -11,35 +11,28 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
 @UseCaseController
 public class CreateBoardController {
-    private Board board;
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
-
     private final BoardRepository repository;
-
     private final UserRepository userRepository;
 
     public CreateBoardController() {
         repository = PersistenceContext.repositories().boards();
         userRepository = PersistenceContext.repositories().users();
-
     }
 
     public boolean createBoard(String boardTitle, int rows, int columns) {
-        BoardTitle title = new BoardTitle(boardTitle);
+        BoardTitle title = BoardTitle.valueOf(boardTitle);
         if (repository.ofIdentity(title).isPresent())
             return false;
 
-        board = new Board(boardTitle, rows, columns,
-                userRepository.ofIdentity(authz.session().get().authenticatedUser().identity()).get());
+        var board = new Board(BoardTitle.valueOf(boardTitle), rows, columns,
+                userRepository.ofIdentity(authz.session()
+                                .orElseThrow()
+                                .authenticatedUser()
+                                .identity())
+                        .orElseThrow());
+
+        repository.save(board);
         return true;
     }
-
-    public void persistBoard() {
-        repository.save(board);
-    }
-
-    public long countAll() {
-        return repository.size();
-    }
-
 }

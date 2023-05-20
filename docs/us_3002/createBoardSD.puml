@@ -34,7 +34,7 @@ activate UI
                             Controller <-- Persistence: boardRepository
                             deactivate Fact
                             deactivate Persistence
-        Controller -> Repo : persistBoard(Board)
+        Controller -> Repo : save(board)
         deactivate Repo
     UI <-- Controller : board
     deactivate Controller

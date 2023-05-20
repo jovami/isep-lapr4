@@ -5,18 +5,26 @@ import java.util.Objects;
 import javax.persistence.Embeddable;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class CourseName implements ValueObject {
 
-    public String name;
+    private final String name;
 
-    public CourseName() {
+    protected CourseName() {
         name = null;
     }
 
-    public static CourseName valueOf(final String courseName) {
-        return new CourseName(courseName);
+    protected CourseName(final String name) {
+        Preconditions.noneNull(name, "Course name should not be null");
+        Preconditions.nonEmpty(name, "Course name should not be empty");
+
+        this.name = name;
+    }
+
+    public static CourseName valueOf(final String name) {
+        return new CourseName(name);
     }
 
     @Override
@@ -26,7 +34,7 @@ public class CourseName implements ValueObject {
         if (o == null || getClass() != o.getClass())
             return false;
         CourseName that = (CourseName) o;
-        return this.name.equals(that.getName());
+        return this.name.equals(that.name());
     }
 
     @Override
@@ -39,15 +47,7 @@ public class CourseName implements ValueObject {
         return name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public CourseName(String name) {
-        setName(name);
-    }
-
-    protected void setName(String name) {
-        this.name = name;
+    public String name() {
+        return this.name;
     }
 }

@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +41,7 @@ public class FormativeExamFactoryTest {
             final var startDate = sdf.parse("20/05/2020");
             final var endDate = sdf.parse("20/09/2020");
 
-            final var course = new Course(name, description, startDate, endDate);
+            final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
             course.setCapacity(minStudents, maxStudents);
             course.open();
 

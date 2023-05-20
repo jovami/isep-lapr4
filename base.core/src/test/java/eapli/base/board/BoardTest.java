@@ -36,7 +36,7 @@ public class BoardTest {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         user = userBuilder.with(username, "Password1", "dummy", "dummy", "a@gmail.com")
                 .withRoles(BaseRoles.MANAGER).build();
-        board = new Board(title, rows, columns, user);
+        board = new Board(BoardTitle.valueOf(title), rows, columns, user);
 
     }
 
@@ -193,29 +193,21 @@ public class BoardTest {
     public void ensureGetBoardTitle() {
         BoardTitle boardTitle = board.getBoardTitle();
 
-        assertEquals("test", boardTitle.getBoardTitle());
-    }
-
-    @Test
-    public void ensureSetBoardTitle() {
-        BoardTitle boardTitle = board.getBoardTitle();
-        boardTitle.setBoardTitle("titleOfBoard");
-
-        assertEquals("titleOfBoard", boardTitle.getBoardTitle());
+        assertEquals("test", boardTitle.title());
     }
 
     @Test
     public void ensureTitleHashCode() {
-        BoardTitle boardTitle1 = new BoardTitle("hello");
-        BoardTitle boardTitle2 = new BoardTitle("hello");
+        BoardTitle boardTitle1 = BoardTitle.valueOf("hello");
+        BoardTitle boardTitle2 = BoardTitle.valueOf("hello");
 
         assertEquals(boardTitle1.hashCode(), boardTitle2.hashCode());
     }
 
     @Test
     public void ensureCompareBoardTitle() {
-        BoardTitle boardTitle1 = new BoardTitle("test");
-        BoardTitle boardTitle2 = new BoardTitle("test2");
+        BoardTitle boardTitle1 = BoardTitle.valueOf("test");
+        BoardTitle boardTitle2 = BoardTitle.valueOf("test2");
         int equal = 0;
         int different = 1;
 
@@ -266,14 +258,14 @@ public class BoardTest {
 
     @Test
     public void ensureBoardSameName() {
-        Board board2 = new Board("test", 10, 5, user);
+        Board board2 = new Board(BoardTitle.valueOf("test"), 10, 5, user);
         assertTrue(board.sameAs(board2));
     }
 
     @Test
     public void ensureIdentity() {
         BoardTitle boardTitle = board.getBoardTitle();
-        assertEquals(title, boardTitle.getBoardTitle());
+        assertEquals(title, boardTitle.title());
     }
 
     @Test
