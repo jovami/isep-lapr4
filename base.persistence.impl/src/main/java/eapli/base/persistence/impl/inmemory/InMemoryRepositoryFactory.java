@@ -49,7 +49,7 @@ import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryU
  *
  * @author nuno on 20/03/16.
  */
-class InMemoryRepositoryFactory implements RepositoryFactory {
+public class InMemoryRepositoryFactory implements RepositoryFactory {
 
     static {
         // only needed because of the in memory persistence

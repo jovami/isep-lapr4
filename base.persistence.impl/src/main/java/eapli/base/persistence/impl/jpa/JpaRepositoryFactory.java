@@ -49,7 +49,7 @@ import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
  *
  * @author nuno on 21/03/16.
  */
-class JpaRepositoryFactory implements RepositoryFactory {
+public class JpaRepositoryFactory implements RepositoryFactory {
 
     @Override
     public UserRepository users(final TransactionalContext autoTx) {
