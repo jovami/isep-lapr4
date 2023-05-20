@@ -31,7 +31,7 @@ public class Enrollment implements AggregateRoot<Integer> {
     @ManyToOne
     private Student student;
 
-    public Enrollment() {
+    protected Enrollment() {
         // empty constructor for JPA
     }
 

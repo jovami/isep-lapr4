@@ -8,8 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -20,13 +20,13 @@ import eapli.framework.infrastructure.authz.domain.model.Role;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
-class StaffMemberTest {
+public class StaffMemberTest {
 
     private StaffMember member;
     private Course course;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
 
         String taxPayerNumber = "123123123";
         String dateOfBirth = "2003-10-10";
@@ -72,14 +72,14 @@ class StaffMemberTest {
     }
 
     @Test
-    void course() {
+    public void course() {
         Course courseNew = createCourse("1/1/2023", "1/1/2024", "curso diff", "curso novo");
         member.setCourse(courseNew);
         assertEquals(courseNew, member.course());
     }
 
     @Test
-    void member() {
+    public void member() {
         String taxPayerNumber = "123123123";
         String dateOfBirth = "2003-10-10";
         SystemUser user = createSystemUser("newUser", "Password1", "first", "last", "newuser@email.com");
@@ -89,22 +89,22 @@ class StaffMemberTest {
     }
 
     @Test
-    void sameAsNull() {
+    public void sameAsNull() {
         assertFalse(member.sameAs(null));
     }
 
     @Test
-    void sameAsObject() {
+    public void sameAsObject() {
         assertFalse(member.sameAs(new Object()));
     }
 
     @Test
-    void sameAsSelf() {
+    public void sameAsSelf() {
         assertTrue(member.sameAs(member));
     }
 
     @Test
-    void sameAsDiffName() {
+    public void sameAsDiffName() {
         SystemUser user = createSystemUser("newUser", "Password1", "first", "last", "newuser@email.com");
         Teacher teacher = createTeacher(user, "NEW", "2000-10-10", "FULL", "SHORT", "222222222");
         StaffMember newMember = new StaffMember(course, teacher);
@@ -112,22 +112,22 @@ class StaffMemberTest {
     }
 
     @Test
-    void compareToEqual() {
+    public void compareToEqual() {
         assertEquals(0, member.compareTo(0));
     }
 
     @Test
-    void compareToBigger() {
+    public void compareToBigger() {
         assertEquals(-1, member.compareTo(10));
     }
 
     @Test
-    void compareToLower() {
+    public void compareToLower() {
         assertEquals(1, member.compareTo(-10));
     }
 
     @Test
-    void hasIdentity() {
+    public void hasIdentity() {
         assertTrue(member.hasIdentity(0));
     }
 }

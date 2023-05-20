@@ -11,11 +11,11 @@ public class DeniedReason implements ValueObject {
 
     public String description;
 
-    public DeniedReason() {
+    protected DeniedReason() {
         description = null;
     }
 
-    public DeniedReason(String description) {
+    protected DeniedReason(String description) {
         this.description = description;
     }
 

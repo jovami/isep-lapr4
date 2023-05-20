@@ -8,9 +8,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqWeeklyBuilder;
@@ -28,8 +28,8 @@ public class TimeTableTest {
     private SystemUser userGlobal;
     private RecurringPattern patternGlobal;
 
-    @BeforeEach
-    void BeforeEach() {
+    @Before
+    public void BeforeEach() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with(USERNAME, "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER).build();
         userGlobal = userBuilder.build();
@@ -51,7 +51,7 @@ public class TimeTableTest {
     }
 
     @Test
-    void testGetPattern() {
+    public void testGetPattern() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -67,7 +67,7 @@ public class TimeTableTest {
     }
 
     @Test
-    void testOverLap() {
+    public void testOverLap() {
         LocalDate startDate = LocalDate.of(2000, 2, 10);
         LocalDate endDate = LocalDate.of(2000, 2, 20);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -81,7 +81,7 @@ public class TimeTableTest {
     }
 
     @Test
-    void testNoneOverLapBeforeDate() {
+    public void testNoneOverLapBeforeDate() {
         LocalDate startDate = LocalDate.of(2000, 1, 1);
         LocalDate endDate = LocalDate.of(2000, 1, 30);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -95,7 +95,7 @@ public class TimeTableTest {
     }
 
     @Test
-    void testNoneOverLapAfterDate() {
+    public void testNoneOverLapAfterDate() {
         LocalDate startDate = LocalDate.of(2001, 1, 1);
         LocalDate endDate = LocalDate.of(2002, 1, 30);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -109,43 +109,43 @@ public class TimeTableTest {
     }
 
     @Test
-    void testHasIdentity() {
+    public void testHasIdentity() {
         assertTrue(timeTable.hasIdentity(0));
     }
 
     @Test
-    void testHasIdentityFalse() {
+    public void testHasIdentityFalse() {
         assertFalse(timeTable.hasIdentity(10));
     }
 
     @Test
-    void testCompareToWithLower() {
+    public void testCompareToWithLower() {
         assertEquals(1, timeTable.compareTo(-10));
     }
 
     @Test
-    void testCompareTo() {
+    public void testCompareTo() {
 
         assertEquals(-1, timeTable.compareTo(1));
     }
 
     @Test
-    void testEqualsSameObject() {
+    public void testEqualsSameObject() {
         assertTrue(timeTable.sameAs(timeTable));
     }
 
     @Test
-    void testEqualsNull() {
+    public void testEqualsNull() {
         assertFalse(timeTable.sameAs(null));
     }
 
     @Test
-    void testEqualsDiffInstance() {
+    public void testEqualsDiffInstance() {
         assertFalse(timeTable.sameAs(new Object()));
     }
 
     @Test
-    void testEqualsDiffUserName() {
+    public void testEqualsDiffUserName() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("diff", "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER).build();
         TimeTable diff = new TimeTable(userBuilder.build(), patternGlobal);
@@ -153,13 +153,13 @@ public class TimeTableTest {
     }
 
     @Test
-    void testEqualsSameUserName() {
+    public void testEqualsSameUserName() {
         TimeTable diff = new TimeTable(userGlobal, patternGlobal);
         assertTrue(timeTable.sameAs(diff));
     }
 
     @Test
-    void testEqualsSameUserNameDiffPattern() {
+    public void testEqualsSameUserNameDiffPattern() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -176,7 +176,7 @@ public class TimeTableTest {
     }
 
     @Test
-    void testGetUser() {
+    public void testGetUser() {
         assertEquals(userGlobal, timeTable.getUser());
     }
 }

@@ -45,16 +45,16 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     @Column(name = "DENIEDREASON")
     private DeniedReason deniedReason;
 
-    public EnrollmentRequest() {
+    protected EnrollmentRequest() {
         // for JPA
     }
 
     public EnrollmentRequest(Course course, Student student) {
         Preconditions.nonNull(course, "Course name cannot be null");
         Preconditions.nonNull(student, "Student cannot be null");
+
         this.state = EnrollmentRequestState.PENDING;
         this.deniedReason = new DeniedReason(); // starts with null description value
-
         this.course = course;
         this.student = student;
     }

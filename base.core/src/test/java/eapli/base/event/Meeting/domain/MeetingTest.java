@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
@@ -20,13 +20,13 @@ import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
-class MeetingTest {
+public class MeetingTest {
     private Meeting meeting;
     private SystemUser user;
     private RecurringPattern pattern;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         // SystemUser
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("user", "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER);
@@ -44,12 +44,12 @@ class MeetingTest {
     }
 
     @Test
-    void admin() {
+    public void admin() {
         Assertions.assertEquals(user, meeting.admin());
     }
 
     @Test
-    void setMeetingAdmin() {
+    public void setMeetingAdmin() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("other", "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER);
         SystemUser newAdmin = userBuilder.build();
@@ -58,67 +58,65 @@ class MeetingTest {
     }
 
     @Test
-    void testHandleDescription() {
+    public void testHandleDescription() {
         meeting.setDescription(new Description("new description"));
         Description description = new Description("new description");
         assertEquals(description, meeting.getDescription());
     }
 
     @Test
-    void getPattern() {
+    public void getPattern() {
         assertEquals(pattern, meeting.pattern());
-
     }
 
     @Test
-    void sameAsObject() {
+    public void sameAsObject() {
         assertFalse(meeting.sameAs(new Object()));
     }
 
     @Test
-    void sameAsNull() {
+    public void sameAsNull() {
         assertFalse(meeting.sameAs(null));
     }
 
     @Test
-    void sameAsSelf() {
+    public void sameAsSelf() {
         assertTrue(meeting.sameAs(meeting));
     }
 
     @Test
-    void sameAsSameId() {
+    public void sameAsSameId() {
         Meeting newMeeting = new Meeting(user, "description", pattern);
         assertTrue(meeting.sameAs(newMeeting));
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         assertEquals(Objects.hash(0, user, pattern), meeting.hashCode());
     }
 
     @Test
-    void compareToBigger() {
+    public void compareToBigger() {
         assertEquals(-1, meeting.compareTo(10));
     }
 
     @Test
-    void compareToEqual() {
+    public void compareToEqual() {
         assertEquals(0, meeting.compareTo(0));
     }
 
     @Test
-    void compareToLower() {
+    public void compareToLower() {
         assertEquals(1, meeting.compareTo(-10));
     }
 
     @Test
-    void hasIdentity() {
+    public void hasIdentity() {
         assertTrue(meeting.hasIdentity(0));
     }
 
     @Test
-    void hasIdentityFalse() {
+    public void hasIdentityFalse() {
         assertFalse(meeting.hasIdentity(10));
     }
-
 }

@@ -18,8 +18,8 @@ class JpaTeacherRepository extends BaseJpaRepositoryBase<Teacher, Long, Acronym>
     }
 
     @Override
-    public Teacher findBySystemUser(Username username) {
-        return (Teacher) match("systemUser.username=:username");
+    public Optional<Teacher> findBySystemUser(Username username) {
+        return matchOne("systemUser.username=:username");
     }
 
     @Override

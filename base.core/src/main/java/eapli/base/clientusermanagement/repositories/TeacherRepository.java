@@ -12,11 +12,7 @@ import eapli.framework.infrastructure.authz.domain.model.Username;
  * TeacherRepository
  */
 public interface TeacherRepository extends DomainRepository<Acronym, Teacher> {
-
-    // TODO change return type to Optional<Teacher>
-    @Deprecated
-    Teacher findBySystemUser(Username username);
+    Optional<Teacher> findBySystemUser(Username username);
 
     Optional<Teacher> findBySystemUser(SystemUser user);
-
 }

@@ -58,11 +58,11 @@ public class CourseCapacity implements ValueObject {
         return "Min students enrolled: " + minStudentsEnrolled + "\nMax students enrolled: " + maxStudentsEnrolled;
     }
 
-    public int getMaxStudentsEnrolled() {
+    public int maxStudentsEnrolled() {
         return maxStudentsEnrolled;
     }
 
-    public int getMinStudentsEnrolled() {
+    public int minStudentsEnrolled() {
         return minStudentsEnrolled;
     }
 

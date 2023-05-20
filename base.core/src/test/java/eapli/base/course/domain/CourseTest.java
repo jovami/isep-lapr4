@@ -83,8 +83,8 @@ class CourseTest {
         int testMax = -10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.capacity().minStudentsEnrolled());
+        assertEquals(-1, course.capacity().maxStudentsEnrolled());
     }
 
     @Test
@@ -93,8 +93,8 @@ class CourseTest {
         int testMax = 10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.capacity().minStudentsEnrolled());
+        assertEquals(-1, course.capacity().maxStudentsEnrolled());
 
     }
 
@@ -104,8 +104,8 @@ class CourseTest {
         int testMax = 30;
 
         CourseCapacity capacity = new CourseCapacity(testMin, testMax);
-        assertEquals(testMin, capacity.getMinStudentsEnrolled());
-        assertEquals(testMax, capacity.getMaxStudentsEnrolled());
+        assertEquals(testMin, capacity.minStudentsEnrolled());
+        assertEquals(testMax, capacity.maxStudentsEnrolled());
     }
 
     @Test
@@ -114,8 +114,8 @@ class CourseTest {
         int testMax = 20;
 
         course.setCapacity(testMin, testMax);
-        assertEquals(testMin, course.capacity().getMinStudentsEnrolled());
-        assertEquals(testMax, course.capacity().getMaxStudentsEnrolled());
+        assertEquals(testMin, course.capacity().minStudentsEnrolled());
+        assertEquals(testMax, course.capacity().maxStudentsEnrolled());
     }
 
     @Test
@@ -124,8 +124,8 @@ class CourseTest {
         int testMax = 10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.capacity().minStudentsEnrolled());
+        assertEquals(-1, course.capacity().maxStudentsEnrolled());
     }
 
     @Test
@@ -134,8 +134,8 @@ class CourseTest {
         int testMax = -10;
 
         assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().getMinStudentsEnrolled());
-        assertEquals(-1, course.capacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.capacity().minStudentsEnrolled());
+        assertEquals(-1, course.capacity().maxStudentsEnrolled());
     }
 
     @Test
@@ -343,8 +343,8 @@ class CourseTest {
 
     @Test
     void CapacityToString() {
-        assertEquals("Min students enrolled: " + course.capacity().getMinStudentsEnrolled()
-                + "\nMax students enrolled: " + course.capacity().getMaxStudentsEnrolled(),
+        assertEquals("Min students enrolled: " + course.capacity().minStudentsEnrolled()
+                + "\nMax students enrolled: " + course.capacity().maxStudentsEnrolled(),
                 course.capacity().toString());
     }
 

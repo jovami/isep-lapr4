@@ -23,8 +23,8 @@ class InMemoryTeacherRepository extends InMemoryDomainRepository<Teacher, Acrony
     }
 
     @Override
-    public Teacher findBySystemUser(Username username) {
-        return matchOne(teacher -> teacher.user().username().equals(username)).get();
+    public Optional<Teacher> findBySystemUser(Username username) {
+        return matchOne(teacher -> teacher.user().username().equals(username));
     }
 
     @Override
