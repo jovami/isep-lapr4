@@ -51,7 +51,7 @@ public class CreateRegularExamController {
             return false;
 
         var rexam = new RegularExam(RegularExamSpecification.valueOf(file),
-                RegularExamDate.valueOf(openDate, closeDate), chosen);
+                RegularExamDate.valueOf(openDate, closeDate), course.get());
 
         this.repoRegularExam.save(rexam);
 

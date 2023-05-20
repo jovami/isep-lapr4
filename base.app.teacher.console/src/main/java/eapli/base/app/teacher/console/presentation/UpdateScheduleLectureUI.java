@@ -1,5 +1,6 @@
 package eapli.base.app.teacher.console.presentation;
 
+import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.event.lecture.application.UpdateScheduleLectureController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
@@ -30,65 +31,24 @@ public class UpdateScheduleLectureUI extends AbstractUI {
             return false;
         var chosenLecture = widgetLecture.selectedElement();
 
-        List<String> lst = new ArrayList<>();
-        lst.add("Update date of lecture");
-        lst.add("Update starting time of lecture");
-        lst.add("Update duration of lecture");
+        LocalDate removedDate = readDate("Date of lecture to be changed");
+        LocalDate newDate = readDate("Scheduling for");
+        LocalTime time = readTime("The Lecture will start at:");
+        int duration;
 
-        boolean created = false;
-        do{
-            var option = new SelectWidget<>("Choose one of the following options:", lst);
-            option.show();
+        do {
+            duration = Console.readInteger("Lecture duration: (Minutes)");
+        } while (duration < 10);
 
-            if (option.selectedOption() <= 0)
-                return false;
+       var lecture = ctrl.updateDateOfLecture(chosenLecture,removedDate,newDate, time,duration);
 
-            if (option.selectedOption() == 1)
-            {
-                System.out.println("New date for lecture\n");
-                LocalDate startDate = readDate("Scheduling for");
-                LocalDate endDate = readDate("Scheduling until");
-
-                if(!ctrl.updateDateOfLecture(chosenLecture,startDate,endDate))
-                    System.out.println("There was a problem with the specified parameters");
-                else
-                    System.out.println("Lecture date was successfully updated");
-
-
-            }else if(option.selectedOption() == 2)
-            {
-                System.out.println("New starting time for lecture\n");
-                LocalTime time = readTime("The Lecture will start at:");
-
-                if(!ctrl.updateStartingTimeOfLecture(chosenLecture,time))
-                    System.out.println("There was a problem with the specified parameters");
-                else
-                    System.out.println("Lecture starting time was successfully updated");
-
-
-            }else if(option.selectedOption() == 3)
-            {
-                System.out.println("New duration of Lecture\n");
-                int duration;
-                do{
-                    duration=Console.readInteger("Lecture duration: (Minutes)");
-                }while (duration<10);
-
-                if(!ctrl.updateDurationOfLecture(chosenLecture,duration))
-                    System.out.println("There was a problem with the specified parameters");
-                else
-                    System.out.println("Lecture duration was successfully updated");
-
-            }
-
-
-            String op = Console.readLine("Do you want to update anything else?(yes/no)");
-            if (op.compareToIgnoreCase("no") == 0)
-                created = true;
-
-        }while (!created);
-
-        System.out.println(ctrl.showLecture());
+       if(lecture.isPresent())
+       {
+           System.out.println("Lecture updated with success");
+           System.out.println(lecture.get().toString());
+       }
+       else
+            System.out.println("There was a problem with the specified parameters");
 
         return false;
     }

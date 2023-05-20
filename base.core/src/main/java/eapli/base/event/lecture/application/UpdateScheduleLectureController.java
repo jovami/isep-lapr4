@@ -5,9 +5,12 @@ import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.event.lecture.domain.Lecture;
+import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
+import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqWeeklyBuilder;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
@@ -36,7 +39,13 @@ public class UpdateScheduleLectureController {
     private final RecurringPatternRepository patternRepository;
     private RecurringPattern pattern;
 
+    private final LectureParticipantRepository lectureParticipantRepository;
+
+    private LectureParticipant lectureParticipant;
+
     private Lecture lecture;
+
+    private final TimeTableService srv;
 
 
 
@@ -46,7 +55,11 @@ public class UpdateScheduleLectureController {
         patternRepository = PersistenceContext.repositories().recurringPatterns();
         teacherRepository = PersistenceContext.repositories().teachers();
 
+        lectureParticipantRepository = PersistenceContext.repositories().lectureParticipants();
+
         lecture = null;
+
+        srv = new TimeTableService();
     }
 
 
@@ -61,81 +74,90 @@ public class UpdateScheduleLectureController {
         return lectureRepository.lectureGivenBy(teacher.get());
     }
 
-    public boolean updateDateOfLecture(Lecture lecture, LocalDate startDate, LocalDate endDate)
+    public Optional<Lecture> updateDateOfLecture(Lecture lecture, LocalDate removedDate, LocalDate newDate,LocalTime newStartTime,
+                                                 int newDurationMinutes)
     {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
         Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
 
+        if (teacher.isPresent())
+        {
+            pattern = lecture.pattern();
 
-        pattern = buildPattern(startDate,endDate,lecture.pattern().startTime(),lecture.pattern().duration());
-        pattern = patternRepository.save(pattern);
+            /*now the recurring pattern of this specific lecture has one exception
+            the recurring pattern of this lecture doesnt change, but as one exception
+            for a specific day of a specific week*/
+            if (pattern.addException(removedDate))
+            {
+                    patternRepository.save(pattern);
 
-        if (pattern!=null){
-            if(teacher.isPresent()){
-                lecture.updatePattern(pattern);
-                lectureRepository.save(lecture);
-                this.lecture = lecture;
-                return true;
+                    if(schedule(lecture,newDate,newStartTime,newDurationMinutes))
+                        return Optional.of(this.lecture);
+                    else
+                        return Optional.empty();
             }
+
         }
-        return false;
+
+        return Optional.empty();
+
     }
 
-    public boolean updateStartingTimeOfLecture(Lecture lecture, LocalTime startTime)
+
+    private boolean schedule(Lecture lecture, LocalDate newDate,LocalTime newStartTime,
+                            int newDurationMinutes)
     {
+        Iterable<LectureParticipant> lectureParticipants = lectureParticipantRepository.lectureParticipants(lecture);
+
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
+        Optional<SystemUser> sysUser = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
+
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
         Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
 
+        ArrayList<SystemUser> present = new ArrayList<>();
 
-        pattern = buildPattern(lecture.pattern().startDate(), lecture.pattern().endDate(),startTime,lecture.pattern().duration());
-        pattern = patternRepository.save(pattern);
+        if (sysUser.isEmpty())
+            return false;
 
-        if (pattern!=null){
-            if(teacher.isPresent()){
-                lecture.updatePattern(pattern);
-                lectureRepository.save(lecture);
-                this.lecture = lecture;
-                return true;
+        RecurringPattern newPattern = onceBuildPattern(newDate,newStartTime,newDurationMinutes);
+        newPattern = patternRepository.save(newPattern);
+
+        //check availability for teacher not for students
+        if (srv.checkAvailabilityByUser(sysUser.get(), newPattern))
+        {
+            for(LectureParticipant lectureParticipant : lectureParticipants)
+            {
+                present.add(lectureParticipant.studentParticipant().user());
             }
+
+            Lecture lec = new Lecture(teacher.get(),newPattern);
+
+
+            //update student schedule
+            srv.schedule(present,newPattern);
+
+            //update teacher schedule
+            srv.scheduleTeacher(sysUser.get(),newPattern);
+
+            this.lecture = lectureRepository.save(lec);
+
+            return true;
         }
+
         return false;
     }
 
-    public boolean updateDurationOfLecture(Lecture lecture, int durationMinutes)
-    {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
-        Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
 
-
-        pattern = buildPattern(lecture.pattern().startDate(), lecture.pattern().endDate(),lecture.pattern().startTime(),durationMinutes);
-        pattern = patternRepository.save(pattern);
-
-        if (pattern!=null){
-            if(teacher.isPresent()){
-                lecture.updatePattern(pattern);
-                lectureRepository.save(lecture);
-                this.lecture = lecture;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private RecurringPattern buildPattern(LocalDate startDate,LocalDate endDate, LocalTime startTime, int durationMinutes) {
-        RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
-        builder.withDayOfWeek(startDate.getDayOfWeek());
+    private RecurringPattern onceBuildPattern(LocalDate newDate, LocalTime startTime, int durationMinutes) {
+        RecurringPatternFreqOnceBuilder builder =  new RecurringPatternFreqOnceBuilder();
+        builder.withDate(newDate);
         builder.withDuration(startTime,durationMinutes);
-        builder.withDateInterval(startDate,endDate);
-        return builder.getPattern();
+        return builder.build();
     }
 
-    public String showLecture()
-    {
-        return this.lecture.toString();
-    }
 
 }

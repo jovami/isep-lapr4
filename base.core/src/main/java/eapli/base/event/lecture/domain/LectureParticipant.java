@@ -70,4 +70,8 @@ public class LectureParticipant implements AggregateRoot<Integer> {
                 ", with " + lecture.toString() +
                 ", with student: " + student.identity();
     }
+
+    public Student studentParticipant(){
+        return student;
+    }
 }

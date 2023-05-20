@@ -93,8 +93,8 @@ public class ScheduleMeetingController {
             }
             return true;
         }
-        patternRepository.delete(pattern);
         meetingRepository.delete(meeting);
+        patternRepository.delete(pattern);
         return false;
     }
 

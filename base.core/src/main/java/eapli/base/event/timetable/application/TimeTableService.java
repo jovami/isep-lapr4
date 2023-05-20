@@ -2,6 +2,7 @@ package eapli.base.event.timetable.application;
 
 import java.util.Collection;
 
+import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -44,6 +45,16 @@ public class TimeTableService {
                 return false;
             }
         }
+
+        return true;
+    }
+
+    public boolean scheduleTeacher(SystemUser user, RecurringPattern pattern) {
+
+            TimeTable table = new TimeTable(user, pattern);
+
+            if (repo.save(table) == null)
+                return false;
 
         return true;
     }
