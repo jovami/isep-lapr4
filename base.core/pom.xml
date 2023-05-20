@@ -10,7 +10,6 @@
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
-
     <artifactId>base.core</artifactId>
     <packaging>jar</packaging>
 
@@ -55,6 +54,16 @@
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/antlr4/formativeexam</sourceDirectory>
                             <outputDirectory>${project.basedir}/src/main/java/eapli/base/formativeexam/application/parser/autogen</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>question</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/antlr4/question</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/java/eapli/base/question/application/parser/autogen</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,110 @@
+@startuml
+
+actor Teacher as user
+participant AddExamQuestionsExamUI as ui
+participant AddExamQuestionsController as ctrl
+
+participant QuestionRepository as repo
+participant CourseRepository as c_repo
+
+participant QuestionFactory as fact
+participant ValidateQuestionSpecificationService as svc
+
+participant Question as question
+
+
+participant SystemUser as sys_usr
+
+participant TeacherRepository as t_repo
+participant StaffMemberExamRepository as sm_repo
+
+participant AvailableCourseDTOMapper as mapper
+' participant AvailableCourseDTO as dto
+
+
+' participant PersistenceContext as ctx
+' participant RepositoryFactory as rep_fac
+
+' participant QuestionRepository as q_repo
+
+
+user --> ui: enter
+
+activate ui
+
+    ui --> ctrl : create()
+    activate ctrl
+        ctrl --> repo
+        note right : repository is retrieved via\nPersistenceContext.repositories()
+        activate repo
+        deactivate repo
+    deactivate ctrl
+
+    ui --> ctrl : courses()
+    activate ctrl
+        ctrl --> sys_usr : get()
+        activate sys_usr
+            note right : sysUser is obtained via\nthe framework's Authz package
+        deactivate sys_usr
+
+        ctrl --> t_repo : findBySystemUser(sysUser)
+        activate t_repo
+        deactivate t_repo
+
+        ctrl --> sm_repo : nonClosedAndTaughtBy(teacher)
+        activate sm_repo
+            sm_repo --> ctrl : courses
+        deactivate sm_repo
+
+        ctrl --> mapper : toDTO(courses)
+        note right : create AvailableCourseDTO\nfrom list
+        activate mapper
+            mapper --> ctrl : courseDTOList
+        deactivate mapper
+        '     loop for each course in courses
+        '         mapper --> dto : create()
+        '         activate dto
+        '         deactivate dto
+        '     end loop
+
+        ctrl --> ui : courseDTOList
+    deactivate ctrl
+
+    ui --> user : show available courses
+deactivate ui
+
+user --> ui : select course and\ntype specification\nfile path
+
+activate ui
+    ui --> ctrl : addExamQuestion(courseDTO, file)
+    activate ctrl
+        ctrl --> c_repo : ofIdentity(courseDTO.courseId)
+        activate c_repo
+            c_repo --> ctrl : course
+        deactivate c_repo
+
+        ctrl --> fact : build(course, file)
+        activate fact
+            fact --> svc : validate(file)
+            activate svc
+            deactivate svc
+
+            fact --> question : create(course, specification)
+            note left : specification read from file
+            activate question
+            deactivate question
+
+            fact --> ctrl : question
+        deactivate fact
+
+        ctrl --> repo : save(question)
+        activate repo
+        deactivate repo
+
+        ctrl --> ui : success
+    deactivate ctrl
+
+    ui --> user : report success
+deactivate ui
+
+@enduml

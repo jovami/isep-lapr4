@@ -1,7 +1,7 @@
 package eapli.base.persistence.impl.inmemory;
 
-import eapli.base.exam.domain.question.Question;
-import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.question.domain.Question;
+import eapli.base.question.repositories.QuestionRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
 /**

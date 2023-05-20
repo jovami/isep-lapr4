@@ -36,7 +36,7 @@ import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
-import eapli.base.exam.domain.question.QuestionRepository;
+import eapli.base.question.repositories.QuestionRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
 import eapli.base.infrastructure.bootstrapers.BaseBootstrapper;
