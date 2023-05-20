@@ -54,6 +54,8 @@ public class Lecture implements AggregateRoot<Integer> {
         return pattern;
     }
 
+    public void updatePattern(RecurringPattern pattern){ this.pattern = pattern;}
+
     @Override
     public boolean sameAs(Object o) {
         if (this == o) return true;

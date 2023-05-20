@@ -1,6 +1,8 @@
 package eapli.base.persistence.impl.jpa;
 
 
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.course.domain.Course;
 import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.repositories.LectureRepository;
 
@@ -13,4 +15,13 @@ public class JpaLectureRepository extends BaseJpaRepositoryBase<Lecture,Long,Int
         super(identityFieldName);
     }
 
+
+    @Override
+    public Iterable<Lecture> lectureGivenBy(Teacher t) {
+        final var query = entityManager().createQuery(
+                "SELECT sm FROM Lecture sm WHERE sm.teacher = :teacher",
+                Lecture.class);
+        query.setParameter("teacher", t);
+        return query.getResultList();
+    }
 }
