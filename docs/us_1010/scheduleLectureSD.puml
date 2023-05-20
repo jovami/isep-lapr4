@@ -3,7 +3,7 @@
 skinparam packageStyle rect
 skinparam shadowing false
 
-actor User as Actor
+actor Teacher as Actor
 participant ScheduleLectureUI as UI <<presentation>> order 1
 participant ScheduleLectureController as Controller <<application>> order 2
 participant "lecture:\nLecture" as lecture <<domain>> order 3
@@ -14,16 +14,17 @@ database StudentRepository as studentRepo <<repository>> order 8
 database LectureRepository as lectureRepo <<repository>> order 9
 database LectureParticipantRepo as participantRepo <<repository>> order 10
 participant CheckAvailabiltyService as AvailService <<application>> order 11
-participant StudentUsernameMecanographicNumberDTOMapper as Mapper <<application>> order 12
-participant StudentUsernameMecanographicNumberDTO as DTO <<application>> order 13
+
 
 Actor -> UI : create lecture
 activate UI
+    UI -> Controller : choose course
+    Actor <-- UI : show courses teaches\n by teacher
     UI -> Controller : create
 
     deactivate Controller
     Actor <-- UI : ask user information
-    Actor -> UI : date, startTime, \nduration
+    Actor -> UI : startDate, endDate,\n startTime, duration
     UI -> Controller : createLectures(startDate, \nendDate, startTime, duration)
     activate Controller
             Controller -> lecture : createLectures(startDate, endDate, \nstartTime, duration)
@@ -31,40 +32,20 @@ activate UI
                 lecture -> Pattern : buildPattern(startDate,endDate, \nstartTime, duration)
             Controller <-- lecture : lecture
             deactivate lecture
-            Controller --> Mapper : toDto(students)
-            loop for each user in users
-            activate Mapper
-            Mapper --> DTO : create(students)
-            activate DTO
 
-            deactivate DTO
+            Controller --> UI : success of operation
+            UI -> Controller : schedule(enrolled
+            Controller -> AvailService : checkAvailabilityByUser(teacher, recurringPattern)
+            loop for each students enrolled in course
+                Controller -> participantRepo : createParticipant(student,lecture)
+
+
             end
-            Controller <-- Mapper : studentsDto
-            deactivate Mapper
-            UI <-- Controller : studentsDto
+
             Actor <-- UI : students
 
-    loop [invite==true]
-            Actor -> UI : students
-            UI -> Controller : inviteStudents(students)
-            Controller -> Controller : addInvited(students);
 
-        deactivate lectureRepo
-
-    Actor <-- UI : asks if it wants to \nadd a new participant
-    end
-
-    UI -> Controller : schedule()
-
-    Controller -> AvailService : checkAvailability(teacher,recurringPattern)
-    activate AvailService
-     Controller <-- AvailService : returns availability
-    loop for each invited student
-            Controller --> lectureParticipant: createParticipant(student,lecture)
-            Controller --> participantRepo: save(participant)
-            activate lectureRepo
-    end
-    Controller -> AvailService : schedule(invited,recurringPattern)
+    Controller -> AvailService : schedule(present,recurringPattern)
     deactivate AvailService
 
     UI <-- Controller : lecture
