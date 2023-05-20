@@ -79,9 +79,12 @@ a **Builder** class will be used to abstract the process.
 **NOTE:** Constructors for FormativeExam and FormativeExamSpecification
 will have **protected** visibility.
 
-<!-- TODO: add grammar documentation -->
+## Sequence diagram
 
 The following [sequence diagram](./sd.svg) was created to answer this Use Case:
 ![Sequence diagram](./sd.svg)
 
+## Grammar
+
+Refer to [the following document](./grammar-reference.md) for information on the formative exam grammar.
 <!-- # Test Plan -->
