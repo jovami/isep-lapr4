@@ -25,7 +25,6 @@ public class CreateRegularExamUI extends AbstractUI {
 
 
         Date openDate,closeDate;
-        boolean created=false;
         var widget = new SelectWidget<>("Choose a course to create a exam:", ctrl.listCoursesTeacherTeaches());
         widget.show();
 
@@ -42,8 +41,8 @@ public class CreateRegularExamUI extends AbstractUI {
         }
 
         try {
-            openDate = Console.readDate("Open date(yyyy-MM-dd HH:mm)","yyyy-MM-dd HH:mm");
-            closeDate = Console.readDate("Close date(yyyy-MM-dd HH:mm)","yyyy-MM-dd HH:mm");
+            openDate = Console.readDate("Open date(dd/MM/yyyy HH:mm)","dd/MM/yyyy HH:mm");
+            closeDate = Console.readDate("Close date(dd/MM/yyyy HH:mm)","dd/MM/yyyy HH:mm");
 
             if (this.ctrl.createRegularExam(file,openDate,closeDate,chosen))
                 System.out.println("Regular exam created with success");

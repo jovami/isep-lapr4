@@ -1,0 +1,212 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor Teacher as Actor
+participant CreateRegularExamUI as UI <<presentation>>
+participant CreateRegularExamController as controller <<application>>
+participant PersistenceContext as persistence <<persistence>>
+participant RepositoryFactory as factory <<factory>>
+database RegularExamRepository as repoRegularExam <<repository>>
+database StaffRepository as repoStaff <<repository>>
+database TeacherRepository as repoTeacher <<repository>>
+database CourseRepository as repoCourse <<repository>>
+participant AuthzRegistry as authz <<application>>
+participant AuthorizationService as authzService <<application>>
+participant UserSession as userSession <<application>>
+participant ValidateRegularExamSpecificationService as resservice <<application>>
+participant BailErrorListener as listener <<application>>
+participant ExamSpecLexer as lexer <<domain>>
+participant ExamSpecParser as parser <<domain>>
+participant CommonTokenStream as token
+participant RegularExamSpecification as specification <<domain>>
+participant RegularExamDate as examdate <<domain>>
+participant RegularExam as exam <<domain>>
+
+
+
+
+Actor -> UI : create regular exam
+activate Actor
+activate UI
+
+    UI -> controller : create
+    activate controller
+        controller -> persistence : repositories()
+        activate persistence
+            persistence -> factory : create
+            activate factory
+            persistence -> controller : factory
+            deactivate factory
+        deactivate persistence
+
+        controller ->factory :regularExams()
+        activate factory
+            factory -> repoRegularExam : create
+            activate repoRegularExam
+            deactivate repoRegularExam
+            factory -> controller : regularExamsRepository
+        deactivate factory
+
+
+        controller -> factory :staffs()
+        activate factory
+            factory -> repoStaff : create
+            activate repoStaff
+            deactivate repoStaff
+            factory -> controller : staffRepository
+        deactivate factory
+
+        controller -> factory :teachers()
+        activate factory
+           factory -> repoTeacher : create
+           activate repoTeacher
+           deactivate repoTeacher
+           factory -> controller : teacherRepository
+        deactivate factory
+
+        controller -> factory :courses()
+        activate factory
+           factory -> repoCourse : create
+           activate repoCourse
+           deactivate repoCourse
+           factory -> controller : courseRepository
+        deactivate factory
+
+    deactivate controller
+deactivate UI
+
+UI-> controller : listCoursesTeacherTeaches()
+activate UI
+    activate controller
+        controller -> authz : authorizationService()
+        activate authz
+        authz -> authzService : create
+        activate authzService
+        deactivate authzService
+        authz -> controller : authorizationService
+        deactivate authz
+
+        controller -> authzService : session()
+        activate authzService
+            authzService -> userSession : authenticatedUser()
+            activate userSession
+                userSession -> authzService : systemUser
+            deactivate userSession
+            authzService -> controller : systemUser
+        deactivate authzService
+
+        controller -> repoTeacher :findBySystemUser(systemUser)
+        activate repoTeacher
+            repoTeacher -> controller : teacher
+        deactivate repoTeacher
+
+        controller -> repoStaff : taughtBy(teacher)
+        activate repoStaff
+            repoStaff -> controller : courses
+        deactivate repoStaff
+
+        controller -> UI : listCoursesTeacherTeaches
+    deactivate controller
+UI --> Actor : show list courses teacher teaches\n and asks him to select one
+deactivate UI
+
+Actor -> UI : selects a course
+activate UI
+    UI --> Actor : aks the teacher to enter\n regular exam specification file path
+
+    Actor -> UI : enters the file path
+
+    UI --> Actor : asks the teacher to enter an open date to exam\n with format (yyyy-MM-dd HH:mm)
+
+    Actor -> UI : enters the open date
+
+    UI --> Actor : asks the teacher to enter an close date to exam\n with format (yyyy-MM-dd HH:mm)
+
+    Actor -> UI : enters the close date
+
+    UI -> controller :createRegularExam(file,openDate,closeDate,chosenCourse)
+    activate controller
+
+        controller -> authzService : ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER,BaseRoles.TEACHER)
+        activate authzService
+        deactivate authzService
+
+        controller -> repoCourse : ofIdentity(chosenCourseIdentity)
+        activate repoCourse
+            repoCourse -> controller : Course
+        deactivate repoCourse
+
+        controller -> resservice : create
+        activate resservice
+            resservice -> resservice : validate(file)
+            resservice -> resservice : isValid(stream)
+
+                resservice -> lexer :create(stream)
+                activate lexer
+                lexer -> resservice : lexer
+                resservice -> listener :create
+                activate listener
+                    listener -> resservice : listener
+                deactivate listener
+                resservice -> lexer : addErrorListener(listener)
+                deactivate lexer
+
+                resservice -> token : create(lexer)
+                activate token
+                    token -> resservice : tokenstream
+                deactivate token
+
+                resservice -> parser :create(tokenstrean)
+                activate parser
+                parser -> resservice : parser
+                resservice -> listener :create
+                      activate listener
+                        listener -> resservice : listener
+                      deactivate listener
+                resservice -> parser :addErrorListener(listener)
+                deactivate parser
+
+                resservice -> parser : exam()
+                activate parser
+                deactivate parser
+
+            resservice -> controller : boolean
+        deactivate resservice
+
+        controller -> specification : valueOf(file)
+        activate specification
+        specification -> specification :create(file)
+        specification -> controller : RegularExamSpecification
+        deactivate specification
+
+        controller -> examdate : valueOf(openDate,closeDate)
+        activate examdate
+        examdate -> examdate :create(openDate,closeDate)
+        examdate -> examdate : setIntervalDate(openDate,closeDate)
+        note right : checks if opendate is \nbefore closeDate
+        examdate -> controller : RegularExamDate
+        deactivate examdate
+
+        controller -> exam : create(RegularExamSpecification,RegularExamDate,Course)
+        activate exam
+            exam -> controller: RegularExam
+        deactivate exam
+
+        controller -> repoRegularExam : save(RegularExam)
+        activate repoRegularExam
+        deactivate repoRegularExam
+
+    controller -> UI : boolean
+    deactivate controller
+
+    UI --> Actor : informs success of the operation
+deactivate UI
+
+
+
+
+
+
+
+
+@enduml

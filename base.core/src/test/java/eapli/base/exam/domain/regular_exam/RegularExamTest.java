@@ -168,4 +168,32 @@ public class RegularExamTest {
         assertNull(exam.regularExamDate());
         assertNull(exam.course());
     }
+
+    @Test
+    public void updateRegularExamDate_ShouldUpdateDate() {
+        RegularExamSpecification specification = new RegularExamSpecification("Sample Specification");
+        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+
+
+        // Arrange
+        RegularExamDate newDate = RegularExamDate.valueOf(regularExamDate.openDate(),regularExamDate.closeDate());
+
+        // Act
+        exam.updateRegularExamDate(newDate);
+
+        // Assert
+        assertEquals(newDate, exam.regularExamDate());
+    }
+
+    @Test
+    public void updateRegularExamSpecification_ShouldUpdateSpecification() {
+        // Arrange
+        RegularExamSpecification newSpecification = new RegularExamSpecification("New Specification");
+        RegularExam exam = new RegularExam(newSpecification, regularExamDate, course);
+        // Act
+        exam.updateRegularExamSpecification(newSpecification);
+
+        // Assert
+        assertEquals(newSpecification, exam.regularExamSpecification());
+    }
 }

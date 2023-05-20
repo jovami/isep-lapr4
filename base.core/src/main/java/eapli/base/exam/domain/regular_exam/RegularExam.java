@@ -90,6 +90,14 @@ public class RegularExam implements AggregateRoot<Integer> {
         return this.regularExamSpecification;
     }
 
+    public void updateRegularExamDate(RegularExamDate regularExamDate){
+        this.regularExamDate = regularExamDate;
+    }
+
+    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification){
+        this.regularExamSpecification = regularExamSpecification;
+    }
+
     @Override
     public String toString() {
         return "RegularExam [" + "ID: " + id + " | " + regularExamDate + "]";
