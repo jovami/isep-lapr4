@@ -1,9 +1,9 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embeddable;
+
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
 
 @Embeddable
 public class ShortName implements ValueObject, Comparable<ShortName> {

@@ -82,7 +82,7 @@ public class MainMenu extends AbstractUI {
     private static final int MEETING_OPTION = 6;
     private static final int LECTURE_OPTION = 7;
 
-    //MEETING
+    // MEETING
     private static final int SCHEDULE_MEETING = 1;
 
     private static final String SEPARATOR_LABEL = "--------------";
@@ -117,30 +117,22 @@ public class MainMenu extends AbstractUI {
     private Menu buildMainMenu() {
         final Menu mainMenu = new Menu();
 
-        final Menu myUserMenu = new MyUserMenu();
-        mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
+        mainMenu.addSubMenu(MY_USER_OPTION, new MyUserMenu());
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.TEACHER)) {
-            final Menu courseMenu = buildCourseMenu();
-            mainMenu.addSubMenu(COURSE_OPTION, courseMenu);
-            final Menu regularExamMenu = buildRegularExamMenu();
-            mainMenu.addSubMenu(REGULAR_EXAM_OPTION, regularExamMenu);
+            mainMenu.addSubMenu(COURSE_OPTION, buildCourseMenu());
+            mainMenu.addSubMenu(REGULAR_EXAM_OPTION, buildRegularExamMenu());
             mainMenu.addSubMenu(FORMATIVE_EXAM_OPTION, buildFormativeExamMenu());
-            final Menu boardMenu = buildBoardMenu();
-            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
-            final Menu meetingMenu = buildMeetingMenu();
-            mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
-            final Menu lectureMenu = buildLectureMenu();
-            mainMenu.addSubMenu(LECTURE_OPTION, lectureMenu);
+            mainMenu.addSubMenu(BOARD_OPTION, buildBoardMenu());
+            mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
+            mainMenu.addSubMenu(LECTURE_OPTION, buildLectureMenu());
         }
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
@@ -155,7 +147,6 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
-
 
     private Menu buildRegularExamMenu() {
         final Menu menu = new Menu("Regular Exam");
@@ -186,6 +177,7 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
+
     private Menu buildMeetingMenu() {
         final Menu menu = new Menu("Meeting");
 
@@ -194,12 +186,15 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
+
     private Menu buildLectureMenu() {
         final Menu menu = new Menu("Lecture");
 
         menu.addItem(SCHEDULE_LECTURE_OPTION, "Schedule a Lecture", new ScheduleLectureUI()::show);
-        menu.addItem(SCHEDULE_EXTRAORDINARY_LECTURE_OPTION, "Schedule an Extraordinary Lecture", new ScheduleExtraLectureUI()::show);
-        menu.addItem(UPDATE_SCHEDULE_OF_LECTURE_OPTION, "Update the Schedule of Lecture", new UpdateScheduleLectureUI()::show);
+        menu.addItem(SCHEDULE_EXTRAORDINARY_LECTURE_OPTION, "Schedule an Extraordinary Lecture",
+                new ScheduleExtraLectureUI()::show);
+        menu.addItem(UPDATE_SCHEDULE_OF_LECTURE_OPTION, "Update the Schedule of Lecture",
+                new UpdateScheduleLectureUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

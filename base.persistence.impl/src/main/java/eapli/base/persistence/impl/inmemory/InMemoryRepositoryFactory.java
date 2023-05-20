@@ -26,6 +26,7 @@ import eapli.base.clientusermanagement.repositories.ManagerRepository;
 import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
@@ -43,13 +44,12 @@ import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.infrastructure.authz.repositories.impl.inmemory.InMemoryUserRepository;
-import eapli.base.course.repositories.CourseRepository;
 
 /**
  *
  * @author nuno on 20/03/16.
  */
-public class InMemoryRepositoryFactory implements RepositoryFactory {
+class InMemoryRepositoryFactory implements RepositoryFactory {
 
     static {
         // only needed because of the in memory persistence
@@ -178,18 +178,18 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
         return new InMemoryMeetingRepository();
     }
 
-	@Override
-	public MeetingParticipantRepository meetingParticipants() {
-		return new InMemoryMeetingParticipantRepository();
-	}
+    @Override
+    public MeetingParticipantRepository meetingParticipants() {
+        return new InMemoryMeetingParticipantRepository();
+    }
 
-	@Override
-	public LectureRepository lectures() {
-		return new InMemoryLectureRepository();
-	}
+    @Override
+    public LectureRepository lectures() {
+        return new InMemoryLectureRepository();
+    }
 
-	@Override
-	public LectureParticipantRepository lectureParticipants() {
-		return null;
-	}
+    @Override
+    public LectureParticipantRepository lectureParticipants() {
+        return null;
+    }
 }

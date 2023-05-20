@@ -1,5 +1,9 @@
 package eapli.base.enrollment.aplication;
 
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
@@ -8,10 +12,9 @@ import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
-import org.apache.commons.lang3.tuple.Pair;
+import eapli.framework.application.UseCaseController;
 
-import java.util.List;
-
+@UseCaseController
 public class BulkEnrollStudentsService {
 
     private StudentRepository studentRepo;
@@ -20,24 +23,22 @@ public class BulkEnrollStudentsService {
 
     private EnrollmentRepository enrollmentRepo;
 
-    public BulkEnrollStudentsService(RepositoryFactory repos){
+    public BulkEnrollStudentsService(RepositoryFactory repos) {
         studentRepo = repos.students();
         courseRepo = repos.courses();
         enrollmentRepo = repos.enrollments();
 
     }
 
-    public void bulkEnroll(List<Pair<MecanographicNumber,Integer>> data)
-    {
-        for (Pair<MecanographicNumber,Integer> pair : data)
-        {
+    public void bulkEnroll(List<Pair<MecanographicNumber, Integer>> data) {
+        for (Pair<MecanographicNumber, Integer> pair : data) {
             var mecanographicNumber = pair.getLeft();
             var courseID = pair.getRight();
 
             Student student = this.studentRepo.ofIdentity(mecanographicNumber).orElseThrow();
             Course course = this.courseRepo.ofIdentity(courseID).orElseThrow();
 
-            Enrollment enrollment = new Enrollment(course,student);
+            Enrollment enrollment = new Enrollment(course, student);
 
             this.enrollmentRepo.save(enrollment);
         }

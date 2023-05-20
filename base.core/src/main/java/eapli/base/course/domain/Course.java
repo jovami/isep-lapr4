@@ -1,55 +1,63 @@
 package eapli.base.course.domain;
 
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.functional.Either;
 
-import javax.persistence.*;
-import java.util.Date;
-
 @Entity
-@Table(name="COURSE")
+@Table(name = "COURSE")
 public class Course implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="IDCOURSE")
+    @Column(name = "IDCOURSE")
     private int code;
 
-    @Column(name="COURSENAME",nullable = false,unique = true)
+    @Column(name = "COURSENAME", nullable = false, unique = true)
     private CourseName name;
-    @Column(name="COURSEDESCRIPTION")
+    @Column(name = "COURSEDESCRIPTION")
     private CourseDescription description;
-    @Column(name="COURSESTATE",nullable = false)
+    @Column(name = "COURSESTATE", nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseState state;
-    @Column(name="COURSEDURATION")
+    @Column(name = "COURSEDURATION")
     private CourseDuration duration;
-    @Column(name="COURSECAPACITY")
+    @Column(name = "COURSECAPACITY")
     private CourseCapacity capacity;
 
-
-    //TODO: HEAD-TEACHER
-    //@Column(name="HEADTEACHER",nullable = false)
+    // TODO: HEAD-TEACHER
+    // @Column(name="HEADTEACHER",nullable = false)
     @OneToOne
     private Teacher headTeacher;
 
-    //TODO: ENROLLMENT
+    // TODO: ENROLLMENT
 
-    //TODO: FORMATIVE/REGULAR EXAMS
+    // TODO: FORMATIVE/REGULAR EXAMS
 
-    //TODO: LECTURE--COURSE MUST BE REFERENCED IN THE LECTURE
+    // TODO: LECTURE--COURSE MUST BE REFERENCED IN THE LECTURE
 
-    //JPA needs empty constructor
-    private Course(){
+    // JPA needs empty constructor
+    private Course() {
 
     }
 
-    public Course(String name, String description, Date startDate, Date endDate){
+    public Course(String name, String description, Date startDate, Date endDate) {
         this.state = CourseState.CLOSE;
         this.name = new CourseName(name);
         this.description = new CourseDescription(description);
-        //throws IllegalArgumentException
-        this.duration = new CourseDuration(startDate,endDate);
+        // throws IllegalArgumentException
+        this.duration = new CourseDuration(startDate, endDate);
         this.capacity = new CourseCapacity();
     }
 
@@ -80,26 +88,30 @@ public class Course implements AggregateRoot<Integer> {
                 return Either.left("Course cannot be opened in its current state");
         }
     }
+
     public void closeEnrollments() {
         this.state = CourseState.INPROGRESS;
     }
+
     public void createdCourse() {
         this.state = CourseState.CLOSE;
     }
 
-    /*    public void setHeadTeacher(Teacher headTeacher){
-            this.headTeacher=headTeacher;
-    }*/
+    /*
+     * public void setHeadTeacher(Teacher headTeacher){
+     * this.headTeacher=headTeacher;
+     * }
+     */
 
     public String getName() {
         return name.getName();
     }
 
-    public CourseName courseName(){
+    public CourseName courseName() {
         return name;
     }
 
-    public String  getDescription() {
+    public String getDescription() {
         return description.getDescription();
     }
 
@@ -114,6 +126,7 @@ public class Course implements AggregateRoot<Integer> {
     protected CourseDuration getDuration() {
         return duration;
     }
+
     protected CourseCapacity getCapacity() {
         return capacity;
     }
@@ -126,35 +139,38 @@ public class Course implements AggregateRoot<Integer> {
         this.headTeacher = headTeacher;
     }
 
-    public  void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = new CourseDescription(description);
     }
 
-    public boolean setCapacity(int minCacapity,int maxCapacity) {
-        try{
-            capacity = new CourseCapacity(minCacapity,maxCapacity);
+    public boolean setCapacity(int minCacapity, int maxCapacity) {
+        try {
+            capacity = new CourseCapacity(minCacapity, maxCapacity);
             return true;
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
 
     public boolean setDuration(Date startDate, Date endDate) {
-        return this.duration.setIntervalDate(startDate,endDate);
+        return this.duration.setIntervalDate(startDate, endDate);
     }
 
     @Override
     public boolean sameAs(Object other) {
         if (!(other instanceof Course)) {
-            return false;}
+            return false;
+        }
 
         final Course o = (Course) other;
         if (this == o) {
-            return true;}
+            return true;
+        }
         return this.name.equals(o.name)
-                && this.code==o.code;}
+                && this.code == o.code;
+    }
 
-    //TODO:TEST
+    // TODO:TEST
     @Override
     public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
@@ -172,7 +188,7 @@ public class Course implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "Course: "+
+        return "Course: " +
                 "\ncode: " + code +
                 "\nname: " + name.getName() +
                 "\ndescription: " + description.getDescription() +

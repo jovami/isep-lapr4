@@ -1,5 +1,8 @@
 package eapli.base.course.application;
 
+import java.util.Comparator;
+import java.util.List;
+
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
@@ -10,13 +13,12 @@ import eapli.base.course.repositories.StaffRepository;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 
-import java.util.Comparator;
-import java.util.List;
-
+@UseCaseController
 public class ListExamsInCourseController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     CourseRepository courseRepository;

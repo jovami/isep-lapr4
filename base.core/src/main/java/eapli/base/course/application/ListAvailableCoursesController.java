@@ -67,7 +67,6 @@ public final class ListAvailableCoursesController {
         var student = this.studentRepo.findBySystemUser(getUser())
                 .orElseThrow(() -> new IllegalStateException("User not registered as Student"));
 
-
         return new AvailableCourseDTOMapper().toDTO(this.svc.studentIsEnrollableOrCanEnroll(student));
     }
 

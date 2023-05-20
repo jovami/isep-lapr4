@@ -1,15 +1,20 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToOne;
+import javax.persistence.Version;
+
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
 @Entity
-public class Student implements AggregateRoot<MecanographicNumber>, Serializable {
+public class Student implements AggregateRoot<MecanographicNumber> {
     private static final long serialVersionUID = 1L;
 
     @Version

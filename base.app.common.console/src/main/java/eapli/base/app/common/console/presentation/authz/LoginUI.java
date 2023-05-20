@@ -63,10 +63,9 @@ public class LoginUI extends AbstractUI {
     protected boolean doShow() {
         int attempt = 1;
         while (attempt <= maxAttempts) {
-            
+
             final String username = Console.readLine("Username:");
             final String password = Console.readLine("Password:");
-
 
             if (authenticationService.authenticate(username, password, onlyWithThis).isPresent()) {
                 return true;

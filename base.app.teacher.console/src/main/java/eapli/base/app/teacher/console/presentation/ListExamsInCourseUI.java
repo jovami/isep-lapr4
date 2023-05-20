@@ -2,7 +2,6 @@ package eapli.base.app.teacher.console.presentation;
 
 import eapli.base.course.application.ListExamsInCourseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
-import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ListWidget;
 import eapli.framework.presentation.console.SelectWidget;

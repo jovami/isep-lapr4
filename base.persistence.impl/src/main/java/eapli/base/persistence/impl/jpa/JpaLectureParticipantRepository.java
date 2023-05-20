@@ -4,7 +4,9 @@ import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 
-public class JpaLectureParticipantRepository extends BaseJpaRepositoryBase<LectureParticipant,Long,Integer> implements LectureParticipantRepository {
+class JpaLectureParticipantRepository extends BaseJpaRepositoryBase<LectureParticipant, Long, Integer>
+        implements LectureParticipantRepository {
+
     JpaLectureParticipantRepository(String persistenceUnitName, String identityFieldName) {
         super(persistenceUnitName, identityFieldName);
     }
@@ -15,6 +17,6 @@ public class JpaLectureParticipantRepository extends BaseJpaRepositoryBase<Lectu
 
     @Override
     public Iterable<LectureParticipant> lectureParticipants(Lecture lecture) {
-        return match("e.lecture=:lecture","lecture",lecture);
+        return match("e.lecture=:lecture", "lecture", lecture);
     }
 }

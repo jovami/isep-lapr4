@@ -1,17 +1,23 @@
 package eapli.base.event.lecture.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.framework.domain.model.AggregateRoot;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 public class LectureParticipant implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="LECTUREPARTICIPANTID")
+    @Column(name = "LECTUREPARTICIPANTID")
     private int id;
     @ManyToOne
     private Lecture lecture;
@@ -19,7 +25,7 @@ public class LectureParticipant implements AggregateRoot<Integer> {
 
     private Student student;
 
-    protected LectureParticipant(){
+    protected LectureParticipant() {
 
     }
 
@@ -28,24 +34,24 @@ public class LectureParticipant implements AggregateRoot<Integer> {
         this.lecture = lecture;
     }
 
-    public Lecture lecture(){
+    public Lecture lecture() {
         return this.lecture;
     }
 
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         LectureParticipant that = (LectureParticipant) o;
         return Objects.equals(lecture, that.lecture) && Objects.equals(student, that.student);
     }
-
 
     @Override
     public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
     }
-
 
     @Override
     public Integer identity() {

@@ -8,24 +8,28 @@ import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 
-
 public class ListUsersService {
 
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final ManagerRepository managerRepository;
 
-    public ListUsersService()
-    {
+    public ListUsersService() {
         var repos = PersistenceContext.repositories();
         this.teacherRepository = repos.teachers();
         this.studentRepository = repos.students();
         this.managerRepository = repos.managers();
     }
 
-    public Iterable<Teacher> listTeachers(){return this.teacherRepository.findAll();}
-    public Iterable<Student> listStudents() {return this.studentRepository.findAll();}
-    public Iterable<Manager> listManagers(){
+    public Iterable<Teacher> listTeachers() {
+        return this.teacherRepository.findAll();
+    }
+
+    public Iterable<Student> listStudents() {
+        return this.studentRepository.findAll();
+    }
+
+    public Iterable<Manager> listManagers() {
         return this.managerRepository.findAll();
     }
 

@@ -6,7 +6,8 @@ import eapli.base.formativeexam.repositories.FormativeExamRepository;
 /**
  * JpaFormativeExamRepository
  */
-public class JpaFormativeExamRepository extends BaseJpaRepositoryBase<FormativeExam, Long, Long> implements FormativeExamRepository {
+class JpaFormativeExamRepository extends BaseJpaRepositoryBase<FormativeExam, Long, Long>
+        implements FormativeExamRepository {
 
     JpaFormativeExamRepository(String identityFieldName) {
         super(identityFieldName, "id");

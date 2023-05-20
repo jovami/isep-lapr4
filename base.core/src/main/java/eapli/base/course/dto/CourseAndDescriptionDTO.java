@@ -1,9 +1,9 @@
 package eapli.base.course.dto;
 
+import java.util.Objects;
+
 import eapli.base.course.domain.CourseDescription;
 import eapli.base.course.domain.CourseName;
-
-import java.util.Objects;
 
 public class CourseAndDescriptionDTO {
     private final int courseId;

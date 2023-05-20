@@ -1,16 +1,20 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.course.domain.Course;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.course.domain.Course;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 
 public class RegularExamTest {
 
@@ -18,7 +22,7 @@ public class RegularExamTest {
     private Course course;
 
     @Before
-    public void BeforeEach(){
+    public void BeforeEach() {
         String openDateString = "2023-10-10 16:00";
         String closeDateString = "2023-10-10 18:00";
 
@@ -27,7 +31,7 @@ public class RegularExamTest {
         try {
             Date openDate = df.parse(openDateString);
             Date closeDate = df.parse(closeDateString);
-            regularExamDate =  RegularExamDate.valueOf(openDate,closeDate);
+            regularExamDate = RegularExamDate.valueOf(openDate, closeDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -40,11 +44,12 @@ public class RegularExamTest {
         try {
             Date startDate = dfx.parse(startDateString);
             Date endDate = dfx.parse(endDateString);
-            course = new Course("curso","descrição",startDate,endDate);
+            course = new Course("curso", "descrição", startDate, endDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
+
     @Test
     public void testEquals() {
         // Prepare
@@ -174,9 +179,8 @@ public class RegularExamTest {
         RegularExamSpecification specification = new RegularExamSpecification("Sample Specification");
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
 
-
         // Arrange
-        RegularExamDate newDate = RegularExamDate.valueOf(regularExamDate.openDate(),regularExamDate.closeDate());
+        RegularExamDate newDate = RegularExamDate.valueOf(regularExamDate.openDate(), regularExamDate.closeDate());
 
         // Act
         exam.updateRegularExamDate(newDate);

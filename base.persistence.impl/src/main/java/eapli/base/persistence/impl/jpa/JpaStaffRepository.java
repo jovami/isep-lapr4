@@ -6,7 +6,7 @@ import eapli.base.course.domain.CourseState;
 import eapli.base.course.domain.StaffMember;
 import eapli.base.course.repositories.StaffRepository;
 
-public class JpaStaffRepository extends BaseJpaRepositoryBase<StaffMember,Long,Integer> implements StaffRepository {
+class JpaStaffRepository extends BaseJpaRepositoryBase<StaffMember, Long, Integer> implements StaffRepository {
     JpaStaffRepository(String persistenceUnitName, String identityFieldName) {
         super(persistenceUnitName, identityFieldName);
     }
@@ -36,7 +36,8 @@ public class JpaStaffRepository extends BaseJpaRepositoryBase<StaffMember,Long,I
     @Override
     public Iterable<Course> nonClosedAndTaughtBy(Teacher t) {
         final var query = entityManager().createQuery(
-                "SELECT sm.course FROM StaffMember sm WHERE sm.member = :teacher AND sm.course.state <> :state", Course.class);
+                "SELECT sm.course FROM StaffMember sm WHERE sm.member = :teacher AND sm.course.state <> :state",
+                Course.class);
         query.setParameter("teacher", t);
         query.setParameter("state", CourseState.CLOSED);
         return query.getResultList();

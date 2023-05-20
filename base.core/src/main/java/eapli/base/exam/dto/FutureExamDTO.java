@@ -2,7 +2,6 @@ package eapli.base.exam.dto;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -40,7 +39,7 @@ public final class FutureExamDTO {
     }
 
     // private static LocalDateTime toLocalDateTime(final Date date) {
-    //     return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    // return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     // }
 
     public CourseName name() {
@@ -48,11 +47,11 @@ public final class FutureExamDTO {
     }
 
     // public LocalDateTime startTime() {
-    //     return this.startTime;
+    // return this.startTime;
     // }
 
     // public LocalDateTime endTime() {
-    //     return this.endTime;
+    // return this.endTime;
     // }
 
     @Override

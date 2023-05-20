@@ -1,33 +1,27 @@
 package eapli.base.persistence.impl.jpa;
 
+import java.util.Optional;
+
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Optional;
-
-
-public class JpaBoardRepository extends BaseJpaRepositoryBase<Board,Long,Integer> implements BoardRepository {
+class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, Integer> implements BoardRepository {
 
     JpaBoardRepository(String persistenceUnitName) {
         super(persistenceUnitName, "BoardTitle");
     }
 
-
-    public boolean hasCellPostIt(int cellId){
+    public boolean hasCellPostIt(int cellId) {
         Optional<Board> findIfCellHasPostIt = matchOne(
-                "e.cellId = :cellId",cellId
-        );
+                "e.cellId = :cellId", cellId);
         return findIfCellHasPostIt.isPresent();
 
     }
 
-    public boolean isBoardTitleUnique(String otherBoardTitle){
+    public boolean isBoardTitleUnique(String otherBoardTitle) {
         Optional<Board> findIfBoardTitleIsUnique = matchOne(
-                "e.title = :otherBoardTitle",otherBoardTitle
-        );
+                "e.title = :otherBoardTitle", otherBoardTitle);
         return findIfBoardTitleIsUnique.isEmpty();
 
     }

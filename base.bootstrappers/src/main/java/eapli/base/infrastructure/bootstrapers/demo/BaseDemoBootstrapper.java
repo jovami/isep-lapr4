@@ -24,11 +24,11 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
 import eapli.base.infrastructure.bootstrapers.BaseBootstrapper;
+import eapli.base.infrastructure.bootstrapers.TestDataConstants;
 import eapli.framework.actions.Action;
 import eapli.framework.infrastructure.authz.application.AuthenticationService;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.base.infrastructure.bootstrapers.TestDataConstants;
 import eapli.framework.strings.util.Strings;
 import eapli.framework.validations.Invariants;
 
@@ -43,41 +43,40 @@ import eapli.framework.validations.Invariants;
 @SuppressWarnings("squid:S106")
 public class BaseDemoBootstrapper implements Action {
 
-	
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
 
-	private final AuthorizationService authz = AuthzRegistry.authorizationService();
-	private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
+    @Override
+    public boolean execute() {
+        // declare bootstrap actions
+        final Action[] actions = { new ManagerBootstrapper(), new StudentBootstrapper(), new TeacherBootstrapper(),
+                new StaffBootstrapper(), new RegularExamBootstrapper() };
 
-	@Override
-	public boolean execute() {
-		// declare bootstrap actions
-		final Action[] actions = {new ManagerBootstrapper(), new StudentBootstrapper(), new TeacherBootstrapper(), new StaffBootstrapper(), new RegularExamBootstrapper()};
+        authenticateForBootstrapping();
 
-		authenticateForBootstrapping();
+        // execute all bootstrapping
+        boolean ret = true;
+        for (final Action boot : actions) {
+            System.out.println("Bootstrapping " + nameOfEntity(boot) + "...");
+            ret &= boot.execute();
+        }
+        return ret;
+    }
 
-		// execute all bootstrapping
-		boolean ret = true;
-		for (final Action boot : actions) {
-			System.out.println("Bootstrapping " + nameOfEntity(boot) + "...");
-			ret &= boot.execute();
-		}
-		return ret;
-	}
+    /**
+     * authenticate a super user to be able to register new users
+     *
+     */
+    protected void authenticateForBootstrapping() {
 
-	/**
-	 * authenticate a super user to be able to register new users
-	 *
-	 */
-	protected void authenticateForBootstrapping() {
+        authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
 
-		authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
+        Invariants.ensure(authz.hasSession());
 
-		Invariants.ensure(authz.hasSession());
+    }
 
-	}
-
-	private String nameOfEntity(final Action boot) {
-		final String name = boot.getClass().getSimpleName();
-		return Strings.left(name, name.length() - "Bootstrapper".length());
-	}
+    private String nameOfEntity(final Action boot) {
+        final String name = boot.getClass().getSimpleName();
+        return Strings.left(name, name.length() - "Bootstrapper".length());
+    }
 }

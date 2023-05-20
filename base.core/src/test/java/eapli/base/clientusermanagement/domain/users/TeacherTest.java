@@ -1,13 +1,18 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class TeacherTest {
     private Teacher teacher1;
@@ -90,7 +95,7 @@ public class TeacherTest {
     }
 
     private Teacher createTeacher(SystemUser user, String acronym, String fullName, String shortName,
-                                  String dateOfBirth, String taxPayerNumber) {
+            String dateOfBirth, String taxPayerNumber) {
         Acronym teacherAcronym = new Acronym(acronym);
         FullName teacherFullName = new FullName(fullName);
         ShortName teacherShortName = new ShortName(shortName);

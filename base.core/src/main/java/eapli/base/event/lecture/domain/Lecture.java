@@ -1,19 +1,27 @@
 package eapli.base.event.lecture.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.domain.model.AggregateRoot;
 
-import javax.persistence.*;
-import java.util.Objects;
-
 @Entity
-@Table(name="LECTURE")
+@Table(name = "LECTURE")
 public class Lecture implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="LECTUREID")
+    @Column(name = "LECTUREID")
     private int lectureId;
 
     @OneToOne
@@ -25,30 +33,29 @@ public class Lecture implements AggregateRoot<Integer> {
     @Enumerated(EnumType.STRING)
     private LectureType type;
 
-
-    protected Lecture(){
+    protected Lecture() {
     }
 
-    public Lecture(Teacher teacher, RecurringPattern pattern){
+    public Lecture(Teacher teacher, RecurringPattern pattern) {
         this.teacher = teacher;
         this.pattern = pattern;
     }
 
-    public void regular(){
+    public void regular() {
         this.type = LectureType.REGULAR;
     }
-    public void extra(){
+
+    public void extra() {
         this.type = LectureType.EXTRA;
     }
 
-    public LectureType type(){
+    public LectureType type() {
         return this.type;
     }
 
     public Teacher teacher() {
         return teacher;
     }
-
 
     public RecurringPattern pattern() {
         return pattern;
@@ -58,8 +65,10 @@ public class Lecture implements AggregateRoot<Integer> {
 
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Lecture meeting = (Lecture) o;
         return Objects.equals(lectureId, meeting.lectureId);
     }
@@ -82,7 +91,7 @@ public class Lecture implements AggregateRoot<Integer> {
 
     @Override
     public boolean hasIdentity(Integer id) {
-        return this.lectureId==id;
+        return this.lectureId == id;
     }
 
     @Override

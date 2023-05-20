@@ -23,8 +23,9 @@ package eapli.base.clientusermanagement.usermanagement.application;
 import java.util.Calendar;
 import java.util.Set;
 
-import eapli.base.clientusermanagement.domain.users.*;
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.domain.users.Manager;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.ManagerBuilder;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
@@ -36,10 +37,7 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserManagementService;
 import eapli.framework.infrastructure.authz.domain.model.Role;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 import eapli.framework.time.util.CurrentTimeCalendars;
-
-import javax.persistence.Persistence;
 
 /**
  * Created by nuno on 21/03/16.
@@ -61,8 +59,9 @@ public class AddUserController {
         return BaseRoles.nonUserValues();
     }
 
-    public SystemUser addUser(final String username, final String password, final String firstName, final String lastName,
-                              final String email, final Set<Role> roles, final Calendar createdOn) {
+    public SystemUser addUser(final String username, final String password, final String firstName,
+            final String lastName,
+            final String email, final Set<Role> roles, final Calendar createdOn) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
         this.user = userSvc.registerNewUser(username, password, firstName, lastName, email, roles, createdOn);
@@ -71,13 +70,13 @@ public class AddUserController {
     }
 
     public SystemUser addUser(final String username, final String password, final String firstName,
-                              final String lastName, final String email, final Set<Role> roles) {
+            final String lastName, final String email, final Set<Role> roles) {
         return addUser(username, password, firstName, lastName, email, roles, CurrentTimeCalendars.now());
     }
 
-
-    public Teacher addTeacher(final SystemUser user ,final String acronym, final String fullName, final String shortName,
-                              final String dateOfBirth, final String taxPayerNumber) {
+    public Teacher addTeacher(final SystemUser user, final String acronym, final String fullName,
+            final String shortName,
+            final String dateOfBirth, final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
@@ -88,20 +87,22 @@ public class AddUserController {
         return PersistenceContext.repositories().teachers().save(teacherBuilder.build());
     }
 
-    public Student addStudent(final SystemUser user ,final String mecanographicNumber, final String fullName, final String shortName,
-                              final String dateOfBirth, final String taxPayerNumber) {
+    public Student addStudent(final SystemUser user, final String mecanographicNumber, final String fullName,
+            final String shortName,
+            final String dateOfBirth, final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
         final var studentBuilder = new StudentBuilder();
-        studentBuilder.withSystemUser(user).withMecanographicNumber(mecanographicNumber).withFullName(fullName).
-                withShortName(shortName).withDateOfBirth(dateOfBirth).withTaxPayerNumber(taxPayerNumber);
+        studentBuilder.withSystemUser(user).withMecanographicNumber(mecanographicNumber).withFullName(fullName)
+                .withShortName(shortName).withDateOfBirth(dateOfBirth).withTaxPayerNumber(taxPayerNumber);
 
         return PersistenceContext.repositories().students().save(studentBuilder.build());
     }
 
-    public Manager addManager(final SystemUser user ,final String fullName, final String shortName, final String dateOfBirth,
-                              final String taxPayerNumber) {
+    public Manager addManager(final SystemUser user, final String fullName, final String shortName,
+            final String dateOfBirth,
+            final String taxPayerNumber) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
@@ -112,9 +113,8 @@ public class AddUserController {
         return PersistenceContext.repositories().managers().save(managerBuilder.build());
     }
 
-    public Iterable<Manager> listManagers (){
+    public Iterable<Manager> listManagers() {
         return PersistenceContext.repositories().managers().findAll();
     }
-
 
 }

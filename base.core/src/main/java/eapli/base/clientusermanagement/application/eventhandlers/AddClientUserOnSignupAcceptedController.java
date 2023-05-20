@@ -30,6 +30,7 @@ import eapli.base.clientusermanagement.domain.ClientUserBuilder;
 import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.functional.Functions;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
@@ -39,6 +40,7 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
  * @author Paulo Gandra de Sousa
  *
  */
+@UseCaseController
 /* package */ class AddClientUserOnSignupAcceptedController {
 
     private final UserRepository repo = PersistenceContext.repositories().users();

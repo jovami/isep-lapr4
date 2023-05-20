@@ -1,11 +1,12 @@
 package eapli.base.clientusermanagement.domain.users;
 
-import eapli.framework.domain.model.ValueObject;
-import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import javax.persistence.Embeddable;
+
+import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class DateOfBirth implements ValueObject, Comparable<DateOfBirth> {
@@ -38,7 +39,8 @@ public class DateOfBirth implements ValueObject, Comparable<DateOfBirth> {
      * Checks if a given date of birth is valid.
      *
      * @param dateOfBirth the date of birth to be validated
-     * @return true if the date of birth is on or before the current date, false otherwise
+     * @return true if the date of birth is on or before the current date, false
+     *         otherwise
      */
     private static boolean isDateOfBirthValid(LocalDate dateOfBirth) {
         return !dateOfBirth.isAfter(LocalDate.now());

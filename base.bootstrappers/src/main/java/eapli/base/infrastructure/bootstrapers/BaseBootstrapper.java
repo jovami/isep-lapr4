@@ -23,10 +23,13 @@
  */
 package eapli.base.infrastructure.bootstrapers;
 
-import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
-import eapli.base.infrastructure.persistence.PersistenceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;
+import eapli.base.infrastructure.bootstrapers.demo.CourseBootstrapper;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.actions.Action;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
@@ -38,8 +41,6 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.strings.util.Strings;
 import eapli.framework.validations.Invariants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Bootstrapping master data so that the application can work. Here you should
@@ -49,65 +50,67 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("squid:S106")
 public class BaseBootstrapper implements Action {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaseBootstrapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseBootstrapper.class);
 
-	private final AuthorizationService authz = AuthzRegistry.authorizationService();
-	private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
-	private final UserRepository userRepository = PersistenceContext.repositories().users();
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
+    private final UserRepository userRepository = PersistenceContext.repositories().users();
 
-	@Override
-	public boolean execute() {
-		// declare bootstrap actions
-		final Action[] actions = { new CourseBootstrapper()/*, new BoardBootstrapper()*//*  new RegularExamBootstrapper() */};
+    @Override
+    public boolean execute() {
+        // declare bootstrap actions
+        final Action[] actions = { new CourseBootstrapper()/* , new BoardBootstrapper() *//*
+                                                                                           * new
+                                                                                           * RegularExamBootstrapper()
+                                                                                           */ };
 
+        registerPowerUser();
+        authenticateForBootstrapping();
 
-		registerPowerUser();
-		authenticateForBootstrapping();
+        // execute all bootstrapping
+        boolean ret = true;
+        for (final Action boot : actions) {
+            System.out.println("Bootstrapping " + nameOfEntity(boot) + "...");
+            ret &= boot.execute();
+        }
+        return ret;
+    }
 
-		// execute all bootstrapping
-		boolean ret = true;
-		for (final Action boot : actions) {
-			System.out.println("Bootstrapping " + nameOfEntity(boot) + "...");
-			ret &= boot.execute();
-		}
-		return ret;
-	}
+    /**
+     * register a power user directly in the persistence layer as we need to
+     * circumvent authorisations in the Application Layer
+     */
+    private boolean registerPowerUser() {
+        final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
+        userBuilder.withUsername(TestDataConstants.POWERUSER_USERNAME).withPassword(TestDataConstants.POWERUSER_PWD)
+                .withName("power", "user").withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
+        final SystemUser newUser = userBuilder.build();
 
-	/**
-	 * register a power user directly in the persistence layer as we need to
-	 * circumvent authorisations in the Application Layer
-	 */
-	private boolean registerPowerUser() {
-		final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
-		userBuilder.withUsername(TestDataConstants.POWERUSER_USERNAME).withPassword(TestDataConstants.POWERUSER_PWD).
-				withName("power", "user").withEmail("power@user.org").withRoles(BaseRoles.POWER_USER);
-		final SystemUser newUser = userBuilder.build();
+        SystemUser poweruser;
+        try {
+            poweruser = userRepository.save(newUser);
+            assert poweruser != null;
+            return true;
+        } catch (ConcurrencyException | IntegrityViolationException e) {
+            // ignoring exception. assuming it is just a primary key violation
+            // due to the tentative of inserting a duplicated user
+            LOGGER.warn("Assuming {} already exists (activate trace log for details)", newUser.username());
+            LOGGER.trace("Assuming existing record", e);
+            return false;
+        }
+    }
 
-		SystemUser poweruser;
-		try {
-			poweruser = userRepository.save(newUser);
-			assert poweruser != null;
-			return true;
-		} catch (ConcurrencyException | IntegrityViolationException e) {
-			// ignoring exception. assuming it is just a primary key violation
-			// due to the tentative of inserting a duplicated user
-			LOGGER.warn("Assuming {} already exists (activate trace log for details)", newUser.username());
-			LOGGER.trace("Assuming existing record", e);
-			return false;
-		}
-	}
+    /**
+     * authenticate a super user to be able to register new users
+     *
+     */
+    protected void authenticateForBootstrapping() {
+        authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
+        Invariants.ensure(authz.hasSession());
+    }
 
-	/**
-	 * authenticate a super user to be able to register new users
-	 *
-	 */
-	protected void authenticateForBootstrapping() {
-		authenticationService.authenticate(TestDataConstants.POWERUSER_USERNAME, TestDataConstants.POWERUSER_PWD);
-		Invariants.ensure(authz.hasSession());
-	}
-
-	private String nameOfEntity(final Action boot) {
-		final String name = boot.getClass().getSimpleName();
-		return Strings.left(name, name.length() - "Bootstrapper".length());
-	}
+    private String nameOfEntity(final Action boot) {
+        final String name = boot.getClass().getSimpleName();
+        return Strings.left(name, name.length() - "Bootstrapper".length());
+    }
 }

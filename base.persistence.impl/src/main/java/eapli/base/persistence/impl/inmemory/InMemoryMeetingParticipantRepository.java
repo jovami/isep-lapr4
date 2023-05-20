@@ -1,13 +1,14 @@
 package eapli.base.persistence.impl.inmemory;
 
+import java.util.stream.Collectors;
+
 import eapli.base.event.Meeting.domain.Meeting;
 import eapli.base.event.Meeting.domain.MeetingParticipant;
 import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
-import java.util.stream.Collectors;
-
-public class InMemoryMeetingParticipantRepository extends InMemoryDomainRepository<MeetingParticipant,Integer> implements MeetingParticipantRepository {
+class InMemoryMeetingParticipantRepository extends InMemoryDomainRepository<MeetingParticipant, Integer>
+        implements MeetingParticipantRepository {
 
     static {
         InMemoryInitializer.init();

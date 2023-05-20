@@ -76,7 +76,7 @@ public class BasePasswordPolicy implements PasswordPolicy {
      * for example rules of password strength
      *
      * @param rawPassword
-     *            the string to check
+     *                    the string to check
      *
      * @return how strong a password is
      */

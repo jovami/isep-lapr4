@@ -18,34 +18,34 @@ public class SetCourseTeacherUI extends AbstractUI {
         ctrl.chooseCourse(selecCourse.selectedElement());
 
         boolean headTeacherCoosed = false;
-        while(!headTeacherCoosed){
+        while (!headTeacherCoosed) {
             SelectWidget<Teacher> selec = new SelectWidget<>("Choose Head Teacher", ctrl.teachers());
             selec.show();
-            if(ctrl.chooseHeadTeacher(selec.selectedElement())){
-                headTeacherCoosed=true;
-            }else {
+            if (ctrl.chooseHeadTeacher(selec.selectedElement())) {
+                headTeacherCoosed = true;
+            } else {
                 System.out.println("There was an error choosing the head teacher");
             }
         }
 
-
         SelectWidget<Teacher> selecMember = new SelectWidget<>("Choose new staff member", ctrl.teachers());
-        do{
+        do {
             selecMember.show();
-            if(selecMember.selectedOption()!=0){
-                if (ctrl.addStaffMember(selecMember.selectedElement()) ) {
+            if (selecMember.selectedOption() != 0) {
+                if (ctrl.addStaffMember(selecMember.selectedElement())) {
                     System.out.println("Staff member added with succes");
                 } else {
                     System.out.println("There was an error with the new staff member");
                 }
             }
 
-        }while (selecMember.selectedOption()!=0);
+        } while (selecMember.selectedOption() != 0);
 
         System.out.println("\n\tSTAFF MEMBERS:");
-        for (Teacher member: ctrl.staff()) {
-            System.out.println(" - "+member.acronym());
-        };
+        for (Teacher member : ctrl.staff()) {
+            System.out.println(" - " + member.acronym());
+        }
+        ;
         return true;
     }
 

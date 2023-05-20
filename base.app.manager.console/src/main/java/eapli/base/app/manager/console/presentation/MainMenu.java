@@ -63,12 +63,11 @@ public class MainMenu extends AbstractUI {
     private static final int LIST_TEACHERS_STUDENTS_MANAGERS = 5;
     private static final int ACCEPT_REFUSE_COURSE_APPLICATION_OPTION = 6;
 
-
     // Boards
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
 
-    //COURSE
+    // COURSE
     private static final int ADD_COURSE_OPTION = 1;
     private static final int LIST_COURSES = 2;
     private static final int OPEN_COURSE = 3;
@@ -83,7 +82,7 @@ public class MainMenu extends AbstractUI {
     private static final int USERS_OPTION = 2;
     private static final int BOARD_OPTION = 3;
     private static final int COURSE_OPTION = 4;
-    //MEETING
+    // MEETING
     private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
 
@@ -119,27 +118,20 @@ public class MainMenu extends AbstractUI {
     private Menu buildMainMenu() {
         final Menu mainMenu = new Menu();
 
-        final Menu myUserMenu = new MyUserMenu();
-        mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
+        mainMenu.addSubMenu(MY_USER_OPTION, new MyUserMenu());
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.MANAGER)) {
-            final Menu usersMenu = buildUsersMenu();
-            mainMenu.addSubMenu(USERS_OPTION, usersMenu);
-            final Menu boardMenu = buildBoardMenu();
-            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
-            final Menu courseMenu = buildCourseMenu();
-            mainMenu.addSubMenu(COURSE_OPTION,courseMenu );
-            final Menu meetingMenu = buildMeetingMenu();
-            mainMenu.addSubMenu(MEETING_OPTION,meetingMenu );
+            mainMenu.addSubMenu(USERS_OPTION, buildUsersMenu());
+            mainMenu.addSubMenu(BOARD_OPTION, buildBoardMenu());
+            mainMenu.addSubMenu(COURSE_OPTION, buildCourseMenu());
+            mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
         }
 
-        if (!Application.settings().isMenuLayoutHorizontal()) {
+        if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        }
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
@@ -163,14 +155,15 @@ public class MainMenu extends AbstractUI {
     private Menu buildUsersMenu() {
         final Menu menu = new Menu("Users");
 
-        //TODO: CLEAN SOME OF THE OPTIONS
+        // TODO: CLEAN SOME OF THE OPTIONS
 
         menu.addItem(ADD_USER_OPTION, "Add User", new AddUserUI()::show);
         menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
         menu.addItem(DISABLE_USER_OPTION, "Deactivate User", new DisableUserAction());
         menu.addItem(ACCEPT_REFUSE_SIGNUP_REQUEST_OPTION, "Accept/Refuse Signup Request",
                 new AcceptRefuseSignupRequestAction());
-        menu.addItem(LIST_TEACHERS_STUDENTS_MANAGERS, "List Teachers,Students and Managers", new ListTeachersStudentsManagersUI()::show);
+        menu.addItem(LIST_TEACHERS_STUDENTS_MANAGERS, "List Teachers,Students and Managers",
+                new ListTeachersStudentsManagersUI()::show);
         menu.addItem(ACCEPT_REFUSE_COURSE_APPLICATION_OPTION, "Accept/Refuse Course Application",
                 new AcceptRefuseEnrollmentRequestAction());
         menu.addItem(ENABLE_USER_OPTION, "Enable User", new EnableUserAction());
@@ -188,6 +181,7 @@ public class MainMenu extends AbstractUI {
 
         return menu;
     }
+
     private Menu buildMeetingMenu() {
         final Menu menu = new Menu("Meeting");
 

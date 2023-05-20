@@ -1,12 +1,12 @@
 package eapli.base.course.domain;
 
-import eapli.framework.domain.model.ValueObject;
-
 import javax.persistence.Embeddable;
+
+import eapli.framework.domain.model.ValueObject;
 
 @Embeddable
 public class CourseDescription implements ValueObject {
-    //TODO: verify max length??
+    // TODO: verify max length??
     private final int MAXLENGTH = 100;
 
     public String getDescription() {
@@ -14,23 +14,27 @@ public class CourseDescription implements ValueObject {
     }
 
     private String description;
-    public CourseDescription(){
-        description=null;
+
+    public CourseDescription() {
+        description = null;
     }
-    public CourseDescription(String description){
+
+    public CourseDescription(String description) {
         setDescription(description);
     }
 
-    /*protected boolean checkDescription(String description){
-        return description.length()<=MAXLENGTH;
-    }*/
+    /*
+     * protected boolean checkDescription(String description){
+     * return description.length()<=MAXLENGTH;
+     * }
+     */
 
     @Override
     public String toString() {
         return description;
     }
 
-    protected void setDescription(String description){
-            this.description=description;
+    protected void setDescription(String description) {
+        this.description = description;
     }
 }

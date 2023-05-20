@@ -47,8 +47,6 @@ public class EnrollmentRequestAcceptedEvent extends DomainEventBase {
         return theCourseApplication.course();
     }
 
-
-
     @Override
     public String toString() {
         return "CourseApplicationAccepted(" + systemUser().toString() + ")";

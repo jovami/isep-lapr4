@@ -20,6 +20,9 @@
  */
 package eapli.base.app.manager.console.presentation.clientuser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eapli.base.clientusermanagement.application.AcceptRefuseEnrollmentRequestController;
 import eapli.base.clientusermanagement.application.AcceptRefuseEnrollmentRequestFactory;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
@@ -28,8 +31,6 @@ import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -56,18 +57,18 @@ public class AcceptRefuseEnrollmentRequestUI extends AbstractUI {
             final int option = Console.readOption(1, 2, 0);
             try {
                 switch (option) {
-                case 1:
-                    this.theController.acceptCourseApplication(theCourseApplication);
-                    break;
-                case 2:
-                    //DeniedReason deniedReason= new DeniedReason();
-                    //deniedReason.setDenyingReason(Console.readLine("Denying Reason: "));
-                    String deniedReason = Console.readLine("Denying Reason: ");
-                    this.theController.refuseCourseApplication(theCourseApplication,deniedReason);
-                    break;
-                default:
-                    System.out.println("No valid option selected");
-                    break;
+                    case 1:
+                        this.theController.acceptCourseApplication(theCourseApplication);
+                        break;
+                    case 2:
+                        // DeniedReason deniedReason= new DeniedReason();
+                        // deniedReason.setDenyingReason(Console.readLine("Denying Reason: "));
+                        String deniedReason = Console.readLine("Denying Reason: ");
+                        this.theController.refuseCourseApplication(theCourseApplication, deniedReason);
+                        break;
+                    default:
+                        System.out.println("No valid option selected");
+                        break;
                 }
             } catch (IntegrityViolationException | ConcurrencyException ex) {
                 LOGGER.error("Error performing the operation", ex);

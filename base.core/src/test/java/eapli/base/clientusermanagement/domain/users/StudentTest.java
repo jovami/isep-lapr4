@@ -1,15 +1,20 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class StudentTest {
     private Student student1;
@@ -27,11 +32,11 @@ public class StudentTest {
                 .withRoles(BaseRoles.STUDENT).build();
 
         final var studentBuilder = new StudentBuilder();
-        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira").
-                withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira")
+                .withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student1 = studentBuilder.build();
-        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais").
-                withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais")
+                .withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student2 = studentBuilder.build();
     }
 

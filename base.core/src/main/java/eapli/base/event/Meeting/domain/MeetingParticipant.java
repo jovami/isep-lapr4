@@ -1,17 +1,23 @@
 package eapli.base.event.Meeting.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 public class MeetingParticipant implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="MEETINGPARTICIPANTID")
+    @Column(name = "MEETINGPARTICIPANTID")
     private int id;
     @ManyToOne
     private Meeting meeting;
@@ -20,7 +26,7 @@ public class MeetingParticipant implements AggregateRoot<Integer> {
     private SystemUser user;
     private MeetingParticipantStatus status;
 
-    protected MeetingParticipant(){
+    protected MeetingParticipant() {
 
     }
 
@@ -30,30 +36,31 @@ public class MeetingParticipant implements AggregateRoot<Integer> {
         this.status = MeetingParticipantStatus.PENDING;
     }
 
-    public MeetingParticipantStatus status(){
+    public MeetingParticipantStatus status() {
         return this.status;
     }
 
-    public Meeting meeting(){
+    public Meeting meeting() {
         return this.meeting;
     }
 
-    public void accept(){
+    public void accept() {
         this.status = MeetingParticipantStatus.ACCEPTED;
     }
-    public void deny(){
+
+    public void deny() {
         this.status = MeetingParticipantStatus.REJECTED;
     }
 
-
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         MeetingParticipant that = (MeetingParticipant) o;
         return Objects.equals(meeting, that.meeting) && Objects.equals(user, that.user);
     }
-
 
     @Override
     public int compareTo(Integer other) {

@@ -16,7 +16,6 @@ import eapli.base.exam.application.parser.autogen.ExamSpecParser;
 
 public class ValidateRegularExamSpecificationService {
 
-
     /**
      * Inner class to act as a Fail-Fast Error Listener,
      * as we're only concerned with whether the input syntax is valid
@@ -40,7 +39,6 @@ public class ValidateRegularExamSpecificationService {
             throw new ParseCancellationException(exception);
         }
     }
-
 
     /**
      * @param stream the CharStream to read the tokens from

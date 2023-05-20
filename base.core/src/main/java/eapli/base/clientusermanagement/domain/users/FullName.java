@@ -1,11 +1,12 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import java.util.Arrays;
+
+import javax.persistence.Embeddable;
+
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
-import java.util.Arrays;
 
 @Embeddable
 public class FullName implements ValueObject {
@@ -16,7 +17,8 @@ public class FullName implements ValueObject {
         Preconditions.nonNull(names, "Full name should not be null");
         Preconditions.ensure(names.length > 0, "Full name should not be empty");
 
-        Invariants.ensure(Arrays.stream(names).allMatch(n -> n.matches("[[A-Za-z]+' '?]+")), "Full name contains invalid characters");
+        Invariants.ensure(Arrays.stream(names).allMatch(n -> n.matches("[[A-Za-z]+' '?]+")),
+                "Full name contains invalid characters");
 
         this.names = names;
     }
@@ -25,7 +27,6 @@ public class FullName implements ValueObject {
     public FullName() {
         names = null;
     }
-
 
     public static FullName valueOf(String... names) {
         return new FullName(names);
@@ -36,5 +37,3 @@ public class FullName implements ValueObject {
         return String.join(" ", names);
     }
 }
-
-

@@ -1,46 +1,55 @@
 package eapli.base.enrollmentrequest.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.functional.Either;
 import eapli.framework.validations.Preconditions;
 
-import javax.persistence.*;
-
 @Entity
-@Table(name="ENROLLMENTREQUEST",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSE", "STUDENT" }) })
+@Table(name = "ENROLLMENTREQUEST", uniqueConstraints = { @UniqueConstraint(columnNames = { "COURSE", "STUDENT" }) })
 public class EnrollmentRequest implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="IDENROLLMENTREQUEST")
+    @Column(name = "IDENROLLMENTREQUEST")
     private int code;
 
-    //@Column(name="COURSE",nullable = false)
-    @JoinColumn(name="COURSE")
+    // @Column(name="COURSE",nullable = false)
+    @JoinColumn(name = "COURSE")
     @ManyToOne
     private Course course;
 
     // TODO: username vs mecanographicNumber
-    //@Column(name="STUDENT",nullable = false)
-    @JoinColumn(name="STUDENT")
+    // @Column(name="STUDENT",nullable = false)
+    @JoinColumn(name = "STUDENT")
     @ManyToOne
     private Student student;
 
-    @Column(name="ENROLLMENTREQUESTSTATE",nullable = false)
+    @Column(name = "ENROLLMENTREQUESTSTATE", nullable = false)
     @Enumerated(EnumType.STRING)
     private EnrollmentRequestState state;
 
-    @Column(name="DENIEDREASON")
+    @Column(name = "DENIEDREASON")
     private DeniedReason deniedReason;
 
-    public EnrollmentRequest(){
-        //for JPA
+    public EnrollmentRequest() {
+        // for JPA
     }
 
-    public EnrollmentRequest(Course course, Student student){
+    public EnrollmentRequest(Course course, Student student) {
         Preconditions.nonNull(course, "Course name cannot be null");
         Preconditions.nonNull(student, "Student cannot be null");
         this.state = EnrollmentRequestState.PENDING;
@@ -85,9 +94,11 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     public EnrollmentRequestState enrollmentRequestState() {
         return state;
     }
+
     public boolean isPending() {
         return state == EnrollmentRequestState.PENDING;
     }
+
     public Course course() {
         return course;
     }
@@ -99,11 +110,13 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     @Override
     public boolean sameAs(Object other) {
         if (!(other instanceof EnrollmentRequest)) {
-            return false;}
+            return false;
+        }
 
         final EnrollmentRequest o = (EnrollmentRequest) other;
         if (this == o) {
-            return true;}
+            return true;
+        }
         return this.course.sameAs(o.course)
                 && this.student.sameAs(o.student);
     }
@@ -126,6 +139,5 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
                 "\nstudent: " + student.toString() +
                 "\nstate: " + state.toString();
     }
-
 
 }

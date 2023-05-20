@@ -1,13 +1,14 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class FullNameTest {
 
     @Test
     public void fullNameCreationValidFullNameSuccess() {
-        String[] validNames = {"John", "Doe"};
+        String[] validNames = { "John", "Doe" };
 
         FullName fullName = FullName.valueOf(validNames);
 
@@ -30,14 +31,14 @@ public class FullNameTest {
 
     @Test(expected = IllegalStateException.class)
     public void fullNameCreationInvalidFullNameThrowsException() {
-        String[] invalidNames = {"John123", "Doe"};
+        String[] invalidNames = { "John123", "Doe" };
 
         FullName.valueOf(invalidNames);
     }
 
     @Test
     public void fullNameToStringValidFullNameReturnsFormattedString() {
-        String[] validNames = {"John", "Doe"};
+        String[] validNames = { "John", "Doe" };
         FullName fullName = new FullName(validNames);
         String expectedString = "John Doe";
 

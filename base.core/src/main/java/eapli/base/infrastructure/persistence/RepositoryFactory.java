@@ -21,7 +21,11 @@
 package eapli.base.infrastructure.persistence;
 
 import eapli.base.board.repositories.BoardRepository;
-import eapli.base.clientusermanagement.repositories.*;
+import eapli.base.clientusermanagement.repositories.ClientUserRepository;
+import eapli.base.clientusermanagement.repositories.ManagerRepository;
+import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
+import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
@@ -54,7 +58,7 @@ public interface RepositoryFactory {
     /**
      *
      * @param autoTx
-     *            the transactional context to enrol
+     *               the transactional context to enrol
      * @return
      */
     UserRepository users(TransactionalContext autoTx);
@@ -69,7 +73,7 @@ public interface RepositoryFactory {
     /**
      *
      * @param autoTx
-     *            the transactional context to enroll
+     *               the transactional context to enroll
      * @return
      */
     ClientUserRepository clientUsers(TransactionalContext autoTx);
@@ -84,7 +88,7 @@ public interface RepositoryFactory {
     /**
      *
      * @param autoTx
-     *            the transactional context to enroll
+     *               the transactional context to enroll
      * @return
      */
     SignupRequestRepository signupRequests(TransactionalContext autoTx);
@@ -99,23 +103,23 @@ public interface RepositoryFactory {
     /**
      *
      * @param autoTx
-     *            the transactional context to enroll
+     *               the transactional context to enroll
      * @return
      */
     EnrollmentRequestRepository enrollmentRequests(TransactionalContext autoTx);
+
     /**
      *
      * @param autoTx
-     *            the transactional context to enroll
+     *               the transactional context to enroll
      * @return
      */
     EnrollmentRepository enrollments(TransactionalContext autoTx);
 
-
     /**
      *
      * @param autoTx
-     *            the transactional context to enroll
+     *               the transactional context to enroll
      * @return
      */
     BoardRepository boards(TransactionalContext autoTx);
@@ -130,21 +134,32 @@ public interface RepositoryFactory {
     CourseRepository courses();
 
     StudentRepository students();
+
     TeacherRepository teachers();
+
     ManagerRepository managers();
 
     QuestionRepository questions();
+
     RegularExamRepository regularExams();
+
     FormativeExamRepository formativeExams();
+
     EnrollmentRequestRepository enrollmentRequests();
+
     EnrollmentRepository enrollments();
 
     RecurringPatternRepository recurringPatterns();
 
     TimeTableRepository timeTables();
+
     StaffRepository staffs();
+
     MeetingRepository meetings();
+
     MeetingParticipantRepository meetingParticipants();
+
     LectureRepository lectures();
+
     LectureParticipantRepository lectureParticipants();
 }

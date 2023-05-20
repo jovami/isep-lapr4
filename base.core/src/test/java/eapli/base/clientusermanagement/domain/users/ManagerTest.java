@@ -1,17 +1,21 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.ManagerBuilder;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.text.ParseException;
-
-import static org.junit.Assert.*;
 
 public class ManagerTest {
     private Manager manager1;
@@ -36,11 +40,11 @@ public class ManagerTest {
                 .withRoles(BaseRoles.MANAGER).build();
 
         final var managerBuilder = new ManagerBuilder();
-        managerBuilder.withSystemUser(systemUser1).withFullName("Alexandre Moreira").
-                withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756799");
+        managerBuilder.withSystemUser(systemUser1).withFullName("Alexandre Moreira").withShortName("Alex")
+                .withDateOfBirth("2001-01-01").withTaxPayerNumber("123756799");
         manager1 = managerBuilder.build();
-        managerBuilder.withSystemUser(systemUser2).withFullName("Miguel Novais").
-                withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        managerBuilder.withSystemUser(systemUser2).withFullName("Miguel Novais").withShortName("Miguel")
+                .withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         manager2 = managerBuilder.build();
 
         fullName1 = new FullName("Alexandre Moreira");

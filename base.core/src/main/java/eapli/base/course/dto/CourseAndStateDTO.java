@@ -8,7 +8,6 @@ import eapli.base.course.domain.CourseState;
 /**
  * CourseAndStateDTO
  */
-// TODO: Bump JDK to use Records?
 public class CourseAndStateDTO {
 
     private final CourseName name;

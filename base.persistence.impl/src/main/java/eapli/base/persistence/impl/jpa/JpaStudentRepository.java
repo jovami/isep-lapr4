@@ -1,17 +1,18 @@
 package eapli.base.persistence.impl.jpa;
 
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 
-import java.util.Optional;
-
 /**
  * JpaStudentRepository
  */
-public class JpaStudentRepository extends BaseJpaRepositoryBase<Student, Long, MecanographicNumber> implements StudentRepository {
+class JpaStudentRepository extends BaseJpaRepositoryBase<Student, Long, MecanographicNumber>
+        implements StudentRepository {
 
     JpaStudentRepository(String identityFieldName) {
         super(identityFieldName, "mecanographicNumber");

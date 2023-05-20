@@ -1,5 +1,17 @@
 package eapli.base.enrollmentrequest.domain;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
@@ -7,14 +19,6 @@ import eapli.base.course.domain.Course;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.Test;
-import org.junit.Before;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.junit.Assert.*;
 
 public class EnrollmentRequestTest {
     private Course course1;
@@ -37,26 +41,26 @@ public class EnrollmentRequestTest {
                 .withRoles(BaseRoles.MANAGER).build();
 
         final var studentBuilder = new StudentBuilder();
-        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira").
-                withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira")
+                .withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student1 = studentBuilder.build();
-        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais").
-                withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais")
+                .withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student2 = studentBuilder.build();
     }
 
     @Test
-    public void courseEmptyThrowsIllegalArgumentException(){
+    public void courseEmptyThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new EnrollmentRequest(null, student1));
     }
 
     @Test
-    public void studentEmptyThrowsIllegalArgumentException(){
+    public void studentEmptyThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new EnrollmentRequest(course1, null));
     }
 
     @Test
-    public void createEnrollmentRequestShouldWork(){
+    public void createEnrollmentRequestShouldWork() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             assertEquals(student1, request.student());
@@ -372,7 +376,7 @@ public class EnrollmentRequestTest {
     }
 
     @Test
-    public void cannotGetDeniedReasonFromNotDeniedEnrollmentRequest(){
+    public void cannotGetDeniedReasonFromNotDeniedEnrollmentRequest() {
         {
             EnrollmentRequest request = new EnrollmentRequest(course1, student1);
             request.deniedReason().left().map(enrollmentRequest -> {

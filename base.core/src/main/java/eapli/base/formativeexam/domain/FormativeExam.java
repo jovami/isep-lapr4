@@ -53,7 +53,7 @@ public class FormativeExam implements AggregateRoot<Long> {
 
         var o = (FormativeExam) other;
         return this.spec.equals(o.spec)
-            && this.course.sameAs(o.course);
+                && this.course.sameAs(o.course);
     }
 
     @Override

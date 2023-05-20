@@ -1,28 +1,29 @@
 package eapli.base.enrollmentrequest.domain;
 
-import eapli.framework.domain.model.ValueObject;
+import java.util.Objects;
 
 import javax.persistence.Embeddable;
-import java.util.Objects;
+
+import eapli.framework.domain.model.ValueObject;
 
 @Embeddable
 public class DeniedReason implements ValueObject {
 
     public String description;
 
-    public DeniedReason(){
+    public DeniedReason() {
         description = null;
     }
 
-    public DeniedReason(String description){
+    public DeniedReason(String description) {
         this.description = description;
     }
 
-    public void specifyDeniedReason(String description){
+    public void specifyDeniedReason(String description) {
         this.description = description;
     }
 
-    public String obtainDenyingReason(){
+    public String obtainDenyingReason() {
         return this.description;
     }
 
@@ -37,7 +38,6 @@ public class DeniedReason implements ValueObject {
         DeniedReason that = (DeniedReason) o;
         return Objects.equals(description, that.description);
     }
-
 
     @Override
     public int hashCode() {

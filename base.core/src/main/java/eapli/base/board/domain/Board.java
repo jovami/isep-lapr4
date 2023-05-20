@@ -1,12 +1,21 @@
 package eapli.base.board.domain;
 
-import eapli.framework.domain.model.AggregateRoot;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 @Entity
 @Table(name = "BOARD")
@@ -26,7 +35,6 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Column(nullable = false)
     private BoardState state;
 
-
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Cell> cells = new ArrayList<>();
 
@@ -36,11 +44,10 @@ public class Board implements AggregateRoot<BoardTitle> {
     @ElementCollection
     private final List<BoardRow> boardRowList = new ArrayList<>();
 
-
     protected Board() {
     }
 
-    //TODO protected??
+    // TODO protected??
 
     protected Board(String boardTitle, int rows, int columns) {
         this.boardTitle = new BoardTitle(boardTitle);
@@ -49,7 +56,8 @@ public class Board implements AggregateRoot<BoardTitle> {
         this.state = BoardState.CREATED;
         setupBoard(rows, columns);
     }
-    public Board(String boardTitle, int rows, int columns,SystemUser owner) {
+
+    public Board(String boardTitle, int rows, int columns, SystemUser owner) {
         this.boardTitle = new BoardTitle(boardTitle);
         this.num_rows = rows;
         this.num_columns = columns;
@@ -73,19 +81,22 @@ public class Board implements AggregateRoot<BoardTitle> {
     public BoardState getState() {
         return state;
     }
+
     public List<Cell> getCells() {
         return cells;
     }
+
     public List<BoardColumn> getBoardColumnList() {
         return boardColumnList;
     }
+
     public List<BoardRow> getBoardRowList() {
         return boardRowList;
     }
+
     public BoardTitle getBoardTitle() {
         return boardTitle;
     }
-
 
     public void setupBoard(int rows, int columns) {
         addRowIds(rows);
@@ -101,13 +112,11 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-
     public void addRowIds(int lastColumn) {
         for (int i = 0; i < lastColumn; i++) {
             boardRowList.add(new BoardRow(i));
         }
     }
-
 
     public void addColumnIds(int lastRow) {
         for (int i = 0; i < lastRow; i++) {
@@ -119,17 +128,18 @@ public class Board implements AggregateRoot<BoardTitle> {
         return new PostIt(cellId);
     }
 
-    /*public void movePostIt(int newCellId, PostIt postIt) {
-        //if newCellId has not a post it assigned
-
-        if (!hasCellPostIt(newCellId)) {
-            postIt.alterCell(newCellId);
-        } else
-            System.out.println("Cell Already Occupied");
-
-
-    }*/
-
+    /*
+     * public void movePostIt(int newCellId, PostIt postIt) {
+     * //if newCellId has not a post it assigned
+     *
+     * if (!hasCellPostIt(newCellId)) {
+     * postIt.alterCell(newCellId);
+     * } else
+     * System.out.println("Cell Already Occupied");
+     *
+     *
+     * }
+     */
 
     @Override
     public boolean sameAs(Object other) {
@@ -156,9 +166,3 @@ public class Board implements AggregateRoot<BoardTitle> {
                 "\nwith " + cells.size() + " cells";
     }
 }
-
-
-
-
-
-

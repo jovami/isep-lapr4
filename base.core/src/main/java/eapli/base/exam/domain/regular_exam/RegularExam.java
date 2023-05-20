@@ -1,12 +1,20 @@
 package eapli.base.exam.domain.regular_exam;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import eapli.base.course.domain.Course;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "REGULAREXAM")
@@ -92,11 +100,11 @@ public class RegularExam implements AggregateRoot<Integer> {
         return this.regularExamSpecification;
     }
 
-    public void updateRegularExamDate(RegularExamDate regularExamDate){
+    public void updateRegularExamDate(RegularExamDate regularExamDate) {
         this.regularExamDate = regularExamDate;
     }
 
-    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification){
+    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification) {
         this.regularExamSpecification = regularExamSpecification;
     }
 

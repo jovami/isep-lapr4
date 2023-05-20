@@ -36,10 +36,10 @@ import eapli.framework.actions.Action;
 @SuppressWarnings("squid:S1126")
 public class BaseDemoSmokeTester implements Action {
 
-	@Override
-	public boolean execute() {
-		// TODO: Add your smoke test execute here. Look for examples in the eCafeteria
-		// project
-		return true;
-	}
+    @Override
+    public boolean execute() {
+        // TODO: Add your smoke test execute here. Look for examples in the eCafeteria
+        // project
+        return true;
+    }
 }

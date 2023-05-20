@@ -24,6 +24,7 @@
 package eapli.base.clientusermanagement.application;
 
 import eapli.base.clientusermanagement.domain.SignupRequest;
+import eapli.framework.application.UseCaseController;
 
 /**
  * The controller for the use case "Accept or refuse signup request".
@@ -55,6 +56,7 @@ import eapli.base.clientusermanagement.domain.SignupRequest;
  *
  * @author Paulo Gandra de Sousa
  */
+@UseCaseController
 public interface AcceptRefuseSignupRequestController {
 
     SignupRequest acceptSignupRequest(SignupRequest theSignupRequest);

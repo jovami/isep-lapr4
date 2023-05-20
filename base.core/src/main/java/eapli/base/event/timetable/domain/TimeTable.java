@@ -1,14 +1,20 @@
 package eapli.base.event.timetable.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
-import javax.persistence.*;
-import java.util.Objects;
-
 @Entity
-@Table(name="TIMETABLE")
+@Table(name = "TIMETABLE")
 public class TimeTable implements AggregateRoot<Integer> {
 
     @Id
@@ -21,11 +27,11 @@ public class TimeTable implements AggregateRoot<Integer> {
     @ManyToOne
     private RecurringPattern pattern;
 
-    private TimeTable(){
+    protected TimeTable() {
+        // for ORM
     }
 
-
-    public TimeTable(SystemUser user,RecurringPattern pattern){
+    public TimeTable(SystemUser user, RecurringPattern pattern) {
         this.user = user;
         this.pattern = pattern;
     }
@@ -35,16 +41,19 @@ public class TimeTable implements AggregateRoot<Integer> {
         return "TimeTable" +
                 "\n timeTableId: " + timeTableId +
                 "\n user: " + user.username().toString() +
-                "\n pattern: " + pattern ;
+                "\n pattern: " + pattern;
     }
+
     public RecurringPattern pattern() {
         return pattern;
     }
 
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TimeTable timeTable = (TimeTable) o;
         return Objects.equals(user, timeTable.user) && this.pattern.equals(timeTable.pattern);
     }
@@ -53,7 +62,6 @@ public class TimeTable implements AggregateRoot<Integer> {
     public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
     }
-
 
     @Override
     public Integer identity() {

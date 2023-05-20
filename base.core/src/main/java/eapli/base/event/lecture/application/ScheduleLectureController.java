@@ -1,9 +1,12 @@
 package eapli.base.event.lecture.application;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
-import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTOMapper;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -20,21 +23,18 @@ import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.application.TimeTableService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.framework.domain.repositories.ConcurrencyException;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.*;
-
+@UseCaseController
 public class ScheduleLectureController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
-    //Repositories
+    // Repositories
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
@@ -45,14 +45,13 @@ public class ScheduleLectureController {
 
     private final EnrollmentRepository enrollmentRepository;
 
-    //Service
+    // Service
     private final TimeTableService srv;
-    //Domain
+    // Domain
     private Lecture lecture;
     private ArrayList<Student> students;
     private RecurringPattern pattern;
     private ArrayList<SystemUser> present = new ArrayList<>();
-
 
     public ScheduleLectureController() {
         lectureRepository = PersistenceContext.repositories().lectures();
@@ -62,7 +61,7 @@ public class ScheduleLectureController {
         teacherRepository = PersistenceContext.repositories().teachers();
         studentRepository = PersistenceContext.repositories().students();
         enrollmentRepository = PersistenceContext.repositories().enrollments();
-        staffRepository= PersistenceContext.repositories().staffs();
+        staffRepository = PersistenceContext.repositories().staffs();
         students = (ArrayList<Student>) studentRepository.findAll();
 
         srv = new TimeTableService();
@@ -72,7 +71,6 @@ public class ScheduleLectureController {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
         Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
-
 
         pattern = buildPattern(startDate, endDate, startTime, durationMinutes);
         pattern = patternRepository.save(pattern);
@@ -95,15 +93,14 @@ public class ScheduleLectureController {
         return teacher.get();
     }
 
-
-    private RecurringPattern buildPattern(LocalDate startDate, LocalDate endDate, LocalTime startTime, int durationMinutes) {
+    private RecurringPattern buildPattern(LocalDate startDate, LocalDate endDate, LocalTime startTime,
+            int durationMinutes) {
         RecurringPatternFreqWeeklyBuilder builder = new RecurringPatternFreqWeeklyBuilder();
         builder.withDayOfWeek(startDate.getDayOfWeek());
         builder.withDuration(startTime, durationMinutes);
         builder.withDateInterval(startDate, endDate);
         return builder.getPattern();
     }
-
 
     public boolean schedule(Iterable<Enrollment> enrolled) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
@@ -113,10 +110,10 @@ public class ScheduleLectureController {
             return false;
 
         if (srv.checkAvailabilityByUser(sysUser.get(), lecture.pattern())) {
-            //create LectureParticipant for each invited user
+            // create LectureParticipant for each invited user
             for (Enrollment enroll : enrolled) {
-                //TODO:check ManytoOne participant-> Lecture
-                //TODO: transaction??
+                // TODO:check ManytoOne participant-> Lecture
+                // TODO: transaction??
 
                 LectureParticipant participant = new LectureParticipant(enroll.student(), lecture);
                 present.add(enroll.student().user());
@@ -126,8 +123,8 @@ public class ScheduleLectureController {
             if (!srv.schedule(present, lecture.pattern())) {
                 return false;
             }
-            System.out.println("Lecture: \n"+lectureRepository.findAll().toString());
-            System.out.println("Participants: \n"+participantRepository.findAll().toString());
+            System.out.println("Lecture: \n" + lectureRepository.findAll().toString());
+            System.out.println("Participants: \n" + participantRepository.findAll().toString());
             return true;
         }
         patternRepository.delete(pattern);
@@ -143,6 +140,4 @@ public class ScheduleLectureController {
         return enrollmentRepository.enrollmentsByCourse(course);
     }
 
-
 }
-

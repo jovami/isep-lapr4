@@ -1,5 +1,8 @@
 package eapli.base.course.application;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.course.domain.Course;
@@ -7,10 +10,9 @@ import eapli.base.course.domain.StaffMember;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.application.UseCaseController;
 
-import java.util.HashSet;
-import java.util.Set;
-
+@UseCaseController
 public class SetCourseTeachersController {
     private final CourseRepository repo;
     private final TeacherRepository teacherRepo;
@@ -18,32 +20,33 @@ public class SetCourseTeachersController {
     private final Set<Teacher> staff = new HashSet<>();
     private Course course;
 
-    public SetCourseTeachersController(){
+    public SetCourseTeachersController() {
         repo = PersistenceContext.repositories().courses();
         teacherRepo = PersistenceContext.repositories().teachers();
         staffRepo = PersistenceContext.repositories().staffs();
 
     }
 
-    public void chooseCourse(Course course){
-        this.course = course ;
+    public void chooseCourse(Course course) {
+        this.course = course;
     }
-    public Iterable<Course> courses(){
+
+    public Iterable<Course> courses() {
         return repo.findAll();
     }
 
-    public boolean chooseHeadTeacher(Teacher teacher){
+    public boolean chooseHeadTeacher(Teacher teacher) {
         course.setHeadTeacher(teacher);
-        return repo.save(course)!=null;
+        return repo.save(course) != null;
     }
 
-    public  Iterable<Teacher> teachers(){
+    public Iterable<Teacher> teachers() {
         return teacherRepo.findAll();
     }
 
     public boolean addStaffMember(Teacher teacher) {
-        if(staff.add(teacher) && course.headTeacher()!=teacher){
-            StaffMember newMember = new StaffMember(course,teacher);
+        if (staff.add(teacher) && course.headTeacher() != teacher) {
+            StaffMember newMember = new StaffMember(course, teacher);
             return staffRepo.save(newMember) != null;
         }
         return false;

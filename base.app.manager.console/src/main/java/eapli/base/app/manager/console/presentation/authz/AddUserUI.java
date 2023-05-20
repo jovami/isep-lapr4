@@ -64,7 +64,6 @@ public class AddUserUI extends AbstractUI {
         final String taxPayerNumber = Console.readLine("Tax Payer Number");
         final String shortName = firstName + " " + lastName;
 
-
         final Set<Role> roleTypes = new HashSet<>();
         boolean show;
         do {
@@ -75,16 +74,15 @@ public class AddUserUI extends AbstractUI {
             SystemUser user = this.theController.addUser(username, password, firstName, lastName, email, roleTypes);
             if (roleTypes.contains(BaseRoles.TEACHER)) {
                 final String acronym = Console.readLine("Acronym");
-                theController.addTeacher(user, acronym,fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addTeacher(user, acronym, fullName, shortName, dateOfBirth, taxPayerNumber);
             }
             if (roleTypes.contains(BaseRoles.STUDENT)) {
                 final String mecanographicNumber = Console.readLine("MecanographicNumber");
-                theController.addStudent(user, mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addStudent(user, mecanographicNumber, fullName, shortName, dateOfBirth, taxPayerNumber);
             }
             if (roleTypes.contains(BaseRoles.MANAGER)) {
-                theController.addManager(user,fullName,shortName,dateOfBirth,taxPayerNumber);
+                theController.addManager(user, fullName, shortName, dateOfBirth, taxPayerNumber);
             }
-
 
             System.out.println("\nUser Created Successfully!");
         } catch (final IntegrityViolationException | ConcurrencyException e) {

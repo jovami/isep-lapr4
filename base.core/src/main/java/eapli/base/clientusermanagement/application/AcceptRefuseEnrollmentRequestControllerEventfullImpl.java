@@ -23,6 +23,10 @@
  */
 package eapli.base.clientusermanagement.application;
 
+import java.util.Optional;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import eapli.base.clientusermanagement.domain.events.EnrollmentRequestAcceptedEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.enrollment.domain.Enrollment;
@@ -39,9 +43,6 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
 import eapli.framework.validations.Preconditions;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * the controller for the use case "Accept or refuse signup request"
@@ -56,73 +57,73 @@ import java.util.Optional;
 @UseCaseController
 public class AcceptRefuseEnrollmentRequestControllerEventfullImpl implements AcceptRefuseEnrollmentRequestController {
 
-	private final EnrollmentRequestRepository enrollmentRequestRepository = PersistenceContext.repositories().enrollmentRequests();
-	private final AuthorizationService authorizationService = AuthzRegistry.authorizationService();
-	private final EventPublisher dispatcher = InProcessPubSub.publisher();
-	private final EnrollmentRepository enrollmentRepository = PersistenceContext.repositories().enrollments();
+    private final EnrollmentRequestRepository enrollmentRequestRepository = PersistenceContext.repositories()
+            .enrollmentRequests();
+    private final AuthorizationService authorizationService = AuthzRegistry.authorizationService();
+    private final EventPublisher dispatcher = InProcessPubSub.publisher();
+    private final EnrollmentRepository enrollmentRepository = PersistenceContext.repositories().enrollments();
 
-	@Override
-	@SuppressWarnings("squid:S1226")
-	public EnrollmentRequest acceptCourseApplication(EnrollmentRequest theCourseApplication) {
-		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
+    @Override
+    @SuppressWarnings("squid:S1226")
+    public EnrollmentRequest acceptCourseApplication(EnrollmentRequest theCourseApplication) {
+        authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-		Preconditions.nonNull(theCourseApplication);
+        Preconditions.nonNull(theCourseApplication);
 
-		theCourseApplication = markCourseApplicationAsAccepted(theCourseApplication);
-		return theCourseApplication;
-	}
+        theCourseApplication = markCourseApplicationAsAccepted(theCourseApplication);
+        return theCourseApplication;
+    }
 
+    /**
+     * modify Signup Request to accepted
+     *
+     * @param theCourseApplication
+     * @return
+     * @throws ConcurrencyException
+     * @throws IntegrityViolationException
+     */
+    @SuppressWarnings("squid:S1226")
+    private EnrollmentRequest markCourseApplicationAsAccepted(EnrollmentRequest theCourseApplication) {
+        Enrollment enrollment;
+        // do just what is needed in the scope of this use case
+        // theCourseApplication.approveEnrollmentRequest();
 
+        enrollment = new Enrollment(theCourseApplication.course(), theCourseApplication.student());
+        enrollmentRepository.save(enrollment);
+        theCourseApplication.approveEnrollmentRequest();
+        theCourseApplication = enrollmentRequestRepository.save(theCourseApplication);
 
-	/**
-	 * modify Signup Request to accepted
-	 *
-	 * @param theCourseApplication
-	 * @return
-	 * @throws ConcurrencyException
-	 * @throws IntegrityViolationException
-	 */
-	@SuppressWarnings("squid:S1226")
-	private EnrollmentRequest markCourseApplicationAsAccepted(EnrollmentRequest theCourseApplication) {
-		Enrollment enrollment;
-		// do just what is needed in the scope of this use case
-		//theCourseApplication.approveEnrollmentRequest();
+        // notify interested parties (if any)
+        final DomainEvent event = new EnrollmentRequestAcceptedEvent(theCourseApplication);
+        dispatcher.publish(event);
+        System.out.println(enrollmentRepository.findAll());
 
-		enrollment = new Enrollment(theCourseApplication.course(), theCourseApplication.student());
-		enrollmentRepository.save(enrollment);
-		theCourseApplication.approveEnrollmentRequest();
-		theCourseApplication = enrollmentRequestRepository.save(theCourseApplication);
+        return theCourseApplication;
+    }
 
-		// notify interested parties (if any)
-		final DomainEvent event = new EnrollmentRequestAcceptedEvent(theCourseApplication);
-		dispatcher.publish(event);
-		System.out.println(enrollmentRepository.findAll());
+    @Override
+    @Transactional
+    public EnrollmentRequest refuseCourseApplication(final EnrollmentRequest theCourseApplication,
+            final String deniedReason) {
+        authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-		return theCourseApplication;
-	}
+        Preconditions.nonNull(theCourseApplication);
 
-	@Override
-	@Transactional
-	public EnrollmentRequest refuseCourseApplication(final EnrollmentRequest theCourseApplication, final String deniedReason) {
-		authorizationService.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
+        theCourseApplication.denyEnrollmentRequest(deniedReason);
+        return enrollmentRequestRepository.save(theCourseApplication);
+    }
 
-		Preconditions.nonNull(theCourseApplication);
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Iterable<EnrollmentRequest> listPendingEnrollmentRequests() {
+        return enrollmentRequestRepository.pendingEnrollmentRequests();
+    }
 
-		theCourseApplication.denyEnrollmentRequest(deniedReason);
-		return enrollmentRequestRepository.save(theCourseApplication);
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public Iterable<EnrollmentRequest> listPendingEnrollmentRequests() {
-		return enrollmentRequestRepository.pendingEnrollmentRequests();
-	}
-
-	@Override
-	public Optional<EnrollmentRequest> findFirstPendingEnrollmentRequest() {
-		return enrollmentRequestRepository.findFirstPendingEnrollmentRequest();
-	}
+    @Override
+    public Optional<EnrollmentRequest> findFirstPendingEnrollmentRequest() {
+        return enrollmentRequestRepository.findFirstPendingEnrollmentRequest();
+    }
 }

@@ -29,7 +29,7 @@ import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainR
  *
  * @author Jorge Santos ajs@isep.ipp.pt 02/04/2016
  */
-public class InMemorySignupRequestRepository extends
+class InMemorySignupRequestRepository extends
         InMemoryDomainRepository<SignupRequest, Username> implements SignupRequestRepository {
 
     static {

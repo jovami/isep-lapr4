@@ -1,5 +1,8 @@
 package eapli.base.persistence.impl.inmemory;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseState;
@@ -7,13 +10,10 @@ import eapli.base.course.domain.StaffMember;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-public class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMember,Integer> implements StaffRepository {
+class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMember, Integer> implements StaffRepository {
 
     static {
-         InMemoryInitializer.init();
+        InMemoryInitializer.init();
     }
 
     public InMemoryStaffRepository() {
@@ -30,10 +30,9 @@ public class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMembe
 
     private Stream<Course> streamOfTaughtBy(Teacher t) {
         return valuesStream()
-            .filter(staff -> staff.member().sameAs(t))
-            .map(StaffMember::course);
+                .filter(staff -> staff.member().sameAs(t))
+                .map(StaffMember::course);
     }
-
 
     @Override
     public Iterable<Course> taughtBy(Teacher t) {
@@ -43,7 +42,7 @@ public class InMemoryStaffRepository extends InMemoryDomainRepository<StaffMembe
     @Override
     public Iterable<Course> nonClosedAndTaughtBy(Teacher t) {
         return streamOfTaughtBy(t)
-            .filter(course -> course.state() != CourseState.CLOSED)
-            .collect(Collectors.toList());
+                .filter(course -> course.state() != CourseState.CLOSED)
+                .collect(Collectors.toList());
     }
 }

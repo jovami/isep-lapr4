@@ -18,7 +18,6 @@ public enum CSVHeader {
         }
     };
 
-
     private final int columns;
     private final String delimiter;
 

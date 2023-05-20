@@ -25,9 +25,9 @@ package eapli.base.clientusermanagement.usermanagement.application.eventhandlers
 
 import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
 import eapli.base.clientusermanagement.domain.events.SignupAcceptedEvent;
-import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.UserBuilderHelper;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.events.DomainEvent;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -44,28 +44,28 @@ import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPub
  */
 @UseCaseController
 /* package */ class AddUserOnSignupAcceptedController {
-	private final UserRepository userRepository = PersistenceContext.repositories().users();
-	private final EventPublisher dispatcher = InProcessPubSub.publisher();
+    private final UserRepository userRepository = PersistenceContext.repositories().users();
+    private final EventPublisher dispatcher = InProcessPubSub.publisher();
 
-	/**
-	 *
-	 * @param theSignupRequest
-	 * @return
-	 * @throws ConcurrencyException
-	 * @throws IntegrityViolationException
-	 */
-	public SystemUser addUser(final SignupAcceptedEvent theSignupRequest) {
+    /**
+     *
+     * @param theSignupRequest
+     * @return
+     * @throws ConcurrencyException
+     * @throws IntegrityViolationException
+     */
+    public SystemUser addUser(final SignupAcceptedEvent theSignupRequest) {
 
-		final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
-		userBuilder.withUsername(theSignupRequest.username()).withPassword(theSignupRequest.password())
-				.withName(theSignupRequest.name()).withEmail(theSignupRequest.email()).withRoles(BaseRoles.STUDENT);
-		final SystemUser newUser = userRepository.save(userBuilder.build());
+        final SystemUserBuilder userBuilder = UserBuilderHelper.builder();
+        userBuilder.withUsername(theSignupRequest.username()).withPassword(theSignupRequest.password())
+                .withName(theSignupRequest.name()).withEmail(theSignupRequest.email()).withRoles(BaseRoles.STUDENT);
+        final SystemUser newUser = userRepository.save(userBuilder.build());
 
-		// notify interested parties
-		final DomainEvent event = new NewUserRegisteredFromSignupEvent(theSignupRequest.mecanographicNumber(),
-				newUser.username());
-		dispatcher.publish(event);
+        // notify interested parties
+        final DomainEvent event = new NewUserRegisteredFromSignupEvent(theSignupRequest.mecanographicNumber(),
+                newUser.username());
+        dispatcher.publish(event);
 
-		return newUser;
-	}
+        return newUser;
+    }
 }

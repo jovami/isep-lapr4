@@ -1,8 +1,12 @@
 package eapli.base.board.domain;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Cell implements Serializable {
@@ -14,17 +18,17 @@ public class Cell implements Serializable {
     private BoardRow row;
     private BoardColumn column;
 
+    /*
+     * @OneToOne(mappedBy = "cell")
+     * private PostIt postIt;
+     */
 
-    /*@OneToOne(mappedBy = "cell")
-    private PostIt postIt;*/
-
-
-//@OneToMany
-    //private final List<PostIt> postIts = new ArrayList<>();
-
+    // @OneToMany
+    // private final List<PostIt> postIts = new ArrayList<>();
 
     protected Cell() {
     }
+
     public Cell(BoardRow row, BoardColumn column) {
         this.row = row;
         this.column = column;
@@ -38,14 +42,14 @@ public class Cell implements Serializable {
         return column;
     }
 
-
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Cell cell = (Cell) o;
-        return  Objects.equals(row, cell.row) && Objects.equals(column, cell.column);
+        return Objects.equals(row, cell.row) && Objects.equals(column, cell.column);
     }
 
     @Override
@@ -53,4 +57,3 @@ public class Cell implements Serializable {
         return Objects.hash(row, column);
     }
 }
-

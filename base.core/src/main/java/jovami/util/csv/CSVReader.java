@@ -1,11 +1,18 @@
 package jovami.util.csv;
 
-import jovami.util.csv.exceptions.InvalidCSVHeaderException;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import jovami.util.csv.exceptions.InvalidCSVHeaderException;
 
 public class CSVReader {
 
@@ -32,8 +39,7 @@ public class CSVReader {
      * @throws IOException the io exception
      */
     public static List<String[]> readFromResources(String bundle, CSVHeader header)
-            throws IOException
-    {
+            throws IOException {
         Objects.requireNonNull(bundle);
 
         InputStream is = CSVHeader.class.getResourceAsStream(bundle);
@@ -52,8 +58,7 @@ public class CSVReader {
      * @throws FileNotFoundException the file not found exception
      */
     public static List<String[]> readCSV(File file, CSVHeader header)
-            throws FileNotFoundException
-    {
+            throws FileNotFoundException {
         Objects.requireNonNull(file);
         return readCSV(new FileInputStream(file), header);
     }
@@ -87,7 +92,7 @@ public class CSVReader {
 
                 if (HEADER == CSVHeader.NO_HEADER || tmp.length == EXPECTED_COLUMNS) {
                     // remove " at begining and " at end
-                    if(quotationMarks) {
+                    if (quotationMarks) {
                         tmp[0] = tmp[0].replaceAll("\"", "");
                         tmp[tmp.length - 1] = tmp[tmp.length - 1].replaceAll("\"", "");
                     }
@@ -111,6 +116,7 @@ public class CSVReader {
      * This method attempts to circumvent this issue by scanning the
      * first character of the stream being read and resetting the file
      * pointer to the beggining in case it isn't a BOM
+     *
      * @param reader READER
      * @throws IOException excep
      */
@@ -128,7 +134,8 @@ public class CSVReader {
      * Check if the CSV File contains quotation marks.
      * Needed because the lines need to be split according to the
      * correct delimiter.
-     * @param reader    the {@code BufferedReader} used
+     *
+     * @param reader the {@code BufferedReader} used
      * @throws IOException if an error occurs while checking for quotes
      */
     private static boolean checkQuotationMark(BufferedReader reader) throws IOException {

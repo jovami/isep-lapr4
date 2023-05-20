@@ -1,19 +1,25 @@
 package eapli.base.event.Meeting.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
-import javax.persistence.*;
-import java.util.Objects;
-
 @Entity
-@Table(name="MEETING")
+@Table(name = "MEETING")
 public class Meeting implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="MEETINGID")
+    @Column(name = "MEETINGID")
     private int meetingId;
 
     @OneToOne
@@ -24,11 +30,10 @@ public class Meeting implements AggregateRoot<Integer> {
     @OneToOne
     private RecurringPattern pattern;
 
-
-    protected Meeting(){
+    protected Meeting() {
     }
 
-    public Meeting(SystemUser user,String description, RecurringPattern pattern){
+    public Meeting(SystemUser user, String description, RecurringPattern pattern) {
         this.meetingAdmin = user;
         this.description = new Description(description);
         this.pattern = pattern;
@@ -56,8 +61,10 @@ public class Meeting implements AggregateRoot<Integer> {
 
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Meeting meeting = (Meeting) o;
         return Objects.equals(meetingId, meeting.meetingId);
     }
@@ -79,7 +86,7 @@ public class Meeting implements AggregateRoot<Integer> {
 
     @Override
     public boolean hasIdentity(Integer id) {
-        return this.meetingId==id;
+        return this.meetingId == id;
     }
 
 }

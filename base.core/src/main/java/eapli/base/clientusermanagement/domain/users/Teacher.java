@@ -1,21 +1,24 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embedded;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Version;
+
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
 @Entity
-public class Teacher implements AggregateRoot<Acronym>, Serializable {
+public class Teacher implements AggregateRoot<Acronym> {
     private static final long serialVersionUID = 1L;
 
     @Version
     private Long version;
 
-    //TODO: check one to one
+    // TODO: check one to one
     @EmbeddedId
     private Acronym acronym;
 
@@ -35,8 +38,8 @@ public class Teacher implements AggregateRoot<Acronym>, Serializable {
     private SystemUser systemUser;
 
     public Teacher(final SystemUser user, final Acronym acronym,
-                   final FullName fullName, final ShortName shortName, final DateOfBirth dateOfBirth,
-                   final TaxPayerNumber taxPayerNumber) {
+            final FullName fullName, final ShortName shortName, final DateOfBirth dateOfBirth,
+            final TaxPayerNumber taxPayerNumber) {
         Preconditions.noneNull(user, acronym, fullName, shortName, dateOfBirth, taxPayerNumber);
 
         this.systemUser = user;
@@ -90,7 +93,7 @@ public class Teacher implements AggregateRoot<Acronym>, Serializable {
                 "\nFull Name: " + fullName +
                 "\nShort Name: " + shortName +
                 "\nDate Of Birth: " + dateOfBirth +
-                "\nTax Payer Number: " + taxPayerNumber ;
+                "\nTax Payer Number: " + taxPayerNumber;
     }
 
     public Acronym acronym() {

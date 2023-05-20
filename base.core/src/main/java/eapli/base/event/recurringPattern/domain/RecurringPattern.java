@@ -1,8 +1,5 @@
 package eapli.base.event.recurringPattern.domain;
 
-import eapli.framework.domain.model.AggregateRoot;
-
-import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,13 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import eapli.framework.domain.model.AggregateRoot;
+
 @Entity
-@Table(name="RECURRINGPATTERN")
+@Table(name = "RECURRINGPATTERN")
 public class RecurringPattern implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int code;
-
 
     @Enumerated(EnumType.STRING)
     private RecurringFrequency frequency;
@@ -40,27 +47,28 @@ public class RecurringPattern implements AggregateRoot<Integer> {
     private DayOfWeek dayOfWeek;
     private LocalTime startTime;
     private int durationMinutes;
-    @ElementCollection(targetClass= LocalDate.class)
+    @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> exceptions;
 
     public RecurringPattern() {
         exceptions = new ArrayList<>();
     }
 
-
     public RecurringFrequency getFrequency() {
         return frequency;
     }
+
     public boolean setTime(LocalTime startTime, int durationMinutes) {
-        if(setDurationMinutes(durationMinutes)){
+        if (setDurationMinutes(durationMinutes)) {
             setStartTime(startTime);
             return true;
-        }else
+        } else
             return false;
     }
-    public boolean addException(LocalDate date){
-        if(this.betweenDates(date)){
-            if(date.getDayOfWeek()==this.dayOfWeek){
+
+    public boolean addException(LocalDate date) {
+        if (this.betweenDates(date)) {
+            if (date.getDayOfWeek() == this.dayOfWeek) {
                 exceptions.add(date);
                 return true;
             }
@@ -68,27 +76,27 @@ public class RecurringPattern implements AggregateRoot<Integer> {
         return false;
     }
 
-    //True if there is no overlapping between 2 RecurringPatterns
-    public boolean overLap(RecurringPattern that){
+    // True if there is no overlapping between 2 RecurringPatterns
+    public boolean overLap(RecurringPattern that) {
 
-        //different weekDays -> false
-        if(dayOfWeek!=that.dayOfWeek){
+        // different weekDays -> false
+        if (dayOfWeek != that.dayOfWeek) {
             return false;
         }
 
-        //if dates dont overlap-> false
-        if(!overLapDateInterval(that.startDate,that.endDate)){
+        // if dates dont overlap-> false
+        if (!overLapDateInterval(that.startDate, that.endDate)) {
             return false;
         }
 
-        //if times dont overlap-> return false
-        if(!overLapTime(that)){
+        // if times dont overlap-> return false
+        if (!overLapTime(that)) {
             return false;
         }
 
-        if(that.frequency==RecurringFrequency.ONCE){
+        if (that.frequency == RecurringFrequency.ONCE) {
             for (LocalDate ex : exceptions) {
-                if(that.betweenDates(ex)){
+                if (that.betweenDates(ex)) {
                     return false;
                 }
             }
@@ -99,6 +107,7 @@ public class RecurringPattern implements AggregateRoot<Integer> {
     public boolean betweenDates(LocalDate ex) {
         return (startDate.isBefore(ex) || startDate.isEqual(ex)) && (endDate.isAfter(ex) || endDate.isEqual(ex));
     }
+
     public void setFrequency(RecurringFrequency frequency) {
         this.frequency = frequency;
     }
@@ -111,27 +120,28 @@ public class RecurringPattern implements AggregateRoot<Integer> {
         return true;
     }
 
-
-    public boolean overLapDateInterval( LocalDate startDate1, LocalDate endDate1) {
-        // DATA     |   DATA INICIO     |  DATA FIM
-        // data 1    |   23-06-2010      |   23-07-2010
-        // data 1    |   23-08-2010      |   23-09-2010
+    public boolean overLapDateInterval(LocalDate startDate1, LocalDate endDate1) {
+        // DATA | DATA INICIO | DATA FIM
+        // data 1 | 23-06-2010 | 23-07-2010
+        // data 1 | 23-08-2010 | 23-09-2010
 
         // nao convergem
         if (this.startDate.isAfter(endDate1) || this.endDate.isBefore(startDate1))
-            return false;//nao convergem
+            return false;// nao convergem
 
-        return true;//convergem
+        return true;// convergem
     }
-    public boolean setDateInterval(LocalDate startDate,LocalDate endDate){
-        if (startDate.isBefore(endDate)){
+
+    public boolean setDateInterval(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isBefore(endDate)) {
             setStartDate(startDate);
             setEndDate(endDate);
             return true;
         }
         return false;
     }
-    public void setDateOnce(LocalDate date){
+
+    public void setDateOnce(LocalDate date) {
         setStartDate(date);
         setEndDate(date);
         setDayOfWeek(date.getDayOfWeek());
@@ -148,6 +158,7 @@ public class RecurringPattern implements AggregateRoot<Integer> {
     public LocalDate endDate() {
         return endDate;
     }
+
     private void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -173,22 +184,23 @@ public class RecurringPattern implements AggregateRoot<Integer> {
     }
 
     public boolean setDurationMinutes(int durationMinutes) {
-        if(durationMinutes < 10) {
+        if (durationMinutes < 10) {
             return false;
         }
         this.durationMinutes = durationMinutes;
         return true;
     }
 
-    public LocalTime endTime(){
+    public LocalTime endTime() {
         return startTime.plusMinutes(durationMinutes);
     }
 
-
     @Override
     public boolean sameAs(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         RecurringPattern that = (RecurringPattern) o;
         return code == that.code &&
                 durationMinutes == that.durationMinutes &&

@@ -57,15 +57,15 @@ public class AcceptRefuseSignupRequestUI extends AbstractUI {
             final int option = Console.readOption(1, 2, 0);
             try {
                 switch (option) {
-                case 1:
-                    this.theController.acceptSignupRequest(theSignupRequest);
-                    break;
-                case 2:
-                    this.theController.refuseSignupRequest(theSignupRequest);
-                    break;
-                default:
-                    System.out.println("No valid option selected");
-                    break;
+                    case 1:
+                        this.theController.acceptSignupRequest(theSignupRequest);
+                        break;
+                    case 2:
+                        this.theController.refuseSignupRequest(theSignupRequest);
+                        break;
+                    default:
+                        System.out.println("No valid option selected");
+                        break;
                 }
             } catch (IntegrityViolationException | ConcurrencyException ex) {
                 LOGGER.error("Error performing the operation", ex);

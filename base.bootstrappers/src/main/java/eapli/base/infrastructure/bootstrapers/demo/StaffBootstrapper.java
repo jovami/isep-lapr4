@@ -17,8 +17,10 @@ public class StaffBootstrapper implements Action {
         var course = courseRepository.findAll();
 
         TeacherRepository teacherRepository = PersistenceContext.repositories().teachers();
-        Teacher teacherJFA = teacherRepository.ofIdentity(Acronym.valueOf("JFA")).orElseThrow(IllegalStateException::new);
-        Teacher teacherMAM = teacherRepository.ofIdentity(Acronym.valueOf("MAM")).orElseThrow(IllegalStateException::new);
+        Teacher teacherJFA = teacherRepository.ofIdentity(Acronym.valueOf("JFA"))
+                .orElseThrow(IllegalStateException::new);
+        Teacher teacherMAM = teacherRepository.ofIdentity(Acronym.valueOf("MAM"))
+                .orElseThrow(IllegalStateException::new);
 
         for (Course c : course) {
             String name = c.courseName().getName();
@@ -41,10 +43,10 @@ public class StaffBootstrapper implements Action {
 
     private void saveStaff(Course c, Teacher t) {
         StaffRepository repo = PersistenceContext.repositories().staffs();
-        try{
-            StaffMember sm =  new StaffMember(c, t);
+        try {
+            StaffMember sm = new StaffMember(c, t);
             repo.save(sm);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.printf("StaffMember %s was not bootstrapped in course %s\n", t, c);
             throw new RuntimeException(e);
         }

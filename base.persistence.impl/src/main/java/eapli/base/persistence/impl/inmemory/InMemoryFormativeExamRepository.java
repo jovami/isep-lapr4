@@ -7,7 +7,8 @@ import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainR
 /**
  * InMemoryFormativeExamRepository
  */
-public class InMemoryFormativeExamRepository extends InMemoryDomainRepository<FormativeExam, Long> implements FormativeExamRepository {
+class InMemoryFormativeExamRepository extends InMemoryDomainRepository<FormativeExam, Long>
+        implements FormativeExamRepository {
     static {
         InMemoryInitializer.init();
     }

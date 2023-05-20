@@ -6,5 +6,5 @@ import eapli.framework.domain.repositories.DomainRepository;
  * FIXME: move this into a Question package
  * QuestionRepository
  */
-public interface QuestionRepository extends DomainRepository<Long, Question>{
+public interface QuestionRepository extends DomainRepository<Long, Question> {
 }

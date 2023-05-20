@@ -1,26 +1,28 @@
 package eapli.base.exam.application;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
+import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
-
+@UseCaseController
 public class CreateRegularExamController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();

@@ -20,11 +20,16 @@
  */
 package eapli.base.clientusermanagement.usermanagement.domain;
 
-import eapli.base.clientusermanagement.domain.users.*;
+import java.util.Objects;
+
+import eapli.base.clientusermanagement.domain.users.Acronym;
+import eapli.base.clientusermanagement.domain.users.DateOfBirth;
+import eapli.base.clientusermanagement.domain.users.FullName;
+import eapli.base.clientusermanagement.domain.users.ShortName;
+import eapli.base.clientusermanagement.domain.users.TaxPayerNumber;
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.DomainFactory;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-
-import java.util.Objects;
 
 /**
  * A factory for User entities.
@@ -48,24 +53,27 @@ public class TeacherBuilder implements DomainFactory<Teacher> {
         return this;
     }
 
-
     public TeacherBuilder withAcronym(final String acronym) {
         this.acronym = new Acronym(acronym);
         return this;
     }
+
     public TeacherBuilder withFullName(final String fullName) {
         this.fullName = new FullName(fullName);
         return this;
     }
+
     public TeacherBuilder withShortName(final String shortName) {
         this.shortName = new ShortName(shortName);
         return this;
     }
+
     public TeacherBuilder withDateOfBirth(final String dateOfBirth) {
-        //TODO create console.readLocalDate
+        // TODO create console.readLocalDate
         this.dateOfBirth = DateOfBirth.valueOf(dateOfBirth);
         return this;
     }
+
     public TeacherBuilder withTaxPayerNumber(final String taxPayerNumber) {
         this.taxPayerNumber = new TaxPayerNumber(taxPayerNumber);
         return this;
@@ -73,8 +81,10 @@ public class TeacherBuilder implements DomainFactory<Teacher> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TeacherBuilder that = (TeacherBuilder) o;
         return Objects.equals(systemUser, that.systemUser) && Objects.equals(acronym, that.acronym) &&
                 Objects.equals(fullName, that.fullName) && Objects.equals(shortName, that.shortName) &&
@@ -90,6 +100,7 @@ public class TeacherBuilder implements DomainFactory<Teacher> {
     public Teacher build() {
         // since the factory knows that all the parts are needed it could throw
         // an exception. however, we will leave that to the constructor
-        return new Teacher(this.systemUser, this.acronym,this.fullName,this.shortName,this.dateOfBirth,this.taxPayerNumber);
+        return new Teacher(this.systemUser, this.acronym, this.fullName, this.shortName, this.dateOfBirth,
+                this.taxPayerNumber);
     }
 }

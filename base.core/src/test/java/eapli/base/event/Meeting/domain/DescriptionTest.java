@@ -1,8 +1,10 @@
 package eapli.base.event.Meeting.domain;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class DescriptionTest {
 
@@ -10,7 +12,7 @@ class DescriptionTest {
     void getDescription() {
         Description des = new Description("test");
         des.setDescription("set test");
-        assertEquals("set test",des.getDescription());
+        assertEquals("set test", des.getDescription());
     }
 
     @Test
@@ -24,6 +26,7 @@ class DescriptionTest {
         Description des = new Description("test");
         assertFalse(des.equals(new Object()));
     }
+
     @Test
     void testEqualsSelf() {
         Description des = new Description("test");

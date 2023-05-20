@@ -1,9 +1,8 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 
 public class RegularExamSpecificationTest {
 
@@ -131,7 +134,8 @@ public class RegularExamSpecificationTest {
     }
 
     @Test
-    public void protectedConstructor() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void protectedConstructor()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         // Obtain the constructor
         Constructor<RegularExamSpecification> constructor = RegularExamSpecification.class.getDeclaredConstructor();
 

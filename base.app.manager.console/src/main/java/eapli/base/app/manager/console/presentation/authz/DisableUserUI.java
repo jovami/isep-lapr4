@@ -20,14 +20,15 @@
  */
 package eapli.base.app.manager.console.presentation.authz;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.base.clientusermanagement.usermanagement.application.DisableUserController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -41,7 +42,7 @@ public class DisableUserUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        boolean keepDisabling=true;
+        boolean keepDisabling = true;
         do {
             final Iterable<SystemUserNameEmailDTO> iterable = this.theController.enabledUsers();
             if (!iterable.iterator().hasNext()) {
@@ -49,7 +50,7 @@ public class DisableUserUI extends AbstractUI {
             } else {
                 SelectWidget<SystemUserNameEmailDTO> selec = new SelectWidget<>("Choose a user to disable", iterable);
                 selec.show();
-                keepDisabling=selec.selectedElement()!=null;
+                keepDisabling = selec.selectedElement() != null;
                 if (keepDisabling) {
                     try {
                         if (this.theController.disableUser(selec.selectedElement())) {
@@ -64,7 +65,7 @@ public class DisableUserUI extends AbstractUI {
                     }
                 }
             }
-        }while (keepDisabling);
+        } while (keepDisabling);
         return true;
     }
 

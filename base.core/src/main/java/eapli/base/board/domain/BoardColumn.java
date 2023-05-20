@@ -1,23 +1,22 @@
 package eapli.base.board.domain;
 
+import java.util.Objects;
+
+import javax.persistence.Embeddable;
 
 import eapli.framework.domain.model.ValueObject;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
-
 @Embeddable
-public class BoardColumn  implements ValueObject {
+public class BoardColumn implements ValueObject {
 
     private int columnId;
     private String columnTitle;
 
-    protected BoardColumn(){
+    protected BoardColumn() {
     }
-    public BoardColumn(int columnId){
-        this.columnId = columnId;
 
+    public BoardColumn(int columnId) {
+        this.columnId = columnId;
     }
 
     public void setColumnId(int columnId) {
@@ -31,15 +30,17 @@ public class BoardColumn  implements ValueObject {
     public String getColumnTitle() {
         return columnTitle;
     }
-    public void setColumnTitle(String columnTitle){
+
+    public void setColumnTitle(String columnTitle) {
         this.columnTitle = columnTitle;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BoardColumn that = (BoardColumn) o;
         return columnId == that.columnId && Objects.equals(columnTitle, that.columnTitle);
     }

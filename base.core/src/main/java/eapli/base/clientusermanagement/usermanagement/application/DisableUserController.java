@@ -23,6 +23,10 @@
  */
 package eapli.base.clientusermanagement.usermanagement.application;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTOMapper;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -33,10 +37,6 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserManagementService;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Optional;
 
 /**
  *
@@ -53,19 +53,19 @@ public class DisableUserController {
     public Iterable<SystemUserNameEmailDTO> enabledUsers() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
 
-        return new SystemUserNameEmailDTOMapper().toDTO(userSvc.activeUsers(),Comparator.comparing(SystemUser::identity));
+        return new SystemUserNameEmailDTOMapper().toDTO(userSvc.activeUsers(),
+                Comparator.comparing(SystemUser::identity));
     }
 
     public boolean disableUser(final SystemUserNameEmailDTO user) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
-        Optional<SystemUser> systemUser =repo.ofIdentity(user.username());
-        if (systemUser.isPresent()){
+        Optional<SystemUser> systemUser = repo.ofIdentity(user.username());
+        if (systemUser.isPresent()) {
             userSvc.deactivateUser(systemUser.get());
             return true;
-        }else {
+        } else {
             return false;
         }
 
     }
 }
-

@@ -7,7 +7,7 @@ import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainR
 /**
  * InMemoryQuestionRepository
  */
-public class InMemoryQuestionRepository extends InMemoryDomainRepository<Question, Long> implements QuestionRepository{
+class InMemoryQuestionRepository extends InMemoryDomainRepository<Question, Long> implements QuestionRepository {
 
     static {
         InMemoryInitializer.init();

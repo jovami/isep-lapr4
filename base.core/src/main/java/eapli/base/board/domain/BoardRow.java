@@ -1,13 +1,13 @@
 package eapli.base.board.domain;
 
-import eapli.framework.domain.model.ValueObject;
-
-import javax.persistence.*;
 import java.util.Objects;
 
-@Embeddable
-public class BoardRow implements ValueObject{
+import javax.persistence.Embeddable;
 
+import eapli.framework.domain.model.ValueObject;
+
+@Embeddable
+public class BoardRow implements ValueObject {
 
     private int rowId;
     private String rowTitle;
@@ -35,11 +35,12 @@ public class BoardRow implements ValueObject{
         this.rowTitle = rowTitle;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BoardRow boardRow = (BoardRow) o;
         return rowId == boardRow.rowId && Objects.equals(rowTitle, boardRow.rowTitle);
     }

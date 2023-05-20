@@ -1,22 +1,21 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
-import eapli.base.course.domain.Course;
-import eapli.base.course.repositories.CourseRepository;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.exam.domain.regular_exam.RegularExam;
-import eapli.framework.actions.Action;
-import eapli.base.exam.repositories.RegularExamRepository;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class RegularExamBootstrapper implements Action{
+import eapli.base.course.domain.Course;
+import eapli.base.course.repositories.CourseRepository;
+import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
+import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.actions.Action;
+
+public class RegularExamBootstrapper implements Action {
 
     @Override
     public boolean execute() {

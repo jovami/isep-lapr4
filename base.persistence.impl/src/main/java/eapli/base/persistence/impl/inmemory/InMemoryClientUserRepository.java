@@ -32,7 +32,7 @@ import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainR
  *
  * @author Jorge Santos ajs@isep.ipp.pt 02/04/2016
  */
-public class InMemoryClientUserRepository
+class InMemoryClientUserRepository
         extends InMemoryDomainRepository<ClientUser, MecanographicNumber>
         implements ClientUserRepository {
 

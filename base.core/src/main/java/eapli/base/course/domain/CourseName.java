@@ -1,18 +1,18 @@
 package eapli.base.course.domain;
 
-import eapli.framework.domain.model.ValueObject;
-import eapli.framework.infrastructure.authz.domain.model.Username;
+import java.util.Objects;
 
 import javax.persistence.Embeddable;
-import java.util.Objects;
+
+import eapli.framework.domain.model.ValueObject;
 
 @Embeddable
 public class CourseName implements ValueObject {
 
     public String name;
 
-    public CourseName(){
-        name=null;
+    public CourseName() {
+        name = null;
     }
 
     public static CourseName valueOf(final String courseName) {
@@ -21,8 +21,10 @@ public class CourseName implements ValueObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         CourseName that = (CourseName) o;
         return this.name.equals(that.getName());
     }
@@ -40,11 +42,12 @@ public class CourseName implements ValueObject {
     public String getName() {
         return name;
     }
-    public CourseName(String name){
+
+    public CourseName(String name) {
         setName(name);
     }
 
-    protected void setName(String name){
-        this.name=name;
+    protected void setName(String name) {
+        this.name = name;
     }
 }

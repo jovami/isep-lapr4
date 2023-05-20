@@ -1,8 +1,16 @@
 package eapli.base.board.domain;
 
-import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity
 public class PostIt {
@@ -14,13 +22,12 @@ public class PostIt {
     @Column(nullable = false, unique = true)
     private int cellId;
 
-
-    protected PostIt(){
+    protected PostIt() {
     }
+
     public PostIt(int cellId) {
-        this.cellId=cellId;
+        this.cellId = cellId;
     }
-
 
     public void alterCell(int cellId) {
         this.cellId = cellId;
@@ -37,8 +44,10 @@ public class PostIt {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         PostIt postIt = (PostIt) o;
         return postItId == postIt.postItId && cellId == postIt.cellId && Arrays.equals(postItData, postIt.postItData);
     }

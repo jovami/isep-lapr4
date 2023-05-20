@@ -1,12 +1,11 @@
 package eapli.base.persistence.impl.jpa;
 
-
 import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.course.domain.Course;
 import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.repositories.LectureRepository;
 
-public class JpaLectureRepository extends BaseJpaRepositoryBase<Lecture,Long,Integer> implements LectureRepository {
+class JpaLectureRepository extends BaseJpaRepositoryBase<Lecture, Long, Integer> implements LectureRepository {
+
     JpaLectureRepository(String persistenceUnitName, String identityFieldName) {
         super(persistenceUnitName, identityFieldName);
     }
@@ -14,7 +13,6 @@ public class JpaLectureRepository extends BaseJpaRepositoryBase<Lecture,Long,Int
     JpaLectureRepository(String identityFieldName) {
         super(identityFieldName);
     }
-
 
     @Override
     public Iterable<Lecture> lectureGivenBy(Teacher t) {

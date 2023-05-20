@@ -5,6 +5,6 @@ import eapli.framework.actions.Action;
 public class EnableUserAction implements Action {
     @Override
     public boolean execute() {
-        return  new EnableUserUI().show();
+        return new EnableUserUI().show();
     }
 }

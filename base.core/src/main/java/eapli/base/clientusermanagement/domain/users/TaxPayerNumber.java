@@ -1,10 +1,10 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embeddable;
+
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
 
 @Embeddable
 public class TaxPayerNumber implements ValueObject, Comparable<TaxPayerNumber> {

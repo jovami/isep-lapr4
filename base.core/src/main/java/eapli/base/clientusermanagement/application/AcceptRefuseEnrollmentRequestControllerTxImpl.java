@@ -23,6 +23,8 @@
  */
 package eapli.base.clientusermanagement.application;
 
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.enrollment.domain.Enrollment;
@@ -35,8 +37,6 @@ import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserManagementService;
-
-import java.util.Optional;
 
 /**
  * The transactional controller for the use case "accept/refuse a signup
@@ -92,7 +92,6 @@ public class AcceptRefuseEnrollmentRequestControllerTxImpl
         theCourseApplication.approveEnrollmentRequest();
         theCourseApplication = enrollmentRequestRepository.save(theCourseApplication);
 
-
         // explicitly commit the transaction
         txCtx.commit();
         System.out.println(enrollmentRepository.findAll());
@@ -100,11 +99,13 @@ public class AcceptRefuseEnrollmentRequestControllerTxImpl
         return theCourseApplication;
     }
 
-    /*private EnrollmentRequest acceptTheCourseApplication(final EnrollmentRequest theCourseApplication) {
-        theCourseApplication.approveEnrollmentRequest();
-        return this.enrollmentRequestRepository.save(theCourseApplication);
-    }*/
-
+    /*
+     * private EnrollmentRequest acceptTheCourseApplication(final EnrollmentRequest
+     * theCourseApplication) {
+     * theCourseApplication.approveEnrollmentRequest();
+     * return this.enrollmentRequestRepository.save(theCourseApplication);
+     * }
+     */
 
     /*
      * (non-Javadoc)

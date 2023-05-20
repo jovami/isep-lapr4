@@ -1,6 +1,5 @@
 package eapli.base.app.student.console.presentation;
 
-import eapli.base.course.domain.Course;
 import eapli.base.enrollmentrequest.application.EnrollmentRequestController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
@@ -10,7 +9,8 @@ import eapli.framework.presentation.console.SelectWidget;
 public class EnrollmentRequestUI extends AbstractUI {
 
     private final EnrollmentRequestController ctrl;
-    public EnrollmentRequestUI(){
+
+    public EnrollmentRequestUI() {
         super();
         ctrl = new EnrollmentRequestController();
     }
@@ -31,7 +31,7 @@ public class EnrollmentRequestUI extends AbstractUI {
             try {
                 if (this.ctrl.createEnrollmentRequest(chosen)) {
                     System.out.println("Enrollment request created successfully");
-                }else {
+                } else {
                     System.out.println("Error creating enrollment request");
                     return false;
                 }

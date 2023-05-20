@@ -1,10 +1,16 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class AcronymTest {
+
     @Test
     public void acronymCreationValidAcronymSuccess() {
         String validAcronym = "ABC";
@@ -39,6 +45,7 @@ public class AcronymTest {
         int result = acronym1.compareTo(acronym2);
         assertNotEquals(0, result);
     }
+
     @Test
     public void equalsMethodSameObjectReturnsTrue() {
         Acronym acronym = new Acronym("ABC");

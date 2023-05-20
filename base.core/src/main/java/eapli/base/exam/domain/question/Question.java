@@ -1,10 +1,14 @@
 package eapli.base.exam.domain.question;
 
-import eapli.base.exam.domain.question.valueobjects.QuestionFeedback;
-import eapli.framework.domain.model.AggregateRoot;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Version;
 
-import javax.persistence.*;
-import java.util.List;
+import eapli.framework.domain.model.AggregateRoot;
 
 @Entity
 public class Question implements AggregateRoot<Long> {
@@ -26,13 +30,15 @@ public class Question implements AggregateRoot<Long> {
     @Embedded
     private QuestionType questionType;
 
-    //TODO
-    /*@OneToMany
-    @Column(name = "QuestionFeedback")
-    private List<QuestionFeedback> questionFeedbacks;*/
+    // TODO
+    /*
+     * @OneToMany
+     *
+     * @Column(name = "QuestionFeedback")
+     * private List<QuestionFeedback> questionFeedbacks;
+     */
 
-    public Question(String description, String solution)
-    {
+    public Question(String description, String solution) {
         this.description = description;
         this.solution = solution;
     }
@@ -60,11 +66,17 @@ public class Question implements AggregateRoot<Long> {
     }
 
     @Override
-    public int compareTo(Long other) { return AggregateRoot.super.compareTo(other);}
+    public int compareTo(Long other) {
+        return AggregateRoot.super.compareTo(other);
+    }
 
     @Override
-    public Long identity() { return this.id; }
+    public Long identity() {
+        return this.id;
+    }
 
     @Override
-    public boolean hasIdentity(Long id) { return AggregateRoot.super.hasIdentity(id); }
+    public boolean hasIdentity(Long id) {
+        return AggregateRoot.super.hasIdentity(id);
+    }
 }

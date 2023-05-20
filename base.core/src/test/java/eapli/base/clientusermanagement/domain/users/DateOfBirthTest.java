@@ -1,13 +1,16 @@
 package eapli.base.clientusermanagement.domain.users;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThrows;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class DateOfBirthTest {
+
     @Test
     public void dateOfBirthCreationValidDateOfBirthSuccess() {
         LocalDate validDateOfBirth = LocalDate.of(1990, 5, 19);

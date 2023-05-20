@@ -16,7 +16,8 @@ public class OpenEnrollmentUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        var widget = new SelectWidget<>("Choose a course to open is enrollments:", this.ctrl.openableToEnrollmentsCourses());
+        var widget = new SelectWidget<>("Choose a course to open is enrollments:",
+                this.ctrl.openableToEnrollmentsCourses());
         widget.show();
 
         if (widget.selectedOption() <= 0)

@@ -1,12 +1,11 @@
 package eapli.base.app.manager.console.presentation;
 
-import eapli.framework.io.util.Console;
-import eapli.framework.presentation.console.AbstractUI;
-import eapli.base.enrollment.aplication.CSVLoaderStudentsController;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import eapli.base.enrollment.aplication.CSVLoaderStudentsController;
+import eapli.framework.io.util.Console;
+import eapli.framework.presentation.console.AbstractUI;
 
 public class CSVLoaderStudentsUI extends AbstractUI {
 
@@ -39,6 +38,4 @@ public class CSVLoaderStudentsUI extends AbstractUI {
     public String headline() {
         return "Import csv student file";
     }
-
-
 }

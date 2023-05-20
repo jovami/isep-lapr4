@@ -1,18 +1,14 @@
 package eapli.base.app.manager.console.presentation;
 
-
 import eapli.base.clientusermanagement.usermanagement.application.ListUsersController;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.ListWidget;
 
-
-
 public class ListTeachersStudentsManagersUI extends AbstractUI {
 
-    private final ListUsersController ctrl ;
+    private final ListUsersController ctrl;
 
-    public ListTeachersStudentsManagersUI()
-    {
+    public ListTeachersStudentsManagersUI() {
 
         this.ctrl = new ListUsersController();
     }

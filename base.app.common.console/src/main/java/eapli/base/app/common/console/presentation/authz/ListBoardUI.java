@@ -1,31 +1,46 @@
 package eapli.base.app.common.console.presentation.authz;
 
 import eapli.base.board.application.ListBoardController;
-import eapli.framework.presentation.console.AbstractUI;
-import org.springframework.beans.factory.annotation.Autowired;
+import eapli.base.board.domain.Board;
+import eapli.framework.presentation.console.AbstractListUI;
+import eapli.framework.visitor.Visitor;
 
-public class ListBoardUI extends AbstractUI {
+public class ListBoardUI extends AbstractListUI<Board> {
 
-
-    @Autowired
-    ListBoardController controller;
-
+    private final ListBoardController controller;
 
     public ListBoardUI() {
-        controller = new ListBoardController();
-    }
-
-
-    @Override
-    protected boolean doShow() {
-        controller.listBoards();
-        return true;
+        super();
+        this.controller = new ListBoardController();
     }
 
     @Override
     public String headline() {
+        return "List boards";
+    }
+
+    @Override
+    protected String elementName() {
         return "Board";
     }
 
+    @Override
+    protected Visitor<Board> elementPrinter() {
+        return System.out::println;
+    }
 
+    @Override
+    protected Iterable<Board> elements() {
+        return this.controller.listBoards();
+    }
+
+    @Override
+    protected String emptyMessage() {
+        return "No boards";
+    }
+
+    @Override
+    protected String listHeader() {
+        return "Available boards:";
+    }
 }

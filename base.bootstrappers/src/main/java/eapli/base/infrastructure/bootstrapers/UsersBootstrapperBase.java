@@ -22,12 +22,12 @@ package eapli.base.infrastructure.bootstrapers;
 
 import java.util.Set;
 
-import eapli.base.clientusermanagement.domain.users.Manager;
-import eapli.base.clientusermanagement.domain.users.Student;
-import eapli.base.clientusermanagement.domain.users.Teacher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eapli.base.clientusermanagement.domain.users.Manager;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.application.AddUserController;
 import eapli.base.clientusermanagement.usermanagement.application.ListUsersController;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -68,16 +68,19 @@ public class UsersBootstrapperBase {
         return u;
     }
 
-    protected Teacher registerTeacher(final SystemUser user ,final String acronym, final String fullName, final String shortName,
-                                   final String dateOfBirth, final String taxPayerNumber){
-        return userController.addTeacher(user,acronym, fullName, shortName, dateOfBirth, taxPayerNumber);
+    protected Teacher registerTeacher(final SystemUser user, final String acronym, final String fullName,
+            final String shortName,
+            final String dateOfBirth, final String taxPayerNumber) {
+        return userController.addTeacher(user, acronym, fullName, shortName, dateOfBirth, taxPayerNumber);
     }
-    protected Student registerStudent(final SystemUser user ,final String mecanographicNumber, final String fullName,
-                                      final String shortName, final String dateOfBirth, final String taxPayerNumber){
-        return userController.addStudent(user,mecanographicNumber,fullName,shortName,dateOfBirth,taxPayerNumber);
+
+    protected Student registerStudent(final SystemUser user, final String mecanographicNumber, final String fullName,
+            final String shortName, final String dateOfBirth, final String taxPayerNumber) {
+        return userController.addStudent(user, mecanographicNumber, fullName, shortName, dateOfBirth, taxPayerNumber);
     }
+
     protected Manager registerManagerRepo(final SystemUser user, final String fullName, final String shortName,
-                                      final String dateOfBirth, final String taxPayerNumber){
+            final String dateOfBirth, final String taxPayerNumber) {
         return userController.addManager(user, fullName, shortName, dateOfBirth, taxPayerNumber);
     }
 }

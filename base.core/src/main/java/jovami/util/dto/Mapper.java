@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-
 /**
  * Mapper
  * Functional interface that reduces code duplication when creating DTO objects

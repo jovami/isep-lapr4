@@ -23,9 +23,10 @@
  */
 package eapli.base.clientusermanagement.application;
 
-import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
-
 import java.util.Optional;
+
+import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
+import eapli.framework.application.UseCaseController;
 
 /**
  * The controller for the use case "Accept or refuse signup request".
@@ -57,6 +58,7 @@ import java.util.Optional;
  *
  * @author Paulo Gandra de Sousa
  */
+@UseCaseController
 public interface AcceptRefuseEnrollmentRequestController {
 
     EnrollmentRequest acceptCourseApplication(EnrollmentRequest theCourseApplication);

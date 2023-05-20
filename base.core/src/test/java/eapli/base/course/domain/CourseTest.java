@@ -1,27 +1,31 @@
 package eapli.base.course.domain;
 
-import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
-import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
-import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
-import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
 class CourseTest {
     private Course course;
 
     @BeforeEach
-    void BeforeEach(){
+    void BeforeEach() {
         String startDateString = "1/1/2020";
         String endDateString = "1/1/2023";
 
@@ -30,7 +34,7 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            course = new Course("curso","descrição",startDate,endDate);
+            course = new Course("curso", "descrição", startDate, endDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -46,32 +50,32 @@ class CourseTest {
     @Test
     void closeCourse() {
         course.close();
-        assertEquals(CourseState.CLOSED,course.state());
+        assertEquals(CourseState.CLOSED, course.state());
     }
 
     @Test
     void openEnrollments() {
-            course.openEnrollments();
-            assertEquals(CourseState.ENROLL,course.state());
+        course.openEnrollments();
+        assertEquals(CourseState.ENROLL, course.state());
     }
 
     @Test
     void openCourse() {
-            course.open();
-            assertEquals(CourseState.OPEN,course.state());
+        course.open();
+        assertEquals(CourseState.OPEN, course.state());
 
     }
 
     @Test
     void closeEnrollments() {
-            course.closeEnrollments();
-            assertEquals(CourseState.INPROGRESS,course.state());
+        course.closeEnrollments();
+        assertEquals(CourseState.INPROGRESS, course.state());
     }
 
     @Test
     void createdCourse() {
-            course.createdCourse();
-            assertEquals(CourseState.CLOSE,course.state());
+        course.createdCourse();
+        assertEquals(CourseState.CLOSE, course.state());
     }
 
     @Test
@@ -92,10 +96,10 @@ class CourseTest {
     void setNegativeCapacities() {
         int testMin = -5;
         int testMax = -10;
-        
+
         assertEquals(false, course.setCapacity(testMin, testMax));
-        assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
 
     @Test
@@ -103,10 +107,9 @@ class CourseTest {
         int testMin = 40;
         int testMax = 10;
 
-
         assertEquals(false, course.setCapacity(testMin, testMax));
-        assertEquals(-1,course.getCapacity().getMinStudentsEnrolled());
-        assertEquals(-1,course.getCapacity().getMaxStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
+        assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
 
     }
 
@@ -125,7 +128,7 @@ class CourseTest {
         int testMin = 5;
         int testMax = 20;
 
-        course.setCapacity(testMin,testMax);
+        course.setCapacity(testMin, testMax);
         assertEquals(testMin, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(testMax, course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -134,7 +137,6 @@ class CourseTest {
     void setMinNegativeCapacity() {
         int testMin = -5;
         int testMax = 10;
-
 
         assertFalse(course.setCapacity(testMin, testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
@@ -146,9 +148,7 @@ class CourseTest {
         int testMin = 5;
         int testMax = -10;
 
-
-
-        assertFalse(course.setCapacity(testMin,testMax));
+        assertFalse(course.setCapacity(testMin, testMax));
         assertEquals(-1, course.getCapacity().getMinStudentsEnrolled());
         assertEquals(-1, course.getCapacity().getMaxStudentsEnrolled());
     }
@@ -163,7 +163,6 @@ class CourseTest {
 
         Date startDate = df.parse(startDateString);
         Date endDate = df.parse(endDateString);
-
 
         assertTrue(course.setDuration(startDate, endDate));
         assertEquals(startDate, course.getDuration().startDate());
@@ -217,13 +216,15 @@ class CourseTest {
         AtomicReference<CourseDuration> duration = new AtomicReference<>(new CourseDuration());
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                ()->{
+                () -> {
                     duration.set(new CourseDuration(startDate, endDate));
                 });
-/*
-        assertEquals(startDate, duration.get().getStartDate());
-        assertEquals(endDate, duration.get().getEndDate());
-        assertEquals("Start date: " + startDate.toString() + "\tEnd date: " + endDate.toString(), duration.toString());*/
+        /*
+         * assertEquals(startDate, duration.get().getStartDate());
+         * assertEquals(endDate, duration.get().getEndDate());
+         * assertEquals("Start date: " + startDate.toString() + "\tEnd date: " +
+         * endDate.toString(), duration.toString());
+         */
     }
 
     @Test
@@ -236,7 +237,7 @@ class CourseTest {
 
         Date startDate = df.parse(startDateString);
         Date endDate = df.parse(endDateString);
-        assertFalse(course.setDuration(startDate,endDate));
+        assertFalse(course.setDuration(startDate, endDate));
 
     }
 
@@ -256,7 +257,7 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            c2 = new Course("curso","descrição",startDate,endDate);
+            c2 = new Course("curso", "descrição", startDate, endDate);
             assertTrue(course.sameAs(c2));
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -279,7 +280,7 @@ class CourseTest {
         try {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
-            c2 = new Course("different","descrição",startDate,endDate);
+            c2 = new Course("different", "descrição", startDate, endDate);
             assertFalse(course.sameAs(c2));
         } catch (ParseException e) {
             throw new RuntimeException(e);
@@ -295,21 +296,22 @@ class CourseTest {
     @Test
     void sameIdentity() {
 
-        assertEquals(0,course.compareTo(0));
+        assertEquals(0, course.compareTo(0));
     }
 
     @Test
     void biggerIdentity() {
 
-        assertEquals(-1,course.compareTo(10));
+        assertEquals(-1, course.compareTo(10));
     }
 
     @Test
     void smallerIdentity() {
 
-        assertEquals(1,course.compareTo(-10));
+        assertEquals(1, course.compareTo(-10));
 
     }
+
     @Test
     void ensureCourseStateCannotGoBackToOpen() {
         CourseState state;
@@ -319,7 +321,6 @@ class CourseTest {
         assertEquals(CourseState.OPEN, course.state(), "Course state should've been OPEN");
         course.open().onRight(__ -> fail("Opening an open course should not alter its state"));
         assertEquals(CourseState.OPEN, course.state());
-
 
         // check return values are correct
         // && also ensure the course state actually changed
@@ -396,31 +397,33 @@ class CourseTest {
 
     @Test
     void CapacityToString() {
-        assertEquals("Min students enrolled: "+course.getCapacity().getMinStudentsEnrolled()
-                +"\nMax students enrolled: "+course.getCapacity().getMaxStudentsEnrolled(),
+        assertEquals("Min students enrolled: " + course.getCapacity().getMinStudentsEnrolled()
+                + "\nMax students enrolled: " + course.getCapacity().getMaxStudentsEnrolled(),
                 course.getCapacity().toString());
     }
+
     @Test
     void courseDescriptionNull() {
         CourseDescription courseDescription = new CourseDescription();
         Assertions.assertNull(courseDescription.getDescription());
     }
 
-    /*@Test
-    void courseName() {
-        CourseName name = new CourseName("curso");
-        assertEquals(name,course.getCourseName());
-    }
-*/
+    /*
+     * @Test
+     * void courseName() {
+     * CourseName name = new CourseName("curso");
+     * assertEquals(name,course.getCourseName());
+     * }
+     */
     @Test
-    void headTeacher(){
+    void headTeacher() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
-        userBuilder.with("teacher","Password1","first","last","email@teacher.com").withRoles(BaseRoles.TEACHER);
-        TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(userBuilder.build()).
-                withAcronym("TCH").withDateOfBirth("2003-10-10").withFullName("full").withTaxPayerNumber("123123123").
-                withShortName("short");
+        userBuilder.with("teacher", "Password1", "first", "last", "email@teacher.com").withRoles(BaseRoles.TEACHER);
+        TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(userBuilder.build()).withAcronym("TCH")
+                .withDateOfBirth("2003-10-10").withFullName("full").withTaxPayerNumber("123123123")
+                .withShortName("short");
         Teacher teacher = teacherBuilder.build();
         course.setHeadTeacher(teacher);
-        assertEquals(teacher,course.headTeacher());
+        assertEquals(teacher, course.headTeacher());
     }
 }

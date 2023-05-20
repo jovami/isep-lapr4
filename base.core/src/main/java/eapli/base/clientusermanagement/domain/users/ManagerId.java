@@ -1,10 +1,10 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embeddable;
+
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
 
 @Embeddable
 public class ManagerId implements ValueObject, Comparable<ManagerId> {
@@ -14,7 +14,7 @@ public class ManagerId implements ValueObject, Comparable<ManagerId> {
     protected ManagerId(String id) {
         Preconditions.nonEmpty(id, "Manager ID should neither be null nor empty");
 
-        //TODO: discuss the ID later
+        // TODO: discuss the ID later
         Invariants.ensure(id.matches("[A-Za-z0-9]+"), "Manager ID contains invalid characters");
 
         this.id = id;

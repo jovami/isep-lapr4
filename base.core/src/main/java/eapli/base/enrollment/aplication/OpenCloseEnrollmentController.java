@@ -1,5 +1,8 @@
 package eapli.base.enrollment.aplication;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Supplier;
 
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
@@ -7,18 +10,16 @@ import eapli.base.course.dto.CourseAndStateDTO;
 import eapli.base.course.dto.CourseAndStateDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Supplier;
-
-
+@UseCaseController
 public final class OpenCloseEnrollmentController {
 
     private final CourseRepository repoCourse;
 
     private final ListCoursesService svc;
+
     public OpenCloseEnrollmentController() {
         this.repoCourse = PersistenceContext.repositories().courses();
         this.svc = new ListCoursesService(this.repoCourse);
@@ -41,9 +42,7 @@ public final class OpenCloseEnrollmentController {
         return this.getCourses(this.svc::enrollable);
     }
 
-
-    public void openEnrollments(CourseAndStateDTO chosen)
-    {
+    public void openEnrollments(CourseAndStateDTO chosen) {
         var course = this.fromDTO(chosen);
 
         course.openEnrollments();
@@ -51,8 +50,7 @@ public final class OpenCloseEnrollmentController {
 
     }
 
-    public void closeEnrollments(CourseAndStateDTO chosen)
-    {
+    public void closeEnrollments(CourseAndStateDTO chosen) {
         var course = this.fromDTO(chosen);
 
         course.closeEnrollments();

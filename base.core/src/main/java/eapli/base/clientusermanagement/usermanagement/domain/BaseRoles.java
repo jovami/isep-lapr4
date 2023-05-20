@@ -54,7 +54,7 @@ public final class BaseRoles {
      * @return
      */
     public static Role[] nonUserValues() {
-        return new Role[] {MANAGER,TEACHER,STUDENT };
+        return new Role[] { MANAGER, TEACHER, STUDENT };
     }
 
 }

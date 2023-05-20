@@ -1,19 +1,24 @@
 package eapli.base.enrollment.domain;
 
-import eapli.base.clientusermanagement.domain.users.Student;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
-import eapli.base.course.domain.Course;
-import eapli.framework.infrastructure.authz.domain.model.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
+import eapli.base.course.domain.Course;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
 public class EnrollmentTest {
     private Course course1;
@@ -36,11 +41,11 @@ public class EnrollmentTest {
                 .withRoles(BaseRoles.STUDENT).build();
 
         final var studentBuilder = new StudentBuilder();
-        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira").
-                withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user1).withMecanographicNumber("isep567").withFullName("Alexandre Moreira")
+                .withShortName("Alex").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student1 = studentBuilder.build();
-        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais").
-                withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
+        studentBuilder.withSystemUser(user2).withMecanographicNumber("isep568").withFullName("Miguel Novais")
+                .withShortName("Miguel").withDateOfBirth("2001-01-01").withTaxPayerNumber("123756789");
         student2 = studentBuilder.build();
     }
 

@@ -20,7 +20,12 @@
  */
 package eapli.base.clientusermanagement.usermanagement.domain;
 
-import eapli.base.clientusermanagement.domain.users.*;
+import eapli.base.clientusermanagement.domain.users.DateOfBirth;
+import eapli.base.clientusermanagement.domain.users.FullName;
+import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
+import eapli.base.clientusermanagement.domain.users.ShortName;
+import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.TaxPayerNumber;
 import eapli.framework.domain.model.DomainFactory;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
@@ -56,25 +61,28 @@ public class StudentBuilder implements DomainFactory<Student> {
         this.fullName = new FullName(fullName);
         return this;
     }
+
     public StudentBuilder withShortName(final String shortName) {
         this.shortName = new ShortName(shortName);
         return this;
     }
+
     public StudentBuilder withDateOfBirth(final String dateOfBirth) {
-        //TODO create console.readLocalDate
+        // TODO create console.readLocalDate
         this.dateOfBirth = DateOfBirth.valueOf(dateOfBirth);
         return this;
     }
+
     public StudentBuilder withTaxPayerNumber(final String taxPayerNumber) {
         this.taxPayerNumber = new TaxPayerNumber(taxPayerNumber);
         return this;
     }
 
-
     @Override
     public Student build() {
         // since the factory knows that all the parts are needed it could throw
         // an exception. however, we will leave that to the constructor
-        return new Student(this.systemUser,this.mecanographicNumber,this.fullName,this.shortName,this.dateOfBirth,this.taxPayerNumber);
+        return new Student(this.systemUser, this.mecanographicNumber, this.fullName, this.shortName, this.dateOfBirth,
+                this.taxPayerNumber);
     }
 }

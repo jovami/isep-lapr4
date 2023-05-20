@@ -1,12 +1,26 @@
 package eapli.base.board;
 
-import eapli.base.board.domain.*;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.framework.infrastructure.authz.domain.model.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardColumn;
+import eapli.base.board.domain.BoardRow;
+import eapli.base.board.domain.BoardState;
+import eapli.base.board.domain.BoardTitle;
+import eapli.base.board.domain.Cell;
+import eapli.base.board.domain.PostIt;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
 public class BoardTest {
     private final String title = "test";
@@ -16,7 +30,6 @@ public class BoardTest {
     private Board board = null;
     private SystemUser user;
     private final String username = "Tony";
-
 
     @Before
     public void BeforeEach() {
@@ -72,7 +85,6 @@ public class BoardTest {
         assertEquals(boardColumn, cell.getColumn());
     }
 
-
     @Test
     public void ensureRowIdsAreAdded() {
         for (int i = 0; i < rows; i++) {
@@ -110,7 +122,7 @@ public class BoardTest {
         assertNotEquals(cellId + 1, postIt.getCellId());
         postIt.alterCell(cellId + 1);
 
-        //board.movePostIt(cellId+1,postIt);
+        // board.movePostIt(cellId+1,postIt);
         assertEquals(cellId + 1, postIt.getCellId());
 
     }
@@ -145,7 +157,6 @@ public class BoardTest {
         BoardColumn boardColumn2 = new BoardColumn(1);
         assertEquals(boardColumn1.hashCode(), boardColumn2.hashCode());
     }
-
 
     @Test
     public void ensureGetBoardRowId() {
@@ -229,7 +240,6 @@ public class BoardTest {
 
         assertEquals(postIt1.hashCode(), postIt2.hashCode());
     }
-
 
     @Test
     public void ensureArchiveBoardState() {

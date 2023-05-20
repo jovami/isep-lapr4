@@ -1,16 +1,19 @@
 package eapli.base.event.Meeting.domain;
 
-import eapli.framework.domain.model.ValueObject;
+import java.util.Objects;
 
 import javax.persistence.Embeddable;
-import java.util.Objects;
+
+import eapli.framework.domain.model.ValueObject;
 
 @Embeddable
 public class Description implements ValueObject {
     private String description;
-    public Description(){
+
+    public Description() {
 
     }
+
     public Description(String description) {
         this.description = description;
     }
@@ -21,8 +24,10 @@ public class Description implements ValueObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Description that = (Description) o;
         return Objects.equals(description, that.description);
     }

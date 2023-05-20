@@ -1,22 +1,27 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Version;
+
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 
-import javax.persistence.*;
-import java.io.Serializable;
-
 @Entity
-public class Manager implements AggregateRoot<Integer>, Serializable {
+public class Manager implements AggregateRoot<Integer> {
     private static final long serialVersionUID = 1L;
 
     @Version
     private Long version;
 
-    //TODO: check one to one
-    //@EmbeddedId
+    // TODO: check one to one
+    // @EmbeddedId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int managerId;
@@ -37,8 +42,8 @@ public class Manager implements AggregateRoot<Integer>, Serializable {
     private SystemUser systemUser;
 
     public Manager(final SystemUser user,
-                   final FullName fullName, final ShortName shortName, final DateOfBirth dateOfBirth,
-                   final TaxPayerNumber taxPayerNumber) {
+            final FullName fullName, final ShortName shortName, final DateOfBirth dateOfBirth,
+            final TaxPayerNumber taxPayerNumber) {
         Preconditions.noneNull(user, fullName, shortName, dateOfBirth, taxPayerNumber);
 
         this.systemUser = user;
@@ -92,14 +97,13 @@ public class Manager implements AggregateRoot<Integer>, Serializable {
         if (this == that) {
             return true;
         }
-        return managerId==(that.managerId) && systemUser.sameAs(that.systemUser);
+        return managerId == (that.managerId) && systemUser.sameAs(that.systemUser);
     }
 
     @Override
     public int compareTo(Integer other) {
         return AggregateRoot.super.compareTo(other);
     }
-
 
     @Override
     public String toString() {
@@ -108,7 +112,7 @@ public class Manager implements AggregateRoot<Integer>, Serializable {
                 "\nFull Name: " + fullName +
                 "\nShort Name: " + shortName +
                 "\nDate Of Birth: " + dateOfBirth +
-                "\nTax Payer Number: " + taxPayerNumber ;
+                "\nTax Payer Number: " + taxPayerNumber;
     }
 
     @Override

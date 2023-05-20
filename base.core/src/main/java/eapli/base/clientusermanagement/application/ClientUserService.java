@@ -23,26 +23,24 @@
  */
 package eapli.base.clientusermanagement.application;
 
+import java.util.Optional;
+
 import eapli.base.clientusermanagement.domain.ClientUser;
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
-import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.Username;
-
-import java.util.Optional;
 
 /**
  * @author mcn
  */
 public class ClientUserService {
 
-    private final AuthorizationService authz =
-            AuthzRegistry.authorizationService();
-    private final ClientUserRepository repo =
-            PersistenceContext.repositories().clientUsers();
+    private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final ClientUserRepository repo = PersistenceContext.repositories().clientUsers();
 
     public Optional<ClientUser> findClientUserByMecNumber(
             final String mecNumber) {

@@ -38,7 +38,7 @@ public interface ClientUserRepository
      * returns the client user (utente) whose username is given
      *
      * @param name
-     *            the username to search for
+     *             the username to search for
      * @return
      */
     Optional<ClientUser> findByUsername(Username name);

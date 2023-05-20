@@ -1,13 +1,14 @@
 package eapli.base.clientusermanagement.dto;
 
+import java.util.Objects;
+
 import eapli.framework.general.domain.model.EmailAddress;
 import eapli.framework.infrastructure.authz.domain.model.Username;
-
-import java.util.Objects;
 
 public class SystemUserNameEmailDTO {
     private Username username;
     private EmailAddress email;
+
     public SystemUserNameEmailDTO(Username username, EmailAddress email) {
         this.username = username;
         this.email = email;
@@ -21,8 +22,10 @@ public class SystemUserNameEmailDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         SystemUserNameEmailDTO that = (SystemUserNameEmailDTO) o;
         return Objects.equals(username, that.username) && Objects.equals(email, that.email);
     }
@@ -32,14 +35,12 @@ public class SystemUserNameEmailDTO {
         return Objects.hash(username, email);
     }
 
-    public Username username(){
+    public Username username() {
         return this.username;
     }
 
-    public EmailAddress email(){
+    public EmailAddress email() {
         return this.email;
     }
-
-
 
 }

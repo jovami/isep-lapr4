@@ -99,20 +99,16 @@ public class MainMenu extends AbstractUI {
     private Menu buildMainMenu() {
         final Menu mainMenu = new Menu();
 
-        final Menu myUserMenu = new MyUserMenu();
-        mainMenu.addSubMenu(MY_USER_OPTION, myUserMenu);
+        mainMenu.addSubMenu(MY_USER_OPTION, new MyUserMenu());
 
         if (!Application.settings().isMenuLayoutHorizontal())
             mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
-            final Menu courseMenu = buildCourseMenu();
-            mainMenu.addSubMenu(ENROLLMENTS_OPTION, courseMenu);
+            mainMenu.addSubMenu(ENROLLMENTS_OPTION, buildCourseMenu());
             mainMenu.addSubMenu(EXAM_OPTION, buildExamMenu());
-            final Menu boardMenu = buildBoardMenu();
-            mainMenu.addSubMenu(BOARD_OPTION, boardMenu);
-            final Menu meetingMenu = buildMeetingMenu();
-            mainMenu.addSubMenu(MEETING_OPTION, meetingMenu);
+            mainMenu.addSubMenu(BOARD_OPTION, buildBoardMenu());
+            mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
         }
 
         if (!Application.settings().isMenuLayoutHorizontal())

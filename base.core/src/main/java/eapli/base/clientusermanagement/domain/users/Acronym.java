@@ -1,11 +1,12 @@
 package eapli.base.clientusermanagement.domain.users;
 
+import java.util.Objects;
+
+import javax.persistence.Embeddable;
+
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Invariants;
 import eapli.framework.validations.Preconditions;
-
-import javax.persistence.Embeddable;
-import java.util.Objects;
 
 @Embeddable
 public class Acronym implements ValueObject, Comparable<Acronym> {
@@ -26,8 +27,10 @@ public class Acronym implements ValueObject, Comparable<Acronym> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Acronym acronym1 = (Acronym) o;
         return Objects.equals(acronym, acronym1.acronym);
     }

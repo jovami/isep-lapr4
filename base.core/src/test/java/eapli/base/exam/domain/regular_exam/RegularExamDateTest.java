@@ -1,24 +1,22 @@
 package eapli.base.exam.domain.regular_exam;
 
-
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+
 public class RegularExamDateTest {
 
     private RegularExamDate regularExamDate;
 
-
     @Before
-    public void BeforeEach(){
+    public void BeforeEach() {
         String openDateString = "2023-10-10 16:00";
         String closeDateString = "2023-10-10 18:00";
 
@@ -27,7 +25,7 @@ public class RegularExamDateTest {
         try {
             Date openDate = df.parse(openDateString);
             Date closeDate = df.parse(closeDateString);
-            regularExamDate =  RegularExamDate.valueOf(openDate,closeDate);
+            regularExamDate = RegularExamDate.valueOf(openDate, closeDate);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +61,7 @@ public class RegularExamDateTest {
             Date startDate = df.parse(startDateString);
             Date endDate = df.parse(endDateString);
             RegularExamDate createdDate = RegularExamDate.valueOf(startDate, endDate);
-            Assertions.assertEquals(createdDate.openDate(),null);
+            Assertions.assertEquals(createdDate.openDate(), null);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
