@@ -1,0 +1,178 @@
+@startuml
+'http://plantuml.com/skinparam.html
+
+actor Teacher as Actor
+participant UpdateScheduleLectureUI as ui <<presentation>>
+participant UpdateScheduleLectureController as controller <<application>>
+participant PersistenceContext as persistence <<persistence>>
+participant Repositoryfactory as factory <<factory>>
+database LectureRepository as repoLecture <<repository>>
+database UserRepository as repoUser <<repository>>
+database RecurringPatternRepository as repoPattern <<repository>>
+database TeacherRepository as repoTeacher <<repository>>
+database LectureParticipantRepository as repoLectureParticipant <<repository>>
+participant TimeTableService as service <<service>>
+participant RecurringPattern as pattern <<domain>>
+participant Lecture as lec <<domain>>
+participant RecurringPatternFreqOnceBuilder as rfreqp <<application>>
+participant Timetable as tt <<domain>>
+database TimeTableRepository as repoTimeTable <<repository>>
+
+
+
+Actor -> ui : update a schedule lecture
+activate Actor
+activate ui
+
+    ui ->   controller : create
+    activate controller
+            controller -> persistence : repositories()
+            activate persistence
+                persistence -> factory : create
+                activate factory
+                deactivate factory
+                persistence -> controller : factory
+            deactivate persistence
+
+    controller -> factory : lectures()
+    activate factory
+        factory -> repoLecture : create
+        activate repoLecture
+        deactivate repoLecture
+        factory -> controller :lectures
+    deactivate factory
+
+    controller -> factory : users()
+        activate factory
+            factory -> repoUser : create
+            activate repoUser
+            deactivate repoUser
+            factory -> controller :users
+        deactivate factory
+
+    controller -> factory : recurringPatterns()
+            activate factory
+                factory -> repoPattern : create
+                activate repoPattern
+                deactivate repoPattern
+                factory -> controller :recurringPatterns
+            deactivate factory
+
+    controller -> factory : teachers()
+            activate factory
+                factory -> repoTeacher : create
+                activate repoTeacher
+                deactivate repoTeacher
+                factory -> controller :teachers
+            deactivate factory
+
+    controller -> factory : lectureParticipants()
+            activate factory
+                factory -> repoLectureParticipant : create
+                activate repoLectureParticipant
+                deactivate repoLectureParticipant
+                factory -> controller :lectureParticipants
+            deactivate factory
+            controller -> service : create
+            activate service
+            deactivate service
+    deactivate controller
+
+
+
+
+    ui -> controller : listOfLecturesTaughtByTeacher()
+    activate controller
+
+        note right: Checks if user logged is a teacher.\nGets from userRepository that user\n after that finds that user in teacherRepository.
+        controller -> repoLecture : lectureGivenBy(teacher)
+        activate repoLecture
+            repoLecture -> controller: lectures
+        deactivate repoLecture
+        controller -> ui : lectures
+    deactivate controller
+        ui --> Actor: shows list of lectures \ngiven by the teacher
+
+deactivate ui
+Actor -> ui: chooses one lecture
+activate ui
+    ui --> Actor: asks the date of the lecture to be changed
+    Actor -> ui: types the date
+    ui --> Actor: asks the new date of the lecture
+    Actor -> ui : types the date of the new lecture
+    ui --> Actor: asks the time at witch time the new lecture begins
+    Actor -> ui: types the time of the new lecture
+
+    ui --> Actor: asks the lecture duration
+    Actor -> ui: lecture duration
+
+    ui -> controller : updateDateOfLecture(lecture,\nremovedDate,newDate,newStartTime\nnewDurationMinutes)
+    activate controller
+        controller -> lec : pattern = pattern()
+        activate lec
+        deactivate lec
+        controller -> pattern : addException(removedDate)
+        activate pattern
+        deactivate pattern
+        controller -> repoPattern : save(pattern)
+        activate repoPattern
+        deactivate repoPattern
+        controller -> controller : schedule(lecture,newDate,newStartTime,newDurationMinutes)
+        controller -> controller : newPattern = onceBuildPattern(newDate,newStartTime,newDurationMinutes)
+
+        controller -> rfreqp : create
+        activate rfreqp
+            rfreqp -> rfreqp : withDate(newDate)
+            rfreqp -> rfreqp : withDuration(startTime,durationMinutes)
+            rfreqp -> rfreqp : build()
+            rfreqp -> controller : newPattern
+        deactivate rfreqp
+
+            controller -> repoPattern : newPattern = save(newPattern)
+            activate repoPattern
+            deactivate repoPattern
+
+        controller -> service :checkAvailabilityByUser(systemuser, newPattern)
+        note right: checkAvailability for the teacher
+        activate service
+        deactivate service
+
+        controller -> lec : lec = create(teacher,newPattern)
+        activate lec
+        deactivate lec
+
+        controller -> service : schedule(listOfLecturesParticipants,newPattern)
+        activate service
+            service -> tt : create
+            activate tt
+            deactivate tt
+            service -> repoTimeTable : save(timetable)
+            activate repoTimeTable
+            deactivate repoTimeTable
+        deactivate service
+
+        controller -> service : scheduleTeacher(teacher,newPattern)
+        activate service
+        service -> tt : create
+        activate tt
+        deactivate tt
+        service -> repoTimeTable : save(timetable)
+        activate repoTimeTable
+        deactivate repoTimeTable
+
+
+        deactivate service
+
+        controller -> repoLecture : lec = save(lec)
+        activate repoLecture
+        deactivate repoLecture
+
+        controller -> ui : lec
+        deactivate controller
+
+        ui --> Actor: informs success of the operation
+        ui --> Actor: shows new lecture
+
+deactivate ui
+deactivate Actor
+@enduml
