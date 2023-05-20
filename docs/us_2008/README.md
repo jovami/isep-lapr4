@@ -74,7 +74,7 @@ a **Service** will be created in order to verify that specifications input by us
 comply with the aforementioned grammar.
 
 In order to ensure that formative exams are **always** created with a valid specification,
-a **Builder** class will be used to abstract the process.
+a **Factory** class will be used to abstract the process.
 
 **NOTE:** Constructors for FormativeExam and FormativeExamSpecification
 will have **protected** visibility.
