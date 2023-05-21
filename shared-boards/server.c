@@ -22,6 +22,7 @@
 #include <assert.h>
 
 #include "common.h"
+#include "helpers.h"
 
 /* Default board names */
 #define JOVAMI      "/board.jovami"

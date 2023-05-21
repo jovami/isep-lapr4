@@ -1,8 +1,22 @@
 #include <fcntl.h>
+#include <semaphore.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 #include <time.h>
+#include <unistd.h>
+
+#include "common.h"
+#include "helpers.h"
+
+/* TODO: remove this later */
+#include <assert.h>
 
 #define TIMEOUT 5
 #define MILLION 1000000
@@ -15,24 +29,10 @@
 # error "idk"
 #endif
 
-#include <semaphore.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
 #define LENGTH(X) (sizeof(X) / sizeof(X[0]))
 
 __attribute__((__format__(printf, 1, 2))) static size_t
 read_option(const char *restrict prompt, ...);
-
-/* TODO: remove this later */
-#include <assert.h>
-
-#include "common.h"
 
 typedef void (*board_func)(sharedboard *, sem_t[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
@@ -64,9 +64,9 @@ void
 add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 {
     size_t row, col;
-    char buf[1024];  // 1024 bytes - simulating image data
+    char buf[1024]; // 1024 bytes - simulating image data
 
-    struct timespec spec = {.tv_sec = 0, .tv_nsec = TIMEOUT * MILLION};
+    struct timespec spec = { .tv_sec = 0, .tv_nsec = TIMEOUT * MILLION };
 
     row = read_option("Choose the row (1-%d): ", BOARD_ROWS) - 1;
     col = read_option("Choose the column (1-%d): ", BOARD_COLS) - 1;

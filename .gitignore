@@ -71,3 +71,6 @@ README.html
 base.core/src/main/java/eapli/base/regularexam/application/parser/autogen/*
 base.core/src/main/java/eapli/base/formativeexam/application/parser/autogen/*
 base.core/src/main/java/eapli/base/question/application/parser/autogen/*
+
+# Shared-boards (SCOMP)
+.cache/*
