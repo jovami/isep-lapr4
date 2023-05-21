@@ -12,14 +12,14 @@ deps = [ librt, dependency('threads') ]
 
 add_project_arguments(flags, language: 'c')
 
-client_src = [ 'client.c' ]
+client_src = [ 'client.c', 'helpers.c' ]
 
 client = executable('client', client_src,
   dependencies: deps,
   install : true)
 
 
-server_src = [ 'server.c' ]
+server_src = [ 'server.c', 'helpers.c' ]
 
 server = executable('server', server_src,
   dependencies: deps,

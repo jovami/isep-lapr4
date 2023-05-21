@@ -25,7 +25,7 @@ enum content_type {
     IMAGE,
     TEXT,
 };
-union cell_content {
+union post_it {
     char text[256];
     char image[1024];
 };
@@ -33,7 +33,8 @@ union cell_content {
 typedef struct cell cell;
 struct cell {
     enum content_type type;
-    union cell_content content;
+    union post_it content;
+    size_t num_readers;
 };
 
 typedef struct sharedboard sharedboard;

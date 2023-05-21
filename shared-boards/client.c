@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/semaphore.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
@@ -52,12 +53,57 @@ static void add_image(sharedboard *board,
 static void swap_cells(sharedboard *board,
                        sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
-static void todo(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+static void view_cell(sharedboard *board,
+                      sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
 void
-todo(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]) // NOLINT
+view_cell(sharedboard *board,
+          sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]) // NOLINT
 {
-    puts("To be implemented!");
+    size_t row, col;
+    struct timespec spec = { .tv_sec = 0, .tv_nsec = TIMEOUT * MILLION };
+
+    row = read_option("Choose the row (1-%d): ", BOARD_ROWS) - 1;
+    col = read_option("Choose the column (1-%d): ", BOARD_COLS) - 1;
+
+    if (row >= BOARD_ROWS)
+        puts("Bad value for row");
+    else if (col >= BOARD_COLS)
+        puts("Bad value for column");
+
+    sem_t *mutex = &sems[row][col][MUTEX];
+    if (sem_timedwait(mutex, &spec) == -1) {
+        puts("This cell is currently busy! Please try again later.");
+        return;
+    }
+    sem_t *wrt = &sems[row][col][WRT];
+
+    cell *c = &board->cell[row][col];
+    c->num_readers++;
+    if (c->num_readers == 1)
+        sem_wait(wrt);
+    sem_post(mutex);
+
+    switch (c->type) {
+    case TEXT:
+        printf("Cell content: %s\n", c->content.text);
+        break;
+    case IMAGE:
+        printf("Cell content: %s\n", c->content.image);
+        break;
+    default:
+        puts("Cell is empty!");
+        break;
+    }
+
+    if (sem_timedwait(mutex, &spec) == -1) {
+        puts("This cell is currently busy! Please try again later.");
+        return;
+    }
+    c->num_readers--;
+    if (c->num_readers == 0)
+        sem_post(wrt);
+    sem_post(mutex);
 }
 
 void
@@ -78,7 +124,7 @@ add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 
     puts("Reading image data...");
 
-    fread(buf, sizeof(char), 1024, stdin);
+    fgets(buf, sizeof(buf), stdin);
 
     sem_t *wrt = &sems[row][col][WRT];
 
@@ -88,10 +134,9 @@ add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
     } else {
         board->cell[row][col].type = IMAGE;
         memcpy(board->cell[row][col].content.image, buf, 1024);
-
+        sem_post(wrt);
         puts("Cell content updated with success!");
     }
-    sem_post(wrt);
 }
 
 void
@@ -121,10 +166,9 @@ add_text(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
     } else {
         board->cell[row][col].type = TEXT;
         strncpy(board->cell[row][col].content.text, buf, 256);
-
+        sem_post(wrt);
         puts("Cell content updated with success!");
     }
-    sem_post(wrt);
 }
 
 void
@@ -299,7 +343,7 @@ main(void)
     const struct menu_item menu[] = {
         {.name = "Add text to cell",   .func = &add_text  },
         { .name = "Add image to cell", .func = &add_image },
-        { .name = "View cell",         .func = &todo      },
+        { .name = "View cell",         .func = &view_cell },
         { .name = "Swap two cells",    .func = &swap_cells},
     };
 
