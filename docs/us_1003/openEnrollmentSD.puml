@@ -14,7 +14,7 @@ participant CourseAndStateDTO as dto
 participant Course as course
 
 activate user
-user -> ui: enter
+user -> ui: Open a enrollment
 
 activate ui
     ui --> ctrl: create()

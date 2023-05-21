@@ -1,4 +1,4 @@
-US 2002 -- As Teacher, I want to update an exam
+US 2001 -- As Teacher, I want to update an exam
 ==============================
 
 # Analysis

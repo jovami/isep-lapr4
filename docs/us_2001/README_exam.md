@@ -1,4 +1,4 @@
-US 2002 -- As Teacher, I want to create an exam
+US 2001 -- As Teacher, I want to create an exam
 ==============================
 
 # Analysis
@@ -15,12 +15,13 @@ US 2002 -- As Teacher, I want to create an exam
 
 # Design
 
-- Used a parser to file related to regular exam specification.
+- Used a parser to file related to regular exam specification, the file is validated by the grammar.
 - Find courses taught by the teacher logged.
 - Validate the file used to test the grammar created.
 - Verify if the user logged is indeed a teacher.
 - Save regular exam created in repository.
 - Verify if the dates used to create an exam are valid.
+- The exam as an open date and close date in format (`dd-MM-yyyy HH:mm`).
 
 ## Classes
 

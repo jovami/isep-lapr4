@@ -1,4 +1,4 @@
-US 1004 -- Open/Close enrollments
+US 1003 -- Open/Close enrollments
 ==============================
 
 # Analysis
@@ -25,11 +25,13 @@ Even though this is a single use case, the user interface will be split into two
 The **DTO** pattern will be applied in order to decrease the coupling between the UI and
 the domain classes.
 
-Both UIs will require the manager to select a course from the existing ones, so a **service**
-to **List Courses** will be created.
+Both UIs will require the manager to select a course from the existing ones, only courses that are available to 
+be open to enrollments will be displayed when using **OpenEnrollmentUI**,will display courses that
+can actually be enrollable. 
+In the second case when using **CloseEnrollmentUI**, only courses
+that are in the state **Enroll** will be shown to the **Manager** soo he can close the enrollments and after that the
+course will be in the state **INPROGRESS**.(c.f. Business rules)
 
-In order to facilitate the user experience, **OpenEnrollmentUI** will display courses that
-can actually be enrollable (c.f. Business rules).
 
 To avoid code duplication, the **strategy pattern** will be applied in the **CourseRepository**,
 by creating a `ofStates(states)` that will provide a list of courses whose `state` matches any

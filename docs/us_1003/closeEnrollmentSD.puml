@@ -15,7 +15,7 @@ participant Course as course
 
 
 activate user
-user -> ui: enter
+user -> ui: Close a enrollment
 
 activate ui
     ui --> ctrl: create()

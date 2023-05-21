@@ -1,11 +1,13 @@
 US 1007 -- As Manager, I want to enroll students in bulk by importing their data using a csv file
 ==============================
 
-# Analysi
+# Analysis
 
 ## Business rules
 
 - The csv file is composed by the following structure : (mecanographicnumber,courseID).
+- Students are already registered.
+- The course already exists.
 
 
 ## Unit tests
