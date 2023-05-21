@@ -6,7 +6,7 @@ flags = [ '-D_XOPEN_SOURCE=500', '-D_POSIX_C_SOURCE=200809L' ]
 
 cc = meson.get_compiler('c')
 
-librt = cc.find_library('rt', required: true)
+librt = cc.find_library('rt', required: false)
 
 deps = [ librt, dependency('threads') ]
 
