@@ -2,6 +2,7 @@ package eapli.base.enrollment.application;
 
 import java.util.List;
 
+import eapli.base.course.domain.CourseName;
 import org.apache.commons.lang3.tuple.Pair;
 
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
@@ -30,17 +31,36 @@ public class BulkEnrollStudentsService {
 
     }
 
-    public void bulkEnroll(List<Pair<MecanographicNumber, Integer>> data) {
+    /*public void bulkEnroll(List<Pair<MecanographicNumber, Integer>> data) {
         for (Pair<MecanographicNumber, Integer> pair : data) {
             var mecanographicNumber = pair.getLeft();
             var courseID = pair.getRight();
 
             Student student = this.studentRepo.ofIdentity(mecanographicNumber).orElseThrow();
+            System.out.println(""+student.toString());
             Course course = this.courseRepo.ofIdentity(courseID).orElseThrow();
 
             Enrollment enrollment = new Enrollment(course, student);
 
             this.enrollmentRepo.save(enrollment);
         }
+    }*/
+
+    public void bulkEnroll(List<Pair<MecanographicNumber, CourseName>> data) {
+        for (Pair<MecanographicNumber, CourseName> pair : data) {
+            var mecanographicNumber = pair.getLeft();
+            var courseName = pair.getRight();
+
+            Student student = this.studentRepo.ofIdentity(mecanographicNumber).orElseThrow();
+            Course course = this.courseRepo.findCourseByName(courseName);
+
+            Enrollment enrollment = new Enrollment(course, student);
+
+            this.enrollmentRepo.save(enrollment);
+        }
+    }
+
+    public Iterable<Enrollment> listAllEnrollmentsInAllCourses() {
+        return this.enrollmentRepo.findAll();
     }
 }

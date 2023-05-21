@@ -65,7 +65,19 @@ public class StudentBootstrapper extends UsersBootstrapperBase implements Action
         registerStudent("tiago", "Password1", "Mary", "Smith",
                 "mary@student.com", "isep237", "Mary Smith", "Mary",
                 "1999-01-01", "123123129");
+
         enrollStudents();
+
+
+        ////////////////////////////////////////////
+        //Test students for CSV bulk enroll students
+        registerStudent("quim", "Password1", "quim", "Smith",
+                "quim@student.com", "isep500", "quim Smith", "quim",
+                "1999-01-01", "122222229");
+        registerStudent("jose", "Password1", "jose", "Smith",
+                "jose@student.com", "isep501", "jose Smith", "jose",
+                "1999-01-01", "122222333");
+
         return true;
     }
 

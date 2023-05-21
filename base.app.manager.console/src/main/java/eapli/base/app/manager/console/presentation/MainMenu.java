@@ -75,6 +75,7 @@ public class MainMenu extends AbstractUI {
     private static final int OPEN_ENROLLMENTS = 5;
     private static final int CLOSE_ENROLLMENTS = 6;
     private static final int SET_COURSE_TEACHERS = 7;
+    private static final int ENROLL_STUDENTS_IN_BULK_CSV = 8;
 
     // SETTINGS
 
@@ -148,7 +149,8 @@ public class MainMenu extends AbstractUI {
         menu.addItem(OPEN_ENROLLMENTS, "Open enrollments", new OpenEnrollmentUI()::show);
         menu.addItem(CLOSE_ENROLLMENTS, "Close enrollments", new CloseEnrollmentUI()::show);
         menu.addItem(SET_COURSE_TEACHERS, "Set Staff", new SetCourseTeacherUI()::show);
-
+        menu.addItem(ENROLL_STUDENTS_IN_BULK_CSV, "Enroll students in bulk ,import csv file", new CSVLoaderStudentsUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
         return menu;
     }
 

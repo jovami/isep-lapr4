@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import eapli.base.enrollment.domain.Enrollment;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import jovami.util.csv.CSVHeader;
@@ -26,5 +28,9 @@ public class CSVLoaderStudentsController {
         var parsedList = new EnrollmentParser().parse(list);
 
         this.service.bulkEnroll(parsedList);
+    }
+
+    public Iterable<Enrollment> listAllEnrollmentsInAllCourses() {
+        return this.service.listAllEnrollmentsInAllCourses();
     }
 }
