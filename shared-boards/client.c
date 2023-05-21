@@ -63,7 +63,35 @@ todo(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]) // N
 void
 add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 {
-    todo(board, sems);
+    size_t row, col;
+    char buf[1024];  // 1024 bytes - simulating image data
+
+    struct timespec spec = {.tv_sec = 0, .tv_nsec = TIMEOUT * MILLION};
+
+    row = read_option("Choose the row (1-%d): ", BOARD_ROWS) - 1;
+    col = read_option("Choose the column (1-%d): ", BOARD_COLS) - 1;
+
+    if (row >= BOARD_ROWS)
+        puts("bad value for row");
+    else if (col >= BOARD_COLS)
+        puts("bad value for column");
+
+    puts("Reading image data...");
+
+    fread(buf, sizeof(char), 1024, stdin);
+
+    sem_t *wrt = &sems[row][col][WRT];
+
+    puts("Trying to get access to the cell");
+    if (sem_timedwait(wrt, &spec) == -1) {
+        puts("This cell is currently busy! Please try again later.");
+    } else {
+        board->cell[row][col].type = IMAGE;
+        memcpy(board->cell[row][col].content.image, buf, 1024);
+
+        puts("Cell content updated with success!");
+    }
+    sem_post(wrt);
 }
 
 void
