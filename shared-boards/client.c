@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <semaphore.h>
 #include <stdarg.h>
@@ -7,17 +8,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/errno.h>
 #include <sys/mman.h>
-#include <sys/semaphore.h>
+#if defined(__APPLE__)
+# include <sys/semaphore.h>
+#endif
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
 #include "common.h"
 #include "helpers.h"
-
-/* TODO: remove this later */
-#include <assert.h>
 
 #define TIMEOUT 5
 #define MILLION 1000000
@@ -35,7 +36,8 @@
 __attribute__((__format__(printf, 1, 2))) static size_t
 read_option(const char *restrict prompt, ...);
 
-typedef void (*board_func)(sharedboard *, sem_t[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+typedef void (*board_func)(sharedboard *,
+                           sem_t *[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
 struct menu_item {
     board_func func;
@@ -47,18 +49,18 @@ static void *init_mem(const char *restrict name, size_t size);
 #define INIT_DATABASE() init_mem(DATABASE, sizeof(boardlist))
 
 static void add_text(sharedboard *board,
-                     sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+                     sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 static void add_image(sharedboard *board,
-                      sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+                      sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 static void swap_cells(sharedboard *board,
-                       sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+                       sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
 static void view_cell(sharedboard *board,
-                      sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
+                      sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]);
 
 void
 view_cell(sharedboard *board,
-          sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]) // NOLINT
+          sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]) // NOLINT
 {
     size_t row, col;
     struct timespec spec = { .tv_sec = 0, .tv_nsec = TIMEOUT * MILLION };
@@ -71,12 +73,12 @@ view_cell(sharedboard *board,
     else if (col >= BOARD_COLS)
         puts("Bad value for column");
 
-    sem_t *mutex = &sems[row][col][MUTEX];
+    sem_t *mutex = sems[row][col][MUTEX];
     if (sem_timedwait(mutex, &spec) == -1) {
         puts("This cell is currently busy! Please try again later.");
         return;
     }
-    sem_t *wrt = &sems[row][col][WRT];
+    sem_t *wrt = sems[row][col][WRT];
 
     cell *c = &board->cell[row][col];
     c->num_readers++;
@@ -107,7 +109,7 @@ view_cell(sharedboard *board,
 }
 
 void
-add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
+add_image(sharedboard *board, sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 {
     size_t row, col;
     char buf[1024]; // 1024 bytes - simulating image data
@@ -126,7 +128,7 @@ add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 
     fgets(buf, sizeof(buf), stdin);
 
-    sem_t *wrt = &sems[row][col][WRT];
+    sem_t *wrt = sems[row][col][WRT];
 
     puts("Trying to get access to the cell");
     if (sem_timedwait(wrt, &spec) == -1) {
@@ -140,7 +142,7 @@ add_image(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 }
 
 void
-add_text(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
+add_text(sharedboard *board, sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 {
     size_t row, col;
     char buf[256];
@@ -155,15 +157,14 @@ add_text(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
     else if (col >= BOARD_COLS)
         puts("bad value for column");
 
-    fputs("Text to add: ", stdout);
-    fgets(buf, sizeof(buf), stdin);
-
-    sem_t *wrt = &sems[row][col][WRT];
+    sem_t *wrt = sems[row][col][WRT];
 
     puts("Trying to get access to the cell");
     if (sem_timedwait(wrt, &spec) == -1) {
         puts("This cell is currently busy! Please try again later.");
     } else {
+        fputs("Text to add: ", stdout);
+        fgets(buf, sizeof(buf), stdin);
         board->cell[row][col].type = TEXT;
         strncpy(board->cell[row][col].content.text, buf, 256);
         sem_post(wrt);
@@ -172,7 +173,7 @@ add_text(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 }
 
 void
-swap_cells(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
+swap_cells(sharedboard *board, sem_t *sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST])
 {
     size_t row1, col1;
     size_t row2, col2;
@@ -200,8 +201,8 @@ swap_cells(sharedboard *board, sem_t sems[BOARD_ROWS][BOARD_COLS][CELL_SEM_LAST]
         puts("bad value for column");
 
     sem_t *cell_a, *cell_b;
-    cell_a = &sems[row1][col1][WRT];
-    cell_b = &sems[row2][col2][WRT];
+    cell_a = sems[row1][col1][WRT];
+    cell_b = sems[row2][col2][WRT];
 
     if (sem_timedwait(cell_a, &spec) == -1) {
         printf("Cell at position (%zu, %zu) is currently busy!"
@@ -266,12 +267,17 @@ read_option(const char *restrict fmt, ...)
     vfprintf(stdout, fmt, ap);
     va_end(ap);
 
-    fgets(buf, sizeof(buf), stdin);
-    assert(buf);
+    if (fgets(buf, sizeof(buf), stdin) == NULL) {
+        puts("Error reading input");
+        return 0;
+    }
 
     size_t idx;
     int ret = sscanf(buf, "%zu", &idx);
-    assert(ret == 1);
+    if (ret != 1) {
+        puts("Invalid input");
+        return 0;
+    }
 
     return idx;
 }
@@ -296,7 +302,10 @@ query_boards(const boardlist *list, sem_t *board_sem)
 
     if (idx > 0 && idx <= len) {
         chosen = strdup(list->boards[idx - 1]);
-        assert(chosen);
+        if (!chosen) {
+            perror("strdup");
+            return NULL;
+        }
     } else {
         chosen = NULL;
     }
@@ -319,24 +328,37 @@ init_sems(const char *board_name,
     for (i = 0; i < rows; i++) {
         for (j = 0; j < cols; j++) {
             int ret = snprintf(buf, sizeof(buf), "%s.%zu.%zu.mutex", board_name, i, j);
-            assert((unsigned) ret < sizeof(buf));
+            if ((unsigned) ret >= sizeof(buf)) {
+                perror("snprintf");
+                exit(EXIT_FAILURE);
+            }
 
             sem = sem_open(buf, 0, 0640);
-            assert(sem != SEM_FAILED);
+            if (sem == SEM_FAILED) {
+                perror("sem_open");
+                exit(EXIT_FAILURE);
+            }
 
             sems[i][j][MUTEX] = sem;
 
             ret = snprintf(buf, sizeof(buf), "%s.%zu.%zu.wrt", board_name, i, j);
-            assert((unsigned) ret < sizeof(buf));
+            if ((unsigned) ret >= sizeof(buf)) {
+                perror("snprintf");
+                exit(EXIT_FAILURE);
+            }
 
             sem = sem_open(buf, 0, 0640);
-            assert(sem != SEM_FAILED);
+            if (sem == SEM_FAILED) {
+                perror("sem_open");
+                exit(EXIT_FAILURE);
+            }
 
             sems[i][j][WRT] = sem;
         }
     }
 }
 
+// Pattern used: Reader/Writer
 int
 main(void)
 {
@@ -356,13 +378,23 @@ main(void)
     }
 
     sem_t *db_sem = sem_open(DATABASE_SEM, 0, 0640);
-    assert(db_sem != SEM_FAILED);
+    if (db_sem == SEM_FAILED) {
+        perror("sem_open");
+        return EXIT_FAILURE;
+    }
 
     char *boardname = query_boards(list, db_sem);
-    assert(boardname);
+    int err = errno;
+    if (!boardname && err != ENOMEM){
+        puts("No such board");
+        return EXIT_FAILURE;
+    }
 
     sharedboard *board = init_mem(boardname, sizeof(sharedboard));
-    assert(board);
+    if (!board) {
+        fputs("init_mem: failed to open board\n", stderr);
+        return EXIT_FAILURE;
+    }
 
     init_sems(boardname, sems, BOARD_ROWS, BOARD_COLS);
 
@@ -378,7 +410,7 @@ main(void)
             puts("Invalid option\n");
         } else if (opt > 0) {
             printf("Entering menu \"%s\"\n", menu[opt - 1].name);
-            menu[opt - 1].func(board, NULL);
+            menu[opt - 1].func(board, sems);
         }
     } while (opt != 0);
 

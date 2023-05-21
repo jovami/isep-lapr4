@@ -1,5 +1,6 @@
 #include <fcntl.h>
 #include <stddef.h>
+#include <sys/semaphore.h>
 
 #if defined(__linux__)
 # include <linux/limits.h>
@@ -91,12 +92,12 @@ init_sems(const char *board_name, const size_t rows, const size_t cols)
             int ret = snprintf(buf, sizeof(buf), "%s.%zu.%zu.mutex", board_name, i, j);
             assert((unsigned) ret < sizeof(buf));
 
-            sem_open(buf, O_CREAT | O_EXCL, 0640, 1);
+            assert(sem_open(buf, O_CREAT | O_EXCL, 0640, 1));
 
             ret = snprintf(buf, sizeof(buf), "%s.%zu.%zu.wrt", board_name, i, j);
             assert((unsigned) ret < sizeof(buf));
 
-            sem_open(buf, O_CREAT | O_EXCL, 0640, 1);
+            assert(sem_open(buf, O_CREAT | O_EXCL, 0640, 1));
         }
     }
 }
@@ -122,32 +123,40 @@ int
 main(void)
 {
     boardlist *list = init_mem(DATABASE, true, sizeof(boardlist));
-
-    assert(list);
+    if (!list){
+        fputs("Failed to create database\n", stderr);
+        return EXIT_FAILURE;
+    }
 
     sem_t *database_sem = sem_open(DATABASE_SEM, O_CREAT | O_EXCL, 0640, 0);
-
-    assert(database_sem != SEM_FAILED);
+    if (database_sem == SEM_FAILED){ 
+        perror("database_sem: sem_open");
+        shm_unlink(DATABASE);
+        return EXIT_FAILURE;
+    }
 
     puts("Initialized board database");
 
     sharedboard *b1 = init_mem(JOVAMI, true, sizeof(sharedboard));
-    assert(b1);
-    strncpy(list->boards[list->len++], JOVAMI, MAX_NAME_LEN);
-    strncpy(b1->name, JOVAMI, MAX_NAME_LEN);
-    init_sems(JOVAMI, BOARD_ROWS, BOARD_COLS);
+    if (b1) {
+        strncpy(list->boards[list->len++], JOVAMI, MAX_NAME_LEN);
+        strncpy(b1->name, JOVAMI, MAX_NAME_LEN);
+        init_sems(JOVAMI, BOARD_ROWS, BOARD_COLS);
+    }
 
     sharedboard *b2 = init_mem(ORION, true, sizeof(sharedboard));
-    assert(b2);
-    strncpy(list->boards[list->len++], ORION, MAX_NAME_LEN);
-    strncpy(b2->name, ORION, MAX_NAME_LEN);
-    init_sems(ORION, BOARD_ROWS, BOARD_COLS);
+    if (b2) {
+        strncpy(list->boards[list->len++], ORION, MAX_NAME_LEN);
+        strncpy(b2->name, ORION, MAX_NAME_LEN);
+        init_sems(ORION, BOARD_ROWS, BOARD_COLS);
+    }
 
     sharedboard *b3 = init_mem(ANTI_YELLOW, true, sizeof(sharedboard));
-    assert(b3);
-    strncpy(list->boards[list->len++], ANTI_YELLOW, MAX_NAME_LEN);
-    strncpy(b3->name, ANTI_YELLOW, MAX_NAME_LEN);
-    init_sems(ANTI_YELLOW, BOARD_ROWS, BOARD_COLS);
+    if (b3) {
+        strncpy(list->boards[list->len++], ANTI_YELLOW, MAX_NAME_LEN);
+        strncpy(b3->name, ANTI_YELLOW, MAX_NAME_LEN);
+        init_sems(ANTI_YELLOW, BOARD_ROWS, BOARD_COLS);
+    }
 
     puts("Initialized all boards");
     sem_post(database_sem);
