@@ -29,12 +29,7 @@ class InMemoryRegularExamRepository extends InMemoryDomainRepository<RegularExam
     @Override
     public Iterable<RegularExam> examsOfCoursesAfterTime(LocalDateTime time, Set<Course> courses) {
         return valuesStream()
-                .filter(exam -> {
-                    var date = LocalDateTime.ofInstant(exam.regularExamDate().openDate().toInstant(),
-                            ZoneId.systemDefault());
-
-                    return courses.contains(exam.course()) && date.isAfter(time);
-                })
+                .filter(exam -> courses.contains(exam.course()) && exam.regularExamDate().openDate().isAfter(time))
                 .collect(Collectors.toList());
     }
 }

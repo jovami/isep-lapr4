@@ -61,7 +61,7 @@ public final class BaseBootstrap extends BaseApplication {
     @Override
     protected void doMain(final String[] args) {
         handleArgs(args);
-
+        isToBootstrapDemoData = true;
         System.out.println("\n\n------- MASTER DATA -------");
         new BaseBootstrapper().execute();
 

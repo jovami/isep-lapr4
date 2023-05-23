@@ -2,9 +2,14 @@ package eapli.base.app.teacher.console.presentation;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import eapli.base.exam.application.UpdateRegularExamController;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -23,8 +28,7 @@ public class UpdateRegularExamUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-
-        Date openDate, closeDate;
+        LocalDateTime openDate, closeDate;
         var widgetCourse = new SelectWidget<>("Choose a course to update a exam:", ctrl.listCourses());
         widgetCourse.show();
 
@@ -45,8 +49,9 @@ public class UpdateRegularExamUI extends AbstractUI {
         lst.add("Update regular exam date");
         lst.add("Update regular exam specification");
 
-        do {
+        var fmt = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
 
+        do {
             var option = new SelectWidget<>("Choose one of the following options:", lst);
             option.show();
 
@@ -55,8 +60,16 @@ public class UpdateRegularExamUI extends AbstractUI {
 
             if (option.selectedOption() == 1) {
 
-                openDate = Console.readDate("New Open date(dd/MM/yyyy HH:mm)", "dd/MM/yyyy HH:mm");
-                closeDate = Console.readDate("New Close date(dd/MM/yyyy HH:mm)", "dd/MM/yyyy HH:mm");
+                Optional<LocalDateTime> opt;
+                do {
+                    opt = readDate("New Open date(dd/MM/yyyy HH:mm)", fmt);
+                } while (opt.isEmpty());
+                openDate = opt.get();
+
+                do {
+                    opt = readDate("New Close date(dd/MM/yyyy HH:mm)", fmt);
+                } while (opt.isEmpty());
+                closeDate = opt.get();
 
                 ctrl.updateRegularExamDate(chosenExam, openDate, closeDate);
                 System.out.println("Regular Exam updated with success");
@@ -89,11 +102,17 @@ public class UpdateRegularExamUI extends AbstractUI {
             String op = Console.readLine("Do you want to update anything else?(yes/no)");
             if (op.compareToIgnoreCase("no") == 0)
                 created = true;
-
         } while (!created);
-
         return false;
+    }
 
+    private Optional<LocalDateTime> readDate(String prompt, DateTimeFormatter fmt) {
+        try {
+            var line = Console.readLine(prompt);
+            return Optional.of(LocalDateTime.parse(line, fmt));
+        } catch (DateTimeParseException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

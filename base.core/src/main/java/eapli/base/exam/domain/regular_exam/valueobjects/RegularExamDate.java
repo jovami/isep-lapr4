@@ -2,55 +2,46 @@ package eapli.base.exam.domain.regular_exam.valueobjects;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class RegularExamDate implements ValueObject {
 
     private static final long serialVersionUID = 1L;
 
-    // TODO: convert to timestamp since DATE has no time info
-    @Temporal(TemporalType.DATE)
-    private Date openDate;
-
-    @Temporal(TemporalType.DATE)
-    private Date closeDate;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
     protected RegularExamDate() {
-        this.openDate = null;
-        this.closeDate = null;
+        this.start = null;
+        this.end = null;
     }
 
-    public RegularExamDate(Date openDate, Date closeDate) {
-        setIntervalDate(openDate, closeDate);
+    public RegularExamDate(LocalDateTime start, LocalDateTime end) {
+        Preconditions.noneNull(start, end);
+        Preconditions.ensure(start.isBefore(end), "The open date must be before the close date");
+
+        this.start = start;
+        this.end = end;
     }
 
-    public static RegularExamDate valueOf(Date openDate, Date closeDate) {
+    public static RegularExamDate valueOf(LocalDateTime openDate, LocalDateTime closeDate) {
         return new RegularExamDate(openDate, closeDate);
     }
 
-    protected boolean setIntervalDate(Date openDate, Date closeDate) {
-        if (openDate.before(closeDate)) {
-            this.openDate = openDate;
-            this.closeDate = closeDate;
-            return true;
-        }
-        return false;
+    public LocalDateTime openDate() {
+        return this.start;
     }
 
-    public Date openDate() {
-        return this.openDate;
-    }
-
-    public Date closeDate() {
-        return this.closeDate;
+    public LocalDateTime closeDate() {
+        return this.end;
     }
 
     @Override
@@ -60,19 +51,19 @@ public class RegularExamDate implements ValueObject {
         if (o == null || getClass() != o.getClass())
             return false;
         RegularExamDate that = (RegularExamDate) o;
-        return this.openDate.equals(that.openDate) && this.closeDate.equals(that.closeDate);
+        return this.start.equals(that.start) && this.end.equals(that.end);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(openDate);
+        return Objects.hash(start);
     }
 
     @Override
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        String open = dateFormat.format(openDate);
-        String close = dateFormat.format(closeDate);
+        String open = dateFormat.format(start);
+        String close = dateFormat.format(end);
         return "Opening: " + open +
                 " | Closing: " + close;
     }

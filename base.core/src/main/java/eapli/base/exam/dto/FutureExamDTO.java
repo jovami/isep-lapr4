@@ -1,58 +1,42 @@
 package eapli.base.exam.dto;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
 import eapli.base.course.domain.CourseName;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * FutureExamDTO
  */
 public final class FutureExamDTO {
-
-    private final CourseName courseName;
-    // TODO: change back to LocalDateTime when ExamDate gets fixed
-    private final LocalDate startTime;
-    private final LocalDate endTime;
-    // private final LocalDateTime startTime;
-    // private final LocalDateTime endTime;
-
     private static final DateTimeFormatter fmt;
 
     static {
-        // fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-        fmt = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     }
+
+    private final CourseName courseName;
+    private final LocalDateTime startTime;
+    private final LocalDateTime endTime;
 
     public FutureExamDTO(final CourseName name, final RegularExamDate date) {
         this.courseName = name;
-        this.startTime = toLocalDateTime(date.openDate());
-        this.endTime = toLocalDateTime(date.closeDate());
+        this.startTime = date.openDate();
+        this.endTime = date.closeDate();
     }
-
-    private static LocalDate toLocalDateTime(final Date date) {
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-    }
-
-    // private static LocalDateTime toLocalDateTime(final Date date) {
-    // return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-    // }
 
     public CourseName name() {
         return this.courseName;
     }
 
-    // public LocalDateTime startTime() {
-    // return this.startTime;
-    // }
+    public LocalDateTime startTime() {
+        return this.startTime;
+    }
 
-    // public LocalDateTime endTime() {
-    // return this.endTime;
-    // }
+    public LocalDateTime endTime() {
+        return this.endTime;
+    }
 
     @Override
     public String toString() {

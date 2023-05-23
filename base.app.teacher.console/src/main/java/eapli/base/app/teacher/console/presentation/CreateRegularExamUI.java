@@ -2,7 +2,11 @@ package eapli.base.app.teacher.console.presentation;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Optional;
 
 import eapli.base.exam.application.CreateRegularExamController;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -21,8 +25,7 @@ public class CreateRegularExamUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-
-        Date openDate, closeDate;
+        LocalDateTime openDate, closeDate;
         var widget = new SelectWidget<>("Choose a course to create a exam:", ctrl.listCoursesTeacherTeaches());
         widget.show();
 
@@ -38,9 +41,20 @@ public class CreateRegularExamUI extends AbstractUI {
             return false;
         }
 
+        var fmt = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
+
         try {
-            openDate = Console.readDate("Open date(dd/MM/yyyy HH:mm)", "dd/MM/yyyy HH:mm");
-            closeDate = Console.readDate("Close date(dd/MM/yyyy HH:mm)", "dd/MM/yyyy HH:mm");
+
+            Optional<LocalDateTime> opt;
+            do {
+                opt = readDate("Open date(dd/MM/yyyy HH:mm)", fmt);
+            } while (opt.isEmpty());
+            openDate = opt.get();
+
+            do {
+                opt = readDate("Close date(dd/MM/yyyy HH:mm)", fmt);
+            } while (opt.isEmpty());
+            closeDate = opt.get();
 
             if (this.ctrl.createRegularExam(file, openDate, closeDate, chosen))
                 System.out.println("Regular exam created with success");
@@ -52,12 +66,19 @@ public class CreateRegularExamUI extends AbstractUI {
             System.out.println("Integrity violation");
         } catch (ConcurrencyException e) {
             System.out.println(
-                    "Unfortunatelly there was an unexpected error in the application.\n" +
+                    "Unfortunately there was an unexpected error in the application.\n" +
                             "Please try again and if the problem persists, contact your system admnistrator.");
         }
-
         return false;
+    }
 
+    private Optional<LocalDateTime> readDate(String prompt, DateTimeFormatter fmt) {
+        try {
+            var line = Console.readLine(prompt);
+            return Optional.of(LocalDateTime.parse(line, fmt));
+        } catch (DateTimeParseException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

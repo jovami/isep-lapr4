@@ -2,6 +2,7 @@ package eapli.base.exam.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class CreateRegularExamController {
         this.repoCourse = repositoryFactory.courses();
     }
 
-    public boolean createRegularExam(File file, Date openDate, Date closeDate, Course chosen) throws IOException {
+    public boolean createRegularExam(File file, LocalDateTime openDate, LocalDateTime closeDate, Course chosen) throws IOException {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         var course = this.repoCourse.ofIdentity(chosen.identity());
 

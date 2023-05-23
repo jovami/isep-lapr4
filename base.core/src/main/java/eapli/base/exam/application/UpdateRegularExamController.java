@@ -2,6 +2,7 @@ package eapli.base.exam.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +72,7 @@ public class UpdateRegularExamController {
         return repoRegularExam.findByCourse(course);
     }
 
-    public void updateRegularExamDate(RegularExam regularExam, Date openDate, Date closeDate) {
+    public void updateRegularExamDate(RegularExam regularExam, LocalDateTime openDate, LocalDateTime closeDate) {
         regularExam.updateRegularExamDate(RegularExamDate.valueOf(openDate, closeDate));
         repoRegularExam.save(regularExam);
     }

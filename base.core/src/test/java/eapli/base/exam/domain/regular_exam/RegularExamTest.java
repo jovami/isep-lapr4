@@ -1,6 +1,12 @@
 package eapli.base.exam.domain.regular_exam;
 
 import eapli.base.course.domain.Course;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import eapli.base.course.domain.CourseDescription;
 import eapli.base.course.domain.CourseDuration;
 import eapli.base.course.domain.CourseName;
@@ -8,15 +14,10 @@ import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RegularExamTest {
 
@@ -25,18 +26,14 @@ public class RegularExamTest {
 
     @Before
     public void BeforeEach() {
-        String openDateString = "2023-10-10 16:00";
-        String closeDateString = "2023-10-10 18:00";
+        String openDateString = "10/10/2023 16:00";
+        String closeDateString = "10/10/2023 18:00";
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        var df = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
 
-        try {
-            Date openDate = df.parse(openDateString);
-            Date closeDate = df.parse(closeDateString);
-            regularExamDate = RegularExamDate.valueOf(openDate, closeDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        var openDate = LocalDateTime.parse(openDateString, df);
+        var closeDate = LocalDateTime.parse(closeDateString, df);
+        regularExamDate = RegularExamDate.valueOf(openDate, closeDate);
 
         String startDateString = "01/01/2020";
         String endDateString = "01/01/2023";

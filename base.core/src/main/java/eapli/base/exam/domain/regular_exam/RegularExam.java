@@ -17,21 +17,16 @@ import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 
 @Entity
-@Table(name = "REGULAREXAM")
 public class RegularExam implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "IDREGULAREXAM")
     private int id;
 
     @Embedded
     @Column(unique = true, nullable = false)
     private RegularExamSpecification regularExamSpecification;
-    @Column(name = "REGULAREXAMDATE")
     private RegularExamDate regularExamDate;
-
-    @JoinColumn(name = "COURSE")
     @ManyToOne
     private Course course;
 
@@ -47,6 +42,26 @@ public class RegularExam implements AggregateRoot<Integer> {
         this.regularExamSpecification = regularExamSpecification;
         this.regularExamDate = regularExamDate;
         this.course = course;
+    }
+
+    public Course course() {
+        return this.course;
+    }
+
+    public RegularExamDate regularExamDate() {
+        return this.regularExamDate;
+    }
+
+    public RegularExamSpecification regularExamSpecification() {
+        return this.regularExamSpecification;
+    }
+
+    public void updateRegularExamDate(RegularExamDate regularExamDate) {
+        this.regularExamDate = regularExamDate;
+    }
+
+    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification) {
+        this.regularExamSpecification = regularExamSpecification;
     }
 
     @Override
@@ -86,26 +101,6 @@ public class RegularExam implements AggregateRoot<Integer> {
     @Override
     public boolean hasIdentity(Integer id) {
         return AggregateRoot.super.hasIdentity(id);
-    }
-
-    public Course course() {
-        return this.course;
-    }
-
-    public RegularExamDate regularExamDate() {
-        return this.regularExamDate;
-    }
-
-    public RegularExamSpecification regularExamSpecification() {
-        return this.regularExamSpecification;
-    }
-
-    public void updateRegularExamDate(RegularExamDate regularExamDate) {
-        this.regularExamDate = regularExamDate;
-    }
-
-    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification) {
-        this.regularExamSpecification = regularExamSpecification;
     }
 
     @Override
