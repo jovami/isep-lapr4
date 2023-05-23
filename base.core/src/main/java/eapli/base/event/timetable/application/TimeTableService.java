@@ -1,14 +1,13 @@
 package eapli.base.event.timetable.application;
 
-import java.util.Collection;
-
-import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+
+import java.util.Collection;
 
 @UseCaseController
 public class TimeTableService {
@@ -49,7 +48,7 @@ public class TimeTableService {
         return true;
     }
 
-    public boolean scheduleTeacher(SystemUser user, RecurringPattern pattern) {
+    public boolean schedule(SystemUser user, RecurringPattern pattern) {
 
             TimeTable table = new TimeTable(user, pattern);
 

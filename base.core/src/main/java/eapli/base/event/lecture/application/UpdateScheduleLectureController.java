@@ -1,17 +1,13 @@
 package eapli.base.event.lecture.application;
 
-import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
-import eapli.base.event.recurringPattern.application.RecurringPatternFreqWeeklyBuilder;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.application.TimeTableService;
@@ -24,7 +20,6 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 public class UpdateScheduleLectureController {
@@ -141,7 +136,7 @@ public class UpdateScheduleLectureController {
             srv.schedule(present,newPattern);
 
             //update teacher schedule
-            srv.scheduleTeacher(sysUser.get(),newPattern);
+            srv.schedule(sysUser.get(),newPattern);
 
             this.lecture = lectureRepository.save(lec);
 

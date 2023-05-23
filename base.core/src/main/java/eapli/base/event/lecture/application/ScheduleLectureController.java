@@ -1,10 +1,5 @@
 package eapli.base.event.lecture.application;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
@@ -28,6 +23,11 @@ import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @UseCaseController
 public class ScheduleLectureController {
@@ -109,7 +109,9 @@ public class ScheduleLectureController {
         if (sysUser.isEmpty())
             return false;
 
-        if (srv.checkAvailabilityByUser(sysUser.get(), lecture.pattern())) {
+        SystemUser teacher = sysUser.get();
+
+        if (srv.checkAvailabilityByUser(teacher, lecture.pattern())) {
             // create LectureParticipant for each invited user
             for (Enrollment enroll : enrolled) {
                 // TODO:check ManytoOne participant-> Lecture
@@ -120,12 +122,11 @@ public class ScheduleLectureController {
                 participantRepository.save(participant);
             }
 
-            if (!srv.schedule(present, lecture.pattern())) {
-                return false;
+            if (srv.schedule(present, lecture.pattern()) && srv.schedule(teacher, lecture.pattern())) {
+                System.out.println("Lecture: \n" + lectureRepository.findAll().toString());
+                System.out.println("Participants: \n" + participantRepository.findAll().toString());
+                return true;
             }
-            System.out.println("Lecture: \n" + lectureRepository.findAll().toString());
-            System.out.println("Participants: \n" + participantRepository.findAll().toString());
-            return true;
         }
         patternRepository.delete(pattern);
         lectureRepository.delete(lecture);

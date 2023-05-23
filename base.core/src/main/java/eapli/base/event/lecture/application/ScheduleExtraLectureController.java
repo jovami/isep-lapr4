@@ -1,13 +1,5 @@
 package eapli.base.event.lecture.application;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
 import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTOMapper;
@@ -30,6 +22,14 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import eapli.framework.io.util.Console;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @UseCaseController
 public class ScheduleExtraLectureController {
@@ -112,14 +112,17 @@ public class ScheduleExtraLectureController {
             return false;
         }
 
-        var user = userRepository.ofIdentity(session.get().authenticatedUser().identity());
-        if (srv.checkAvailabilityByUser(user.orElseThrow(), lecture.pattern())) {
+        var userOptional = userRepository.ofIdentity(session.get().authenticatedUser().identity());
+        SystemUser user = userOptional.orElseThrow();
+        if (srv.checkAvailabilityByUser(user, lecture.pattern())) {
             for (SystemUser sysUser : invited) {
                 LectureParticipant participant = new LectureParticipant(findStudentBySystemUser(sysUser), lecture);
                 participantRepository.save(participant);
             }
 
-            return srv.schedule(invited, lecture.pattern());
+            if (srv.schedule(invited, lecture.pattern()) && srv.schedule(user, lecture.pattern())) {
+                return true;
+            }
         }
 
         patternRepository.delete(pattern);
