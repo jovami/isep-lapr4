@@ -1,64 +1,58 @@
 package eapli.base.course.domain;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
-class CourseTest {
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CourseTest {
     private Course course;
 
-    @BeforeEach
-    void setUp(){
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
+    @Before
+    public void setUp() {
+        String startDateString = "01/01/2020";
+        String endDateString = "01/01/2023";
 
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        var df = DateTimeFormatter.ofPattern("d/M/yyyy");
 
-        try {
-            Date startDate = df.parse(startDateString);
-            Date endDate = df.parse(endDateString);
-            course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("description"), startDate, endDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        var startDate = LocalDate.parse(startDateString, df);
+        var endDate = LocalDate.parse(endDateString, df);
+        course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("description"), CourseDuration.valueOf(startDate, endDate));
     }
 
     @Test
-    void closeCourse() {
+    public void closeCourse() {
         course.close();
         assertEquals(CourseState.CLOSED, course.state());
     }
 
     @Test
-    void openEnrollments() {
+    public void openEnrollments() {
         course.open();
         course.openEnrollments();
         assertEquals(CourseState.ENROLL, course.state());
     }
 
     @Test
-    void openCourse() {
+    public void openCourse() {
         course.open();
         assertEquals(CourseState.OPEN, course.state());
     }
 
     @Test
-    void closeEnrollments() {
+    public void closeEnrollments() {
         course.open();
         course.openEnrollments();
         course.closeEnrollments();
@@ -66,19 +60,18 @@ class CourseTest {
     }
 
     @Test
-    void createdCourse() {
-        course.createdCourse();
+    public void createdCourse() {
         assertEquals(CourseState.CLOSE, course.state());
     }
 
 
     @Test
-    void setCourseDescription() {
+    public void setCourseDescription() {
         assertDoesNotThrow(() -> new CourseDescription("TestDescription"));
     }
 
     @Test
-    void setNegativeCapacities() {
+    public void setNegativeCapacities() {
         int testMin = -5;
         int testMax = -10;
 
@@ -88,7 +81,7 @@ class CourseTest {
     }
 
     @Test
-    void setInversedCapacity() {
+    public void setInversedCapacity() {
         int testMin = 40;
         int testMax = 10;
 
@@ -99,7 +92,7 @@ class CourseTest {
     }
 
     @Test
-    void setConstructorCapacity() {
+    public void setConstructorCapacity() {
         int testMin = 20;
         int testMax = 30;
 
@@ -109,7 +102,7 @@ class CourseTest {
     }
 
     @Test
-    void setRightCapacity() {
+    public void setRightCapacity() {
         int testMin = 5;
         int testMax = 20;
 
@@ -119,7 +112,7 @@ class CourseTest {
     }
 
     @Test
-    void setMinNegativeCapacity() {
+    public void setMinNegativeCapacity() {
         int testMin = -5;
         int testMax = 10;
 
@@ -129,7 +122,7 @@ class CourseTest {
     }
 
     @Test
-    void setMaxNegativeCapacity() {
+    public void setMaxNegativeCapacity() {
         int testMin = 5;
         int testMax = -10;
 
@@ -139,127 +132,85 @@ class CourseTest {
     }
 
     @Test
-    void setTrueCourseDuration() throws ParseException {
+    public void ensureStartDateIsBeforeEndDate() throws ParseException {
 
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
+        String startDateString = "01/01/2025";
+        String endDateString = "01/01/2023";
 
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("d/M/yyyy");
 
-        Date startDate = df.parse(startDateString);
-        Date endDate = df.parse(endDateString);
-
-        CourseDuration duration = new CourseDuration();
-        Assertions.assertNull(duration.getEndDate());
-        Assertions.assertNull(duration.getStartDate());
-        assertTrue(duration.setIntervalDate(startDate, endDate));
-        assertEquals(startDate, duration.getStartDate());
-        assertEquals(endDate, duration.getEndDate());
-    }
-
-    @Test
-    void setFalseCourseDuration() throws ParseException {
-
-        String startDateString = "1/1/2023";
-        String endDateString = "1/1/2020";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date startDate = df.parse(startDateString);
-        Date endDate = df.parse(endDateString);
-
-        CourseDuration duration = new CourseDuration();
-        assertFalse(duration.setIntervalDate(startDate, endDate));
-    }
-
-    @Test
-    void CourseDuration() throws ParseException {
-
-        String startDateString = "1/1/2025";
-        String endDateString = "1/1/2023";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        Date startDate = df.parse(startDateString);
-        Date endDate = df.parse(endDateString);
-        AtomicReference<CourseDuration> duration = new AtomicReference<>(new CourseDuration());
+        LocalDate startDate = LocalDate.parse(startDateString, df);
+        LocalDate endDate = LocalDate.parse(endDateString, df);
 
         Assertions.assertThrows(IllegalArgumentException.class,
-                () -> duration.set(new CourseDuration(startDate, endDate)));
+                () -> CourseDuration.valueOf(startDate, endDate));
     }
 
     @Test
-    void testSameCourse() {
+    public void testSameCourse() {
         assertTrue(course.sameAs(course));
     }
 
     @Test
-    void testCourseSameName() {
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    public void testCourseSameName() {
         Course c2;
-        try {
-            Date startDate = df.parse(startDateString);
-            Date endDate = df.parse(endDateString);
-            c2 = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), startDate, endDate);
-            assertTrue(course.sameAs(c2));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        String startDateString = "01/01/2020";
+        String endDateString = "01/01/2023";
+
+        var df = DateTimeFormatter.ofPattern("d/M/yyyy");
+        var startDate = LocalDate.parse(startDateString, df);
+        var endDate = LocalDate.parse(endDateString, df);
+        c2 = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
+        assertTrue(course.sameAs(c2));
     }
 
     @Test
-    void testSameAsNotCourse() {
+    public void testSameAsNotCourse() {
         CourseDuration c2 = new CourseDuration();
         assertFalse(course.sameAs(c2));
     }
 
     @Test
-    void testDifferentName() {
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
-
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    public void testDifferentName() {
         Course c2;
-        try {
-            Date startDate = df.parse(startDateString);
-            Date endDate = df.parse(endDateString);
-            c2 = new Course(CourseName.valueOf("Different"), CourseDescription.valueOf("descrição"), startDate, endDate);
-            assertFalse(course.sameAs(c2));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        String startDateString = "01/01/2020";
+        String endDateString = "01/01/2023";
+
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("d/M/yyyy");
+
+        var startDate = LocalDate.parse(startDateString, df);
+        var endDate = LocalDate.parse(endDateString, df);
+        c2 = new Course(CourseName.valueOf("Different"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
+        assertFalse(course.sameAs(c2));
         assertFalse(course.sameAs(c2));
     }
 
     @Test
-    void withoutIdentity() {
+    public void withoutIdentity() {
         assertFalse(course.hasIdentity(1));
     }
 
     @Test
-    void sameIdentity() {
+    public void sameIdentity() {
 
         assertEquals(0, course.compareTo(0));
     }
 
     @Test
-    void biggerIdentity() {
+    public void biggerIdentity() {
 
         assertEquals(-1, course.compareTo(10));
     }
 
     @Test
-    void smallerIdentity() {
+    public void smallerIdentity() {
 
         assertEquals(1, course.compareTo(-10));
 
     }
 
     @Test
-    void ensureCourseStateCannotGoBackToOpen() {
+    public void ensureCourseStateCannotGoBackToOpen() {
         CourseState state;
         course.open().onLeft(__ -> fail("Created courses should be able to be opened"));
 
@@ -289,14 +240,14 @@ class CourseTest {
 
     // }
     @Test
-    void ensureCreatedCourseCanBeClosed() {
+    public void ensureCreatedCourseCanBeClosed() {
 
         course.close().onLeft(__ -> fail("Created courses should be able to be closed"));
         assertEquals(CourseState.CLOSED, course.state(), "Created course should be able to be closed");
     }
 
     @Test
-    void ensureOpenCourseCanBeClosed() {
+    public void ensureOpenCourseCanBeClosed() {
         course.open();
 
         var errMsg = "Opened courses should be able to be closed";
@@ -306,7 +257,7 @@ class CourseTest {
     }
 
     @Test
-    void ensureOpenToEnrollmentsCourseCanBeClosed() {
+    public void ensureOpenToEnrollmentsCourseCanBeClosed() {
         course.open();
         course.openEnrollments();
 
@@ -317,7 +268,7 @@ class CourseTest {
     }
 
     @Test
-    void ensureClosedToEnrollmentsCourseCanBeClosed() {
+    public void ensureClosedToEnrollmentsCourseCanBeClosed() {
         course.open();
         course.openEnrollments();
         course.closeEnrollments();
@@ -329,7 +280,7 @@ class CourseTest {
     }
 
     @Test
-    void ensureClosingClosedCourseDoesNotAlterState() {
+    public void ensureClosingClosedCourseDoesNotAlterState() {
         course.open();
         course.openEnrollments();
         course.closeEnrollments();
@@ -342,14 +293,14 @@ class CourseTest {
     }
 
     @Test
-    void CapacityToString() {
+    public void CapacityToString() {
         assertEquals("Min students enrolled: " + course.capacity().minStudentsEnrolled()
-                + "\nMax students enrolled: " + course.capacity().maxStudentsEnrolled(),
+                        + "\nMax students enrolled: " + course.capacity().maxStudentsEnrolled(),
                 course.capacity().toString());
     }
 
     @Test
-    void courseDescriptionNull() {
+    public void courseDescriptionNull() {
         assertThrows(IllegalArgumentException.class, () -> {
             new CourseDescription(null);
         });
@@ -363,7 +314,7 @@ class CourseTest {
      * }
      */
     @Test
-    void headTeacher() {
+    public void headTeacher() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("teacher", "Password1", "first", "last", "email@teacher.com").withRoles(BaseRoles.TEACHER);
         TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(userBuilder.build()).withAcronym("TCH")

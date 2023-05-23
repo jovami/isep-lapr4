@@ -1,18 +1,17 @@
 package eapli.base.question.domain;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
+import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseDuration;
 import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
-import eapli.base.course.domain.Course;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * FormativeExamFactoryTest
@@ -29,50 +28,46 @@ public class QuestionFactoryTest {
 
     @Before
     public void buildCourse() {
-        final var sdf = new SimpleDateFormat("dd/MM/yyyy");
+        final var df = DateTimeFormatter.ofPattern("d/M/yyyy");
 
         final var name = "Fisica";
         final var description = "Fisica dos materiais";
         final var minStudents = 10;
         final var maxStudents = 100;
 
-        try {
-            final var startDate = sdf.parse("20/05/2020");
-            final var endDate = sdf.parse("20/09/2020");
+        final var startDate = LocalDate.parse("20/05/2020", df);
+        final var endDate = LocalDate.parse("20/09/2020", df);
 
-            final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
-            course.setCapacity(minStudents, maxStudents);
-            course.open();
+        final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
+        course.setCapacity(minStudents, maxStudents);
+        course.open();
 
-            FISICA = course;
-        } catch (ParseException e) {
-            fail("Bad course");
-        }
+        FISICA = course;
     }
 
     @Test
     public void ensureMatchingMustHaveSolution() {
         // @formatter:off
-        var spec = List.of("MATCHING {" ,
-            "DESCRIPTION: \"Match the countries with their capital cities\"",
+        var spec = List.of("MATCHING {",
+                "DESCRIPTION: \"Match the countries with their capital cities\"",
 
-            "SUBQUESTION 1: \"Portugal\"",
-            "SUBQUESTION 2: \"Spain\"",
-            "SUBQUESTION 3: \"France\"",
-            "SUBQUESTION 4: \"Italy\"",
+                "SUBQUESTION 1: \"Portugal\"",
+                "SUBQUESTION 2: \"Spain\"",
+                "SUBQUESTION 3: \"France\"",
+                "SUBQUESTION 4: \"Italy\"",
 
-            "ANSWER 1: \"Lisbon\"",
-            "ANSWER 2: \"Madrid\"",
-            "ANSWER 3: \"Paris\"",
-            "ANSWER 4: \"Rome\"",
-        "}");
+                "ANSWER 1: \"Lisbon\"",
+                "ANSWER 2: \"Madrid\"",
+                "ANSWER 3: \"Paris\"",
+                "ANSWER 4: \"Rome\"",
+                "}");
         // @formatter:on
 
         var question = this.factory.build(FISICA, spec);
         assertTrue(question.isEmpty(), "Solution not found");
 
         // @formatter:off
-        spec = List.of("MATCHING {" ,
+        spec = List.of("MATCHING {",
                 "DESCRIPTION: \"Match the countries with their capital cities\"",
 
                 "SUBQUESTION 1: \"Portugal\"",
@@ -100,15 +95,15 @@ public class QuestionFactoryTest {
     public void ensureMultipleChoiceMustHaveDescription() {
         // @formatter:off
         var spec = List.of("MULTIPLE_CHOICE {",
-            "CHOICE_TYPE: single-answer",
+                "CHOICE_TYPE: single-answer",
 
-            "ANSWER 1: \"Sally Ride\"",
-            "ANSWER 2: \"Valentina Tereshkova\"",
-            "ANSWER 3: \"Mae Jemison\"",
-            "ANSWER 4: \"Yuri Gagarin\"",
+                "ANSWER 1: \"Sally Ride\"",
+                "ANSWER 2: \"Valentina Tereshkova\"",
+                "ANSWER 3: \"Mae Jemison\"",
+                "ANSWER 4: \"Yuri Gagarin\"",
 
-            "SOLUTION 1: 2 [5.0]",
-        "}");
+                "SOLUTION 1: 2 [5.0]",
+                "}");
         // @formatter:on
 
         var fexam = this.factory.build(FISICA, spec);
@@ -135,7 +130,7 @@ public class QuestionFactoryTest {
     @Test
     public void ensureMultipleChoiceMustHaveAnswer() {
         // @formatter:off
-        var spec = List.of("MULTIPLE_CHOICE {" ,
+        var spec = List.of("MULTIPLE_CHOICE {",
                 "CHOICE_TYPE: multiple-answer",
                 "DESCRIPTION: \"Which of the following animals are mammals?\"",
 
@@ -153,7 +148,7 @@ public class QuestionFactoryTest {
         assertTrue(fexam.isEmpty(), "Answer not found");
 
         // @formatter:off
-        spec = List.of("MULTIPLE_CHOICE {" ,
+        spec = List.of("MULTIPLE_CHOICE {",
                 "CHOICE_TYPE: multiple-answer",
                 "DESCRIPTION: \"Which of the following animals are mammals?\"",
 
@@ -239,7 +234,7 @@ public class QuestionFactoryTest {
                 " SOLUTION 1: 1 [1.5]",
                 " FROM_GROUP: \"verbs\"",
                 "}",
-        "}");
+                "}");
         // @formatter:on
 
         var fexam = this.factory.build(FISICA, spec);
@@ -259,7 +254,7 @@ public class QuestionFactoryTest {
                 " SOLUTION 1: 1 [1.5]",
                 " FROM_GROUP: \"verbs\"",
                 "}",
-        "}");
+                "}");
         // @formatter:on
 
         fexam = this.factory.build(FISICA, spec);
@@ -271,7 +266,7 @@ public class QuestionFactoryTest {
         // @formatter:off
         var spec = List.of("TRUE_FALSE {",
                 "DESCRIPTION: \"Water boils at 100 degrees Celsius.\"",
-        "}");
+                "}");
         // @formatter:on
 
         var fexam = this.factory.build(FISICA, spec);
@@ -281,7 +276,7 @@ public class QuestionFactoryTest {
         spec = List.of("TRUE_FALSE {",
                 "DESCRIPTION: \"Water boils at 100 degrees Celsius.\"",
                 "SOLUTION 1: true [1.0]",
-        "}");
+                "}");
         // @formatter:on
 
         fexam = this.factory.build(FISICA, spec);

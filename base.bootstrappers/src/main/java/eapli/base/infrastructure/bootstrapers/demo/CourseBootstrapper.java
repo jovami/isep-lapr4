@@ -1,16 +1,12 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseName;
-import eapli.base.course.domain.CourseState;
+import eapli.base.course.domain.*;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.actions.Action;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class CourseBootstrapper implements Action {
 
@@ -27,22 +23,15 @@ public class CourseBootstrapper implements Action {
     }
 
     private void saveCourse(String name, String description, String startDate, String endDate, int min, int max,
-            CourseState state) {
+                            CourseState state) {
         CourseRepository repo = PersistenceContext.repositories().courses();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        var df = DateTimeFormatter.ofPattern("d/M/yyyy");
 
-        Date sDate = null;
-        Date eDate = null;
-
-        try {
-            sDate = df.parse(startDate);
-            eDate = df.parse(endDate);
-        } catch (ParseException e) {
-            System.out.printf("Course %s was not bootstrapped\n because Duration was not right", name);
-        }
+        var sDate = LocalDate.parse(startDate, df);
+        var eDate = LocalDate.parse(endDate, df);
 
         try {
-            Course c = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), sDate, eDate);
+            Course c = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(sDate, eDate));
             setCourseState(c, state);
             repo.save(c);
         } catch (IllegalArgumentException e) {

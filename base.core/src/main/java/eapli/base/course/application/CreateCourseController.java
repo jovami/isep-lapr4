@@ -1,10 +1,12 @@
 package eapli.base.course.application;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseDuration;
 import eapli.base.course.domain.CourseName;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -25,10 +27,10 @@ public class CreateCourseController {
         course = null;
     }
 
-    public boolean createCourse(String name, String description, Date startDate, Date endDate) {
+    public boolean createCourse(String name, String description, LocalDate startDate, LocalDate endDate) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.MANAGER);
         try {
-            course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
+            course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
             return true;
         } catch (IllegalArgumentException e) {
             return false;

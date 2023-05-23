@@ -1,22 +1,22 @@
 package eapli.base.exam.domain.regular_exam;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseDuration;
+import eapli.base.course.domain.CourseName;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseName;
-import org.junit.Before;
-import org.junit.Test;
-
-import eapli.base.course.domain.Course;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegularExamTest {
 
@@ -38,18 +38,14 @@ public class RegularExamTest {
             throw new RuntimeException(e);
         }
 
-        String startDateString = "1/1/2020";
-        String endDateString = "1/1/2023";
+        String startDateString = "01/01/2020";
+        String endDateString = "01/01/2023";
 
-        SimpleDateFormat dfx = new SimpleDateFormat("dd/MM/yyyy");
+        var dfx = DateTimeFormatter.ofPattern("d/M/yyyy");
 
-        try {
-            Date startDate = dfx.parse(startDateString);
-            Date endDate = dfx.parse(endDateString);
-            course = new Course(CourseName.valueOf("curso") , CourseDescription.valueOf("descrição"), startDate, endDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        var startDate = LocalDate.parse(startDateString, dfx);
+        var endDate = LocalDate.parse(endDateString, dfx);
+        course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
     }
 
     @Test

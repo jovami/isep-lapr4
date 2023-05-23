@@ -1,61 +1,44 @@
 package eapli.base.course.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class CourseDuration implements ValueObject {
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private final LocalDate start;
+    private final LocalDate end;
 
     protected CourseDuration() {
-        startDate = null;
-        endDate = null;
+        start = null;
+        end = null;
     }
 
-    protected CourseDuration(Date startDate, Date endDate) {
-        if (!setIntervalDate(startDate, endDate)) {
-            throw new IllegalArgumentException();
-        }
+    protected CourseDuration(LocalDate start, LocalDate end) {
+        Preconditions.noneNull(start, end);
+        Preconditions.ensure(start.isBefore(end), "Start date must be before end date");
+
+        this.start = start;
+        this.end = end;
     }
 
-    protected boolean setIntervalDate(Date startDate, Date endDate) {
-        if (startDate.before(endDate)) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-            return true;
-        }
-        return false;
+    public static CourseDuration valueOf(LocalDate start, LocalDate end){
+        return new CourseDuration(start, end);
     }
 
-    protected Date startDate() {
-        return startDate;
+    public LocalDate startDate() {
+        return this.start;
+    }
+
+    public LocalDate endDate() {
+        return this.end;
     }
 
     @Override
     public String toString() {
-        return "Start date: " + startDate.toString() +
-                "\tEnd date: " + endDate.toString();
-    }
-
-    protected Date endDate() {
-        return endDate;
-
+        return start +  " - " + end;
     }
 }

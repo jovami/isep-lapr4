@@ -4,6 +4,8 @@ import eapli.base.course.application.CreateCourseController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class CreateCourseUI extends AbstractUI {
@@ -17,15 +19,16 @@ public class CreateCourseUI extends AbstractUI {
     protected boolean doShow() {
 
         String name, description;
-        Date startDate, endDate;
+        LocalDate startDate, endDate;
+        var formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         boolean created = false;
 
         do {
             name = Console.readNonEmptyLine("Course name:", "Value can't be null");
             description = Console.readNonEmptyLine("Course description:", "Value can't be null");
 
-            startDate = Console.readDate("Start date(DD/MM/YYYY)", "dd/MM/yyyy");
-            endDate = Console.readDate("End date(DD/MM/YYYY)", "dd/MM/yyyy");
+            startDate = readDate("Start date(DD/MM/YYYY)", formatter);
+            endDate = readDate("End date(DD/MM/YYYY)", formatter);
 
             if (ctrl.createCourse(name, description, startDate, endDate)) {
                 created = true;
@@ -58,6 +61,11 @@ public class CreateCourseUI extends AbstractUI {
         System.out.println(ctrl.countAll());
         return false;
 
+    }
+
+    private LocalDate readDate(String prompt, DateTimeFormatter fmt) {
+        var line = Console.readLine(prompt);
+        return LocalDate.parse(line, fmt);
     }
 
     @Override

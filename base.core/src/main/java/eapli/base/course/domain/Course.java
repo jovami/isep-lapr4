@@ -1,7 +1,5 @@
 package eapli.base.course.domain;
 
-import java.util.Date;
-
 import javax.persistence.*;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
@@ -10,22 +8,17 @@ import eapli.framework.functional.Either;
 import eapli.framework.validations.Preconditions;
 
 @Entity
-@Table(name = "COURSE")
 public class Course implements AggregateRoot<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "IDCOURSE")
     private int code;
-    @Column(name = "COURSENAME", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private CourseName name;
-    @Column(name = "COURSEDESCRIPTION")
     private CourseDescription description;
-    @Column(name = "COURSESTATE", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseState state;
-    @Column(name = "COURSEDURATION")
     private CourseDuration duration;
-    @Column(name = "COURSECAPACITY")
     private CourseCapacity capacity;
     @ManyToOne
     private Teacher headTeacher;
@@ -34,13 +27,13 @@ public class Course implements AggregateRoot<Integer> {
     protected Course() {
     }
 
-    public Course(CourseName name, CourseDescription description, Date startDate, Date endDate) {
-        Preconditions.noneNull(name, description, startDate, endDate);
+    public Course(CourseName name, CourseDescription description, CourseDuration duration) {
+        Preconditions.noneNull(name, description, duration);
 
         this.state = CourseState.CLOSE;
         this.name = name;
         this.description = description;
-        this.duration = new CourseDuration(startDate, endDate);
+        this.duration = duration;
         this.capacity = new CourseCapacity();
     }
 
@@ -86,10 +79,6 @@ public class Course implements AggregateRoot<Integer> {
             default:
                 return Either.left("Course cannot be opened to enrollments in its current state");
         }
-    }
-
-    protected void createdCourse() {
-        this.state = CourseState.CLOSE;
     }
 
     public CourseName name() {
@@ -162,10 +151,10 @@ public class Course implements AggregateRoot<Integer> {
     @Override
     public String toString() {
         return "Course: " +
-                "\ncode: " + code +
-                "\nname: " + name +
-                "\ndescription: " + description +
-                "\nduration: " + duration.getStartDate() + " - " + duration.getEndDate();
+                "\nCode: " + code +
+                "\nName: " + name +
+                "\nDescription: " + description +
+                "\nDuration: " + duration;
     }
 
 }

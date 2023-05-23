@@ -1,24 +1,16 @@
 package eapli.base.course.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
-import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
-import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
-import eapli.framework.infrastructure.authz.domain.model.Role;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import eapli.framework.infrastructure.authz.domain.model.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static org.junit.Assert.*;
 
 public class StaffMemberTest {
 
@@ -34,13 +26,13 @@ public class StaffMemberTest {
         SystemUser user = createSystemUser("userName", "Password1", "First", "Last", "user@email.com",
                 BaseRoles.TEACHER);
         Teacher teacher = createTeacher(user, "TCH", dateOfBirth, "Full", "Short", taxPayerNumber);
-        course = createCourse("1/1/2023", "1/1/2024", "curso", "descricao");
+        course = createCourse("01/01/2023", "01/01/2024", "curso", "descricao");
 
         member = new StaffMember(course, teacher);
     }
 
     public Teacher createTeacher(SystemUser user, String acronym, String dateOfBirth, String fullName, String shortName,
-            String taxPayerNumber) {
+                                 String taxPayerNumber) {
         TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(user).withAcronym(acronym)
                 .withDateOfBirth(dateOfBirth)
                 .withFullName(fullName).withTaxPayerNumber(taxPayerNumber).withShortName(shortName);
@@ -48,7 +40,7 @@ public class StaffMemberTest {
     }
 
     public SystemUser createSystemUser(String userName, String password, String firsName, String lastName, String email,
-            final Role... roles) {
+                                       final Role... roles) {
 
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with(userName, password, firsName, lastName, email).withRoles(roles);
@@ -57,23 +49,20 @@ public class StaffMemberTest {
     }
 
     public Course createCourse(String startDateString, String endDateString, String name, String description) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("d/M/yyyy");
+
         Course course;
 
-        try {
-            Date startDate = df.parse(startDateString);
-            Date endDate = df.parse(endDateString);
-            course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        var startDate = LocalDate.parse(startDateString, df);
+        var endDate = LocalDate.parse(endDateString, df);
+        course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
 
         return course;
     }
 
     @Test
     public void course() {
-        Course courseNew = createCourse("1/1/2023", "1/1/2024", "curso diff", "curso novo");
+        Course courseNew = createCourse("01/01/2023", "01/01/2024", "curso diff", "curso novo");
         member.setCourse(courseNew);
         assertEquals(courseNew, member.course());
     }

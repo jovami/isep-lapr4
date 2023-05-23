@@ -1,17 +1,16 @@
 package eapli.base.formativeexam.domain;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseDescription;
+import eapli.base.course.domain.CourseDuration;
 import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
-import eapli.base.course.domain.Course;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * FormativeExamTest
@@ -22,24 +21,20 @@ public class FormativeExamTest {
 
     @Before
     public void buildCourse() {
-        final var sdf = new SimpleDateFormat("dd/MM/yyyy");
+        final var df = DateTimeFormatter.ofPattern("d/M/yyyy");
 
         final var name = "Matematica";
         final var description = "Funcoes e tabuada";
         final var minStudents = 10;
         final var maxStudents = 40;
 
-        try {
-            final var startDate = sdf.parse("20/03/2020");
-            final var endDate = sdf.parse("20/09/2020");
+        final var startDate = LocalDate.parse("20/03/2020", df);
+        final var endDate = LocalDate.parse("20/09/2020", df);
 
-            final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), startDate, endDate);
-            course.setCapacity(minStudents, maxStudents);
+        final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
+        course.setCapacity(minStudents, maxStudents);
 
-            MATEMATICA = course;
-        } catch (ParseException e) {
-            fail("Bad course");
-        }
+        MATEMATICA = course;
     }
 
     @Test
