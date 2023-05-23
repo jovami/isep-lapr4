@@ -1,7 +1,6 @@
 package eapli.base.course.application;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;

@@ -1,8 +1,6 @@
 package eapli.base.persistence.impl.jpa;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Set;
 
 import eapli.base.course.domain.Course;

@@ -3,7 +3,6 @@ package eapli.base.exam.domain.regular_exam.valueobjects;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Embeddable;

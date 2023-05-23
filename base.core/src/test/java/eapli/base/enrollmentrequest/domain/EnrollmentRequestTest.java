@@ -6,15 +6,12 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import eapli.base.course.domain.CourseDescription;
 import eapli.base.course.domain.CourseDuration;
 import eapli.base.course.domain.CourseName;
-import net.bytebuddy.asm.Advice;
 import org.junit.Before;
 import org.junit.Test;
 

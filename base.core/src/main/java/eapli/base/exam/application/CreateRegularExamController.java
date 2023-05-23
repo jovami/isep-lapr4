@@ -3,7 +3,6 @@ package eapli.base.exam.application;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;

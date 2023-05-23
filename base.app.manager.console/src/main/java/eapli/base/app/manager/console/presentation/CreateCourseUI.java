@@ -6,7 +6,6 @@ import eapli.framework.presentation.console.AbstractUI;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class CreateCourseUI extends AbstractUI {
     private CreateCourseController ctrl;
