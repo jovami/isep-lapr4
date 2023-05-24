@@ -1,18 +1,19 @@
 package eapli.base.enrollmentrequest.application;
 
+import java.util.Optional;
+
+import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseState;
-import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+import eapli.framework.infrastructure.authz.application.UserSession;
 
 /**
  * EnrollmentRequestController
@@ -21,19 +22,17 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 public final class EnrollmentRequestController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     private final EnrollmentRequestRepository enrollmentRequestRepo;
-    private final CourseRepository courseRepo;
     private final StudentRepository studentRepo;
-    private final UserRepository userRepository;
+    private final ListCoursesService svc;
 
     public EnrollmentRequestController() {
         this.enrollmentRequestRepo = PersistenceContext.repositories().enrollmentRequests();
-        this.courseRepo = PersistenceContext.repositories().courses();
         this.studentRepo = PersistenceContext.repositories().students();
-        this.userRepository = PersistenceContext.repositories().users();
+        this.svc = new ListCoursesService();
     }
 
     public Iterable<Course> getEnrollableCourses() {
-        return courseRepo.ofState(CourseState.OPEN);
+        return this.svc.studentCanRequestEnroll(getStudent(this.authz.session().orElseThrow()).orElseThrow());
     }
 
     public Iterable<EnrollmentRequest> findAllRequests() {
@@ -41,13 +40,13 @@ public final class EnrollmentRequestController {
     }
 
     public boolean createEnrollmentRequest(Course course) {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
-        var session = authz.session();
+        this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
+        var session = this.authz.session();
         if (session.isEmpty()) {
             return false;
         }
 
-        var student = studentRepo.findBySystemUser(session.get().authenticatedUser());
+        var student = getStudent(session.get());
         if (student.isEmpty()) {
             System.out.println("Student not found");
             return false;
@@ -55,5 +54,9 @@ public final class EnrollmentRequestController {
         var enrollmentRequest = new EnrollmentRequest(course, student.get());
         this.enrollmentRequestRepo.save(enrollmentRequest);
         return true;
+    }
+
+    private Optional<Student> getStudent(UserSession session) {
+        return this.studentRepo.findBySystemUser(session.authenticatedUser());
     }
 }

@@ -23,13 +23,13 @@ public final class ListCoursesService {
     private final EnrollmentRepository enrollRepo;
 
     @Deprecated
-    public ListCoursesService(CourseRepository repo) {
+    public ListCoursesService(final CourseRepository repo) {
         this.courseRepo = repo;
         this.enrollRepo = null;
     }
 
     public ListCoursesService() {
-        var repos = PersistenceContext.repositories();
+        final var repos = PersistenceContext.repositories();
         this.courseRepo = repos.courses();
         this.enrollRepo = repos.enrollments();
     }
@@ -64,9 +64,21 @@ public final class ListCoursesService {
         return withStates(Arrays.stream(states).collect(Collectors.toUnmodifiableSet()));
     }
 
-    public Iterable<Course> studentIsEnrolledOrCanEnroll(Student s) {
+    public Iterable<Course> studentCanRequestEnroll(final Student s) {
+        final var enrollable = HashingStrategySets.mutable.withAll(
+                fromFunction(Course::identity),
+                this.courseRepo.enrollable());
+
+        final var enrolled = HashingStrategySets.mutable.withAll(
+                fromFunction(Course::identity),
+                this.enrollRepo.coursesOfEnrolledStudent(s));
+
+        return enrollable.difference(enrolled);
+    }
+
+    public Iterable<Course> studentIsEnrolledOrCanEnroll(final Student s) {
         // Courses that the student can enroll in
-        var courses = HashingStrategySets.mutable.withAll(
+        final var courses = HashingStrategySets.mutable.withAll(
                 fromFunction(Course::identity),
                 this.courseRepo.enrollable());
 

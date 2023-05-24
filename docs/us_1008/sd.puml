@@ -4,13 +4,14 @@ actor Student as user
 participant EnrollmentRequestUI as ui
 participant EnrollmentRequestController as ctrl
 
+participant ListCoursesService as courses_svc
+
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant EnrollmentRequestRepository as enrollment_request_repo
 participant StudentRepository as student_repo
-
-participant ListCoursesService as courses_svc
+participant EnrollmentRepository as enrollment_repo
 
 participant EnrollmentRequest as enrollment_request
 
@@ -19,70 +20,79 @@ user --> ui: enter
 activate ui
     ui --> ctrl: create()
     activate ctrl
-        ctrl --> ctx: repositories()
+        ctrl --> ctx : repositories()
         activate ctx
-            ctx --> rep_fac: create()
+            ctx --> rep_fac : create()
             activate rep_fac
             deactivate rep_fac
         deactivate ctx
 
-        ctrl --> rep_fac: courses()
+        ctrl --> rep_fac : courses()
         activate rep_fac
-            rep_fac --> course_repo: create()
+            rep_fac --> course_repo : create()
             activate course_repo
             deactivate course_repo
         deactivate rep_fac
 
         ctrl --> rep_fac : enrollmentRequests()
         activate rep_fac
-            rep_fac --> enrollment_request_repo: create()
+            rep_fac --> enrollment_request_repo : create()
             activate enrollment_request_repo
             deactivate enrollment_request_repo
         deactivate rep_fac
 
-        ctrl --> rep_fac: students()
+        ctrl --> rep_fac : students()
         activate rep_fac
-            rep_fac --> student_repo: create()
+            rep_fac --> student_repo : create()
             activate student_repo
             deactivate student_repo
         deactivate rep_fac
     deactivate ctrl
 
-    ui --> ctrl: getCourses()
+    ui --> ctrl : getEnrollableCourses()
     activate ctrl
-        ctrl --> courses_svc: enrollable(coursesRepository)
+        ctrl --> student_repo : student = findBySystemUser(systemUser)
+        activate student_repo
+        deactivate student_repo
+        note bottom: systemUser is taken from user session
+
+        ctrl --> courses_svc : studentCanRequestEnroll(student)
         activate courses_svc
-            courses_svc --> course_repo: findByState()
+            courses_svc --> course_repo : enrollable()
             activate course_repo
             deactivate course_repo
+
+            courses_svc --> enrollment_repo : coursesOfEnrolledStudent(student)
+            activate enrollment_repo
+            deactivate enrollment_repo
+
+            courses_svc --> courses_svc : calculate difference
+            courses_svc --> ctrl : courses
         deactivate courses_svc
 
-        ctrl --> ui: courses
+        ctrl --> ui : courses
     deactivate ctrl
 
-
-
-    ui --> user: show courses
+    ui --> user : show courses
 deactivate ui
 
 user --> ui: selects course from list
 activate ui
-    ui --> ctrl: createEnrollmentRequest(course)
+    ui --> ctrl : createEnrollmentRequest(course)
     activate ctrl
-        ctrl --> student_repo: student = findBySystemUser(systemUser)
+        ctrl --> student_repo : student = findBySystemUser(systemUser)
         activate student_repo
         deactivate student_repo
 
-        ctrl ---> enrollment_request: enrollmentRequest = new EnrollmentRequest(course, student)
-        note bottom: systemUser is taken from user session
+        ctrl ---> enrollment_request : enrollmentRequest = new EnrollmentRequest(course, student)
         activate enrollment_request
         deactivate enrollment_request
 
-        ctrl --> enrollment_request_repo: save(enrollmentRequest)
+        ctrl --> enrollment_request_repo : save(enrollmentRequest)
         activate enrollment_request_repo
         deactivate enrollment_request_repo
     deactivate ctrl
 
-    ui --> user: show success message
+    ui --> user : show success message
 deactivate ui
 @enduml

@@ -17,21 +17,16 @@ A student can request enrollment in a course if:
 
 # Design
 
-The system consists of two primary components, namely the **EnrollmentRequestUI** and the **EnrollmentRequestController**. 
-The former is responsible for receiving user input and displaying relevant information to the user, while the latter is 
+The system consists of two primary components, namely the **EnrollmentRequestUI** and the **EnrollmentRequestController**.
+The former is responsible for receiving user input and displaying relevant information to the user, while the latter is
 responsible for implementing the system's business logic and interacting with the domain classes.
 
-In order to ensure a user-friendly experience, the **EnrollmentRequestUI** provides a list of courses that are available 
+In order to ensure a user-friendly experience, the **EnrollmentRequestUI** provides a list of courses that are available
 for enrollment, thereby enabling the user to select the course of their choice.
 
-To prevent code duplication, the **strategy pattern** is utilized in the **ListCoursesService**, as in **us_1004**. 
-Specifically, the service offers a `ofStates(states)` method that provides a list of courses whose state matches any of 
-the states provided. 
-This approach not only increases the flexibility of the service, but also allows it to be used in other use cases that 
-require a list of courses with specific states.
-
-Additionally, for ease of use, the service provides an `enrollable()` method that internally calls `ofStates()`. 
-This further enhances the service's usability and makes it more efficient.
+To ensure the student can only select the appropriate courses (c.f business rules), a `studentCanEnroll` method will be
+implemented in the **ListCoursesService**, which will obtain the set of courses *open to enrollments* and the set of
+courses the student is *already enrolled in*, and then computes the difference between them.
 
 ## Classes
 
