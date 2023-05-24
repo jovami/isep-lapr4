@@ -3,9 +3,9 @@ package eapli.base.event.lecture.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.domain.users.Teacher;
@@ -29,7 +29,7 @@ public class LectureParticipantTest {
     private TeacherBuilder teacherBuilder = new TeacherBuilder();
     private StudentBuilder studentBuilder = new StudentBuilder();
 
-    @BeforeEach
+    @Before
     public void setUp() {
 
         // Teacher

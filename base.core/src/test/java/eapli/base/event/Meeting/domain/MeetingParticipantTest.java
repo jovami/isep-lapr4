@@ -3,9 +3,9 @@ package eapli.base.event.Meeting.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
@@ -15,14 +15,14 @@ import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
-class MeetingParticipantTest {
+public class MeetingParticipantTest {
 
     private MeetingParticipant participant;
     private Meeting meeting;
     private SystemUser user;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
 
         // SystemUser
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
@@ -44,58 +44,58 @@ class MeetingParticipantTest {
     }
 
     @Test
-    void sameAsEqualValues() {
+    public void sameAsEqualValues() {
         MeetingParticipant newParticipant = new MeetingParticipant(user, meeting);
         Assertions.assertTrue(participant.sameAs(newParticipant));
     }
 
     @Test
-    void sameAsSameObject() {
+    public void sameAsSameObject() {
         Assertions.assertTrue(participant.sameAs(participant));
     }
 
     @Test
-    void sameAsNull() {
+    public void sameAsNull() {
         Assertions.assertFalse(participant.sameAs(null));
     }
 
     @Test
-    void sameAsOtherObject() {
+    public void sameAsOtherObject() {
         Assertions.assertFalse(participant.sameAs(new Object()));
     }
 
     @Test
-    void compareTo() {
+    public void compareTo() {
         Assertions.assertEquals(0, participant.compareTo(0));
     }
 
     @Test
-    void compareToBigger() {
+    public void compareToBigger() {
         Assertions.assertEquals(-1, participant.compareTo(10));
     }
 
     @Test
-    void compareToLower() {
+    public void compareToLower() {
         Assertions.assertEquals(1, participant.compareTo(-10));
     }
 
     @Test
-    void identity() {
+    public void identity() {
         Assertions.assertEquals(0, participant.identity());
     }
 
     @Test
-    void hasIdentityFalse() {
+    public void hasIdentityFalse() {
         Assertions.assertFalse(participant.hasIdentity(-10));
     }
 
     @Test
-    void hasIdentityTrue() {
+    public void hasIdentityTrue() {
         Assertions.assertTrue(participant.hasIdentity(0));
     }
 
     @Test
-    void sameAsDiffUser() {
+    public void sameAsDiffUser() {
         // SystemUser
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("newUser", "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER);
@@ -117,7 +117,7 @@ class MeetingParticipantTest {
     }
 
     @Test
-    void sameAsDiffMeeting() {
+    public void sameAsDiffMeeting() {
         // SystemUser
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with("newUser", "duMMy1", "dummy", "dummy", "a@b.ro").withRoles(BaseRoles.MANAGER);
@@ -139,25 +139,25 @@ class MeetingParticipantTest {
     }
 
     @Test
-    void testAccept() {
+    public void testAccept() {
         participant.accept();
         Assertions.assertEquals(MeetingParticipantStatus.ACCEPTED, participant.status());
     }
 
     @Test
-    void testDeny() {
+    public void testDeny() {
         participant.deny();
         Assertions.assertEquals(MeetingParticipantStatus.REJECTED, participant.status());
     }
 
     @Test
-    void testPending() {
+    public void testPending() {
         participant.deny();
         Assertions.assertEquals(MeetingParticipantStatus.REJECTED, participant.status());
     }
 
     @Test
-    void meeting() {
+    public void meeting() {
         Assertions.assertEquals(meeting, participant.meeting());
     }
 }

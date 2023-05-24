@@ -4,9 +4,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqWeeklyBuilder;
@@ -16,8 +16,8 @@ public class RecurringPatternTest {
 
     private RecurringPattern pattern;
 
-    @BeforeEach
-    void BeforeEach() {
+    @Before
+    public void BeforeEach() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
@@ -32,7 +32,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testDateWithWrongInterval() {
+    public void testDateWithWrongInterval() {
         LocalDate startDate = LocalDate.of(2003, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
 
@@ -40,7 +40,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testDateWithAcceptableInterval() {
+    public void testDateWithAcceptableInterval() {
         LocalDate startDate = LocalDate.of(1999, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
 
@@ -50,7 +50,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testDurationWithAcceptableInterval() {
+    public void testDurationWithAcceptableInterval() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalTime endTime = LocalTime.of(11, 20);
         int duration = 80;
@@ -102,44 +102,44 @@ public class RecurringPatternTest {
      */
 
     @Test
-    void testBetweenDatesRight() {
+    public void testBetweenDatesRight() {
         LocalDate date = LocalDate.of(2000, 2, 10);
         Assertions.assertTrue(pattern.betweenDates(date));
     }
 
     @Test
-    void testBetweenDatesSameStartDate() {
+    public void testBetweenDatesSameStartDate() {
         LocalDate date = LocalDate.of(2000, 2, 1);
         Assertions.assertTrue(pattern.betweenDates(date));
     }
 
     @Test
-    void testBetweenDatesSameEndDate() {
+    public void testBetweenDatesSameEndDate() {
         LocalDate date = LocalDate.of(2000, 2, 28);
         Assertions.assertTrue(pattern.betweenDates(date));
     }
 
     @Test
-    void testBetweenDatesWrongBefore() {
+    public void testBetweenDatesWrongBefore() {
         LocalDate date = LocalDate.of(2000, 1, 10);
         Assertions.assertFalse(pattern.betweenDates(date));
     }
 
     @Test
-    void testBetweenDatesWrongAfter() {
+    public void testBetweenDatesWrongAfter() {
         LocalDate date = LocalDate.of(2000, 3, 10);
         Assertions.assertFalse(pattern.betweenDates(date));
     }
 
     @Test
-    void testSetNegativeDurationMinutes() {
+    public void testSetNegativeDurationMinutes() {
         LocalTime time = LocalTime.of(10, 0);
         int duration = -10;
         Assertions.assertFalse(pattern.setTime(time, duration));
     }
 
     @Test
-    void testDurationMinutes() {
+    public void testDurationMinutes() {
         LocalTime time = LocalTime.of(10, 0);
         int duration = 100;
         Assertions.assertTrue(pattern.setTime(time, duration));
@@ -147,37 +147,37 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testDayOfWeek() {
+    public void testDayOfWeek() {
         Assertions.assertEquals(DayOfWeek.MONDAY, pattern.dayOfWeek());
     }
 
     @Test
-    void testCompareToBigger() {
+    public void testCompareToBigger() {
         Assertions.assertEquals(-1, pattern.compareTo(100));
     }
 
     @Test
-    void testCompareToSmaller() {
+    public void testCompareToSmaller() {
         Assertions.assertEquals(1, pattern.compareTo(-10));
     }
 
     @Test
-    void testCompareToEqual() {
+    public void testCompareToEqual() {
         Assertions.assertEquals(0, pattern.compareTo(0));
     }
 
     @Test
-    void testHasIdentity() {
+    public void testHasIdentity() {
         Assertions.assertTrue(pattern.hasIdentity(0));
     }
 
     @Test
-    void testHasNotIdentity() {
+    public void testHasNotIdentity() {
         Assertions.assertFalse(pattern.hasIdentity(10));
     }
 
     @Test
-    void testOverLapBeforeTime() {
+    public void testOverLapBeforeTime() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(11, 0);
@@ -192,7 +192,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testOverLapDiffDayOfWeek() {
+    public void testOverLapDiffDayOfWeek() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(11, 0);
@@ -208,7 +208,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testOverLapAfterTime() {
+    public void testOverLapAfterTime() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 30);
@@ -223,7 +223,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testNonOverLapAfterTime() {
+    public void testNonOverLapAfterTime() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(13, 0);
@@ -238,7 +238,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testNonOverLapBeforeTime() {
+    public void testNonOverLapBeforeTime() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(7, 0);
@@ -253,7 +253,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testNonOverLapBeforeDate() {
+    public void testNonOverLapBeforeDate() {
         LocalDate startDate = LocalDate.of(2000, 1, 1);
         LocalDate endDate = LocalDate.of(2000, 1, 10);
 
@@ -261,43 +261,43 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testNonOverLapAfterDate() {
+    public void testNonOverLapAfterDate() {
         LocalDate startDate = LocalDate.of(2000, 3, 1);
         LocalDate endDate = LocalDate.of(2000, 3, 28);
         Assertions.assertFalse(pattern.overLapDateInterval(startDate, endDate));
     }
 
     @Test
-    void testOverLapBeforeDate() {
+    public void testOverLapBeforeDate() {
         LocalDate startDate = LocalDate.of(2000, 2, 15);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         Assertions.assertTrue(pattern.overLapDateInterval(startDate, endDate));
     }
 
     @Test
-    void testOverLapAfterDate() {
+    public void testOverLapAfterDate() {
         LocalDate startDate = LocalDate.of(2000, 1, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 15);
         Assertions.assertTrue(pattern.overLapDateInterval(startDate, endDate));
     }
 
     @Test
-    void testSameRecurringPatter() {
+    public void testSameRecurringPatter() {
         Assertions.assertTrue(pattern.sameAs(pattern));
     }
 
     @Test
-    void testSameNull() {
+    public void testSameNull() {
         Assertions.assertFalse(pattern.sameAs(null));
     }
 
     @Test
-    void testSameNoRecurinPatternInstance() {
+    public void testSameNoRecurinPatternInstance() {
         Assertions.assertFalse(pattern.sameAs(new Object()));
     }
 
     @Test
-    void testSameParameters() {
+    public void testSameParameters() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -312,7 +312,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentStartTime() {
+    public void testSameAsDifferentStartTime() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(1, 0);
@@ -327,7 +327,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentStartTimeDuration() {
+    public void testSameAsDifferentStartTimeDuration() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(1, 0);
@@ -342,7 +342,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentDuration() {
+    public void testSameAsDifferentDuration() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -357,7 +357,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentStartDateTimeDuration() {
+    public void testSameAsDifferentStartDateTimeDuration() {
         LocalDate startDate = LocalDate.of(2000, 2, 3);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -372,7 +372,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentEndDateTimeDuration() {
+    public void testSameAsDifferentEndDateTimeDuration() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2001, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -387,7 +387,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentDayOfWeek() {
+    public void testSameAsDifferentDayOfWeek() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2001, 2, 28);
         LocalTime startTime = LocalTime.of(10, 0);
@@ -402,7 +402,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testSameAsDifferentFrequency() {
+    public void testSameAsDifferentFrequency() {
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalTime startTime = LocalTime.of(10, 0);
         int duration = 120;
@@ -415,7 +415,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalDate startDate = LocalDate.of(2000, 2, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 28);
@@ -430,7 +430,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testNonOverLapWithException() {
+    public void testNonOverLapWithException() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalDate startDate = LocalDate.of(2000, 2, 7);
         LocalDate endDate = LocalDate.of(2000, 2, 7);
@@ -447,7 +447,7 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testOverLapWithException() {
+    public void testOverLapWithException() {
         LocalTime startTime = LocalTime.of(10, 0);
         LocalDate startDate = LocalDate.of(2000, 2, 7);
         LocalDate endDate = LocalDate.of(2000, 2, 7);
@@ -463,20 +463,20 @@ public class RecurringPatternTest {
     }
 
     @Test
-    void testAddExceptionTrue() {
+    public void testAddExceptionTrue() {
         // 7-2-2000 -> Monday
         LocalDate date = LocalDate.of(2000, 2, 7);
         Assertions.assertTrue(pattern.addException(date));
     }
 
     @Test
-    void testAddExceptionFalse() {
+    public void testAddExceptionFalse() {
         LocalDate date = LocalDate.of(2000, 2, 8);
         Assertions.assertFalse(pattern.addException(date));
     }
 
     @Test
-    void testAddExceptionOutOfBounds() {
+    public void testAddExceptionOutOfBounds() {
         LocalDate date = LocalDate.of(2001, 2, 8);
         Assertions.assertFalse(pattern.addException(date));
     }

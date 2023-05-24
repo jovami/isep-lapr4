@@ -4,37 +4,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class DescriptionTest {
+public class DescriptionTest {
 
     @Test
-    void getDescription() {
+    public void getDescription() {
         Description des = new Description("test");
         des.setDescription("set test");
         assertEquals("set test", des.getDescription());
     }
 
     @Test
-    void testEqualsNull() {
+    public void testEqualsNull() {
         Description des = new Description("test");
         assertFalse(des.equals(null));
     }
 
     @Test
-    void testEqualsObject() {
+    public void testEqualsObject() {
         Description des = new Description("test");
         assertFalse(des.equals(new Object()));
     }
 
     @Test
-    void testEqualsSelf() {
+    public void testEqualsSelf() {
         Description des = new Description("test");
         assertTrue(des.equals(des));
     }
 
     @Test
-    void testEqualsDiffDes() {
+    public void testEqualsDiffDes() {
         Description des = new Description("test");
         Description des2 = new Description("test2");
         assertFalse(des.equals(des2));
