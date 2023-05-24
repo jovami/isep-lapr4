@@ -1,12 +1,12 @@
 package eapli.base.app.manager.console.presentation;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import eapli.base.enrollment.application.CSVLoaderStudentsController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
-import eapli.framework.presentation.console.SelectWidget;
-
-import java.io.File;
-import java.io.FileNotFoundException;
+import eapli.framework.presentation.console.ListWidget;
 
 public class CSVLoaderStudentsUI extends AbstractUI {
 
@@ -31,14 +31,11 @@ public class CSVLoaderStudentsUI extends AbstractUI {
             System.out.println("File doesnt exist");
         }
 
-
-        var widget = new SelectWidget<>("All enrollments in all courses:", this.ctrl.listAllEnrollmentsInAllCourses());
+        var widget = new ListWidget<>("All enrollments in all courses:", this.ctrl.listAllEnrollmentsInAllCourses());
         widget.show();
 
         System.out.println("Data loaded with success!!");
         return false;
-
-
     }
 
     @Override
