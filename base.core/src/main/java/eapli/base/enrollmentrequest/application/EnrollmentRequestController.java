@@ -4,6 +4,7 @@ import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.application.ListCoursesService;
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseState;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
@@ -32,7 +33,7 @@ public final class EnrollmentRequestController {
     }
 
     public Iterable<Course> getEnrollableCourses() {
-        return new ListCoursesService(courseRepo).openableToEnrollments();
+        return courseRepo.ofState(CourseState.OPEN);
     }
 
     public Iterable<EnrollmentRequest> findAllRequests() {

@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eapli.base.clientusermanagement.application;
+package eapli.base.enrollmentrequest.application.eventhandlers;
 
 import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import eapli.base.clientusermanagement.domain.events.EnrollmentRequestAcceptedEvent;
+import eapli.base.enrollmentrequest.domain.events.EnrollmentRequestAcceptedEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;

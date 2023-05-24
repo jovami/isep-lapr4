@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package eapli.base.clientusermanagement.application;
+package eapli.base.enrollmentrequest.application.eventhandlers;
 
 import java.util.Optional;
 

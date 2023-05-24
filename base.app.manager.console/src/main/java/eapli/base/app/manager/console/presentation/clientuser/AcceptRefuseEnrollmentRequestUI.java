@@ -23,8 +23,8 @@ package eapli.base.app.manager.console.presentation.clientuser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eapli.base.clientusermanagement.application.AcceptRefuseEnrollmentRequestController;
-import eapli.base.clientusermanagement.application.AcceptRefuseEnrollmentRequestFactory;
+import eapli.base.enrollmentrequest.application.eventhandlers.AcceptRefuseEnrollmentRequestController;
+import eapli.base.enrollmentrequest.application.eventhandlers.AcceptRefuseEnrollmentRequestFactory;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
