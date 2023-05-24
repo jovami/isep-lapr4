@@ -28,7 +28,6 @@ import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
-import eapli.base.app.common.console.presentation.clientuser.ListAvailableCoursesUI;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
@@ -143,7 +142,7 @@ public class MainMenu extends AbstractUI {
     private Menu buildCourseMenu() {
         final Menu menu = new Menu("Course");
 
-        menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesUI()::show);
+        menu.addItem(LIST_COURSES, "List available courses", new ListAvailableCoursesTeacherUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

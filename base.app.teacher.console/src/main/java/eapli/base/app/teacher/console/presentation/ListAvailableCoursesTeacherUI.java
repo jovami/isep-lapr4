@@ -1,20 +1,20 @@
-package eapli.base.app.common.console.presentation.clientuser;
+package eapli.base.app.teacher.console.presentation;
 
-import eapli.base.course.application.ListAvailableCoursesController;
+import eapli.base.course.application.ListAvailableCoursesTeacherController;
 import eapli.base.course.dto.AvailableCourseDTO;
 import eapli.framework.presentation.console.AbstractListUI;
 import eapli.framework.visitor.Visitor;
 
 /**
- * ListAvailableCoursesUI
+ * ListAvailableCoursesManagerUI
  */
-public class ListAvailableCoursesUI extends AbstractListUI<AvailableCourseDTO> {
-    private final ListAvailableCoursesController ctrl;
+public class ListAvailableCoursesTeacherUI extends AbstractListUI<AvailableCourseDTO> {
+    private final ListAvailableCoursesTeacherController ctrl;
 
-    public ListAvailableCoursesUI() {
+    public ListAvailableCoursesTeacherUI() {
         super();
 
-        this.ctrl = new ListAvailableCoursesController();
+        this.ctrl = new ListAvailableCoursesTeacherController();
     }
 
     @Override

@@ -64,7 +64,7 @@ public final class ListCoursesService {
         return withStates(Arrays.stream(states).collect(Collectors.toUnmodifiableSet()));
     }
 
-    public Iterable<Course> studentIsEnrollableOrCanEnroll(Student s) {
+    public Iterable<Course> studentIsEnrolledOrCanEnroll(Student s) {
         // Courses that the student can enroll in
         var courses = HashingStrategySets.mutable.withAll(
                 fromFunction(Course::identity),

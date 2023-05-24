@@ -11,7 +11,7 @@ participant SystemUser as sys_usr
 
 participant TeacherRepository as t_repo
 
-participant StaffMemberRepository as st_repo
+participant StaffRepository as st_repo
 
 ' participant AuthzRegistry as authreg
 ' participant AuthorizationService as authsvc
