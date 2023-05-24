@@ -1,16 +1,23 @@
 package eapli.base.course.domain;
 
-import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
-import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
-import eapli.framework.infrastructure.authz.domain.model.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.clientusermanagement.domain.users.Teacher;
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.clientusermanagement.usermanagement.domain.TeacherBuilder;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.Role;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
 public class StaffMemberTest {
 
@@ -32,7 +39,7 @@ public class StaffMemberTest {
     }
 
     public Teacher createTeacher(SystemUser user, String acronym, String dateOfBirth, String fullName, String shortName,
-                                 String taxPayerNumber) {
+            String taxPayerNumber) {
         TeacherBuilder teacherBuilder = new TeacherBuilder().withSystemUser(user).withAcronym(acronym)
                 .withDateOfBirth(dateOfBirth)
                 .withFullName(fullName).withTaxPayerNumber(taxPayerNumber).withShortName(shortName);
@@ -40,7 +47,7 @@ public class StaffMemberTest {
     }
 
     public SystemUser createSystemUser(String userName, String password, String firsName, String lastName, String email,
-                                       final Role... roles) {
+            final Role... roles) {
 
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         userBuilder.with(userName, password, firsName, lastName, email).withRoles(roles);
@@ -55,14 +62,18 @@ public class StaffMemberTest {
 
         var startDate = LocalDate.parse(startDateString, df);
         var endDate = LocalDate.parse(endDateString, df);
-        course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
+
+        var duration = CourseDuration.valueOf(startDate, endDate);
+        var capacity = CourseCapacity.valueOf(10, 24);
+        course = new Course(CourseID.valueOf(name + "-1"), CourseDescription.valueOf(description), duration,
+                capacity);
 
         return course;
     }
 
     @Test
     public void course() {
-        Course courseNew = createCourse("01/01/2023", "01/01/2024", "curso diff", "curso novo");
+        Course courseNew = createCourse("01/01/2023", "01/01/2024", "outro", "curso novo");
         member.setCourse(courseNew);
         assertEquals(courseNew, member.course());
     }

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import eapli.base.enrollment.domain.Enrollment;
-import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import jovami.util.csv.CSVHeader;

@@ -3,7 +3,6 @@ package eapli.base.exam.application;
 import static org.eclipse.collections.impl.block.factory.HashingStrategies.fromFunction;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.collections.impl.factory.HashingStrategySets;
@@ -54,13 +53,7 @@ public final class ListFutureExamsController {
 
         var exams = this.examRepo.examsOfCoursesAfterTime(time, courses);
 
-        try {
-            System.out.println(4);
-            return new FutureExamDTOMapper().toDTO(exams);
-        } catch (UnsupportedOperationException e) {
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
+        return new FutureExamDTOMapper().toDTO(exams);
     }
 
     // TODO: factor out common code

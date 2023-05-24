@@ -9,9 +9,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseDuration;
-import eapli.base.course.domain.CourseName;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +16,8 @@ import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseFactory;
+import eapli.base.course.dto.CreateCourseDTO;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
@@ -37,8 +36,11 @@ public class EnrollmentRequestTest {
         var sDate = LocalDate.parse("20/05/2020", df);
         var eDate = LocalDate.parse("20/09/2020", df);
 
-        course1 = new Course(CourseName.valueOf("PYTHON-1"), CourseDescription.valueOf("Python for beginners :)"), CourseDuration.valueOf(sDate, eDate));
-        course2 = new Course(CourseName.valueOf("JAVA-3"), CourseDescription.valueOf("Java advanced!"), CourseDuration.valueOf(sDate, eDate));
+        var dto1 = new CreateCourseDTO("PYTHON", 1L, "Python for beginners :)", sDate, eDate, 10, 24);
+        var dto2 = new CreateCourseDTO("JAVA", 3L, "Java advanced!", sDate, eDate, 20, 34);
+
+        course1 = new CourseFactory().build(dto1);
+        course2 = new CourseFactory().build(dto2);
 
         var user1 = userBuilder.with("alexandre", "Password1", "Alexandre", "Moreira", "alexmoreira@gmail.com")
                 .withRoles(BaseRoles.MANAGER).build();

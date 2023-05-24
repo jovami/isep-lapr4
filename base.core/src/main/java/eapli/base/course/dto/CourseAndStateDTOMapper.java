@@ -10,6 +10,6 @@ public final class CourseAndStateDTOMapper implements Mapper<Course, CourseAndSt
 
     @Override
     public CourseAndStateDTO toDTO(Course course) {
-        return new CourseAndStateDTO(course.identity(), course.name(), course.state());
+        return new CourseAndStateDTO(course.identity(), course.state());
     }
 }

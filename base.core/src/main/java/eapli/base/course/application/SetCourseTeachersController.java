@@ -1,7 +1,10 @@
 package eapli.base.course.application;
 
-import java.util.HashSet;
+import static org.eclipse.collections.impl.block.factory.HashingStrategies.fromFunction;
+
 import java.util.Set;
+
+import org.eclipse.collections.impl.factory.HashingStrategySets;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
@@ -17,7 +20,9 @@ public class SetCourseTeachersController {
     private final CourseRepository repo;
     private final TeacherRepository teacherRepo;
     private final StaffRepository staffRepo;
-    private final Set<Teacher> staff = new HashSet<>();
+    private final Set<Teacher> staff;
+
+    // FIXME: use DTO
     private Course course;
 
     public SetCourseTeachersController() {
@@ -25,6 +30,7 @@ public class SetCourseTeachersController {
         teacherRepo = PersistenceContext.repositories().teachers();
         staffRepo = PersistenceContext.repositories().staffs();
 
+        this.staff = HashingStrategySets.mutable.with(fromFunction(Teacher::identity));
     }
 
     public void chooseCourse(Course course) {
@@ -45,15 +51,16 @@ public class SetCourseTeachersController {
     }
 
     public boolean addStaffMember(Teacher teacher) {
-        if (staff.add(teacher) && course.headTeacher() != teacher) {
-            StaffMember newMember = new StaffMember(course, teacher);
-            return staffRepo.save(newMember) != null;
-        }
+        boolean notHead = course.headTeacher()
+                .map(t -> !teacher.sameAs(t))
+                .orElse(false);
+
+        if (staff.add(teacher) && notHead)
+            return staffRepo.save(new StaffMember(course, teacher)) != null;
         return false;
     }
 
     public Iterable<Teacher> staff() {
         return staffRepo.findByCourse(course);
-
     }
 }

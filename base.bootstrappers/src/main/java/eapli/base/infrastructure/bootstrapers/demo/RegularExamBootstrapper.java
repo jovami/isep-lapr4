@@ -3,9 +3,6 @@ package eapli.base.infrastructure.bootstrapers.demo;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,7 +28,7 @@ public class RegularExamBootstrapper implements Action {
             var specification = new RegularExamSpecification(grammar);
 
             for (Course c : course) {
-                switch (c.name().name()) {
+                switch (c.identity().title()) {
                     case "Fisica":
                         var openDate1 = LocalDateTime.parse("01/01/2025 13:20", df);
                         var closeDate1 = LocalDateTime.parse("02/01/2025 14:20", df);

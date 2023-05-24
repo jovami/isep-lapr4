@@ -29,7 +29,11 @@ public class CourseTest {
 
         var startDate = LocalDate.parse(startDateString, df);
         var endDate = LocalDate.parse(endDateString, df);
-        course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("description"), CourseDuration.valueOf(startDate, endDate));
+        var duration = CourseDuration.valueOf(startDate, endDate);
+
+        var capacity = CourseCapacity.valueOf(1, 20);
+
+        course = new Course(CourseID.valueOf("JAVA-1"), CourseDescription.valueOf("description"), duration, capacity);
     }
 
     @Test
@@ -71,67 +75,6 @@ public class CourseTest {
     }
 
     @Test
-    public void setNegativeCapacities() {
-        int testMin = -5;
-        int testMax = -10;
-
-        assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().minStudentsEnrolled());
-        assertEquals(-1, course.capacity().maxStudentsEnrolled());
-    }
-
-    @Test
-    public void setInversedCapacity() {
-        int testMin = 40;
-        int testMax = 10;
-
-        assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().minStudentsEnrolled());
-        assertEquals(-1, course.capacity().maxStudentsEnrolled());
-
-    }
-
-    @Test
-    public void setConstructorCapacity() {
-        int testMin = 20;
-        int testMax = 30;
-
-        CourseCapacity capacity = new CourseCapacity(testMin, testMax);
-        assertEquals(testMin, capacity.minStudentsEnrolled());
-        assertEquals(testMax, capacity.maxStudentsEnrolled());
-    }
-
-    @Test
-    public void setRightCapacity() {
-        int testMin = 5;
-        int testMax = 20;
-
-        course.setCapacity(testMin, testMax);
-        assertEquals(testMin, course.capacity().minStudentsEnrolled());
-        assertEquals(testMax, course.capacity().maxStudentsEnrolled());
-    }
-
-    @Test
-    public void setMinNegativeCapacity() {
-        int testMin = -5;
-        int testMax = 10;
-
-        assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().minStudentsEnrolled());
-        assertEquals(-1, course.capacity().maxStudentsEnrolled());
-    }
-
-    @Test
-    public void setMaxNegativeCapacity() {
-        int testMin = 5;
-        int testMax = -10;
-
-        assertFalse(course.setCapacity(testMin, testMax));
-        assertEquals(-1, course.capacity().minStudentsEnrolled());
-        assertEquals(-1, course.capacity().maxStudentsEnrolled());
-    }
-
-    @Test
     public void ensureStartDateIsBeforeEndDate() throws ParseException {
 
         String startDateString = "01/01/2025";
@@ -160,7 +103,8 @@ public class CourseTest {
         var df = DateTimeFormatter.ofPattern("d/M/yyyy");
         var startDate = LocalDate.parse(startDateString, df);
         var endDate = LocalDate.parse(endDateString, df);
-        c2 = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
+        var capacity = CourseCapacity.valueOf(1, 20);
+        c2 = new Course(CourseID.valueOf("JAVA-1"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate), capacity);
         assertTrue(course.sameAs(c2));
     }
 
@@ -180,33 +124,21 @@ public class CourseTest {
 
         var startDate = LocalDate.parse(startDateString, df);
         var endDate = LocalDate.parse(endDateString, df);
-        c2 = new Course(CourseName.valueOf("Different"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
+        var capacity = CourseCapacity.valueOf(1, 20);
+        c2 = new Course(CourseID.valueOf("Different-24"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate), capacity);
         assertFalse(course.sameAs(c2));
         assertFalse(course.sameAs(c2));
     }
 
     @Test
     public void withoutIdentity() {
-        assertFalse(course.hasIdentity(1));
+        assertFalse(course.hasIdentity(CourseID.valueOf("EAPLI-1")));
     }
 
     @Test
     public void sameIdentity() {
 
-        assertEquals(0, course.compareTo(0));
-    }
-
-    @Test
-    public void biggerIdentity() {
-
-        assertEquals(-1, course.compareTo(10));
-    }
-
-    @Test
-    public void smallerIdentity() {
-
-        assertEquals(1, course.compareTo(-10));
-
+        assertEquals(0, course.compareTo(CourseID.valueOf("JAVA-1")));
     }
 
     @Test
@@ -293,26 +225,12 @@ public class CourseTest {
     }
 
     @Test
-    public void CapacityToString() {
-        assertEquals("Min students enrolled: " + course.capacity().minStudentsEnrolled()
-                        + "\nMax students enrolled: " + course.capacity().maxStudentsEnrolled(),
-                course.capacity().toString());
-    }
-
-    @Test
     public void courseDescriptionNull() {
         assertThrows(IllegalArgumentException.class, () -> {
             new CourseDescription(null);
         });
     }
 
-    /*
-     * @Test
-     * void courseName() {
-     * CourseName name = new CourseName("curso");
-     * assertEquals(name,course.getCourseName());
-     * }
-     */
     @Test
     public void headTeacher() {
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
@@ -321,7 +239,9 @@ public class CourseTest {
                 .withDateOfBirth("2003-10-10").withFullName("full").withTaxPayerNumber("123123123")
                 .withShortName("short");
         Teacher teacher = teacherBuilder.build();
+
         course.setHeadTeacher(teacher);
-        assertEquals(teacher, course.headTeacher());
+        assertTrue(course.headTeacher().isPresent());
+        assertEquals(teacher, course.headTeacher().get());
     }
 }

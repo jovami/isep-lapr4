@@ -31,8 +31,8 @@ import eapli.framework.visitor.Visitor;
 class EnrollmentRequestPrinter implements Visitor<EnrollmentRequest> {
 
     @Override
-    public void visit(final EnrollmentRequest visitee) {
-        System.out.printf("%-10s%-20s%-20s%n", visitee.identity(), visitee.course().name(),
-                visitee.student().identity());
+    public void visit(final EnrollmentRequest request) {
+        System.out.printf("%-10s%-20s%-20s%n", request.identity(), request.course().identity(),
+                request.student().identity());
     }
 }

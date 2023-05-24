@@ -3,25 +3,19 @@ package eapli.base.course.dto;
 import java.util.Objects;
 
 import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseName;
+import eapli.base.course.domain.CourseID;
 
 public class CourseAndDescriptionDTO {
-    private final int courseId;
-    private final CourseName name;
+    private final CourseID id;
     private final CourseDescription description;
 
-    public CourseAndDescriptionDTO(int id, CourseName name, CourseDescription description) {
-        this.courseId = id;
-        this.name = name;
+    public CourseAndDescriptionDTO(CourseID name, CourseDescription description) {
+        this.id = name;
         this.description = description;
     }
 
-    public int courseId() {
-        return this.courseId;
-    }
-
-    public CourseName name() {
-        return this.name;
+    public CourseID courseId() {
+        return this.id;
     }
 
     public CourseDescription description() {
@@ -30,7 +24,7 @@ public class CourseAndDescriptionDTO {
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", this.name, this.description);
+        return String.format("%s (%s)", this.id, this.description);
     }
 
     @Override
@@ -40,11 +34,11 @@ public class CourseAndDescriptionDTO {
         else if (obj == null || obj.getClass() != this.getClass())
             return false;
         var o = (CourseAndDescriptionDTO) obj;
-        return this.name.equals(o.name) && this.description.equals(o.description);
+        return this.id.equals(o.id) && this.description.equals(o.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.description);
+        return Objects.hash(this.id, this.description);
     }
 }

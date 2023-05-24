@@ -6,35 +6,50 @@ skinparam shadowing false
 actor Manager as Actor
 participant CreateCourseUI as UI <<presentation>> order 1
 participant CreateCourseController as Controller <<application>> order 2
-participant "course:Course" as Course <<domain>> order 3
-participant PersistenceContext as Persistence <<persistence>> order 4
-participant RepositoryFactory as Fact <<factory>> order 5
-participant CourseRepository as Repo <<repository>> order 6
+participant PersistenceContext as Persistence <<persistence>> order 3
+participant RepositoryFactory as Fact <<factory>> order 4
+participant CourseRepository as Repo <<repository>> order 5
+participant CreateCourseDTO as dto <<DTO>> order 6
+participant CourseFactory as factory <<Factory>> order 7
+participant "course:Course" as Course <<domain>> order 8
 
-Actor -> UI : create Course
+Actor --> UI : create Course
 activate UI
-    UI -> Controller : create
-    Actor <-- UI : ask user information
-    Actor -> UI : name, description,\nduration, capacity
-    UI -> Controller : addCourse(name,\ndescription, duration,\ncapacity)
+    UI --> Controller : create
     activate Controller
-            Controller -> Course : course = createCourse()
-            Controller -> Course : setCourseName(name)
-            note right of Controller: Set the all the information
-            Controller -> Persistence : repositories()
-            activate Persistence
-            Persistence -> Fact : courses()
+        Controller --> Persistence : repositories()
+
+        activate Persistence
+            Persistence --> Fact : courses()
             activate Fact
-                Fact -> Repo : create
+                Fact --> Repo : create()
                 activate Repo
-                Controller <-- Persistence: courseRepository
-                deactivate Fact
-                deactivate Persistence
-        Controller -> Repo : saveCourse(course)
-        deactivate Repo
-    UI <-- Controller : course
+                deactivate Repo
+            deactivate Fact
+        deactivate Persistence
     deactivate Controller
-Actor <-- UI : displayCourseInfo
+deactivate UI
+
+Actor --> UI : types title, code,\ndescription,\nduration, capacity
+activate UI
+    UI --> dto : create
+    activate dto
+    deactivate dto
+
+    UI --> Controller : addCourse(dto)
+    activate Controller
+        Controller --> factory : build(dto)
+        activate factory
+            factory --> Course : create()
+            ' note right of Course: Set the all the information
+            activate Course
+            deactivate Course
+        deactivate factory
+
+        Controller --> Repo : saveCourse(course)
+        activate Repo
+        deactivate Repo
+    deactivate Controller
 deactivate UI
 
 @enduml

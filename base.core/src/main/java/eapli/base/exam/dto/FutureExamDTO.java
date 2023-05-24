@@ -1,10 +1,10 @@
 package eapli.base.exam.dto;
 
-import eapli.base.course.domain.CourseName;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import eapli.base.course.domain.CourseID;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 
 /**
  * FutureExamDTO
@@ -16,18 +16,18 @@ public final class FutureExamDTO {
         fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     }
 
-    private final CourseName courseName;
+    private final CourseID course;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
 
-    public FutureExamDTO(final CourseName name, final RegularExamDate date) {
-        this.courseName = name;
+    public FutureExamDTO(final CourseID name, final RegularExamDate date) {
+        this.course = name;
         this.startTime = date.openDate();
         this.endTime = date.closeDate();
     }
 
-    public CourseName name() {
-        return this.courseName;
+    public CourseID id() {
+        return this.course;
     }
 
     public LocalDateTime startTime() {
@@ -40,7 +40,7 @@ public final class FutureExamDTO {
 
     @Override
     public String toString() {
-        return String.format("%s: From %s To %s", this.courseName, fmt.format(this.startTime),
+        return String.format("%s: From %s To %s", this.course, fmt.format(this.startTime),
                 fmt.format(this.endTime));
     }
 }

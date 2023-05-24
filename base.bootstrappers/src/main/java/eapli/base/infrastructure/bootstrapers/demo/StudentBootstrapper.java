@@ -30,7 +30,7 @@ import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseName;
+import eapli.base.course.domain.CourseID;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
@@ -94,10 +94,10 @@ public class StudentBootstrapper extends UsersBootstrapperBase implements Action
     }
 
     private void enrollStudents() {
-        Course course = courseRepository.findCourseByName(CourseName.valueOf("Fisica"));
-        Student student = studentRepository.findByUsername(Username.valueOf("mary")).get();
+        Course course = courseRepository.ofIdentity(CourseID.valueOf("Fisica-1")).orElseThrow();
+        Student student = studentRepository.findByUsername(Username.valueOf("mary")).orElseThrow();
         enrollmentRepository.save(new Enrollment(course, student));
-        Student student1 = studentRepository.findByUsername(Username.valueOf("tiago")).get();
+        Student student1 = studentRepository.findByUsername(Username.valueOf("tiago")).orElseThrow();
         enrollmentRepository.save(new Enrollment(course, student1));
     }
 

@@ -1,6 +1,13 @@
 package eapli.base.course.domain;
 
-import javax.persistence.*;
+import java.util.Optional;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.framework.domain.model.AggregateRoot;
@@ -8,33 +15,44 @@ import eapli.framework.functional.Either;
 import eapli.framework.validations.Preconditions;
 
 @Entity
-public class Course implements AggregateRoot<Integer> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int code;
-    @Column(nullable = false, unique = true)
-    private CourseName name;
-    private CourseDescription description;
+public class Course implements AggregateRoot<CourseID> {
+
+    @EmbeddedId
+    private final CourseID id;
+
+    @Column(nullable = false)
+    private final CourseDescription description;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseState state;
-    private CourseDuration duration;
-    private CourseCapacity capacity;
+
+    @Column(nullable = false)
+    private final CourseDuration duration;
+
+    @Column(nullable = false)
+    private final CourseCapacity capacity;
+
     @ManyToOne
     private Teacher headTeacher;
 
     // JPA needs empty constructor
     protected Course() {
+        this.id = null;
+        this.description = null;
+        this.duration = null;
+        this.capacity = null;
     }
 
-    public Course(CourseName name, CourseDescription description, CourseDuration duration) {
-        Preconditions.noneNull(name, description, duration);
+    protected Course(CourseID id, CourseDescription description, CourseDuration duration, CourseCapacity capacity) {
+        Preconditions.noneNull(id, description, duration, capacity);
 
-        this.state = CourseState.CLOSE;
-        this.name = name;
+        this.id = id;
         this.description = description;
         this.duration = duration;
-        this.capacity = new CourseCapacity();
+        this.capacity = capacity;
+
+        this.state = CourseState.CLOSE;
     }
 
     public Either<String, CourseState> close() {
@@ -81,10 +99,6 @@ public class Course implements AggregateRoot<Integer> {
         }
     }
 
-    public CourseName name() {
-        return this.name;
-    }
-
     public CourseDescription description() {
         return this.description;
     }
@@ -97,25 +111,16 @@ public class Course implements AggregateRoot<Integer> {
         return this.duration;
     }
 
-    protected CourseCapacity capacity() {
-        return this.capacity;
+    public Optional<CourseCapacity> capacity() {
+        return Optional.ofNullable(this.capacity);
     }
 
-    public Teacher headTeacher() {
-        return this.headTeacher;
+    public Optional<Teacher> headTeacher() {
+        return Optional.ofNullable(this.headTeacher);
     }
 
     public void setHeadTeacher(Teacher headTeacher) {
         this.headTeacher = headTeacher;
-    }
-
-    public boolean setCapacity(int min, int max) {
-        try {
-            capacity = new CourseCapacity(min, max);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
     }
 
     @Override
@@ -128,33 +133,30 @@ public class Course implements AggregateRoot<Integer> {
         if (this == o) {
             return true;
         }
-        return this.name.equals(o.name)
-                && this.code == o.code;
+        return this.id.equals(o.id);
     }
 
     // TODO:TEST
     @Override
-    public int compareTo(Integer other) {
+    public int compareTo(CourseID other) {
         return AggregateRoot.super.compareTo(other);
     }
 
     @Override
-    public Integer identity() {
-        return this.code;
+    public CourseID identity() {
+        return this.id;
     }
 
     @Override
-    public boolean hasIdentity(Integer id) {
+    public boolean hasIdentity(CourseID id) {
         return AggregateRoot.super.hasIdentity(id);
     }
 
     @Override
     public String toString() {
         return "Course: " +
-                "\nCode: " + code +
-                "\nName: " + name +
+                "\nID: " + this.id +
                 "\nDescription: " + description +
                 "\nDuration: " + duration;
     }
-
 }

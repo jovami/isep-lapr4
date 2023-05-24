@@ -13,8 +13,8 @@ public class CourseDuration implements ValueObject {
     private final LocalDate end;
 
     protected CourseDuration() {
-        start = null;
-        end = null;
+        this.start = null;
+        this.end = null;
     }
 
     protected CourseDuration(LocalDate start, LocalDate end) {

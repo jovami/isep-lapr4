@@ -1,7 +1,7 @@
 package eapli.base.course.dto;
 
 import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseName;
+import eapli.base.course.domain.CourseID;
 import eapli.base.course.domain.CourseState;
 
 /**
@@ -9,24 +9,18 @@ import eapli.base.course.domain.CourseState;
  */
 public final class AvailableCourseDTO {
 
-    private final int id;
-    private final CourseName name;
+    private final CourseID id;
     private final CourseDescription desc;
     private final CourseState state;
 
-    public AvailableCourseDTO(int courseId, CourseName name, CourseDescription description, CourseState state) {
+    public AvailableCourseDTO(CourseID courseId, CourseDescription description, CourseState state) {
         this.id = courseId;
-        this.name = name;
         this.desc = description;
         this.state = state;
     }
 
-    public int courseId() {
+    public CourseID courseId() {
         return this.id;
-    }
-
-    public CourseName name() {
-        return this.name;
     }
 
     public CourseDescription desc() {
@@ -39,6 +33,6 @@ public final class AvailableCourseDTO {
 
     @Override
     public String toString() {
-        return String.format("%s, %s (%s)", this.name, this.desc, this.state);
+        return String.format("%s, %s (%s)", this.id, this.desc, this.state);
     }
 }

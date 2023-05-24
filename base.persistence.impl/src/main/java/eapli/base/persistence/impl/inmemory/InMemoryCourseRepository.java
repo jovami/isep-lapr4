@@ -3,12 +3,12 @@ package eapli.base.persistence.impl.inmemory;
 import java.util.Set;
 
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseName;
+import eapli.base.course.domain.CourseID;
 import eapli.base.course.domain.CourseState;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
-class InMemoryCourseRepository extends InMemoryDomainRepository<Course, Integer> implements CourseRepository {
+class InMemoryCourseRepository extends InMemoryDomainRepository<Course, CourseID> implements CourseRepository {
 
     static {
         InMemoryInitializer.init();
@@ -26,10 +26,5 @@ class InMemoryCourseRepository extends InMemoryDomainRepository<Course, Integer>
     @Override
     public Iterable<Course> ofStates(Set<CourseState> states) {
         return match(course -> states.contains(course.state()));
-    }
-
-    @Override
-    public Course findCourseByName(CourseName courseName) {
-        return matchOne((course) -> course.name().equals(courseName)).get();
     }
 }

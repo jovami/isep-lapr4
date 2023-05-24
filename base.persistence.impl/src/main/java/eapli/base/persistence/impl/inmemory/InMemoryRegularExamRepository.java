@@ -1,7 +1,6 @@
 package eapli.base.persistence.impl.inmemory;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Set;
 import java.util.stream.Collectors;
 

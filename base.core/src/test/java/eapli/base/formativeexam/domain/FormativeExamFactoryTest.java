@@ -1,18 +1,18 @@
 package eapli.base.formativeexam.domain;
 
-import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseDuration;
-import eapli.base.course.domain.CourseName;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseFactory;
+import eapli.base.course.dto.CreateCourseDTO;
 
 /**
  * FormativeExamFactoryTest
@@ -39,8 +39,8 @@ public class FormativeExamFactoryTest {
         final var startDate = LocalDate.parse("20/05/2020", df);
         final var endDate = LocalDate.parse("20/09/2020", df);
 
-        final var course = new Course(CourseName.valueOf(name), CourseDescription.valueOf(description), CourseDuration.valueOf(startDate, endDate));
-        course.setCapacity(minStudents, maxStudents);
+        final var dto = new CreateCourseDTO(name, 1L, description, startDate, endDate, minStudents, maxStudents);
+        final var course = new CourseFactory().build(dto);
         course.open();
 
         FISICA = course;

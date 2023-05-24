@@ -1,67 +1,69 @@
 package eapli.base.app.manager.console.presentation;
 
-import eapli.base.course.application.CreateCourseController;
-import eapli.framework.io.util.Console;
-import eapli.framework.presentation.console.AbstractUI;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class CreateCourseUI extends AbstractUI {
-    private CreateCourseController ctrl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import eapli.base.course.application.CreateCourseController;
+import eapli.base.course.dto.CreateCourseDTO;
+import eapli.framework.domain.repositories.ConcurrencyException;
+import eapli.framework.domain.repositories.IntegrityViolationException;
+import eapli.framework.io.util.Console;
+import eapli.framework.presentation.console.AbstractUI;
+
+public final class CreateCourseUI extends AbstractUI {
+    private static final Logger logger = LogManager.getLogger(CreateCourseUI.class);
+
+    private final CreateCourseController ctrl;
 
     public CreateCourseUI() {
-        ctrl = new CreateCourseController();
+        this.ctrl = new CreateCourseController();
     }
 
     @Override
     protected boolean doShow() {
-
-        String name, description;
+        Long code;
+        String title, description;
         LocalDate startDate, endDate;
-        var formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-        boolean created = false;
-
-        do {
-            name = Console.readNonEmptyLine("Course name:", "Value can't be null");
-            description = Console.readNonEmptyLine("Course description:", "Value can't be null");
-
-            startDate = readDate("Start date(DD/MM/YYYY)", formatter);
-            endDate = readDate("End date(DD/MM/YYYY)", formatter);
-
-            if (ctrl.createCourse(name, description, startDate, endDate)) {
-                created = true;
-            } else {
-                System.out.println("There was a error creating the specified course");
-            }
-
-        } while (!created);
-
-        boolean setCapacity = Console.readBoolean("Do you wish to set course capacity?(s/n)");
-
         int minCapacity, maxCapacity;
-        boolean addedCapacity = false;
 
-        if (setCapacity) {
-            do {
-                minCapacity = Console.readInteger("Min capacity");
-                maxCapacity = Console.readInteger("Max capacity");
-                addedCapacity = ctrl.addCapacity(minCapacity, maxCapacity);
+        var formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 
-                if (!addedCapacity) {
-                    System.out.println("Capacities do not meet the requirements");
-                }
-            } while (!addedCapacity);
+        title = Console.readNonEmptyLine("Course title:", "Title cannot be null");
+        code = Console.readLong("Course code");
+        description = Console.readNonEmptyLine("Course description:", "Description cannot be null");
+
+        startDate = readDate("Start date (dd/mm/yyyy)", formatter);
+        endDate = readDate("End date (dd/mm/yyyy)", formatter);
+
+        minCapacity = Console.readInteger("Minimum course capacity");
+        maxCapacity = Console.readInteger("Maximum course capacity");
+
+        var dto = new CreateCourseDTO(title, code, description, startDate, endDate, minCapacity, maxCapacity);
+
+        System.out.printf("Course information:\n%s\n", dto);
+        if (!Console.readBoolean("Is this ok? (y/n)"))
+            return true;
+
+        try {
+            this.ctrl.createCourse(dto);
+            System.out.println("Course created with success!");
+            return true;
+        } catch (IntegrityViolationException | IllegalArgumentException e) {
+            System.out.println("Integrity rule violated");
+        } catch (ConcurrencyException e) {
+            logger.error("This should've never happened; yet it did :^)", e);
+            System.out.println(
+                    "Unfortunatelly there was an unexpected error in the application.\n" +
+                            "Please try again and if the problem persists, contact your system admnistrator.");
         }
 
-        if (ctrl.saveCourse()) {
-            System.out.println("\n\n\tCourse created and saved with success\n:" + ctrl.courseString());
-        }
-        System.out.println(ctrl.countAll());
         return false;
-
     }
 
+    // TODO remove this from here
     private LocalDate readDate(String prompt, DateTimeFormatter fmt) {
         var line = Console.readLine(prompt);
         return LocalDate.parse(line, fmt);

@@ -3,14 +3,14 @@ package eapli.base.persistence.impl.jpa;
 import java.util.Set;
 
 import eapli.base.course.domain.Course;
-import eapli.base.course.domain.CourseName;
+import eapli.base.course.domain.CourseID;
 import eapli.base.course.domain.CourseState;
 import eapli.base.course.repositories.CourseRepository;
 
-class JpaCourseRepository extends BaseJpaRepositoryBase<Course, Long, Integer> implements CourseRepository {
+class JpaCourseRepository extends BaseJpaRepositoryBase<Course, Long, CourseID> implements CourseRepository {
 
     JpaCourseRepository(String persistenceUnitName) {
-        super(persistenceUnitName, "code");
+        super(persistenceUnitName, "id");
     }
 
     @Override
@@ -21,10 +21,5 @@ class JpaCourseRepository extends BaseJpaRepositoryBase<Course, Long, Integer> i
     @Override
     public Iterable<Course> ofState(CourseState state) {
         return match("e.state = :state", "state", state);
-    }
-
-    @Override
-    public Course findCourseByName(CourseName courseName) {
-        return matchOne("e.name = :courseName", "courseName", courseName).get();
     }
 }

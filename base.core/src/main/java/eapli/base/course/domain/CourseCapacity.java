@@ -3,67 +3,42 @@ package eapli.base.course.domain;
 import javax.persistence.Embeddable;
 
 import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Invariants;
+import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class CourseCapacity implements ValueObject {
-    // TODO:Optional
-    private final int NOCAPACITY = -1;
-    private int maxStudentsEnrolled;
-    private int minStudentsEnrolled;
+    private final Integer min;
+    private final Integer max;
 
-    // values with -1 means that there are no min/max capacity defined
-    public CourseCapacity() {
-        maxStudentsEnrolled = NOCAPACITY;
-        minStudentsEnrolled = NOCAPACITY;
+    protected CourseCapacity() {
+        this.max = this.min = null;
     }
 
-    public CourseCapacity(int minStudentsEnrolled, int maxStudentsEnrolled) {
-        if (!setCapacities(minStudentsEnrolled, maxStudentsEnrolled)) {
-            throw new IllegalArgumentException();
-        }
+    protected CourseCapacity(int min, int max) {
+        Preconditions.isPositive(min, "Minimum capacity must be positive");
+        Preconditions.isPositive(max, "Maximum capacity must be positive");
+        Invariants.ensure(max >= min,
+                "Maximum capacity must be greater or equal to minimum capacity");
 
+        this.min = min;
+        this.max = max;
     }
 
-    protected boolean setCapacities(int newMinStudentsEnrolled, int newMaxStudentsEnrolled) {
-        if ((newMaxStudentsEnrolled > newMinStudentsEnrolled) && (newMaxStudentsEnrolled > 1)
-                && (newMinStudentsEnrolled >= 0)) {
-            this.maxStudentsEnrolled = newMaxStudentsEnrolled;
-            this.minStudentsEnrolled = newMinStudentsEnrolled;
-            return true;
-        }
-        return false;
+    public static CourseCapacity valueOf(int min, int max) {
+        return new CourseCapacity(min, max);
     }
-    // TODO: needed?
-    /*
-     * private boolean addMaxCapacity(int newMaxStudentsEnrolled){
-     * if(this.minStudentsEnrolled < newMaxStudentsEnrolled){
-     * this.maxStudentsEnrolled = newMaxStudentsEnrolled;
-     * return true;
-     * }
-     * return false;
-     * }
-     */
-    /*
-     * private boolean addMinCapacity(int newMinStudentsEnrolled){
-     * if(this.maxStudentsEnrolled > newMinStudentsEnrolled){
-     * this.minStudentsEnrolled = newMinStudentsEnrolled;
-     * return true;
-     * }
-     * return false;
-     * }
-     */
+
+    public int maximum() {
+        return this.max;
+    }
+
+    public int minimum() {
+        return this.min;
+    }
 
     @Override
     public String toString() {
-        return "Min students enrolled: " + minStudentsEnrolled + "\nMax students enrolled: " + maxStudentsEnrolled;
+        return "Min students enrolled: " + min + "\nMax students enrolled: " + max;
     }
-
-    public int maxStudentsEnrolled() {
-        return maxStudentsEnrolled;
-    }
-
-    public int minStudentsEnrolled() {
-        return minStudentsEnrolled;
-    }
-
 }

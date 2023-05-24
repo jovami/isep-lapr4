@@ -15,7 +15,7 @@ participant CSVReader as csvreader <<utils>>
 participant FileInputStream as fileinput
 participant EnrollmentParser as parser <<application>>
 participant MecanographicNumber as meca <<domain>>
-participant CourseName as courseName <<domain>>
+participant CourseID as courseID <<domain>>
 participant Enrollment as enroll <<domain>>
 
 
@@ -78,10 +78,10 @@ activate UI
             parser -> meca : create(mecanographicnumber)
             activate meca
             deactivate meca
-            parser -> courseName : valueOf(courseName)
-            activate courseName
-            courseName -> parser : courseName
-            deactivate courseName
+            parser -> courseID : valueOf(courseID)
+            activate courseID
+            courseID -> parser : courseID
+            deactivate courseID
             parser -> controller : parsedList
 
         deactivate parser
@@ -94,7 +94,7 @@ activate UI
                 srepo -> service : student
             deactivate srepo
 
-            service -> crepo : findCourseByName(courseName)
+            service -> crepo : ofIdentity(courseID)
             activate crepo
                  crepo -> service : course
             deactivate crepo

@@ -1,23 +1,22 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.course.domain.Course;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import eapli.base.course.domain.CourseDescription;
-import eapli.base.course.domain.CourseDuration;
-import eapli.base.course.domain.CourseName;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseFactory;
+import eapli.base.course.dto.CreateCourseDTO;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 
 public class RegularExamTest {
 
@@ -42,7 +41,9 @@ public class RegularExamTest {
 
         var startDate = LocalDate.parse(startDateString, dfx);
         var endDate = LocalDate.parse(endDateString, dfx);
-        course = new Course(CourseName.valueOf("curso"), CourseDescription.valueOf("descrição"), CourseDuration.valueOf(startDate, endDate));
+
+        var dto = new CreateCourseDTO("curso", 1L, "descrição", startDate, endDate, 10, 24);
+        course = new CourseFactory().build(dto);
     }
 
     @Test

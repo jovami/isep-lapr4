@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eapli.base.course.domain.Course;
-import eapli.base.formativeexam.application.ValidateFormativeExamSpecificationService;
 import eapli.base.question.application.ValidateQuestionSpecificationService;
 
 /**

@@ -2,13 +2,13 @@ package eapli.base.enrollment.application;
 
 import java.util.List;
 
-import eapli.base.course.domain.CourseName;
 import org.apache.commons.lang3.tuple.Pair;
 
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.domain.Course;
+import eapli.base.course.domain.CourseID;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
@@ -31,28 +31,13 @@ public class BulkEnrollStudentsService {
 
     }
 
-    /*public void bulkEnroll(List<Pair<MecanographicNumber, Integer>> data) {
-        for (Pair<MecanographicNumber, Integer> pair : data) {
-            var mecanographicNumber = pair.getLeft();
-            var courseID = pair.getRight();
-
-            Student student = this.studentRepo.ofIdentity(mecanographicNumber).orElseThrow();
-            System.out.println(""+student.toString());
-            Course course = this.courseRepo.ofIdentity(courseID).orElseThrow();
-
-            Enrollment enrollment = new Enrollment(course, student);
-
-            this.enrollmentRepo.save(enrollment);
-        }
-    }*/
-
-    public void bulkEnroll(List<Pair<MecanographicNumber, CourseName>> data) {
-        for (Pair<MecanographicNumber, CourseName> pair : data) {
+    public void bulkEnroll(List<Pair<MecanographicNumber, CourseID>> data) {
+        for (Pair<MecanographicNumber, CourseID> pair : data) {
             var mecanographicNumber = pair.getLeft();
             var courseName = pair.getRight();
 
             Student student = this.studentRepo.ofIdentity(mecanographicNumber).orElseThrow();
-            Course course = this.courseRepo.findCourseByName(courseName);
+            Course course = this.courseRepo.ofIdentity(courseName).orElseThrow();
 
             Enrollment enrollment = new Enrollment(course, student);
 

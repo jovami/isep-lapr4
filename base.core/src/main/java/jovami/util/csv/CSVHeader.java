@@ -14,7 +14,7 @@ public enum CSVHeader {
     ENROLLMENTS(2, ",") {
         @Override
         public String toString() {
-            return "mecanographicnumber,courseName";
+            return "mecanographicnumber,courseID";
         }
     };
 

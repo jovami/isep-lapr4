@@ -10,22 +10,20 @@ US 4001 -- Create Course
 
 ## Business rules
 
-Course is created in close state
+- Course is created in **close** state
 
-The manager provides the minimal requirements to create a course:
- - course code (unique)
- - course name
- - description
- - start date
- - end date
+- The manager provides the minimal requirements to create a course:
+    + title & code (unique)
+    + description
+    + start & end date
+    + capacity (minimum & maximum)
 
+- The start and end date date
+    + start date before end date
+    + neither are related to the past
 
-The start and end date date
-    - start date before end date
-    - neither are related to the past
-
-It is also possible to set minimum and maximum capacity of the course:
-    - minimum capacity must be lower than maximum
+- Course capacity:
+    + minimum capacity must be lower than maximum
 
 
 # Design
@@ -36,31 +34,47 @@ It is also possible to set minimum and maximum capacity of the course:
     - JpaCourseRepositoryFactory (persist in database)
     - InMemoryRepositoryFactory (persist in memory)
 
+- DTO: provide inputs from the UI as a *package*; controller has no knowledge of
+the DTO's contents.
+
+- Factory: Create a Course from the DTO
 ## Classes
 - Domain:
     + **Course**
-        * **CourseCode** 
-        * **CourseName**
+        * **CourseID**
         * **CourseDescription**
         * **CourseState**
         * **CourseDuration**
         * **CourseCapacity**
+    + **CourseFactory**
 
 - Repository:
     + **CourseRepository**
-    
-- Controller: 
-    * **CreateCourseController**
+
+- Controller:
+    + **CreateCourseController**
+
+- DTO:
+    + **CreateCourseDTO**
 
 
+## Unit tests - PLANNING
 
-##  Unit tests - PLANNING
+**Note:** Business rules and tests for **CourseState** are out of scope for this US,
+and will be implemented in US 1003 and US 1004
+### Course duration
++ ensureNotAllowWrongDateInterval
++ ensureNotAllowDatesFromPast
++ ensureNotAllowWrongCapacities
 
-- ensureNotAllowWrongDateInterval
-- ensureNotAllowDatesFromPast
-- ensureNotAllowWrongCapacities
+### Course Title
+- ensureTitleCannotBeNull
+- ensureCodeCannotBeNegative
+- ensureIDMatchesPattern
 
-
+### Course Capacity
+- ensureCapacityMustBePositive
+- ensureMaximumIsGreaterThanOrEqualToMinimum
 
 ## Sequence diagram
 ![SD-US4001](./SD.svg)
