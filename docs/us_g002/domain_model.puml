@@ -24,7 +24,7 @@ package UserPackage <<Rectangle>>{
         Class SystemUser <<root>><<Entity>>
         class Password <<value object>>
         class Email <<value object>>
-        
+
         SystemUser -> Password
         SystemUser -> Email
     }
@@ -69,7 +69,7 @@ package UserPackage <<Rectangle>>{
         Student  ->  MecanographicNumber
     }
 
-    SystemUser -down-> "0..1" Manager    
+    SystemUser -down-> "0..1" Manager
     SystemUser -down-> "0..1" Teacher
     SystemUser -down-> "0..1" Student
 }
@@ -78,9 +78,7 @@ package CoursePackage <<Rectangle>> {
     package COURSE <<Aggregate>> {
         entity Course <<root>> <<Entity>>
 
-        class CourseCode <<value object>>
-
-        class CourseName <<value object>>
+        class CourseID <<value object>>
 
         class CourseDescription <<value object>>
 
@@ -110,8 +108,7 @@ package CoursePackage <<Rectangle>> {
         class CourseEnrollClosedEvent <<Event>>
         class CourseCreatedEvent <<Event>>
 
-        Course  -down-> CourseCode
-        Course  -up-> CourseName
+        Course  -down-> CourseID
         Course  -up->  CourseState
         Course  -down->  CourseDescription
         Course  -down-> CourseCapacity
@@ -151,7 +148,7 @@ package CoursePackage <<Rectangle>> {
         EnrollmentRequest "1" -> "0..1"DeniedReason
         EnrollmentRequest -> RequestState
         EnrollmentRequest  o-- "*" Student
-        EnrollmentRequest --> Course        
+        EnrollmentRequest --> Course
     }
 
     Teacher "*" <-up-- "1" StaffMember
@@ -161,7 +158,7 @@ package CoursePackage <<Rectangle>> {
     Course -> CourseManagementService
     note top: responsible for enrolling students in a course,\n either by bulk import or by individual request
 
-    Course *- "0..*" Enrollment 
+    Course *- "0..*" Enrollment
 }
 
 package ExamPackage <<Rectangle>> {
@@ -178,7 +175,7 @@ package ExamPackage <<Rectangle>> {
     package REGULAR_EXAM <<Aggregate>> {
 
         entity RegularExam <<root>> <<Entity>>
-     
+
         class ClosingEvent <<Event>>
 
         class RegularExamSpecification <<value object>>
@@ -187,10 +184,10 @@ package ExamPackage <<Rectangle>> {
 
     }
 
-'code duplied??? 
-'both types of exams need to have the exameSection-> 
+'code duplied???
+'both types of exams need to have the exameSection->
 'this exam section should store the questions for that exame(??)
-    
+
 
     package FORMATIVE_EXAM <<Aggregate>> {
         entity FormativeExam <<root>> <<entity>>
@@ -224,7 +221,7 @@ package ExamPackage <<Rectangle>> {
         }
         class ExamGrade <<value object>>
         class ExamFeedback <<value object>>
-        
+
         entity AnswerGiven <<Entity>>{
         }
 
@@ -299,18 +296,18 @@ package BoardPackage <<Rectangle>> {
 
         entity BoardRow <<Entity>>{
             - rowId
-            - rowTitle          
+            - rowTitle
         }
-                
+
         entity BoardCollumn  <<Entity>>{
             - collumnId
             - collumnTitle
         }
-        
+
         entity Cell <<Entity>>{
         }
         class Header<<value object>>
-        
+
         entity BoardHistory <<Entity>>
         note left : stores every post-it that \nis created/modified
 
@@ -326,7 +323,7 @@ package BoardPackage <<Rectangle>> {
             - image
         }
 
-        
+
         enum Permissions <<enum>>{
             - read
             - write
@@ -352,10 +349,10 @@ package BoardPackage <<Rectangle>> {
 
 
     }
-    
+
     package BOARDPARTICIPANT <<Aggregate>> {
         entity  BoardParticipant <<Entity>>
-    } 
+    }
 
     Board *-up- "*" BoardRow
     Board *-up- "*" BoardCollumn
@@ -365,7 +362,7 @@ package BoardPackage <<Rectangle>> {
     Board *--> "1..*" Cell
     Board <-- SystemUser : admin
 
-    Cell "1" o-- "0..1" PostIt     
+    Cell "1" o-- "0..1" PostIt
     Cell -left> Header
     Cell -> BoardCollumn
     Cell -> BoardRow
@@ -391,7 +388,7 @@ package BoardPackage <<Rectangle>> {
 
 package EventPackage <<Rectangle>> {
 
-  
+
 
     package TIMETABLE <<Aggregate>> {
 
@@ -399,7 +396,7 @@ package EventPackage <<Rectangle>> {
         }
         note right : event access, timetable stores\nN RecurringPattern or 1(?)\nfor each user
 
-        Timetable "*" o- "1" SystemUser 
+        Timetable "*" o- "1" SystemUser
 
     }
 
@@ -430,7 +427,7 @@ package EventPackage <<Rectangle>> {
     }
 
     class CheckAvailabilityService<<Service>>
-    note right: checks if an user is available\n for the given RecurringPattern 
+    note right: checks if an user is available\n for the given RecurringPattern
 
     package Lecture <<Aggregate>>{
         entity Lecture <<root>> <<entity>> {
