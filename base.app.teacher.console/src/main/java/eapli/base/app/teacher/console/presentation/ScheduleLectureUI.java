@@ -64,15 +64,13 @@ public class ScheduleLectureUI extends AbstractUI {
             duration = Console.readInteger("Lecture duration: (Minutes)");
         } while (duration < 10);
 
-        if (!ctrl.createLecture(startDate, endDate, time, duration))
-            System.out.println("There was a problem with the specified parameters");
-
         Iterable<Enrollment> enrolled = ctrl.enrollmentsByCourse(option.selectedElement());
 
-        if (ctrl.schedule(enrolled))
+        if (!ctrl.createLecture(startDate, endDate, time, duration, enrolled))
+            System.out.println("There was a problem with the specified parameters");
+        else{
             System.out.println("Lecture scheduled with success");
-        else
-            System.out.println("There was a problem while scheduling the lecture, Teacher not available");
+        }
 
         return true;
 

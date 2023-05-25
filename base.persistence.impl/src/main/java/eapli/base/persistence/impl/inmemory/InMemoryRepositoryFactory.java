@@ -179,6 +179,11 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
     }
 
     @Override
+    public MeetingRepository meetings(TransactionalContext autoTx) {
+        return new InMemoryMeetingRepository();
+    }
+
+    @Override
     public MeetingParticipantRepository meetingParticipants() {
         return new InMemoryMeetingParticipantRepository();
     }

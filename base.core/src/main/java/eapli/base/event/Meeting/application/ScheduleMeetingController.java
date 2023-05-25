@@ -20,6 +20,7 @@ import eapli.base.event.timetable.application.TimeTableService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
+import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
@@ -29,6 +30,8 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 public class ScheduleMeetingController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final TransactionalContext txCtx = PersistenceContext.repositories()
+            .newTransactionalContext();
 
     // Repositories
     private final MeetingRepository meetingRepository;
@@ -57,16 +60,20 @@ public class ScheduleMeetingController {
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
 
         pattern = buildPattern(date, startTime, durationMinutes);
+        txCtx.beginTransaction();
         pattern = patternRepository.save(pattern);
 
         if (pattern != null) {
             if (user.isPresent()) {
                 meeting = new Meeting(user.get(), description, pattern);
                 this.meeting = meetingRepository.save(meeting);
-                return true;
-
+                if (schedule()){
+                    txCtx.commit();
+                    return true;
+                }
             }
         }
+        txCtx.rollback();
         return false;
     }
 
@@ -82,19 +89,15 @@ public class ScheduleMeetingController {
             // create MeetingParticipant for each invited user
 
             for (SystemUser user : invited) {
-                // TODO:check ManytoOne participant-> meeting
-                // TODO: transaction??
                 MeetingParticipant participant = new MeetingParticipant(user, meeting);
                 participantRepository.save(participant);
             }
 
-            if (!srv.schedule(invited, meeting.pattern())) {
-                return false;
+            if (srv.schedule(invited, meeting.pattern())) {
+                return true;
             }
-            return true;
+
         }
-        meetingRepository.delete(meeting);
-        patternRepository.delete(pattern);
         return false;
     }
 

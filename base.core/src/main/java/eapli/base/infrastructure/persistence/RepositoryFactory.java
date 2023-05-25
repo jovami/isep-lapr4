@@ -157,6 +157,8 @@ public interface RepositoryFactory {
 
     MeetingRepository meetings();
 
+    MeetingRepository meetings(TransactionalContext autoTx);
+
     MeetingParticipantRepository meetingParticipants();
 
     LectureRepository lectures();

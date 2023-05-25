@@ -19,6 +19,7 @@ import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository
 import eapli.base.event.timetable.application.TimeTableService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
+import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
@@ -33,6 +34,8 @@ import java.util.Optional;
 public class ScheduleLectureController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final TransactionalContext txCtx = PersistenceContext.repositories()
+            .newTransactionalContext();
 
     // Repositories
     private final LectureRepository lectureRepository;
@@ -52,6 +55,7 @@ public class ScheduleLectureController {
     private ArrayList<Student> students;
     private RecurringPattern pattern;
     private ArrayList<SystemUser> present = new ArrayList<>();
+    private Course course;
 
     public ScheduleLectureController() {
         lectureRepository = PersistenceContext.repositories().lectures();
@@ -67,22 +71,26 @@ public class ScheduleLectureController {
         srv = new TimeTableService();
     }
 
-    public boolean createLecture(LocalDate startDate, LocalDate endDate, LocalTime startTime, int durationMinutes) {
+    public boolean createLecture(LocalDate startDate, LocalDate endDate, LocalTime startTime, int durationMinutes,Iterable<Enrollment> enrolled) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
         Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
 
         pattern = buildPattern(startDate, endDate, startTime, durationMinutes);
+        txCtx.beginTransaction();
         pattern = patternRepository.save(pattern);
 
         if (pattern != null) {
             if (teacher.isPresent()) {
                 lecture = new Lecture(teacher.get(), pattern);
                 this.lecture = lectureRepository.save(lecture);
-                return true;
-
+                if (schedule(enrolled)) {
+                    txCtx.commit();
+                    return true;
+                }
             }
         }
+        txCtx.rollback();
         return false;
     }
 
@@ -114,9 +122,6 @@ public class ScheduleLectureController {
         if (srv.checkAvailabilityByUser(teacher, lecture.pattern())) {
             // create LectureParticipant for each invited user
             for (Enrollment enroll : enrolled) {
-                // TODO:check ManytoOne participant-> Lecture
-                // TODO: transaction??
-
                 LectureParticipant participant = new LectureParticipant(enroll.student(), lecture);
                 present.add(enroll.student().user());
                 participantRepository.save(participant);
@@ -128,8 +133,6 @@ public class ScheduleLectureController {
                 return true;
             }
         }
-        patternRepository.delete(pattern);
-        lectureRepository.delete(lecture);
         return false;
     }
 
