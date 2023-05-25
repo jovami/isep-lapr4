@@ -16,8 +16,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
-
 public class RegularExamSpecificationTest {
 
     @Test

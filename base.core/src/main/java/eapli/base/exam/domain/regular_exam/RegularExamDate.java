@@ -1,4 +1,4 @@
-package eapli.base.exam.domain.regular_exam.valueobjects;
+package eapli.base.exam.domain.regular_exam;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

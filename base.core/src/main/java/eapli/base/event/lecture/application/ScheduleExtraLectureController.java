@@ -154,40 +154,4 @@ public class ScheduleExtraLectureController {
     private Student findStudentBySystemUser(SystemUser user) {
         return studentRepository.findByUsername(user.username()).orElseThrow();
     }
-
-    public LocalDate readDate(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int day = Console.readInteger("Day:");
-                final int month = Console.readInteger("Month:");
-                final int year = Console.readInteger("Year:");
-
-                LocalDate enteredDate = LocalDate.of(year, month, day);
-                LocalDate currentDate = LocalDate.now();
-
-                if (enteredDate.isAfter(currentDate)) {
-                    return enteredDate;
-                } else {
-                    System.out.println("Please enter a date after today.");
-                }
-            } catch (@SuppressWarnings("unused") final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given date");
-            }
-        } while (true);
-    }
-
-    public LocalTime readTime(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int hour = Console.readInteger("Hour:");
-                final int minute = Console.readInteger("Minute:");
-                return LocalTime.of(hour, minute);
-
-            } catch (@SuppressWarnings("unused") final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given time");
-            }
-        } while (true);
-    }
 }

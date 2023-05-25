@@ -15,8 +15,6 @@ import org.junit.Test;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseFactory;
 import eapli.base.course.dto.CreateCourseDTO;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamSpecification;
 
 public class RegularExamTest {
 

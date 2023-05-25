@@ -1,11 +1,9 @@
 package eapli.base.exam.domain.regular_exam;
 
-import eapli.base.exam.domain.regular_exam.valueobjects.RegularExamDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
