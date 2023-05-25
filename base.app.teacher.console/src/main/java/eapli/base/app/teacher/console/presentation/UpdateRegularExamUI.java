@@ -15,6 +15,7 @@ import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 public class UpdateRegularExamUI extends AbstractUI {
 
@@ -60,14 +61,24 @@ public class UpdateRegularExamUI extends AbstractUI {
 
                 Optional<LocalDateTime> opt;
                 do {
-                    opt = readDate("New Open date(dd/MM/yyyy HH:mm)", fmt);
+                    opt = ConsoleUtils.readLocalDateTime("New Open date(dd/MM/yyyy HH:mm)");
                 } while (opt.isEmpty());
                 openDate = opt.get();
 
+                if (openDate.isBefore(LocalDateTime.now())) {
+                    System.out.println("Open date must be after current date");
+                    return false;
+                }
+
                 do {
-                    opt = readDate("New Close date(dd/MM/yyyy HH:mm)", fmt);
+                    opt = ConsoleUtils.readLocalDateTime("New Close date(dd/MM/yyyy HH:mm)");
                 } while (opt.isEmpty());
                 closeDate = opt.get();
+
+                if (closeDate.isBefore(openDate)) {
+                    System.out.println("Close date must be after open date");
+                    return false;
+                }
 
                 ctrl.updateRegularExamDate(chosenExam, openDate, closeDate);
                 System.out.println("Regular Exam updated with success");
@@ -91,7 +102,7 @@ public class UpdateRegularExamUI extends AbstractUI {
                     System.out.println("Integrity violation");
                 } catch (ConcurrencyException e) {
                     System.out.println(
-                            "Unfortunatelly there was an unexpected error in the application.\n" +
+                            "Unfortunately there was an unexpected error in the application.\n" +
                                     "Please try again and if the problem persists, contact your system admnistrator.");
                 }
 
@@ -102,15 +113,6 @@ public class UpdateRegularExamUI extends AbstractUI {
                 created = true;
         } while (!created);
         return false;
-    }
-
-    private Optional<LocalDateTime> readDate(String prompt, DateTimeFormatter fmt) {
-        try {
-            var line = Console.readLine(prompt);
-            return Optional.of(LocalDateTime.parse(line, fmt));
-        } catch (DateTimeParseException e) {
-            return Optional.empty();
-        }
     }
 
     @Override

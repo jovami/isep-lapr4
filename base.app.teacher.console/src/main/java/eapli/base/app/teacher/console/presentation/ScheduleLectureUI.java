@@ -2,7 +2,10 @@ package eapli.base.app.teacher.console.presentation;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import eapli.base.course.domain.Course;
 import eapli.base.enrollment.domain.Enrollment;
@@ -10,6 +13,7 @@ import eapli.base.event.lecture.application.ScheduleLectureController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 public class ScheduleLectureUI extends AbstractUI {
 
@@ -21,14 +25,39 @@ public class ScheduleLectureUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
+        LocalDateTime dateTime;
+        LocalDate startDate, endDate;
+        LocalTime time;
+
         SelectWidget<Course> option = new SelectWidget<>("Choose Course",
                 ctrl.coursesTaughtBy(ctrl.getSessionTeacher()));
         option.show();
         option.selectedElement();
 
-        LocalDate startDate = readDate("Scheduling for");
-        LocalDate endDate = readDate("Scheduling until");
-        LocalTime time = readTime("The Lecture will start at:");
+        Optional<LocalDateTime> optDateTime;
+        do {
+            optDateTime = ConsoleUtils.readLocalDateTime("Scheduling for: (dd/mm/yyyy hh:mm)");
+        } while (optDateTime.isEmpty());
+        dateTime = optDateTime.get();
+
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            System.out.println("A lecture cannot be scheduled for a past date");
+            return false;
+        }
+        startDate = dateTime.toLocalDate();
+        time = dateTime.toLocalTime();
+
+        Optional<LocalDate> optEndDate;
+        do {
+            optEndDate = ConsoleUtils.readLocalDate("Scheduling until: (dd/mm/yyyy)");
+        } while (optEndDate.isEmpty());
+        endDate = optEndDate.get();
+
+        if (startDate.isAfter(endDate)) {
+            System.out.println("The start date cannot be after the end date");
+            return false;
+        }
+
         int duration;
 
         do {
@@ -47,35 +76,6 @@ public class ScheduleLectureUI extends AbstractUI {
 
         return true;
 
-    }
-
-    public LocalDate readDate(final String prompt) {
-        System.out.println(prompt);
-
-        do {
-            try {
-                final int day = Console.readInteger("Day:");
-                final int month = Console.readInteger("Month:");
-                final int year = Console.readInteger("Year:");
-                return LocalDate.of(year, month, day);
-            } catch (final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given date");
-            }
-        } while (true);
-    }
-
-    public LocalTime readTime(final String prompt) {
-        System.out.println(prompt);
-
-        do {
-            try {
-                final int hour = Console.readInteger("Hour:");
-                final int minute = Console.readInteger("Minute:");
-                return LocalTime.of(hour, minute);
-            } catch (final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given time");
-            }
-        } while (true);
     }
 
     @Override

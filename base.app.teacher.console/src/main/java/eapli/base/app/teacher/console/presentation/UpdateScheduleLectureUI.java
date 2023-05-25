@@ -5,12 +5,15 @@ import eapli.base.event.lecture.application.UpdateScheduleLectureController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UpdateScheduleLectureUI extends AbstractUI {
 
@@ -23,7 +26,9 @@ public class UpdateScheduleLectureUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-
+        LocalDateTime dateTime;
+        LocalDate removedDate, newDate;
+        LocalTime time;
         var widgetLecture = new SelectWidget<>("Choose one of the following options:", ctrl.listOfLecturesTaughtByTeacher());
         widgetLecture.show();
 
@@ -31,16 +36,31 @@ public class UpdateScheduleLectureUI extends AbstractUI {
             return false;
         var chosenLecture = widgetLecture.selectedElement();
 
-        LocalDate removedDate = readDate("Date of lecture to be changed");
-        LocalDate newDate = readDate("Scheduling for");
-        LocalTime time = readTime("The Lecture will start at:");
-        int duration;
+        Optional<LocalDate> optRemovedDate;
+        do {
+            optRemovedDate = ConsoleUtils.readLocalDate("Date of lecture to be changed: (dd/mm/yyyy)");
+        } while (optRemovedDate.isEmpty());
+        removedDate = optRemovedDate.get();
 
+        Optional<LocalDateTime> optDateTime;
+        do {
+            optDateTime = ConsoleUtils.readLocalDateTime("Scheduling for: (dd/mm/yyyy hh:mm)");
+        } while (optDateTime.isEmpty());
+        dateTime = optDateTime.get();
+
+        if (dateTime.isBefore(LocalDateTime.now())) {
+            System.out.println("A lecture cannot be scheduled for a past date");
+            return false;
+        }
+        newDate = dateTime.toLocalDate();
+        time = dateTime.toLocalTime();
+
+        int duration;
         do {
             duration = Console.readInteger("Lecture duration: (Minutes)");
         } while (duration < 10);
 
-       var lecture = ctrl.updateDateOfLecture(chosenLecture,removedDate,newDate, time,duration);
+       var lecture = ctrl.updateDateOfLecture(chosenLecture, removedDate, newDate, time, duration);
 
        if(lecture.isPresent())
        {
@@ -51,36 +71,6 @@ public class UpdateScheduleLectureUI extends AbstractUI {
             System.out.println("There was a problem with the specified parameters");
 
         return false;
-    }
-
-
-    public LocalDate readDate(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int day = Console.readInteger("Day:");
-                final int month = Console.readInteger("Month:");
-                final int year = Console.readInteger("Year:");
-                return LocalDate.of(year,month,day);
-
-            } catch (@SuppressWarnings("unused") final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given date");
-            }
-        } while (true);
-    }
-
-    public LocalTime readTime(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int hour = Console.readInteger("Hour:");
-                final int minute = Console.readInteger("Minute:");
-                return  LocalTime.of(hour,minute);
-
-            } catch (@SuppressWarnings("unused") final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given time");
-            }
-        } while (true);
     }
 
     @Override

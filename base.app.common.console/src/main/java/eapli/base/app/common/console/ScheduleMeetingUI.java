@@ -2,7 +2,10 @@ package eapli.base.app.common.console;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.base.event.Meeting.application.ScheduleMeetingController;
@@ -10,6 +13,7 @@ import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 public class ScheduleMeetingUI extends AbstractUI {
 
@@ -21,9 +25,25 @@ public class ScheduleMeetingUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
+        LocalDateTime dateTime;
+        LocalDate date;
+        LocalTime time;
+
         String description = Console.readLine("Meeting subject");
-        LocalDate date = readDate("Scheduling for");
-        LocalTime time = readTime("The meeting will start at:");
+
+        Optional<LocalDateTime> optDateTime;
+        do {
+            optDateTime = ConsoleUtils.readLocalDateTime("Scheduling for: (dd/mm/yyyy hh:mm)");
+        } while (optDateTime.isEmpty());
+        dateTime = optDateTime.get();
+
+        if (dateTime.isBefore(LocalDateTime.now())){
+            System.out.println("A meeting cannot be scheduled for a past date");
+            return false;
+        }
+        date = dateTime.toLocalDate();
+        time = dateTime.toLocalTime();
+
         int duration;
         do {
             duration = Console.readInteger("Meeting duration: (Minutes)");
@@ -63,33 +83,6 @@ public class ScheduleMeetingUI extends AbstractUI {
         }
         return true;
 
-    }
-
-    public LocalDate readDate(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int day = Console.readInteger("Day:");
-                final int month = Console.readInteger("Month:");
-                final int year = Console.readInteger("Year:");
-                return LocalDate.of(year, month, day);
-            } catch (final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given date");
-            }
-        } while (true);
-    }
-
-    public LocalTime readTime(final String prompt) {
-        System.out.println(prompt);
-        do {
-            try {
-                final int hour = Console.readInteger("Hour:");
-                final int minute = Console.readInteger("Minute:");
-                return LocalTime.of(hour, minute);
-            } catch (final DateTimeException ex) {
-                System.out.println("There was an error while parsing the given time");
-            }
-        } while (true);
     }
 
     @Override

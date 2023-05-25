@@ -1,7 +1,10 @@
 package eapli.base.app.teacher.console.presentation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
 import eapli.base.event.lecture.application.ScheduleExtraLectureController;
@@ -9,6 +12,7 @@ import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 public class ScheduleExtraLectureUI extends AbstractUI {
 
@@ -21,8 +25,22 @@ public class ScheduleExtraLectureUI extends AbstractUI {
     @Override
     protected boolean doShow() {
         int duration;
-        LocalDate date = ctrl.readDate("Scheduling for");
-        LocalTime time = ctrl.readTime("The extraordinary lecture will start at:");
+        LocalDateTime dateTime;
+        LocalDate date;
+        LocalTime time;
+
+        Optional<LocalDateTime> optDateTime;
+        do {
+            optDateTime = ConsoleUtils.readLocalDateTime("Scheduling for: (dd/mm/yyyy hh:mm)");
+        } while (optDateTime.isEmpty());
+        dateTime = optDateTime.get();
+
+        if (dateTime.isBefore(LocalDateTime.now())){
+            System.out.println("A lecture cannot be scheduled for a past date");
+            return false;
+        }
+        date = dateTime.toLocalDate();
+        time = dateTime.toLocalTime();
 
         do {
             duration = Console.readInteger("Extraordinary lecture duration: (Minutes)");

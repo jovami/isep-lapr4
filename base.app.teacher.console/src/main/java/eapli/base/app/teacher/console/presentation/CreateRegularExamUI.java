@@ -13,6 +13,7 @@ import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
 
 public class CreateRegularExamUI extends AbstractUI {
 
@@ -40,20 +41,27 @@ public class CreateRegularExamUI extends AbstractUI {
             return false;
         }
 
-        var fmt = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
-
         try {
-
             Optional<LocalDateTime> opt;
             do {
-                opt = readDate("Open date(dd/MM/yyyy HH:mm)", fmt);
+                opt = ConsoleUtils.readLocalDateTime("Open date(dd/MM/yyyy HH:mm)");
             } while (opt.isEmpty());
             openDate = opt.get();
 
+            if (openDate.isBefore(LocalDateTime.now())) {
+                System.out.println("Open date must be after current date");
+                return false;
+            }
+
             do {
-                opt = readDate("Close date(dd/MM/yyyy HH:mm)", fmt);
+                opt = ConsoleUtils.readLocalDateTime("Close date(dd/MM/yyyy HH:mm)");
             } while (opt.isEmpty());
             closeDate = opt.get();
+
+            if (closeDate.isBefore(openDate)) {
+                System.out.println("Close date must be after open date");
+                return false;
+            }
 
             if (this.ctrl.createRegularExam(file, openDate, closeDate, chosen))
                 System.out.println("Regular exam created with success");
@@ -69,15 +77,6 @@ public class CreateRegularExamUI extends AbstractUI {
                             "Please try again and if the problem persists, contact your system admnistrator.");
         }
         return false;
-    }
-
-    private Optional<LocalDateTime> readDate(String prompt, DateTimeFormatter fmt) {
-        try {
-            var line = Console.readLine(prompt);
-            return Optional.of(LocalDateTime.parse(line, fmt));
-        } catch (DateTimeParseException e) {
-            return Optional.empty();
-        }
     }
 
     @Override

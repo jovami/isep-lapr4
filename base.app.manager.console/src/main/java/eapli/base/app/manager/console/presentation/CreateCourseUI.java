@@ -1,8 +1,11 @@
 package eapli.base.app.manager.console.presentation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
+import jovami.util.io.ConsoleUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,17 +32,33 @@ public final class CreateCourseUI extends AbstractUI {
         LocalDate startDate, endDate;
         int minCapacity, maxCapacity;
 
-        var formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-
         title = Console.readNonEmptyLine("Course title:", "Title cannot be null");
-        code = Console.readLong("Course code");
+        code = Console.readLong("Course code:");
         description = Console.readNonEmptyLine("Course description:", "Description cannot be null");
 
-        startDate = readDate("Start date (dd/mm/yyyy)", formatter);
-        endDate = readDate("End date (dd/mm/yyyy)", formatter);
+        Optional<LocalDate> opt;
+        do {
+            opt = ConsoleUtils.readLocalDate("Start date (dd/mm/yyyy)");
+        } while (opt.isEmpty());
+        startDate = opt.get();
 
-        minCapacity = Console.readInteger("Minimum course capacity");
-        maxCapacity = Console.readInteger("Maximum course capacity");
+        if (startDate.isBefore(LocalDate.now())) {
+            System.out.println("Start date cannot be before today");
+            return false;
+        }
+
+        do {
+            opt = ConsoleUtils.readLocalDate("End date (dd/mm/yyyy)");
+        } while (opt.isEmpty());
+        endDate = opt.get();
+
+        if (startDate.isAfter(endDate)) {
+            System.out.println("Start date cannot be after end date");
+            return false;
+        }
+
+        minCapacity = Console.readInteger("Minimum course capacity:");
+        maxCapacity = Console.readInteger("Maximum course capacity:");
 
         var dto = new CreateCourseDTO(title, code, description, startDate, endDate, minCapacity, maxCapacity);
 
@@ -56,17 +75,11 @@ public final class CreateCourseUI extends AbstractUI {
         } catch (ConcurrencyException e) {
             logger.error("This should've never happened; yet it did :^)", e);
             System.out.println(
-                    "Unfortunatelly there was an unexpected error in the application.\n" +
+                    "Unfortunately there was an unexpected error in the application.\n" +
                             "Please try again and if the problem persists, contact your system admnistrator.");
         }
 
         return false;
-    }
-
-    // TODO remove this from here
-    private LocalDate readDate(String prompt, DateTimeFormatter fmt) {
-        var line = Console.readLine(prompt);
-        return LocalDate.parse(line, fmt);
     }
 
     @Override
