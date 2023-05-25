@@ -99,7 +99,7 @@ public class ScheduleLectureController {
         builder.withDayOfWeek(startDate.getDayOfWeek());
         builder.withDuration(startTime, durationMinutes);
         builder.withDateInterval(startDate, endDate);
-        return builder.getPattern();
+        return builder.build();
     }
 
     public boolean schedule(Iterable<Enrollment> enrolled) {

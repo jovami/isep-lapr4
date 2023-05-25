@@ -45,7 +45,7 @@ public class TimeTableTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        patternGlobal = builder.getPattern();
+        patternGlobal = builder.build();
 
         timeTable = new TimeTable(userGlobal, patternGlobal);
     }
@@ -63,7 +63,7 @@ public class TimeTableTest {
         builder.withDateInterval(startDate, endDate);
 
         RecurringPattern pattern = timeTable.pattern();
-        Assertions.assertTrue(pattern.sameAs(builder.getPattern()));
+        Assertions.assertTrue(pattern.sameAs(builder.build()));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class TimeTableTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pattern = builder.getPattern();
+        RecurringPattern pattern = builder.build();
 
         TimeTable diff = new TimeTable(userGlobal, pattern);
         assertFalse(timeTable.sameAs(diff));

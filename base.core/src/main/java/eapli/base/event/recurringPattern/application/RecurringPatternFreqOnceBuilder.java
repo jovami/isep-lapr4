@@ -14,14 +14,17 @@ public class RecurringPatternFreqOnceBuilder implements RecurringPatternBuilderI
     }
 
     @Override
-    public boolean withDuration(LocalTime startTime, int duration) {
-        return pattern.setTime(startTime, duration);
+    public RecurringPatternFreqOnceBuilder withDuration(LocalTime startTime, int duration) {
+        pattern.setTime(startTime, duration);
+        return this;
     }
 
-    public void withDate(LocalDate date) {
+    public RecurringPatternFreqOnceBuilder withDate(LocalDate date) {
         pattern.setDateOnce(date);
+        return this;
     }
 
+    @Override
     public RecurringPattern build() {
         pattern.setFrequency(RecurringFrequency.ONCE);
         return pattern;

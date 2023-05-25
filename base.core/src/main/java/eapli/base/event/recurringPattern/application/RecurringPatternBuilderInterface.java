@@ -1,9 +1,12 @@
 package eapli.base.event.recurringPattern.application;
 
+import eapli.base.event.recurringPattern.domain.RecurringPattern;
+
 import java.time.LocalTime;
 
 public interface RecurringPatternBuilderInterface {
 
-    public boolean withDuration(LocalTime time, int duration);
+    RecurringPatternBuilderInterface withDuration(LocalTime time, int duration);
 
+    RecurringPattern build();
 }

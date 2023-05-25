@@ -1,5 +1,7 @@
 package eapli.base.event.timetable.application;
 
+import eapli.base.event.lecture.domain.Lecture;
+import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -38,23 +40,14 @@ public class TimeTableService {
     }
 
     public boolean schedule(Collection<SystemUser> users, RecurringPattern pattern) {
-        for (SystemUser user : users) {
-            TimeTable table = new TimeTable(user, pattern);
-            if (repo.save(table) == null) {
-                return false;
-            }
-        }
+        for (SystemUser user : users)
+            schedule(user, pattern);
 
         return true;
     }
 
     public boolean schedule(SystemUser user, RecurringPattern pattern) {
-
-            TimeTable table = new TimeTable(user, pattern);
-
-            if (repo.save(table) == null)
-                return false;
-
-        return true;
+        TimeTable table = new TimeTable(user, pattern);
+        return repo.save(table) != null;
     }
 }

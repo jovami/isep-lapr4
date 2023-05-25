@@ -133,7 +133,7 @@ public class LectureParticipantTest {
         builder.withDayOfWeek(startDate.getDayOfWeek());
         builder.withDuration(startTime, duration);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pattern = builder.getPattern();
+        RecurringPattern pattern = builder.build();
 
         Lecture newlecture = new Lecture(teacher, pattern);
         LectureParticipant newParticipant = new LectureParticipant(student2, lecture);
@@ -160,7 +160,7 @@ public class LectureParticipantTest {
         builder.withDayOfWeek(startDate.getDayOfWeek());
         builder.withDuration(startTime, duration);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pattern = builder.getPattern();
+        RecurringPattern pattern = builder.build();
 
         Lecture newlecture = new Lecture(teacher, pattern);
         LectureParticipant newParticipant = new LectureParticipant(student2, newlecture);

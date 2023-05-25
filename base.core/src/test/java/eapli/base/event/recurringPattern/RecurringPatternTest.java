@@ -27,7 +27,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        pattern = builder.getPattern();
+        pattern = builder.build();
 
     }
 
@@ -187,7 +187,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertTrue(pattern.overLapTime(pCompare));
     }
 
@@ -202,7 +202,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.THURSDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
 
         Assertions.assertFalse(pattern.overLap(pCompare));
     }
@@ -218,7 +218,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertTrue(pattern.overLapTime(pCompare));
     }
 
@@ -233,7 +233,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.overLap(pCompare));
     }
 
@@ -248,7 +248,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.overLapTime(pCompare));
     }
 
@@ -307,7 +307,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertTrue(pattern.sameAs(pCompare));
     }
 
@@ -322,7 +322,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -337,7 +337,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -352,7 +352,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -367,7 +367,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -382,7 +382,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -397,7 +397,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.THURSDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertFalse(pattern.sameAs(pCompare));
     }
 
@@ -425,7 +425,7 @@ public class RecurringPatternTest {
         builder.withDuration(startTime, duration);
         builder.withDayOfWeek(DayOfWeek.MONDAY);
         builder.withDateInterval(startDate, endDate);
-        RecurringPattern pCompare = builder.getPattern();
+        RecurringPattern pCompare = builder.build();
         Assertions.assertEquals(pCompare.hashCode(), pattern.hashCode());
     }
 

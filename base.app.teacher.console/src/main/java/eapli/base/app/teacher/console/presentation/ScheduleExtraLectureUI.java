@@ -3,7 +3,7 @@ package eapli.base.app.teacher.console.presentation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
@@ -36,7 +36,7 @@ public class ScheduleExtraLectureUI extends AbstractUI {
         dateTime = optDateTime.get();
 
         if (dateTime.isBefore(LocalDateTime.now())){
-            System.out.println("A lecture cannot be scheduled for a past date");
+            System.out.println("A lecture can't be scheduled for a past date");
             return false;
         }
         date = dateTime.toLocalDate();
@@ -46,30 +46,24 @@ public class ScheduleExtraLectureUI extends AbstractUI {
             duration = Console.readInteger("Extraordinary lecture duration: (Minutes)");
         } while (duration < 10);
 
-        if (!ctrl.createLecture(date, time, duration)) {
-            System.out.println("There was a problem with the specified parameters");
-        }
+        var list = ctrl.listStudents();
+        var participants = new ArrayList<StudentUsernameMecanographicNumberDTO>();
 
         boolean invite = true;
-        try {
-            do {
-                SelectWidget<StudentUsernameMecanographicNumberDTO> opt = new SelectWidget<>("Choose User",
-                        ctrl.students());
-                opt.show();
 
-                if (opt.selectedElement() != null) {
-                    if (!ctrl.inviteStudent(opt.selectedElement())) {
-                        System.out.println("\n\tThis user is already invited\n");
-                    }
-                } else {
-                    invite = false;
-                }
-            } while (invite);
-        } catch (ConcurrencyException e) {
-            System.out.println(e.getMessage());
-        }
+        do {
+            var widget = new SelectWidget<>("Choose User:", list);
+            widget.show();
 
-        if (ctrl.schedule()) {
+            if (widget.selectedOption() != 0) {
+                participants.add(list.remove(widget.selectedOption() - 1));
+            } else {
+                invite = false;
+            }
+        } while (invite);
+
+
+        if (ctrl.schedule(date, time, duration, participants)) {
             System.out.println("Extraordinary lecture scheduled with success");
         } else {
             System.out.println(

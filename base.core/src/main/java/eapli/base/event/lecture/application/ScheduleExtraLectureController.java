@@ -7,127 +7,81 @@ import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.event.lecture.domain.Lecture;
-import eapli.base.event.lecture.domain.LectureParticipant;
-import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
-import eapli.base.event.timetable.application.TimeTableService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-import eapli.framework.io.util.Console;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @UseCaseController
 public class ScheduleExtraLectureController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
-
-    // Repositories
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final RecurringPatternRepository patternRepository;
-    private final LectureParticipantRepository participantRepository;
-
-    // Service
-    private final TimeTableService srv;
-
-    // Domain
-    private Lecture lecture;
-    private final ArrayList<SystemUser> invited = new ArrayList<>();
-    private final ArrayList<Student> students;
-    private RecurringPattern pattern;
+    private final ScheduleLectureService svc;
 
     public ScheduleExtraLectureController() {
         lectureRepository = PersistenceContext.repositories().lectures();
         userRepository = PersistenceContext.repositories().users();
         patternRepository = PersistenceContext.repositories().recurringPatterns();
-        participantRepository = PersistenceContext.repositories().lectureParticipants();
         teacherRepository = PersistenceContext.repositories().teachers();
         studentRepository = PersistenceContext.repositories().students();
-        students = (ArrayList<Student>) studentRepository.findAll();
-
-        srv = new TimeTableService();
+        svc = new ScheduleLectureService();
     }
 
-    public boolean createLecture(LocalDate date, LocalTime time, int durationMinutes) {
-        LocalDateTime lectureDateTime = LocalDateTime.of(date, time);
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        if (lectureDateTime.isBefore(currentDateTime)) {
-            System.out.println("Unable to create lecture. The specified date and time have already passed.");
-            return false;
-        }
+    private RecurringPattern buildPattern(LocalDate date, LocalTime time, int durationMinutes) {
+        return new RecurringPatternFreqOnceBuilder()
+                .withDate(date)
+                .withDuration(time, durationMinutes)
+                .build();
+    }
 
+    public boolean schedule(LocalDate date, LocalTime time, int duration, ArrayList<StudentUsernameMecanographicNumberDTO> participants) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        var session = authz.session();
-        if (session.isEmpty()) {
+        var sessionOpt = authz.session();
+        if (sessionOpt.isEmpty()) {
             return false;
         }
+        var session = sessionOpt.get();
 
-        var teacher = teacherRepository.findBySystemUser(session.get().authenticatedUser());
+        var teacher = teacherRepository.findBySystemUser(session.authenticatedUser());
         if (teacher.isEmpty()) {
             System.out.println("Student not found.");
             return false;
         }
 
-        pattern = buildPattern(date, time, durationMinutes);
+        var pattern = buildPattern(date, time, duration);
         pattern = patternRepository.save(pattern);
         if (pattern == null) {
             return false;
         }
 
-        lecture = new Lecture(teacher.get(), pattern);
-        this.lecture = lectureRepository.save(lecture);
-        return true;
-    }
+        var invited = participants.stream().map(dto -> fromStudentDTO(dto).user()).collect(Collectors.toList());
 
-    private RecurringPattern buildPattern(LocalDate date, LocalTime time, int durationMinutes) {
-        RecurringPatternFreqOnceBuilder builder = new RecurringPatternFreqOnceBuilder();
-        builder.withDate(date);
-        builder.withDuration(time, durationMinutes);
+        var lecture = new Lecture(teacher.orElseThrow(), pattern);
 
-        return builder.build();
-    }
+        var userOpt = userRepository.ofIdentity(session.authenticatedUser().identity());
+        var organizer = userOpt.orElseThrow();
 
-    // TODO: check ManyToOne participant -> Lecture
-    // TODO: transaction?
-    public boolean schedule() {
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        var session = authz.session();
-        if (session.isEmpty()) {
+        if (!this.svc.scheduleLecture(organizer, invited, lecture)) {
             return false;
         }
-
-        var userOptional = userRepository.ofIdentity(session.get().authenticatedUser().identity());
-        SystemUser user = userOptional.orElseThrow();
-        if (srv.checkAvailabilityByUser(user, lecture.pattern())) {
-            for (SystemUser sysUser : invited) {
-                LectureParticipant participant = new LectureParticipant(findStudentBySystemUser(sysUser), lecture);
-                participantRepository.save(participant);
-            }
-
-            if (srv.schedule(invited, lecture.pattern()) && srv.schedule(user, lecture.pattern())) {
-                return true;
-            }
-        }
-
-        patternRepository.delete(pattern);
-        lectureRepository.delete(lecture);
-        return false;
+        return lectureRepository.save(lecture) != null;
     }
 
     private Student fromStudentDTO(StudentUsernameMecanographicNumberDTO dto) throws ConcurrencyException {
@@ -135,23 +89,10 @@ public class ScheduleExtraLectureController {
                 .orElseThrow(() -> new ConcurrencyException("User no longer exists"));
     }
 
-    public List<StudentUsernameMecanographicNumberDTO> students() {
-        return new StudentUsernameMecanographicNumberDTOMapper().toDTO(students,
+    public List<StudentUsernameMecanographicNumberDTO> listStudents() {
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
+        return new StudentUsernameMecanographicNumberDTOMapper().toDTO(
+                studentRepository.findAll(),
                 Comparator.comparing(Student::identity));
-    }
-
-    public boolean inviteStudent(StudentUsernameMecanographicNumberDTO dto) {
-        Student student = fromStudentDTO(dto);
-        if (invited.contains(student.user())) {
-            return false;
-        } else {
-            invited.add(student.user());
-            students.remove(student);
-            return true;
-        }
-    }
-
-    private Student findStudentBySystemUser(SystemUser user) {
-        return studentRepository.findByUsername(user.username()).orElseThrow();
     }
 }

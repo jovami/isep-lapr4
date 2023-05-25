@@ -4,33 +4,29 @@ skinparam packageStyle rect
 skinparam shadowing false
 
 actor User as Actor
-participant ScheduleExtraLectureUI as UI <<presentation>> order 1
-participant ScheduleExtraLectureController as Controller <<application>> order 2
-participant "lecture:\nLecture" as lecture <<domain>> order 3
-participant "recurringPattern:\nRecurringPattern" as Pattern <<domain>> order 4
-participant "participant:\nlectureParticipant" as lectureParticipant <<domain>> order 5
-database TeacherRepository as teacherRepo <<repository>> order 8
-database StudentRepository as studentRepo <<repository>> order 8
-database LectureRepository as lectureRepo <<repository>> order 9
-database LectureParticipantRepo as participantRepo <<repository>> order 10
-participant CheckAvailabiltyService as AvailService <<application>> order 11
-participant StudentUsernameMecanographicNumberDTOMapper as Mapper <<application>> order 12
-participant StudentUsernameMecanographicNumberDTO as DTO <<application>> order 13
+participant ScheduleExtraLectureUI as UI <<presentation>>
+participant ScheduleExtraLectureController as Controller <<application>>
 
-Actor -> UI : create lecture
+participant ScheduleLectureService as scheduleService
+participant TimeTableService as timetableService
+
+database TeacherRepository as teacherRepo
+database LectureRepository as lectureRepo
+database LectureParticipantRepo as participantRepo
+
+participant RecurringPattern as Pattern <<domain>>
+participant Lecture as lecture
+participant StudentUsernameMecanographicNumberDTOMapper as Mapper
+participant StudentUsernameMecanographicNumberDTO as DTO
+
+Actor -> UI : asks to create an extra lecture
 activate UI
-    UI -> Controller : create
-
     deactivate Controller
     Actor <-- UI : ask user information
     Actor -> UI : date, startTime, \nduration
-    UI -> Controller : createLectures(startDate, \nendDate, startTime, duration)
+    UI -> Controller : listStudents()
     activate Controller
-            Controller -> lecture : createLectures(startDate, endDate, \nstartTime, duration)
-            activate lecture
-                lecture -> Pattern : buildPattern(startDate,endDate, \nstartTime, duration)
-            Controller <-- lecture : lecture
-            deactivate lecture
+
             Controller --> Mapper : toDto(students)
             loop for each user in users
             activate Mapper
@@ -54,18 +50,37 @@ activate UI
     Actor <-- UI : asks if it wants to \nadd a new participant
     end
 
-    UI -> Controller : schedule()
+    UI -> Controller : schedule(date, time, duration, participants)
+        Controller -> teacherRepo : teacher = findBySystemUser(user)
+        activate teacherRepo
+        deactivate teacherRepo
 
-    Controller -> AvailService : checkAvailability(teacher,recurringPattern)
-    activate AvailService
-     Controller <-- AvailService : returns availability
-    loop for each invited student
-            Controller --> lectureParticipant: createParticipant(student,lecture)
-            Controller --> participantRepo: save(participant)
-            activate lectureRepo
-    end
-    Controller -> AvailService : schedule(invited,recurringPattern)
-    deactivate AvailService
+        Controller -> Pattern : pattern = build(date, time, duration)
+        activate Pattern
+        deactivate Pattern
+
+        Controller -> lecture : lecture = new Lecture(teacher, pattern)
+        activate lecture
+        deactivate lecture
+
+        Controller -> scheduleService : scheduleLecture(teacher, pattern, participants)
+        activate scheduleService
+            scheduleService -> timetableService : checkAvailabilityByUser(teacher, pattern)
+            activate timetableService
+               scheduleService -> timetableService : schedule(teacher, pattern)
+               loop for each participant
+                    scheduleService -> timetableService : schedule(participant, pattern)
+                    scheduleService -> timetableService : lectureParticipant = new LectureParticipant(paticipant, lecture)
+                    deactivate timetableService
+                    scheduleService -> participantRepo : save(lectureParticipant)
+                    activate participantRepo
+                    deactivate participantRepo
+               end
+        deactivate scheduleService
+
+        Controller -> lectureRepo : save(lecture)
+        activate lectureRepo
+        deactivate lectureRepo
 
     UI <-- Controller : lecture
     deactivate Controller

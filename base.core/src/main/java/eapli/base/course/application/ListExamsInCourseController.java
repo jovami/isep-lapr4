@@ -33,15 +33,6 @@ public class ListExamsInCourseController {
         staffRepository = PersistenceContext.repositories().staffs();
     }
 
-    private List<CourseAndDescriptionDTO> getCourses(Iterable<Course> courses) {
-        return new CourseAndDescriptionDTOMapper().toDTO(courses, Comparator.comparing(Course::identity));
-    }
-
-    private Course fromDTO(CourseAndDescriptionDTO dto) throws ConcurrencyException {
-        return this.courseRepository.ofIdentity(dto.courseId())
-                .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
-    }
-
     public List<CourseAndDescriptionDTO> listCourses() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.TEACHER);
         var session = authz.session();
@@ -53,11 +44,12 @@ public class ListExamsInCourseController {
                 () -> new IllegalStateException("Teacher not found")
         );
 
-        return getCourses(staffRepository.taughtBy(teacher));
+        return new CourseAndDescriptionDTOMapper().toDTO(staffRepository.taughtBy(teacher), Comparator.comparing(Course::identity));
     }
 
     public Iterable<RegularExam> listExams(CourseAndDescriptionDTO chosen){
-        var course = fromDTO(chosen);
+        var course = this.courseRepository.ofIdentity(chosen.courseId())
+                .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
         return regularExamRepository.findByCourse(course);
     }

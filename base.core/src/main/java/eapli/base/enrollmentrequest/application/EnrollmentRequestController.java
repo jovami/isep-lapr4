@@ -42,9 +42,8 @@ public final class EnrollmentRequestController {
     public boolean createEnrollmentRequest(Course course) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
         var session = this.authz.session();
-        if (session.isEmpty()) {
+        if (session.isEmpty())
             return false;
-        }
 
         var student = getStudent(session.get());
         if (student.isEmpty()) {
