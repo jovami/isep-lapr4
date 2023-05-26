@@ -64,7 +64,7 @@ public class ScheduleExtraLectureController {
 
         var teacher = teacherRepository.findBySystemUser(session.authenticatedUser());
         if (teacher.isEmpty()) {
-            System.out.println("Student not found.");
+            System.out.println("Teacher not found.");
             return false;
         }
 
