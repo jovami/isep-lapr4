@@ -14,6 +14,7 @@ import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
+import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @UseCaseController
 public class ScheduleExtraLectureController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final TransactionalContext txCtx;
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
@@ -36,6 +38,7 @@ public class ScheduleExtraLectureController {
     private final ScheduleLectureService svc;
 
     public ScheduleExtraLectureController() {
+        txCtx = PersistenceContext.repositories().newTransactionalContext();
         lectureRepository = PersistenceContext.repositories().lectures();
         userRepository = PersistenceContext.repositories().users();
         patternRepository = PersistenceContext.repositories().recurringPatterns();
@@ -66,6 +69,8 @@ public class ScheduleExtraLectureController {
         }
 
         var pattern = buildPattern(date, time, duration);
+        txCtx.beginTransaction();
+
         pattern = patternRepository.save(pattern);
         if (pattern == null) {
             return false;
@@ -79,9 +84,14 @@ public class ScheduleExtraLectureController {
         var organizer = userOpt.orElseThrow();
 
         if (!this.svc.scheduleLecture(organizer, invited, lecture)) {
+            txCtx.rollback();
             return false;
         }
-        return lectureRepository.save(lecture) != null;
+
+        lectureRepository.save(lecture);
+        txCtx.commit();
+
+        return true;
     }
 
     private Student fromStudentDTO(StudentUsernameMecanographicNumberDTO dto) throws ConcurrencyException {
