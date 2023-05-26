@@ -1,19 +1,16 @@
 package eapli.base.app.teacher.console.presentation;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-
-import eapli.base.course.domain.Course;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.event.lecture.application.ScheduleLectureController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.io.ConsoleUtils;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Optional;
 
 public class ScheduleLectureUI extends AbstractUI {
 
@@ -29,10 +26,9 @@ public class ScheduleLectureUI extends AbstractUI {
         LocalDate startDate, endDate;
         LocalTime time;
 
-        SelectWidget<Course> option = new SelectWidget<>("Choose Course",
-                ctrl.coursesTaughtBy(ctrl.getSessionTeacher()));
+        var option = new SelectWidget<>("Choose Course", ctrl.getCourses());
         option.show();
-        option.selectedElement();
+        var course = option.selectedElement();
 
         Optional<LocalDateTime> optDateTime;
         do {
@@ -64,16 +60,15 @@ public class ScheduleLectureUI extends AbstractUI {
             duration = Console.readInteger("Lecture duration: (Minutes)");
         } while (duration < 10);
 
-        Iterable<Enrollment> enrolled = ctrl.enrollmentsByCourse(option.selectedElement());
+        Iterable<Enrollment> enrolled = ctrl.enrollmentsByCourse(course);
 
-        if (!ctrl.createLecture(startDate, endDate, time, duration, enrolled))
-            System.out.println("There was a problem with the specified parameters");
-        else{
+        if (ctrl.schedule(startDate, endDate, time, duration, enrolled)) {
             System.out.println("Lecture scheduled with success");
+        } else {
+            System.out.println("There was a problem with the specified parameters");
         }
 
         return true;
-
     }
 
     @Override
