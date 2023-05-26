@@ -73,6 +73,7 @@ public class ScheduleExtraLectureController {
 
         pattern = patternRepository.save(pattern);
         if (pattern == null) {
+            txCtx.rollback();
             return false;
         }
 

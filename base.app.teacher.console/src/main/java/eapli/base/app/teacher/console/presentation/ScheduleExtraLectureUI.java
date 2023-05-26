@@ -1,18 +1,17 @@
 package eapli.base.app.teacher.console.presentation;
 
+import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
+import eapli.base.event.lecture.application.ScheduleExtraLectureController;
+import eapli.framework.io.util.Console;
+import eapli.framework.presentation.console.AbstractUI;
+import eapli.framework.presentation.console.SelectWidget;
+import jovami.util.io.ConsoleUtils;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Optional;
-
-import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO;
-import eapli.base.event.lecture.application.ScheduleExtraLectureController;
-import eapli.framework.domain.repositories.ConcurrencyException;
-import eapli.framework.io.util.Console;
-import eapli.framework.presentation.console.AbstractUI;
-import eapli.framework.presentation.console.SelectWidget;
-import jovami.util.io.ConsoleUtils;
 
 public class ScheduleExtraLectureUI extends AbstractUI {
 
@@ -35,7 +34,7 @@ public class ScheduleExtraLectureUI extends AbstractUI {
         } while (optDateTime.isEmpty());
         dateTime = optDateTime.get();
 
-        if (dateTime.isBefore(LocalDateTime.now())){
+        if (dateTime.isBefore(LocalDateTime.now())) {
             System.out.println("A lecture can't be scheduled for a past date");
             return false;
         }
@@ -66,8 +65,7 @@ public class ScheduleExtraLectureUI extends AbstractUI {
         if (ctrl.schedule(date, time, duration, participants)) {
             System.out.println("Extraordinary lecture scheduled with success");
         } else {
-            System.out.println(
-                    "There was a problem while scheduling the extraordinary lecture, teacher is not available");
+            System.out.println("There was a problem while scheduling the extraordinary lecture");
         }
 
         return true;
