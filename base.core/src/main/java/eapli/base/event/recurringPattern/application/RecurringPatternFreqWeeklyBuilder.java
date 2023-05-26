@@ -15,18 +15,19 @@ public class RecurringPatternFreqWeeklyBuilder implements RecurringPatternBuilde
 
     }
 
+    @Override
+    public RecurringPatternFreqWeeklyBuilder withDuration(LocalTime startTime, int duration) {
+        pattern.setTime(startTime, duration);
+        return this;
+    }
+
     public RecurringPatternFreqWeeklyBuilder withDateInterval(LocalDate startDate, LocalDate endDate) {
         pattern.setDateInterval(startDate, endDate);
         return this;
     }
 
-    public void withDayOfWeek(DayOfWeek dayOfWeek) {
+    public RecurringPatternFreqWeeklyBuilder withDayOfWeek(DayOfWeek dayOfWeek) {
         pattern.setDayOfWeek(dayOfWeek);
-    }
-
-    @Override
-    public RecurringPatternFreqWeeklyBuilder withDuration(LocalTime startTime, int duration) {
-        pattern.setTime(startTime, duration);
         return this;
     }
 
