@@ -1,0 +1,60 @@
+@startuml
+actor Student as user
+participant ListGradesUI as ui
+participant ListStudentGradesController as ctrl
+
+participant SystemUser as sys_usr
+
+participant StudentRepository as s_repo
+participant ListExamResultsService as svc
+participant ExamResultRepository as e_repo
+
+participant ExamGradeAndCourseDTOMapper as mapper
+participant ExamGradeAndCourseDTO as dto
+
+user -> ui : enter
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui --> ctrl : listStudentGrades()
+    activate ctrl
+        ctrl --> sys_usr : getUser()
+        activate sys_usr
+            note right : sysUser is obtained via\nthe framework's Authz package
+        deactivate sys_usr
+
+        ctrl --> s_repo : findBySystemUser(sysUser)
+        activate s_repo
+            s_repo --> ctrl : student
+        deactivate s_repo
+
+        ctrl --> svc : regularExamResultsBasedOnGradingProperties(student)
+        activate svc
+            svc --> e_repo : examResultsByStudent(student)
+            e_repo --> svc : examResults
+            note bottom: The service will apply the following filters \nto the exam results:\n\n1. Show results with the "on-submission" property.\n2. Include results with the "after-closing" property \nif the closing date has already passed.
+            svc --> ctrl : examResults
+        deactivate svc
+
+        ctrl --> mapper: toDTO(examResults)
+        activate mapper
+            loop for each course in courses
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: gradesDTOList
+        deactivate mapper
+
+        ctrl --> ui : gradesDTOList
+    deactivate ctrl
+
+    ui --> user : show available \ngrades
+deactivate ui
+
+@enduml
+
+
