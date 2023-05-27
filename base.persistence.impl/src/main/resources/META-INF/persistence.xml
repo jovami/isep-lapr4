@@ -27,6 +27,7 @@
     <class>eapli.base.event.lecture.domain.LectureParticipant</class>
     <class>eapli.base.exam.domain.regular_exam.RegularExam</class>
     <class>eapli.base.formativeexam.domain.FormativeExam</class>
+    <class>eapli.base.examresult.domain.RegularExamResult</class>
 
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->

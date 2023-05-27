@@ -30,10 +30,22 @@ public class RegularExamBootstrapper implements Action {
             for (Course c : course) {
                 switch (c.identity().title()) {
                     case "Fisica":
-                        var openDate1 = LocalDateTime.parse("01/01/2025 13:20", df);
-                        var closeDate1 = LocalDateTime.parse("02/01/2025 14:20", df);
+                        var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);
+                        var closeDate1 = LocalDateTime.parse("02/01/2022 14:20", df);
                         var date1 = new RegularExamDate(openDate1, closeDate1);
                         saveExam(specification, date1, c);
+                        var openDate4 = LocalDateTime.parse("04/01/2021 13:20", df);
+                        var closeDate4 = LocalDateTime.parse("05/01/2021 14:20", df);
+                        var date4 = new RegularExamDate(openDate4, closeDate4);
+                        saveExam(specification, date4, c);
+                        var openDate5 = LocalDateTime.parse("08/01/2020 13:20", df);
+                        var closeDate5 = LocalDateTime.parse("09/01/2020 14:20", df);
+                        var date5 = new RegularExamDate(openDate5, closeDate5);
+                        saveExam(specification, date5, c);
+                        var openDate6 = LocalDateTime.parse("08/01/2020 13:20", df);
+                        var closeDate6 = LocalDateTime.parse("09/01/2100 14:20", df);
+                        var date6 = new RegularExamDate(openDate6, closeDate6);
+                        saveExam(specification, date6, c);
                         break;
                     case "Quimica":
                         var openDate2 = LocalDateTime.parse("15/01/2025 13:20", df);

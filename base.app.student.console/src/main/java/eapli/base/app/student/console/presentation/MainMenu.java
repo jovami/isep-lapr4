@@ -52,6 +52,7 @@ public class MainMenu extends AbstractUI {
 
     // EXAM
     private static final int LIST_FUTURE_EXAMS = 1;
+    private static final int LIST_GRADES = 2;
 
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
@@ -132,6 +133,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Exam");
 
         menu.addItem(LIST_FUTURE_EXAMS, "List future exams", new ListFutureExamsUI()::show);
+        menu.addItem(LIST_GRADES, "List grades", new ListGradesUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

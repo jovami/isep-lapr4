@@ -3,6 +3,7 @@ package eapli.base.exam.domain.regular_exam;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.persistence.Embeddable;
@@ -60,9 +61,9 @@ public class RegularExamDate implements ValueObject {
 
     @Override
     public String toString() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        String open = dateFormat.format(start);
-        String close = dateFormat.format(end);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
+        String open = fmt.format(start);
+        String close = fmt.format(end);
         return "Opening: " + open +
                 " | Closing: " + close;
     }

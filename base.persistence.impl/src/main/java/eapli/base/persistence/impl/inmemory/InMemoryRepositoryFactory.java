@@ -195,6 +195,11 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
 
     @Override
     public LectureParticipantRepository lectureParticipants() {
-        return null;
+        return new InMemoryLectureParticipantRepository();
+    }
+
+    @Override
+    public InMemoryRegularExamResultRepository examResults() {
+        return new InMemoryRegularExamResultRepository();
     }
 }

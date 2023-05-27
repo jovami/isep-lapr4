@@ -36,6 +36,7 @@ import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
+import eapli.base.examresult.repository.RegularExamResultRepository;
 import eapli.base.question.repositories.QuestionRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
@@ -164,4 +165,6 @@ public interface RepositoryFactory {
     LectureRepository lectures();
 
     LectureParticipantRepository lectureParticipants();
+
+    RegularExamResultRepository examResults();
 }
