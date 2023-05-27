@@ -28,6 +28,7 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.Role;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+import jovami.util.io.ConsoleUtils;
 
 /**
  * UI for user login action. Created by nuno on 21/03/16.
@@ -65,7 +66,14 @@ public class LoginUI extends AbstractUI {
         while (attempt <= maxAttempts) {
 
             final String username = Console.readLine("Username:");
-            final String password = Console.readLine("Password:");
+            final String password;
+
+            if (System.console() == null) {
+                System.out.println("WARNING: Console is null. Password will be visible.");
+                password = Console.readLine("Password:");
+            } else {
+                password = ConsoleUtils.readPassword("Password:");
+            }
 
             if (authenticationService.authenticate(username, password, onlyWithThis).isPresent()) {
                 return true;

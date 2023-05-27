@@ -1,6 +1,8 @@
 package jovami.util.io;
 
 import eapli.framework.io.util.Console;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ public class ConsoleUtils {
     private static final DateTimeFormatter fmtLocalDate = DateTimeFormatter.ofPattern("d/M/yyyy");
     private static final DateTimeFormatter fmtLocalTime = DateTimeFormatter.ofPattern("H:m");
     private static final DateTimeFormatter fmtLocalDateTime = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
+    private static final Logger LOGGER = LogManager.getLogger(ConsoleUtils.class);
 
     public static Optional<LocalDateTime> readLocalDateTime(String prompt) {
         try {
@@ -40,5 +43,23 @@ public class ConsoleUtils {
         } catch (DateTimeParseException e) {
             return Optional.empty();
         }
+    }
+
+    public static String readPassword(final String prompt) {
+        try {
+            java.io.Console console = System.console();
+            if (console == null) {
+                throw new UnsupportedOperationException("Console input not available.");
+            }
+
+            char[] password = console.readPassword(prompt);
+            if (password != null) {
+                return new String(password);
+            }
+        } catch (UnsupportedOperationException e) {
+            LOGGER.warn("Ignoring but this is really strange that it even happened.", e);
+        }
+
+        return "";
     }
 }
