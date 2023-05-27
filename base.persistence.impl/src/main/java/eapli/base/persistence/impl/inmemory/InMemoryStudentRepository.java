@@ -5,6 +5,7 @@ import java.util.Optional;
 import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.course.domain.Course;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;

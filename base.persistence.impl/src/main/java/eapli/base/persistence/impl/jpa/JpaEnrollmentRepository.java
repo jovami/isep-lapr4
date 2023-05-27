@@ -30,4 +30,13 @@ class JpaEnrollmentRepository extends BaseJpaRepositoryBase<Enrollment, Long, In
     public Iterable<Enrollment> enrollmentsByCourse(Course c) {
         return match("e.course=:course", "course", c);
     }
+
+    @Override
+    public Iterable<Student> studentsOfEnrolledCourse(Course c) {
+        final var query = entityManager().createQuery(
+                "SELECT e.student FROM Enrollment e WHERE e.course = :course",
+                Student.class);
+        query.setParameter("course", c);
+        return query.getResultList();
+    }
 }

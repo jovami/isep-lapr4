@@ -9,5 +9,5 @@ public interface EnrollmentRepository extends DomainRepository<Integer, Enrollme
 
     Iterable<Course> coursesOfEnrolledStudent(Student s);
     Iterable<Enrollment> enrollmentsByCourse(Course c);
-
+    Iterable<Student> studentsOfEnrolledCourse(Course c);
 }

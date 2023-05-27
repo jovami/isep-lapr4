@@ -28,6 +28,10 @@ public class ScheduleExtraLectureUI extends AbstractUI {
         LocalDate date;
         LocalTime time;
 
+        var option = new SelectWidget<>("Choose Course", ctrl.getCourses());
+        option.show();
+        var course = option.selectedElement();
+
         Optional<LocalDateTime> optDateTime;
         do {
             optDateTime = ConsoleUtils.readLocalDateTime("Scheduling for: (dd/mm/yyyy hh:mm)");
@@ -45,7 +49,7 @@ public class ScheduleExtraLectureUI extends AbstractUI {
             duration = Console.readInteger("Extraordinary lecture duration: (Minutes)");
         } while (duration < 10);
 
-        var list = ctrl.listStudents();
+        var list = ctrl.listStudents(course);
         var participants = new ArrayList<StudentUsernameMecanographicNumberDTO>();
 
         boolean invite = true;

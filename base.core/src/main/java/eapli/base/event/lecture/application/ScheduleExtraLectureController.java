@@ -6,6 +6,9 @@ import eapli.base.clientusermanagement.dto.StudentUsernameMecanographicNumberDTO
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.repositories.TeacherRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.base.course.domain.Course;
+import eapli.base.course.repositories.StaffRepository;
+import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
@@ -34,6 +37,8 @@ public class ScheduleExtraLectureController {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final StaffRepository staffRepository;
     private final RecurringPatternRepository patternRepository;
     private final ScheduleLectureService svc;
 
@@ -44,6 +49,8 @@ public class ScheduleExtraLectureController {
         patternRepository = PersistenceContext.repositories().recurringPatterns();
         teacherRepository = PersistenceContext.repositories().teachers();
         studentRepository = PersistenceContext.repositories().students();
+        enrollmentRepository = PersistenceContext.repositories().enrollments();
+        staffRepository = PersistenceContext.repositories().staffs();
         svc = new ScheduleLectureService();
     }
 
@@ -100,10 +107,29 @@ public class ScheduleExtraLectureController {
                 .orElseThrow(() -> new ConcurrencyException("User no longer exists"));
     }
 
-    public List<StudentUsernameMecanographicNumberDTO> listStudents() {
+    public List<StudentUsernameMecanographicNumberDTO> listStudents(Course course) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
+
         return new StudentUsernameMecanographicNumberDTOMapper().toDTO(
-                studentRepository.findAll(),
+                enrollmentRepository.studentsOfEnrolledCourse(course),
                 Comparator.comparing(Student::identity));
+    }
+
+    public Iterable<Course> getCourses() {
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
+        var sessionOpt = authz.session();
+        if (sessionOpt.isEmpty()) {
+            System.out.println("Session not found.");
+            throw new IllegalStateException();
+        }
+        var session = sessionOpt.get();
+
+        var teacher = teacherRepository.findBySystemUser(session.authenticatedUser());
+        if (teacher.isEmpty()) {
+            System.out.println("Teacher not found.");
+            throw new IllegalStateException();
+        }
+
+        return staffRepository.taughtBy(teacher.get());
     }
 }

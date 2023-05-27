@@ -32,4 +32,12 @@ class InMemoryEnrollmentRepository extends InMemoryDomainRepository<Enrollment, 
             .filter(enr -> enr.course().sameAs(c))
             .collect(Collectors.toList());
     }
+
+    @Override
+    public Iterable<Student> studentsOfEnrolledCourse(Course c) {
+        return valuesStream()
+            .filter(enr -> enr.course().sameAs(c))
+            .map(Enrollment::student)
+            .collect(Collectors.toList());
+    }
 }
