@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import org.eclipse.collections.impl.factory.HashingStrategySets;
 
 import eapli.base.clientusermanagement.domain.users.Student;
@@ -21,17 +22,20 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 public final class ListCoursesService {
     private final CourseRepository courseRepo;
     private final EnrollmentRepository enrollRepo;
+    private final EnrollmentRequestRepository requestRepo;
 
     @Deprecated
     public ListCoursesService(final CourseRepository repo) {
         this.courseRepo = repo;
         this.enrollRepo = null;
+        this.requestRepo = null;
     }
 
     public ListCoursesService() {
         final var repos = PersistenceContext.repositories();
         this.courseRepo = repos.courses();
         this.enrollRepo = repos.enrollments();
+        this.requestRepo = repos.enrollmentRequests();
     }
 
     @Deprecated
@@ -71,7 +75,7 @@ public final class ListCoursesService {
 
         final var enrolled = HashingStrategySets.mutable.withAll(
                 fromFunction(Course::identity),
-                this.enrollRepo.coursesOfEnrolledStudent(s));
+                this.requestRepo.coursesOfEnrollmentRequestsByStudent(s));
 
         return enrollable.difference(enrolled);
     }
