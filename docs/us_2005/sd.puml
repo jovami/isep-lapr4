@@ -34,8 +34,11 @@ activate ui
         ctrl --> svc : regularExamResultsBasedOnGradingProperties(student)
         activate svc
             svc --> e_repo : examResultsByStudent(student)
-            e_repo --> svc : examResults
-            note bottom: The service will apply the following filters \nto the exam results:\n\n1. Show results with the "on-submission" property.\n2. Include results with the "after-closing" property \nif the closing date has already passed.
+            activate e_repo
+                e_repo --> svc : examResults
+            deactivate e_repo
+
+            note bottom: The service will apply the following filters \nto the exam results:\n\n1. Include results with the "on-submission" property.\n2. Include results with the "after-closing" property \nif the closing date has already passed.
             svc --> ctrl : examResults
         deactivate svc
 
