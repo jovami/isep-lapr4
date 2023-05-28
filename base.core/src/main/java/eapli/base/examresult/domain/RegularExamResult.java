@@ -40,7 +40,7 @@ public class RegularExamResult implements AggregateRoot<Long> {
     private Student student;
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private RegularExam regularExam;
 
     //TODO: do we really need AnswerGiven from the domain model?
@@ -50,7 +50,8 @@ public class RegularExamResult implements AggregateRoot<Long> {
     }
 
     //TODO: create an exam interface and make regular and formative exams implement it
-    public RegularExamResult(Student student, RegularExam regularExam, ExamGrade grade, ExamFeedback feedback, ExamGradeProperties gradeProperties, ExamFeedbackProperties feedbackProperties) {
+    public RegularExamResult(Student student, RegularExam regularExam, ExamGrade grade, ExamFeedback feedback,
+                             ExamGradeProperties gradeProperties, ExamFeedbackProperties feedbackProperties) {
         Preconditions.noneNull(student, regularExam, grade, feedback, gradeProperties, feedbackProperties);
 
         this.student = student;
