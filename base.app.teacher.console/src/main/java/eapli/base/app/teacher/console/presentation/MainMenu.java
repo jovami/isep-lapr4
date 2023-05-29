@@ -61,6 +61,8 @@ public class MainMenu extends AbstractUI {
 
     private static final int UPDATE_REGULAR_EXAM_OPTION = 3;
 
+    private static final int LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES  = 4;
+
     // FORMATIVE EXAM
 
     private static final int CREATE_FORMATIVE_EXAM = 1;
@@ -154,6 +156,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(CREATE_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
         menu.addItem(LIST_EXAMS_COURSE, "List exams in a course", new ListExamsInCourseUI()::show);
         menu.addItem(UPDATE_REGULAR_EXAM_OPTION, "Update regular exam", new UpdateRegularExamUI()::show);
+        menu.addItem(LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES, "List of the grades of exams of my courses", new ListExamsGradesInCourseUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
