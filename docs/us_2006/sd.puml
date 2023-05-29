@@ -1,0 +1,115 @@
+@startuml
+actor Teacher as user
+participant ListExamsGradesInCourseUI as ui
+participant ListExamsGradesInCourseController as ctrl
+
+
+participant SystemUser as sys_usr
+
+participant TeacherRepository as t_repo
+participant StaffRepository as st_repo
+
+participant CourseAndDescriptionDTOMapper as course_mapper
+participant CourseAndDescriptionDTO as course_dto
+
+participant CourseRepository as c_repo
+
+participant StudentRepository as s_repo
+participant ListExamResultsService as svc
+participant ExamResultRepository as e_repo
+
+participant ExamGradeAndStudentDTOMapper as mapper
+participant ExamGradeAndStudentDTO as dto
+
+activate user
+user -> ui : enter
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui -> ctrl : listCourses()
+    activate ctrl
+        ctrl -> sys_usr : getUser()
+        activate sys_usr
+            note right : sysUser is obtained via\nthe framework's Authz package
+        deactivate sys_usr
+
+        ctrl -> t_repo : findBySystemUser(teacher)
+        activate t_repo
+            t_repo -> ctrl : teacher
+        deactivate t_repo
+
+        ctrl -> st_repo : taughtBy(teacher)
+        activate st_repo
+            st_repo -> ctrl: listCourses
+        deactivate st_repo
+
+    ctrl -> course_mapper : toDTO(listCourses)
+    activate course_mapper
+        loop for each course in courses
+                        course_mapper --> course_dto: create()
+                        activate course_dto
+                        deactivate course_dto
+        end loop
+        course_mapper -> ctrl: coursesDTOList
+    deactivate course_mapper
+
+    ctrl -> ui : coursesDTOList
+    ui --> user: show courses taught \nby teacher
+
+    deactivate ctrl
+
+deactivate ui
+
+user -> ui :Chooses a course to list \nexams grades from
+activate ui
+
+
+    ui --> ctrl : listExamsGradesAndStudents(courseDTO)
+    activate ctrl
+
+        ctrl -> course_dto : courseId()
+        activate course_dto
+            course_dto -> ctrl: CourseID
+        deactivate course_dto
+
+        ctrl -> c_repo : ofIdentity(CourseID)
+        activate c_repo
+                c_repo -> ctrl: course
+        deactivate c_repo
+
+
+
+
+        ctrl --> svc : regularExamResultsBasedOnGradingProperties(course)
+        activate svc
+            svc --> e_repo : regularExamResultsByCourse(course)
+            activate e_repo
+                e_repo --> svc : examResults
+            deactivate e_repo
+
+            note bottom: The service will apply the following filters \nto the exam results:\n\n1. Include results with the "on-submission" property.\n2. Include results with the "after-closing" property \nif the closing date has already passed.
+            svc --> ctrl : examResults
+        deactivate svc
+
+        ctrl --> mapper: toDTO(examResults)
+        activate mapper
+            loop for each ExamResult in examResult
+                mapper --> dto: create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl: examsGradesInCourseDTOList
+        deactivate mapper
+
+        ctrl --> ui : examsGradesInCourseDTOList
+    deactivate ctrl
+
+    ui --> user : show available \ngrades in exams \nin course
+deactivate ui
+
+@enduml
+
+
