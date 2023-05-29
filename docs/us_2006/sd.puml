@@ -16,7 +16,7 @@ participant CourseRepository as c_repo
 
 participant StudentRepository as s_repo
 participant ListExamResultsService as svc
-participant ExamResultRepository as e_repo
+participant RegularExamResultRepository as e_repo
 
 participant ExamGradeAndStudentDTOMapper as mapper
 participant ExamGradeAndStudentDTO as dto
