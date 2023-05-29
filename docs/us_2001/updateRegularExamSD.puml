@@ -4,6 +4,10 @@
 actor Teacher as Actor
 participant UpdateRegularExamUI as UI <<presentation>>
 participant UpdateRegularExamController as controller <<application>>
+
+participant MyUserService as user_svc
+participant Teacher as teacher
+
 participant RegularExam as regularExam <<domain>>
 participant RegularExamDate as regularExamDate <<domain>>
 participant RegularExamSpecification as regularSpec<<domain>>
@@ -13,7 +17,7 @@ participant PersistenceContext as persistence <<persistence>>
 participant RepositoryFactory as factory <<factory>>
 database RegularExamRepository as repoRegularExam <<repository>>
 database StaffRepository as repoStaff <<repository>>
-database TeacherRepository as repoTeacher <<repository>>
+' database TeacherRepository as repoTeacher <<repository>>
 database CourseRepository as repoCourse <<repository>>
 
 
@@ -55,14 +59,6 @@ activate UI
             factory -> controller : staffRepository
         deactivate factory
 
-        controller -> factory :teachers()
-        activate factory
-           factory -> repoTeacher : create
-           activate repoTeacher
-           deactivate repoTeacher
-           factory -> controller : teacherRepository
-        deactivate factory
-
         controller -> factory :courses()
         activate factory
            factory -> repoCourse : create
@@ -78,10 +74,15 @@ UI --> controller: getCourses()
 
 
     activate controller
-        controller --> repoTeacher: teacher = findBySystemUser(systemUser)
-        activate repoTeacher
-        note bottom: systemUser is taken from user session
-        deactivate repoTeacher
+        controller --> user_svc : currentTeacher()
+        activate user_svc
+            user_svc --> teacher : get()
+            activate teacher
+            deactivate teacher
+            note right : teacher obtained via the framework's\nAuthz package + TeacherRepository
+            user_svc --> controller : teacher
+        deactivate user_svc
+
 
         controller --> repoStaff: taughtBy(teacher)
 

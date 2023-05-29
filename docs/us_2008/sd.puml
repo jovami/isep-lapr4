@@ -5,6 +5,10 @@ participant CreateFormativeExamUI as ui
 participant CreateFormativeExamController as ctrl
 
 participant FormativeExamRepository as repo
+
+participant MyUserService as user_svc
+participant Teacher as teacher
+
 participant CourseRepository as c_repo
 
 participant FormativeExamFactory as fact
@@ -13,9 +17,6 @@ participant ValidateFormativeExamSpecificationService as svc
 participant FormativeExam as exam
 
 
-participant SystemUser as sys_usr
-
-participant TeacherRepository as t_repo
 participant StaffMemberExamRepository as sm_repo
 
 participant AvailableCourseDTOMapper as mapper
@@ -42,14 +43,14 @@ activate ui
 
     ui --> ctrl : courses()
     activate ctrl
-        ctrl --> sys_usr : get()
-        activate sys_usr
-            note right : sysUser is obtained via\nthe framework's Authz package
-        deactivate sys_usr
-
-        ctrl --> t_repo : findBySystemUser(sysUser)
-        activate t_repo
-        deactivate t_repo
+        ctrl --> user_svc : currentTeacher()
+        activate user_svc
+            user_svc --> teacher : get()
+            activate teacher
+            deactivate teacher
+            note right : teacher obtained via the framework's\nAuthz package + TeacherRepository
+            user_svc --> ctrl : teacher
+        deactivate user_svc
 
         ctrl --> sm_repo : nonClosedAndTaughtBy(teacher)
         activate sm_repo

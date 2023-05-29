@@ -7,9 +7,11 @@ participant ListAvailableCoursesController as ctrl
 ' participant PersistenceContext as ctx
 ' participant RepositoryFactory as rep_fac
 
-participant SystemUser as sys_usr
+participant MyUserService as user_svc
+participant Student as student
 
-participant StudentRepository as s_repo
+' participant SystemUser as sys_usr
+' participant StudentRepository as s_repo
 
 participant ListCoursesService as svc
 
@@ -37,15 +39,14 @@ activate ui
 
     ui --> ctrl : availableCourses()
     activate ctrl
-        ctrl --> sys_usr : get()
-        activate sys_usr
-            note right : sysUser is obtained via\nthe framework's Authz package
-        deactivate sys_usr
-
-        ctrl --> s_repo : findBySystemUser(sysUser)
-        activate s_repo
-            s_repo --> ctrl : student
-        deactivate s_repo
+        ctrl --> user_svc : currentStudent()
+        activate user_svc
+            user_svc --> student : get()
+            activate student
+            deactivate student
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            user_svc --> ctrl : student
+        deactivate user_svc
 
         ctrl --> svc : studentIsEnrolledOrCanEnroll(student)
         activate svc

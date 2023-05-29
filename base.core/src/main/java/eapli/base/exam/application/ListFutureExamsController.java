@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.eclipse.collections.impl.factory.HashingStrategySets;
 
-import eapli.base.clientusermanagement.repositories.StudentRepository;
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
@@ -18,7 +18,6 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 /**
  * ListFutureExamsController
@@ -28,7 +27,6 @@ public final class ListFutureExamsController {
 
     private final AuthorizationService authz;
 
-    private final StudentRepository studentRepo;
     private final EnrollmentRepository enrollRepo;
     private final RegularExamRepository examRepo;
 
@@ -36,7 +34,6 @@ public final class ListFutureExamsController {
         this.authz = AuthzRegistry.authorizationService();
         var repos = PersistenceContext.repositories();
 
-        this.studentRepo = repos.students();
         this.enrollRepo = repos.enrollments();
         this.examRepo = repos.regularExams();
     }
@@ -44,8 +41,7 @@ public final class ListFutureExamsController {
     public List<FutureExamDTO> futureExams(LocalDateTime time) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
-        var student = this.studentRepo.findBySystemUser(getUser())
-                .orElseThrow(() -> new IllegalStateException("User not a student"));
+        var student = new MyUserService().currentStudent();
 
         var courses = HashingStrategySets.mutable.withAll(
                 fromFunction(Course::identity),
@@ -56,10 +52,4 @@ public final class ListFutureExamsController {
         return new FutureExamDTOMapper().toDTO(exams);
     }
 
-    // TODO: factor out common code
-    private SystemUser getUser() {
-        return this.authz.session()
-                .orElseThrow(() -> new IllegalStateException("User not logged in"))
-                .authenticatedUser();
-    }
 }

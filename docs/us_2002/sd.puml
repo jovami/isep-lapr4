@@ -7,9 +7,10 @@ participant ListFutureExamsController as ctrl
 ' participant PersistenceContext as ctx
 ' participant RepositoryFactory as rep_fac
 
-participant SystemUser as sys_usr
+participant MyUserService as user_svc
+participant Student as student
 
-participant StudentRepository as s_repo
+' participant StudentRepository as s_repo
 
 participant EnrollmentRepositry as e_repo
 participant RegularExamRepository as ex_repo
@@ -35,15 +36,14 @@ activate ui
 
     ui --> ctrl : futureExams(currentTime)
     activate ctrl
-        ctrl --> sys_usr : get()
-        activate sys_usr
-            note right : sysUser is obtained via\nthe framework's Authz package
-        deactivate sys_usr
-
-        ctrl --> s_repo : findBySystemUser(sysUser)
-        activate s_repo
-            s_repo --> ctrl : student
-        deactivate s_repo
+        ctrl --> user_svc : currentStudent()
+        activate user_svc
+            user_svc --> student : get()
+            activate student
+            deactivate student
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            user_svc --> ctrl : student
+        deactivate user_svc
 
         ctrl --> e_repo : coursesOfEnrolledStudent(student)
         activate e_repo

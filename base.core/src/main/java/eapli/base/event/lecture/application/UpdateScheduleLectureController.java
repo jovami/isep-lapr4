@@ -1,7 +1,11 @@
 package eapli.base.event.lecture.application;
 
-import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.event.lecture.domain.Lecture;
 import eapli.base.event.lecture.domain.LectureParticipant;
@@ -15,128 +19,98 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class UpdateScheduleLectureController {
 
-
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
-    //Repositories
+    // Repositories
     private final LectureRepository lectureRepository;
-    private final UserRepository userRepository;
-    private final TeacherRepository teacherRepository;
     private final RecurringPatternRepository patternRepository;
     private RecurringPattern pattern;
 
     private final LectureParticipantRepository lectureParticipantRepository;
 
-    private LectureParticipant lectureParticipant;
+    // private LectureParticipant lectureParticipant; TODO: unused?
 
     private Lecture lecture;
 
     private final TimeTableService srv;
+    private final MyUserService userSvc;
 
-
-
-    public UpdateScheduleLectureController(){
+    public UpdateScheduleLectureController() {
         lectureRepository = PersistenceContext.repositories().lectures();
-        userRepository = PersistenceContext.repositories().users();
         patternRepository = PersistenceContext.repositories().recurringPatterns();
-        teacherRepository = PersistenceContext.repositories().teachers();
 
         lectureParticipantRepository = PersistenceContext.repositories().lectureParticipants();
 
         lecture = null;
 
         srv = new TimeTableService();
+        this.userSvc = new MyUserService();
     }
 
-
-    public Iterable<Lecture> listOfLecturesTaughtByTeacher()
-    {
-
+    public Iterable<Lecture> listOfLecturesTaughtByTeacher() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
-        Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
-
-
-        return lectureRepository.lectureGivenBy(teacher.get());
+        return lectureRepository.lectureGivenBy(this.userSvc.currentTeacher());
     }
 
-    public Optional<Lecture> updateDateOfLecture(Lecture lecture, LocalDate removedDate, LocalDate newDate,LocalTime newStartTime,
-                                                 int newDurationMinutes)
-    {
+    public Optional<Lecture> updateDateOfLecture(Lecture lecture, LocalDate removedDate, LocalDate newDate,
+            LocalTime newStartTime,
+            int newDurationMinutes) {
 
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
-        Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
+        @SuppressWarnings("unused") var teacher = this.userSvc.currentTeacher();
 
-        if (teacher.isPresent())
-        {
-            pattern = lecture.pattern();
+        pattern = lecture.pattern();
 
-            /*now the recurring pattern of this specific lecture has one exception
-            the recurring pattern of this lecture doesnt change, but as one exception
-            for a specific day of a specific week*/
-            if (pattern.addException(removedDate))
-            {
-                    patternRepository.save(pattern);
+        /*
+         * now the recurring pattern of this specific lecture has one exception
+         * the recurring pattern of this lecture doesnt change, but as one exception
+         * for a specific day of a specific week
+         */
+        if (pattern.addException(removedDate)) {
+            patternRepository.save(pattern);
 
-                    if(schedule(lecture,newDate,newStartTime,newDurationMinutes))
-                        return Optional.of(this.lecture);
-                    else
-                        return Optional.empty();
-            }
-
+            if (schedule(lecture, newDate, newStartTime, newDurationMinutes))
+                return Optional.of(this.lecture);
+            else
+                return Optional.empty();
         }
 
         return Optional.empty();
 
     }
 
+    private boolean schedule(Lecture lecture, LocalDate newDate, LocalTime newStartTime,
+            int newDurationMinutes) {
+        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
 
-    private boolean schedule(Lecture lecture, LocalDate newDate,LocalTime newStartTime,
-                            int newDurationMinutes)
-    {
         Iterable<LectureParticipant> lectureParticipants = lectureParticipantRepository.lectureParticipants(lecture);
 
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        Optional<SystemUser> sysUser = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
+        var sysUser = this.userSvc.currentUser();
 
-        authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
-        Optional<Teacher> teacher = teacherRepository.findBySystemUser(user.get());
+        var teacher = this.userSvc.currentTeacher();
 
         ArrayList<SystemUser> present = new ArrayList<>();
 
-        if (sysUser.isEmpty())
-            return false;
 
-        RecurringPattern newPattern = onceBuildPattern(newDate,newStartTime,newDurationMinutes);
+        RecurringPattern newPattern = onceBuildPattern(newDate, newStartTime, newDurationMinutes);
         newPattern = patternRepository.save(newPattern);
 
-        //check availability for teacher not for students
-        if (srv.checkAvailabilityByUser(sysUser.get(), newPattern))
-        {
-            for(LectureParticipant lectureParticipant : lectureParticipants)
-            {
+        // check availability for teacher not for students
+        if (srv.checkAvailabilityByUser(sysUser, newPattern)) {
+            for (LectureParticipant lectureParticipant : lectureParticipants) {
                 present.add(lectureParticipant.studentParticipant().user());
             }
 
-            Lecture lec = new Lecture(teacher.get(),newPattern);
+            Lecture lec = new Lecture(teacher, newPattern);
 
+            // update student schedule
+            srv.schedule(present, newPattern);
 
-            //update student schedule
-            srv.schedule(present,newPattern);
-
-            //update teacher schedule
-            srv.schedule(sysUser.get(),newPattern);
+            // update teacher schedule
+            srv.schedule(sysUser, newPattern);
 
             this.lecture = lectureRepository.save(lec);
 
@@ -146,13 +120,11 @@ public class UpdateScheduleLectureController {
         return false;
     }
 
-
     private RecurringPattern onceBuildPattern(LocalDate newDate, LocalTime startTime, int durationMinutes) {
-        RecurringPatternFreqOnceBuilder builder =  new RecurringPatternFreqOnceBuilder();
+        RecurringPatternFreqOnceBuilder builder = new RecurringPatternFreqOnceBuilder();
         builder.withDate(newDate);
-        builder.withDuration(startTime,durationMinutes);
+        builder.withDuration(startTime, durationMinutes);
         return builder.build();
     }
-
 
 }

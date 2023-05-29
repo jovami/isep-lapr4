@@ -3,10 +3,8 @@ package eapli.base.exam.application;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import eapli.base.clientusermanagement.domain.users.Teacher;
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
@@ -20,7 +18,6 @@ import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 @UseCaseController
 public class CreateRegularExamController {
@@ -31,15 +28,12 @@ public class CreateRegularExamController {
 
     private final StaffRepository repoStaff;
 
-    private final TeacherRepository repoTeacher;
-
     private final CourseRepository repoCourse;
 
     public CreateRegularExamController() {
         this.repositoryFactory = PersistenceContext.repositories();
         this.repoRegularExam = repositoryFactory.regularExams();
         this.repoStaff = repositoryFactory.staffs();
-        this.repoTeacher = repositoryFactory.teachers();
         this.repoCourse = repositoryFactory.courses();
     }
 
@@ -59,10 +53,7 @@ public class CreateRegularExamController {
     }
 
     public Iterable<Course> listCoursesTeacherTeaches() {
-        SystemUser userTeacher = authz.session().get().authenticatedUser();
-        Optional<Teacher> teacher = repoTeacher.findBySystemUser(userTeacher);
-
-        return repoStaff.taughtBy(teacher.get());
+        return repoStaff.taughtBy(new MyUserService().currentTeacher());
     }
 
 }

@@ -4,11 +4,13 @@ actor Teacher as user
 participant ListExamsInCourseUI as ui
 participant ListExamsInCourseController as ctrl
 
+participant MyUserService as user_svc
+participant Teacher as teacher
+
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant ExamRepository as exam_repo
-participant TeacherRepository as teacher_repo
 participant StaffRepository as staff_repo
 
 participant CourseAndDescriptionDTOMapper as course_mapper
@@ -39,13 +41,6 @@ ui --> ctrl: create()
             deactivate exam_repo
         deactivate rep_fac
 
-        ctrl --> rep_fac: teachers()
-        activate rep_fac
-            rep_fac --> teacher_repo: create()
-            activate teacher_repo
-            deactivate teacher_repo
-        deactivate rep_fac
-
         ctrl --> rep_fac: staff()
         activate rep_fac
             rep_fac --> staff_repo: create()
@@ -56,10 +51,14 @@ ui --> ctrl: create()
 
     ui --> ctrl: getCourses()
     activate ctrl
-        ctrl --> teacher_repo: teacher = findBySystemUser(systemUser)
-        activate teacher_repo
-        note bottom: systemUser is taken from user session
-        deactivate teacher_repo
+        ctrl --> user_svc : currentTeacher()
+        activate user_svc
+            user_svc --> teacher : get()
+            activate teacher
+            deactivate teacher
+            note right : teacher obtained via the framework's\nAuthz package + TeacherRepository
+            user_svc --> ctrl : teacher
+        deactivate user_svc
 
         ctrl --> staff_repo: taughtBy(teacher)
 

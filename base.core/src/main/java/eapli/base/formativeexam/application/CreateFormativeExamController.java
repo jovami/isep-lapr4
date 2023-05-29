@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.dto.AvailableCourseDTO;
 import eapli.base.course.dto.AvailableCourseDTOMapper;
@@ -29,7 +29,6 @@ public class CreateFormativeExamController {
     private final FormativeExamRepository repo;
 
     private final CourseRepository courseRepo;
-    private final TeacherRepository teacherRepo;
     private final StaffRepository staffRepo;
 
     public CreateFormativeExamController() {
@@ -39,19 +38,11 @@ public class CreateFormativeExamController {
         this.repo = repos.formativeExams();
 
         this.courseRepo = repos.courses();
-        this.teacherRepo = repos.teachers();
         this.staffRepo = repos.staffs();
     }
 
-    // TODO: factor out code as it's similar to ListAvailableCoursesDTO
     public List<AvailableCourseDTO> courses() {
-        var user = this.authz.session()
-                .orElseThrow(() -> new IllegalStateException("User not logged in"))
-                .authenticatedUser();
-
-        var teacher = this.teacherRepo.findBySystemUser(user)
-                .orElseThrow(() -> new IllegalStateException("User not registered as Teacher"));
-
+        var teacher = new MyUserService().currentTeacher();
         return new AvailableCourseDTOMapper().toDTO(this.staffRepo.nonClosedAndTaughtBy(teacher));
     }
 

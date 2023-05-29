@@ -3,9 +3,9 @@ actor Student as user
 participant ListGradesUI as ui
 participant ListStudentGradesController as ctrl
 
-participant SystemUser as sys_usr
+participant MyUserService as user_svc
+participant Student as student
 
-participant StudentRepository as s_repo
 participant ListExamResultsService as svc
 participant ExamResultRepository as e_repo
 
@@ -21,15 +21,14 @@ activate ui
 
     ui --> ctrl : listStudentGrades()
     activate ctrl
-        ctrl --> sys_usr : getUser()
-        activate sys_usr
-            note right : sysUser is obtained via\nthe framework's Authz package
-        deactivate sys_usr
-
-        ctrl --> s_repo : findBySystemUser(sysUser)
-        activate s_repo
-            s_repo --> ctrl : student
-        deactivate s_repo
+        ctrl --> user_svc : currentStudent()
+        activate user_svc
+            user_svc --> student : get()
+            activate student
+            deactivate student
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            user_svc --> ctrl : student
+        deactivate user_svc
 
         ctrl --> svc : regularExamResultsBasedOnGradingProperties(student)
         activate svc

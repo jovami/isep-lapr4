@@ -6,13 +6,15 @@ participant CreateRegularExamUI as UI <<presentation>>
 participant CreateRegularExamController as controller <<application>>
 participant PersistenceContext as persistence <<persistence>>
 participant RepositoryFactory as factory <<factory>>
+
+participant MyUserService as user_svc
+participant Teacher as teacher
+
 database RegularExamRepository as repoRegularExam <<repository>>
 database StaffRepository as repoStaff <<repository>>
-database TeacherRepository as repoTeacher <<repository>>
 database CourseRepository as repoCourse <<repository>>
 participant AuthzRegistry as authz <<application>>
 participant AuthorizationService as authzService <<application>>
-participant UserSession as userSession <<application>>
 participant ValidateRegularExamSpecificationService as resservice <<application>>
 participant BailErrorListener as listener <<application>>
 participant ExamSpecLexer as lexer <<domain>>
@@ -56,14 +58,6 @@ activate UI
             factory -> controller : staffRepository
         deactivate factory
 
-        controller -> factory :teachers()
-        activate factory
-           factory -> repoTeacher : create
-           activate repoTeacher
-           deactivate repoTeacher
-           factory -> controller : teacherRepository
-        deactivate factory
-
         controller -> factory :courses()
         activate factory
            factory -> repoCourse : create
@@ -78,27 +72,14 @@ deactivate UI
 UI-> controller : listCoursesTeacherTeaches()
 activate UI
     activate controller
-        controller -> authz : authorizationService()
-        activate authz
-        authz -> authzService : create
-        activate authzService
-        deactivate authzService
-        authz -> controller : authorizationService
-        deactivate authz
-
-        controller -> authzService : session()
-        activate authzService
-            authzService -> userSession : authenticatedUser()
-            activate userSession
-                userSession -> authzService : systemUser
-            deactivate userSession
-            authzService -> controller : systemUser
-        deactivate authzService
-
-        controller -> repoTeacher :findBySystemUser(systemUser)
-        activate repoTeacher
-            repoTeacher -> controller : teacher
-        deactivate repoTeacher
+        controller --> user_svc : currentTeacher()
+        activate user_svc
+            user_svc --> teacher : get()
+            activate teacher
+            deactivate teacher
+            note right : teacher obtained via the framework's\nAuthz package + TeacherRepository
+            user_svc --> controller : teacher
+        deactivate user_svc
 
         controller -> repoStaff : taughtBy(teacher)
         activate repoStaff

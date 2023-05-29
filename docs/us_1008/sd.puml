@@ -4,13 +4,14 @@ actor Student as user
 participant EnrollmentRequestUI as ui
 participant EnrollmentRequestController as ctrl
 
+participant MyUserService as user_svc
+participant Student as student
 participant ListCoursesService as courses_svc
 
 participant PersistenceContext as ctx
 participant RepositoryFactory as rep_fac
 participant CourseRepository as course_repo
 participant EnrollmentRequestRepository as enrollment_request_repo
-participant StudentRepository as student_repo
 participant EnrollmentRepository as enrollment_repo
 
 participant EnrollmentRequest as enrollment_request
@@ -40,21 +41,18 @@ activate ui
             activate enrollment_request_repo
             deactivate enrollment_request_repo
         deactivate rep_fac
-
-        ctrl --> rep_fac : students()
-        activate rep_fac
-            rep_fac --> student_repo : create()
-            activate student_repo
-            deactivate student_repo
-        deactivate rep_fac
     deactivate ctrl
 
     ui --> ctrl : getEnrollableCourses()
     activate ctrl
-        ctrl --> student_repo : student = findBySystemUser(systemUser)
-        activate student_repo
-        deactivate student_repo
-        note bottom: systemUser is taken from user session
+        ctrl --> user_svc : currentStudent()
+        activate user_svc
+            user_svc --> student : get()
+            activate student
+            deactivate student
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            user_svc --> ctrl : student
+        deactivate user_svc
 
         ctrl --> courses_svc : studentCanRequestEnroll(student)
         activate courses_svc
@@ -80,9 +78,14 @@ user --> ui: selects course from list
 activate ui
     ui --> ctrl : createEnrollmentRequest(course)
     activate ctrl
-        ctrl --> student_repo : student = findBySystemUser(systemUser)
-        activate student_repo
-        deactivate student_repo
+        ctrl --> user_svc : currentStudent()
+        activate user_svc
+            user_svc --> student : get()
+            activate student
+            deactivate student
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            user_svc --> ctrl : student
+        deactivate user_svc
 
         ctrl ---> enrollment_request : enrollmentRequest = new EnrollmentRequest(course, student)
         activate enrollment_request

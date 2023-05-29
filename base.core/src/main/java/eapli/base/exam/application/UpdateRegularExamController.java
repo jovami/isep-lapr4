@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.dto.CourseAndDescriptionDTO;
@@ -19,10 +19,12 @@ import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
+import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 
+@UseCaseController
 public class UpdateRegularExamController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
@@ -31,15 +33,12 @@ public class UpdateRegularExamController {
 
     private final StaffRepository repoStaff;
 
-    private final TeacherRepository repoTeacher;
-
     private final CourseRepository repoCourse;
 
     public UpdateRegularExamController() {
         this.repositoryFactory = PersistenceContext.repositories();
         this.repoRegularExam = repositoryFactory.regularExams();
         this.repoStaff = repositoryFactory.staffs();
-        this.repoTeacher = repositoryFactory.teachers();
         this.repoCourse = repositoryFactory.courses();
     }
 
@@ -54,15 +53,7 @@ public class UpdateRegularExamController {
 
     public List<CourseAndDescriptionDTO> listCourses() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.TEACHER);
-        var session = authz.session();
-        if (session.isEmpty()) {
-            throw new IllegalStateException("Session not found");
-        }
-
-        var teacher = repoTeacher.findBySystemUser(session.get().authenticatedUser()).orElseThrow(
-                () -> new IllegalStateException("Teacher not found"));
-
-        return getCourses(repoStaff.taughtBy(teacher));
+        return getCourses(repoStaff.taughtBy(new MyUserService().currentTeacher()));
     }
 
     public Iterable<RegularExam> listExams(CourseAndDescriptionDTO chosen) {

@@ -1,68 +1,53 @@
 package eapli.base.event.lecture.application;
 
-import eapli.base.clientusermanagement.domain.users.Student;
-import eapli.base.clientusermanagement.repositories.StudentRepository;
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.event.lecture.domain.Lecture;
-import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqWeeklyBuilder;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
-import eapli.base.event.timetable.application.TimeTableService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 
 @UseCaseController
 public class ScheduleLectureController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
     private final TransactionalContext txCtx;
     private final LectureRepository lectureRepository;
-    private final UserRepository userRepository;
-    private final TeacherRepository teacherRepository;
     private final RecurringPatternRepository patternRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final StaffRepository staffRepository;
     private final ScheduleLectureService svc;
+    private final MyUserService userSvc;
 
     public ScheduleLectureController() {
         txCtx = PersistenceContext.repositories().newTransactionalContext();
         lectureRepository = PersistenceContext.repositories().lectures();
-        userRepository = PersistenceContext.repositories().users();
         patternRepository = PersistenceContext.repositories().recurringPatterns();
-        teacherRepository = PersistenceContext.repositories().teachers();
         enrollmentRepository = PersistenceContext.repositories().enrollments();
         staffRepository = PersistenceContext.repositories().staffs();
         svc = new ScheduleLectureService();
+        this.userSvc = new MyUserService();
     }
 
-    public boolean schedule(LocalDate startDate, LocalDate endDate, LocalTime startTime, int durationMinutes, Iterable<Enrollment> enrolled) {
+    public boolean schedule(LocalDate startDate, LocalDate endDate, LocalTime startTime, int durationMinutes,
+            Iterable<Enrollment> enrolled) {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        var sessionOpt = authz.session();
-        if (sessionOpt.isEmpty()) {
-            return false;
-        }
-        var session = sessionOpt.get();
 
-        var teacher = teacherRepository.findBySystemUser(session.authenticatedUser());
-        if (teacher.isEmpty()) {
-            System.out.println("Teacher not found.");
-            return false;
-        }
+        var teacher = this.userSvc.currentTeacher();
 
         var pattern = buildPattern(startDate, endDate, startTime, durationMinutes);
         txCtx.beginTransaction();
@@ -78,14 +63,19 @@ public class ScheduleLectureController {
             participants.add(e.student().user());
         });
 
-        Lecture lecture = new Lecture(teacher.get(), pattern);
+        Lecture lecture = new Lecture(teacher, pattern);
 
-        var userOpt = userRepository.ofIdentity(session.authenticatedUser().identity());
-        if (userOpt.isEmpty()) {
+        SystemUser user;
+
+        // TODO: try-catch needed? Or abort to menu/UI?
+        try {
+            user = this.userSvc.currentUser();
+        } catch (IllegalStateException e) {
             txCtx.rollback();
             return false;
         }
-        var organizer = userOpt.get();
+
+        var organizer = user;
 
         if (!this.svc.scheduleLecture(organizer, participants, lecture)) {
             txCtx.rollback();
@@ -99,30 +89,19 @@ public class ScheduleLectureController {
     }
 
     private RecurringPattern buildPattern(LocalDate startDate, LocalDate endDate, LocalTime startTime,
-                                          int durationMinutes) {
+            int durationMinutes) {
         return new RecurringPatternFreqWeeklyBuilder()
-            .withDayOfWeek(startDate.getDayOfWeek())
-            .withDuration(startTime, durationMinutes)
-            .withDateInterval(startDate, endDate)
-            .build();
+                .withDayOfWeek(startDate.getDayOfWeek())
+                .withDuration(startTime, durationMinutes)
+                .withDateInterval(startDate, endDate)
+                .build();
     }
 
     public Iterable<Course> getCourses() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        var sessionOpt = authz.session();
-        if (sessionOpt.isEmpty()) {
-            System.out.println("Session not found.");
-            throw new IllegalStateException();
-        }
-        var session = sessionOpt.get();
 
-        var teacher = teacherRepository.findBySystemUser(session.authenticatedUser());
-        if (teacher.isEmpty()) {
-            System.out.println("Teacher not found.");
-            throw new IllegalStateException();
-        }
-
-        return staffRepository.taughtBy(teacher.get());
+        var teacher = this.userSvc.currentTeacher();
+        return staffRepository.taughtBy(teacher);
     }
 
     public Iterable<Enrollment> enrollmentsByCourse(Course course) {

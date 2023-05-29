@@ -3,10 +3,9 @@ actor Teacher as user
 participant ListExamsGradesInCourseUI as ui
 participant ListExamsGradesInCourseController as ctrl
 
+participant MyUserService as user_svc
+participant Teacher as teacher
 
-participant SystemUser as sys_usr
-
-participant TeacherRepository as t_repo
 participant StaffRepository as st_repo
 
 participant CourseAndDescriptionDTOMapper as course_mapper
@@ -31,15 +30,14 @@ activate ui
 
     ui -> ctrl : listCourses()
     activate ctrl
-        ctrl -> sys_usr : getUser()
-        activate sys_usr
-            note right : sysUser is obtained via\nthe framework's Authz package
-        deactivate sys_usr
-
-        ctrl -> t_repo : findBySystemUser(teacher)
-        activate t_repo
-            t_repo -> ctrl : teacher
-        deactivate t_repo
+        ctrl --> user_svc : currentTeacher()
+        activate user_svc
+            user_svc --> teacher : get()
+            activate teacher
+            deactivate teacher
+            note right : teacher obtained via the framework's\nAuthz package + TeacherRepository
+            user_svc --> ctrl : teacher
+        deactivate user_svc
 
         ctrl -> st_repo : taughtBy(teacher)
         activate st_repo
