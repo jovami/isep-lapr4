@@ -1,0 +1,81 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor User as Actor
+participant AcceptRejectMeetingRequestUI as UI <<presentation>> order 1
+participant AcceptRejectMeetingRequestController as controller <<application>> order 2
+participant AcceptRejectMeetingRequestService as service <<application>> order 3
+participant MeetingRequestDTOMapper as mapper <<repository>> order 4
+participant MeetingRequestDTO as dto <<repository>> order 5
+participant MeetingParticipant as meetingParticipant <<domain>> order 6
+database MeetingParticipantRepositry as meetPartRepo <<repository>> order 7
+
+
+
+Actor -> UI : Accept/Reject \nMeeting Request
+activate UI
+    UI -> controller : create()
+    activate controller
+    controller -> mapper : showInvitedMeetings()
+    activate mapper
+    mapper -> dto : toDTO(meetings)
+    deactivate mapper
+    UI --> Actor : show Invited \nMeeting Requests
+    deactivate controller
+    Actor -> UI : select \nMeeting Request
+
+        alt Accept
+            UI -> controller : accept(meeting)
+            activate controller
+
+            controller -> meetPartRepo : findMeetingParticipantByUserAndMeeting(user, meeting)
+            activate meetPartRepo
+            meetPartRepo --> controller : participant
+            deactivate meetPartRepo
+
+            controller -> service : acceptMeetingRequest (participant)
+            activate service
+
+            service -> meetingParticipant : accept()
+            activate meetingParticipant
+            deactivate meetingParticipant
+            service -> meetPartRepo : save(meetingParticipant)
+            activate meetPartRepo
+            deactivate controller
+            deactivate service
+            deactivate meetPartRepo
+
+            UI --> Actor : show success
+
+        else Reject
+            UI -> controller : deny(meeting)
+            activate controller
+
+            controller -> meetPartRepo : findMeetingParticipantByUserAndMeeting(user, meeting)
+            activate meetPartRepo
+            meetPartRepo --> controller : participant
+            deactivate meetPartRepo
+
+            controller -> service : rejectMeetingRequest (participant)
+            activate service
+            service -> meetingParticipant : deny()
+                        activate meetingParticipant
+                        deactivate meetingParticipant
+            service -> meetPartRepo : save(meetingParticipant)
+            activate meetPartRepo
+            deactivate controller
+            deactivate service
+            deactivate meetPartRepo
+
+            UI --> Actor : show success
+
+        end
+
+
+
+
+deactivate UI
+
+@enduml
