@@ -8,7 +8,8 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import java.util.List;
 import java.util.Optional;
 
-class JpaMeetingParticipantRepository extends BaseJpaRepositoryBase<MeetingParticipant, Long, Integer> implements MeetingParticipantRepository {
+class JpaMeetingParticipantRepository extends BaseJpaRepositoryBase<MeetingParticipant, Long, Integer>
+        implements MeetingParticipantRepository {
 
     JpaMeetingParticipantRepository(String persistenceUnitName, String identityFieldName) {
         super(persistenceUnitName, identityFieldName);
@@ -33,5 +34,13 @@ class JpaMeetingParticipantRepository extends BaseJpaRepositoryBase<MeetingParti
         return matchOne("e.user=:user AND e.meeting=:meeting", "user", systemUser, "meeting", meeting);
     }
 
-
+    @Override
+    public Iterable<Meeting> meetingsOfUser(SystemUser user) {
+        var query = entityManager().createQuery(
+                "SELECT mp.meeting FROM MeetingParticipant mp "
+                        + "WHERE mp.user = :user",
+                Meeting.class);
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
 }

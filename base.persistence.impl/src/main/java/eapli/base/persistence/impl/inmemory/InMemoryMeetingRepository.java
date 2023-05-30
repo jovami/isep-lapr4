@@ -24,4 +24,9 @@ class InMemoryMeetingRepository extends InMemoryDomainRepository<Meeting, Intege
         return null;
     }
 
+    @Override
+    public Iterable<Meeting> organizedBy(SystemUser user) {
+        return match(admin -> user.sameAs(admin));
+    }
+
 }

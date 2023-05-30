@@ -57,4 +57,7 @@ public final class BaseRoles {
         return new Role[] { MANAGER, TEACHER, STUDENT };
     }
 
+    public static Role[] allRoles() {
+        return new Role[] { POWER_USER, MANAGER, TEACHER, STUDENT };
+    }
 }

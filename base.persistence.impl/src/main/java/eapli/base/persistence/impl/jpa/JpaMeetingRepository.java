@@ -34,4 +34,8 @@ class JpaMeetingRepository extends BaseJpaRepositoryBase<Meeting, Long, Integer>
         return query.getResultList();
     }
 
+    @Override
+    public Iterable<Meeting> organizedBy(SystemUser user) {
+        return match("e.meetingAdmin = :user", "user", user);
+    }
 }

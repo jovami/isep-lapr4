@@ -8,7 +8,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * Mapper
- * Functional interface that reduces code duplication when creating DTO objects
+ * Functional interface that reduces code duplication when mapping objects into DTOs
  *
  * @param <T> the mapped class
  * @param <R> the dto target

@@ -17,4 +17,5 @@ public interface MeetingParticipantRepository extends DomainRepository<Integer, 
     Optional<MeetingParticipant> findMeetingParticipantByUserAndMeeting(SystemUser systemUser, Meeting meeting);
 
 
+    Iterable<Meeting> meetingsOfUser(SystemUser user);
 }

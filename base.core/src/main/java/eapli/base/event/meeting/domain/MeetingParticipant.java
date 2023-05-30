@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,15 +21,20 @@ public class MeetingParticipant implements AggregateRoot<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEETINGPARTICIPANTID")
     private int id;
-    @ManyToOne
-    private Meeting meeting;
-    @ManyToOne
 
-    private SystemUser user;
+    @ManyToOne
+    private final Meeting meeting;
+
+    @ManyToOne
+    private final SystemUser user;
+
+    @Enumerated(EnumType.STRING)
     private MeetingParticipantStatus status;
 
+    // for ORM
     protected MeetingParticipant() {
-
+        this.meeting = null;
+        this.user = null;
     }
 
     public MeetingParticipant(SystemUser user, Meeting meeting) {
@@ -44,11 +51,15 @@ public class MeetingParticipant implements AggregateRoot<Integer> {
         return this.meeting;
     }
 
+    public SystemUser participant() {
+        return this.user;
+    }
+
     public void accept() {
         this.status = MeetingParticipantStatus.ACCEPTED;
     }
 
-    public void deny() {
+    public void reject() {
         this.status = MeetingParticipantStatus.REJECTED;
     }
 

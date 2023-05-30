@@ -7,4 +7,5 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 public interface MeetingRepository extends DomainRepository<Integer, Meeting> {
     Iterable<Meeting> findAllMeetingsWithParticipantWithPendingStatus(SystemUser user);
 
+    Iterable<Meeting> organizedBy(SystemUser user);
 }

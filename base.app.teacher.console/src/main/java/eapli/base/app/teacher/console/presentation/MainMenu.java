@@ -26,6 +26,7 @@ package eapli.base.app.teacher.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
+import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
@@ -53,29 +54,29 @@ public class MainMenu extends AbstractUI {
     // LECTURE
     private static final int SCHEDULE_LECTURE_OPTION = 1;
     private static final int SCHEDULE_EXTRAORDINARY_LECTURE_OPTION = 2;
-
     private static final int UPDATE_SCHEDULE_OF_LECTURE_OPTION = 3;
 
     // REGULAR EXAM
     private static final int CREATE_REGULAR_EXAM_OPTION = 1;
     private static final int LIST_EXAMS_COURSE = 2;
-
     private static final int UPDATE_REGULAR_EXAM_OPTION = 3;
-
-    private static final int LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES  = 4;
+    private static final int LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES = 4;
 
     // FORMATIVE EXAM
-
     private static final int CREATE_FORMATIVE_EXAM = 1;
     private static final int ADD_QUESTION = 2;
 
     // BOARD
-
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
 
-    // SETTINGS
+    // MEETING
+    private static final int SCHEDULE_MEETING = 1;
+    private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
+    private static final int LIST_MEETING_PARTICIPANTS = 3;
+    private static final String SEPARATOR_LABEL = "--------------";
 
+    // SETTINGS
     private static final int MY_USER_OPTION = 1;
 
     private static final int COURSE_OPTION = 2;
@@ -84,12 +85,6 @@ public class MainMenu extends AbstractUI {
     private static final int BOARD_OPTION = 5;
     private static final int MEETING_OPTION = 6;
     private static final int LECTURE_OPTION = 7;
-
-    // MEETING
-    private static final int SCHEDULE_MEETING = 1;
-    private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
-    private static final String SEPARATOR_LABEL = "--------------";
-
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
@@ -158,7 +153,8 @@ public class MainMenu extends AbstractUI {
         menu.addItem(CREATE_REGULAR_EXAM_OPTION, "Add regular exam", new CreateRegularExamUI()::show);
         menu.addItem(LIST_EXAMS_COURSE, "List exams in a course", new ListExamsInCourseUI()::show);
         menu.addItem(UPDATE_REGULAR_EXAM_OPTION, "Update regular exam", new UpdateRegularExamUI()::show);
-        menu.addItem(LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES, "List of the grades of exams of my courses", new ListExamsGradesInCourseUI()::show);
+        menu.addItem(LIST_OF_THE_GRADES_OF_EXAMS_OF_MY_COURSES, "List of the grades of exams of my courses",
+                new ListExamsGradesInCourseUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;
@@ -188,7 +184,9 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Meeting");
 
         menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
-        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request", new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request",
+                new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(LIST_MEETING_PARTICIPANTS, "List meeting participants", new ListMeetingParticipantsUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

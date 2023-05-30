@@ -37,9 +37,17 @@ class InMemoryMeetingParticipantRepository extends InMemoryDomainRepository<Meet
     @Override
     public Optional<MeetingParticipant> findMeetingParticipantByUserAndMeeting(SystemUser systemUser, Meeting meeting) {
         return valuesStream()
-                .filter(meetingParticipant -> meetingParticipant.sameAs(systemUser) && meetingParticipant.meeting().sameAs(meeting))
+                .filter(meetingParticipant -> meetingParticipant.sameAs(systemUser)
+                        && meetingParticipant.meeting().sameAs(meeting))
                 .findFirst();
     }
 
+    @Override
+    public Iterable<Meeting> meetingsOfUser(SystemUser user) {
+        return valuesStream()
+                .filter(mp -> mp.participant().sameAs(user))
+                .map(MeetingParticipant::meeting)
+                .collect(Collectors.toList());
+    }
 
 }

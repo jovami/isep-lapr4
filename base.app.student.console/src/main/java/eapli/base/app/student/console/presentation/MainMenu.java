@@ -26,6 +26,7 @@ package eapli.base.app.student.console.presentation;
 import eapli.base.Application;
 import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
+import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
@@ -63,6 +64,7 @@ public class MainMenu extends AbstractUI {
     private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
     private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
+    private static final int LIST_MEETING_PARTICIPANTS = 3;
 
     // SETTINGS
     private static final int MY_USER_OPTION = 1;
@@ -71,7 +73,6 @@ public class MainMenu extends AbstractUI {
     private static final int BOARD_OPTION = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
-
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
@@ -147,7 +148,9 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Meeting");
 
         menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
-        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request", new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request",
+                new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(LIST_MEETING_PARTICIPANTS, "List meeting participants", new ListMeetingParticipantsUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

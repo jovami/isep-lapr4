@@ -1,0 +1,99 @@
+@startuml
+
+actor User as user
+
+participant ListMeetingParticipantsUI as ui
+participant ListMeetingParticipantsController as ctrl
+
+participant SystemUser as sys_user
+participant ListMeetingsService as svc
+
+participant MeetingRepository as m_repo
+participant MeetingParticipantRepository as mp_repo
+
+
+participant MeetingOfUserDTOMapper as m_mapper
+participant MeetingOfUserDTO as m_dto
+
+' participant Meeting as meeting
+
+participant MeetingParticipantDTOMapper as mp_mapper
+participant MeetingParticipantDTO as mp_dto
+
+user --> ui : enter
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui --> ctrl : meetingsOfUser()
+    activate ctrl
+
+        ctrl --> sys_user : get()
+        activate sys_user
+            note right : SystemUser obtained via MyUserService
+        deactivate sys_user
+
+        ctrl --> svc : meetingsOfUser(user)
+        activate svc
+            svc --> mp_repo : meetingsOfUser(user)
+            activate mp_repo
+            deactivate mp_repo
+
+            svc --> m_repo : organizedBy(user)
+            activate m_repo
+            deactivate m_repo
+
+            svc --> svc : mergeLists
+
+            svc --> ctrl : meetings
+        deactivate svc
+
+        ctrl --> m_mapper : toDTO(meetings)
+        activate m_mapper
+            loop for each meeting in meetings
+                m_mapper --> m_dto : create()
+                activate m_dto
+                deactivate m_dto
+            end loop
+            m_mapper --> ctrl : meetingsDTOList
+        deactivate m_mapper
+
+        ctrl --> ui : meetingsDTOList
+    deactivate ctrl
+
+    ui --> user : display list
+deactivate ui
+
+user --> ui : choose meeting from list
+activate ui
+    ui --> ctrl : meetingParticipants(meetingDTO)
+    activate ctrl
+        ctrl --> m_repo : ofIdentity(meetingDTO.id())
+        activate m_repo
+            m_repo --> ctrl : meeting
+        deactivate m_repo
+
+        ctrl --> mp_repo : meetingParticipants(meeting)
+        activate mp_repo
+            mp_repo --> ctrl : participants
+        deactivate mp_repo
+
+        ctrl --> mp_mapper : toDTO(participants)
+        activate mp_mapper
+        loop for each participant in participants
+                mp_mapper --> mp_dto : create()
+                activate mp_dto
+                deactivate mp_dto
+            end loop
+            mp_mapper --> ctrl : participantDTOList
+        deactivate mp_mapper
+
+        ctrl --> ui : participantDTOList
+    deactivate ctrl
+
+    ui --> user : show participant list
+deactivate ui
+
+@enduml

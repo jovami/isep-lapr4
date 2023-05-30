@@ -23,9 +23,9 @@
  */
 package eapli.base.app.manager.console.presentation;
 
-import eapli.base.Application;
 import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
+import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
@@ -83,12 +83,14 @@ public class MainMenu extends AbstractUI {
     private static final int USERS_OPTION = 2;
     private static final int BOARD_OPTION = 3;
     private static final int COURSE_OPTION = 4;
+
     // MEETING
     private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
     private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
-    private static final String SEPARATOR_LABEL = "--------------";
+    private static final int LIST_MEETING_PARTICIPANTS = 3;
 
+    private static final String SEPARATOR_LABEL = "--------------";
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
@@ -122,7 +124,6 @@ public class MainMenu extends AbstractUI {
 
         mainMenu.addSubMenu(MY_USER_OPTION, new MyUserMenu());
 
-
         mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.MANAGER)) {
@@ -131,7 +132,6 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(COURSE_OPTION, buildCourseMenu());
             mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
         }
-
 
         mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
@@ -150,7 +150,8 @@ public class MainMenu extends AbstractUI {
         menu.addItem(OPEN_ENROLLMENTS, "Open enrollments", new OpenEnrollmentUI()::show);
         menu.addItem(CLOSE_ENROLLMENTS, "Close enrollments", new CloseEnrollmentUI()::show);
         menu.addItem(SET_COURSE_TEACHERS, "Set Staff", new SetCourseTeacherUI()::show);
-        menu.addItem(ENROLL_STUDENTS_IN_BULK_CSV, "Enroll students in bulk ,import csv file", new CSVLoaderStudentsUI()::show);
+        menu.addItem(ENROLL_STUDENTS_IN_BULK_CSV, "Enroll students in bulk ,import csv file",
+                new CSVLoaderStudentsUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
         return menu;
     }
@@ -189,7 +190,9 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Meeting");
 
         menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
-        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request", new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request",
+                new AcceptRejectMeetingRequestUI()::show);
+        menu.addItem(LIST_MEETING_PARTICIPANTS, "List meeting participants", new ListMeetingParticipantsUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

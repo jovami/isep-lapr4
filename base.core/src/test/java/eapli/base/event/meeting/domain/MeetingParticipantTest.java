@@ -145,15 +145,14 @@ public class MeetingParticipantTest {
     }
 
     @Test
-    public void testDeny() {
-        participant.deny();
+    public void testReject() {
+        participant.reject();
         Assertions.assertEquals(MeetingParticipantStatus.REJECTED, participant.status());
     }
 
     @Test
     public void testPending() {
-        participant.deny();
-        Assertions.assertEquals(MeetingParticipantStatus.REJECTED, participant.status());
+        Assertions.assertEquals(MeetingParticipantStatus.PENDING, participant.status());
     }
 
     @Test
