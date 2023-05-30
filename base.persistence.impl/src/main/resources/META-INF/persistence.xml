@@ -21,8 +21,8 @@
     <class>eapli.base.clientusermanagement.domain.users.Student</class>
     <class>eapli.base.event.recurringPattern.domain.RecurringPattern</class>
     <class>eapli.base.event.timetable.domain.TimeTable</class>
-    <class>eapli.base.event.Meeting.domain.Meeting</class>
-    <class>eapli.base.event.Meeting.domain.MeetingParticipant</class>
+    <class>eapli.base.event.meeting.domain.Meeting</class>
+    <class>eapli.base.event.meeting.domain.MeetingParticipant</class>
     <class>eapli.base.event.lecture.domain.Lecture</class>
     <class>eapli.base.event.lecture.domain.LectureParticipant</class>
     <class>eapli.base.exam.domain.regular_exam.RegularExam</class>

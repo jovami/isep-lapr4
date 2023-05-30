@@ -1,22 +1,37 @@
 package eapli.base.persistence.impl.jpa;
 
-import eapli.base.event.Meeting.domain.Meeting;
-import eapli.base.event.Meeting.domain.MeetingParticipant;
-import eapli.base.event.Meeting.repositories.MeetingRepository;
+import eapli.base.event.meeting.domain.Meeting;
+import eapli.base.event.meeting.domain.MeetingParticipantStatus;
+import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
-import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+
+import java.util.List;
+import java.util.Optional;
+
 
 class JpaMeetingRepository extends BaseJpaRepositoryBase<Meeting, Long, Integer> implements MeetingRepository {
 
-    JpaMeetingRepository(String persistenceUnitName, String identityFieldName) {
-        super(persistenceUnitName, identityFieldName);
-    }
+    /*JpaMeetingRepository(String persistenceUnitName, String identityFieldName) {
+        super(persistenceUnitName, "meetingId");
+    }*/
 
     JpaMeetingRepository(String identityFieldName) {
-        super(identityFieldName);
+        super(identityFieldName,"meetingId");
     }
     public JpaMeetingRepository(final TransactionalContext autoTx) {
         super(autoTx.toString(), "meetingId");
+    }
+
+    @Override
+    public Iterable<Meeting> findAllMeetingsWithParticipantWithPendingStatus(SystemUser user) {
+        final var query = entityManager().createQuery(
+                "SELECT mp.meeting FROM MeetingParticipant mp" +
+                        " WHERE mp.user = :user AND mp.status = :status",
+                Meeting.class);
+        query.setParameter("user", user);
+        query.setParameter("status", MeetingParticipantStatus.PENDING);
+        return query.getResultList();
     }
 
 }

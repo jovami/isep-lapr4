@@ -20,7 +20,6 @@ public class EnableUserUI extends AbstractUI {
     protected boolean doShow() {
         boolean keepEnabling = true;
         do {
-
             final Iterable<SystemUserNameEmailDTO> iterable = this.theController.disabledUsers();
             if (!iterable.iterator().hasNext()) {
                 System.out.println("There is no users disabled");

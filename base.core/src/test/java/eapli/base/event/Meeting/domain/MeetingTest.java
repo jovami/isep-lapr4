@@ -1,4 +1,4 @@
-package eapli.base.event.Meeting.domain;
+package eapli.base.event.meeting.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

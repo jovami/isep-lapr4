@@ -1,14 +1,12 @@
 package eapli.base.app.common.console;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
-import eapli.base.event.Meeting.application.ScheduleMeetingController;
+import eapli.base.event.meeting.application.ScheduleMeetingController;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;

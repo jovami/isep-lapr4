@@ -99,7 +99,6 @@ public class ScheduleLectureController {
 
     public Iterable<Course> getCourses() {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-
         var teacher = this.userSvc.currentTeacher();
         return staffRepository.taughtBy(teacher);
     }

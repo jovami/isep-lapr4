@@ -30,8 +30,8 @@ import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
-import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
-import eapli.base.event.Meeting.repositories.MeetingRepository;
+import eapli.base.event.meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
@@ -93,9 +93,16 @@ public class JpaRepositoryFactory implements RepositoryFactory {
         return new JpaEnrollmentRepository(autoTx);
     }
 
+
+    //TODO
+
     @Override
     public BoardRepository boards(TransactionalContext autoTx) {
         return null;
+    }
+    @Override
+    public MeetingRepository meetings(TransactionalContext autoTx) {
+        return new JpaMeetingRepository(autoTx);
     }
 
     @Override
@@ -152,11 +159,6 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     public MeetingRepository meetings() {
         return new JpaMeetingRepository(Application.settings().getPersistenceUnitName());
     }
-    @Override
-    public MeetingRepository meetings(TransactionalContext autoTx) {
-        return new JpaMeetingRepository(autoTx);
-    }
-
 
     @Override
     public MeetingParticipantRepository meetingParticipants() {

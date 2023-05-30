@@ -1,4 +1,4 @@
-package eapli.base.event.Meeting.application;
+package eapli.base.event.meeting.application;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,10 +9,10 @@ import java.util.Optional;
 
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTOMapper;
-import eapli.base.event.Meeting.domain.Meeting;
-import eapli.base.event.Meeting.domain.MeetingParticipant;
-import eapli.base.event.Meeting.repositories.MeetingParticipantRepository;
-import eapli.base.event.Meeting.repositories.MeetingRepository;
+import eapli.base.event.meeting.domain.Meeting;
+import eapli.base.event.meeting.domain.MeetingParticipant;
+import eapli.base.event.meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.base.event.recurringPattern.application.RecurringPatternFreqOnceBuilder;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;

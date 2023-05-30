@@ -1,4 +1,4 @@
-package eapli.base.event.Meeting.domain;
+package eapli.base.event.meeting.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

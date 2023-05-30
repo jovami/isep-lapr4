@@ -18,12 +18,12 @@ class JpaTeacherRepository extends BaseJpaRepositoryBase<Teacher, Long, Acronym>
     }
 
     @Override
-    public Optional<Teacher> findBySystemUser(Username username) {
-        return matchOne("systemUser.username=:username");
+    public Optional<Teacher> findByUser(Username username) {
+        return matchOne("e.systemUser.username = :username", "username", username);
     }
 
     @Override
-    public Optional<Teacher> findBySystemUser(SystemUser user) {
+    public Optional<Teacher> findByUser(SystemUser user) {
         return matchOne("e.systemUser = :user", "user", user);
     }
 }

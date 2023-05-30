@@ -4,6 +4,8 @@ import eapli.base.clientusermanagement.domain.users.Manager;
 import eapli.base.clientusermanagement.repositories.ManagerRepository;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 
+import java.util.Optional;
+
 /**
  * JpaManagerRepository
  */
@@ -14,7 +16,7 @@ class JpaManagerRepository extends BaseJpaRepositoryBase<Manager, Long, Integer>
     }
 
     @Override
-    public Manager findBySystemUser(Username username) {
-        return (Manager) match("systemUser.username=:username");
+    public Optional<Manager> findByUsername(Username username) {
+        return matchOne("e.systemUser.username = :username", "username", username);
     }
 }

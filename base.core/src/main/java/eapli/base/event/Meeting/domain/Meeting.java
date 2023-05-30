@@ -1,4 +1,4 @@
-package eapli.base.event.Meeting.domain;
+package eapli.base.event.meeting.domain;
 
 import java.util.Objects;
 

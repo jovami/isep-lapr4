@@ -58,7 +58,7 @@ public class RecurringPattern implements AggregateRoot<Integer> {
         return frequency;
     }
 
-    public boolean setTime(LocalTime startTime, int durationMinutes) {
+    public boolean  setTime(LocalTime startTime, int durationMinutes) {
         if (setDurationMinutes(durationMinutes)) {
             setStartTime(startTime);
             return true;

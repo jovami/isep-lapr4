@@ -24,6 +24,7 @@
 package eapli.base.app.manager.console.presentation;
 
 import eapli.base.Application;
+import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
@@ -85,8 +86,9 @@ public class MainMenu extends AbstractUI {
     // MEETING
     private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
-
+    private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
     private static final String SEPARATOR_LABEL = "--------------";
+
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
@@ -120,8 +122,8 @@ public class MainMenu extends AbstractUI {
 
         mainMenu.addSubMenu(MY_USER_OPTION, new MyUserMenu());
 
-        if (!Application.settings().isMenuLayoutHorizontal())
-            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+
+        mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.MANAGER)) {
             mainMenu.addSubMenu(USERS_OPTION, buildUsersMenu());
@@ -130,8 +132,8 @@ public class MainMenu extends AbstractUI {
             mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
         }
 
-        if (!Application.settings().isMenuLayoutHorizontal())
-            mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+
+        mainMenu.addItem(MenuItem.separator(SEPARATOR_LABEL));
 
         mainMenu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
 
@@ -187,6 +189,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Meeting");
 
         menu.addItem(SCHEDULE_MEETING, "Schedule a meeting", new ScheduleMeetingUI()::show);
+        menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request", new AcceptRejectMeetingRequestUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

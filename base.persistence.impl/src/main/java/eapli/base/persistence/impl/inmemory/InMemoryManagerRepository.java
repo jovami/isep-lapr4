@@ -5,6 +5,8 @@ import eapli.base.clientusermanagement.repositories.ManagerRepository;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
+import java.util.Optional;
+
 /**
  * InMemoryManagerRepository
  */
@@ -19,7 +21,7 @@ class InMemoryManagerRepository extends InMemoryDomainRepository<Manager, Intege
     }
 
     @Override
-    public Manager findBySystemUser(Username username) {
-        return matchOne(manager -> manager.user().username().equals(username)).get();
+    public Optional<Manager> findByUsername(Username username) {
+        return matchOne(manager -> manager.user().username().equals(username));
     }
 }

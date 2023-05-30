@@ -60,7 +60,7 @@ public final class MyUserService {
 
     public Teacher currentTeacher() {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.TEACHER);
-        return this.teacherRepo.findBySystemUser(currentUser())
+        return this.teacherRepo.findByUser(currentUser())
             .orElseThrow(this::error);
     }
 }

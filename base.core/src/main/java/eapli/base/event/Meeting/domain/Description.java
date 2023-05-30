@@ -1,4 +1,4 @@
-package eapli.base.event.Meeting.domain;
+package eapli.base.event.meeting.domain;
 
 import java.util.Objects;
 
@@ -16,6 +16,10 @@ public class Description implements ValueObject {
 
     public Description(String description) {
         this.description = description;
+    }
+
+    public static Description valueOf(String description) {
+        return new Description(description);
     }
 
     public String getDescription() {
