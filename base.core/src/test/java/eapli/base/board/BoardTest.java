@@ -24,6 +24,8 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 
 public class BoardTest {
     private final String title = "test";
+    private final int MAX_ROWS = 20;
+    private final int MAX_COLUMNS = 10;
     private final int rows = 15;
     private final int columns = 10;
     private final int cellId = 10;
@@ -33,6 +35,7 @@ public class BoardTest {
 
     @Before
     public void BeforeEach() {
+        Board.setMax(MAX_ROWS, MAX_COLUMNS);
         SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
         user = userBuilder.with(username, "Password1", "dummy", "dummy", "a@gmail.com")
                 .withRoles(BaseRoles.MANAGER).build();

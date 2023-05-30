@@ -3,16 +3,7 @@ package eapli.base.board.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
@@ -22,8 +13,13 @@ import eapli.framework.validations.Preconditions;
 @Table(name = "BOARD")
 public class Board implements AggregateRoot<BoardTitle> {
 
+
     @Id
     private BoardTitle boardTitle;
+    @Transient
+    public static int MAX_ROWS;
+    @Transient
+    public static int MAX_COLUMNS;
     @Column(nullable = false)
     private int num_rows;
     @Column(nullable = false)
@@ -53,12 +49,27 @@ public class Board implements AggregateRoot<BoardTitle> {
         Preconditions.noneNull(boardTitle, rows, columns, owner);
 
         this.boardTitle = boardTitle;
-        this.num_rows = rows;
-        this.num_columns = columns;
+        setDimension(rows, columns);
         this.owner = owner;
         this.state = BoardState.CREATED;
         setupBoard(rows, columns);
     }
+
+    public void setDimension(int num_rows,int num_columns) {
+        if (num_rows > MAX_ROWS || num_columns > MAX_COLUMNS || num_rows < 1 || num_columns < 1) {
+            throw new IllegalArgumentException("Board dimension is not valid");
+        }
+        this.num_rows = num_rows;
+        this.num_columns = num_columns;
+    }
+
+
+
+    public static void setMax(int maxRows, int maxColumns) {
+        MAX_ROWS = maxRows;
+        MAX_COLUMNS = maxColumns;
+    }
+
 
     public void archiveBoard() {
         this.state = BoardState.ARCHIVED;
@@ -155,8 +166,8 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     @Override
     public String toString() {
-        return "\nBoard: " +
-                "\nboardTitle: " + boardTitle.title() +
-                "\nwith " + cells.size() + " cells";
+        return " Board: " +
+                "\nTitle: " + boardTitle.title() +
+                ", with " + cells.size() + " Cells";
     }
 }

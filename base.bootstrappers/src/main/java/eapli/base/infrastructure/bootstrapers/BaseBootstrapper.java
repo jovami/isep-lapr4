@@ -23,6 +23,7 @@
  */
 package eapli.base.infrastructure.bootstrapers;
 
+import eapli.base.infrastructure.bootstrapers.demo.BoardBootstrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class BaseBootstrapper implements Action {
     @Override
     public boolean execute() {
         // declare bootstrap actions
-        final Action[] actions = { new CourseBootstrapper()/* , new BoardBootstrapper() *//*
+        final Action[] actions = { new CourseBootstrapper()  /*
                                                                                            * new
                                                                                            * RegularExamBootstrapper()
                                                                                            */ };

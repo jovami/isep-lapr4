@@ -24,13 +24,19 @@ public class CreateBoardController {
         BoardTitle title = BoardTitle.valueOf(boardTitle);
         if (repository.ofIdentity(title).isPresent())
             return false;
+        Board board;
+        try {
+            board = new Board(BoardTitle.valueOf(boardTitle), rows, columns,
+                    userRepository.ofIdentity(authz.session()
+                                    .orElseThrow()
+                                    .authenticatedUser()
+                                    .identity())
+                            .orElseThrow());
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
 
-        var board = new Board(BoardTitle.valueOf(boardTitle), rows, columns,
-                userRepository.ofIdentity(authz.session()
-                                .orElseThrow()
-                                .authenticatedUser()
-                                .identity())
-                        .orElseThrow());
+
 
         repository.save(board);
         return true;
