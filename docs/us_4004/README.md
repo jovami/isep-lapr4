@@ -1,4 +1,4 @@
-US 4004 ---As User, I want to view a list of participants in my meeting and their status
+US 4004 --- As User, I want to view a list of participants in my meeting and their status
 ========================================================================================
 
 # Analysis
