@@ -24,6 +24,7 @@
 package eapli.base.app.manager.console.presentation;
 
 import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
+import eapli.base.app.common.console.CancelMeetingUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
@@ -89,6 +90,7 @@ public class MainMenu extends AbstractUI {
     private static final int SCHEDULE_MEETING = 1;
     private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
     private static final int LIST_MEETING_PARTICIPANTS = 3;
+    private static final int CANCEL_MEETING = 4;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -193,6 +195,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(ACCEPT_REJECT_MEETING_REQUEST, "Accept/Reject a meeting request",
                 new AcceptRejectMeetingRequestUI()::show);
         menu.addItem(LIST_MEETING_PARTICIPANTS, "List meeting participants", new ListMeetingParticipantsUI()::show);
+        menu.addItem(CANCEL_MEETING, "Cancel a meeting", new CancelMeetingUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

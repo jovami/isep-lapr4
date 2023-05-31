@@ -2,12 +2,12 @@ package eapli.base.persistence.impl.jpa;
 
 import eapli.base.event.meeting.domain.Meeting;
 import eapli.base.event.meeting.domain.MeetingParticipantStatus;
+import eapli.base.event.meeting.domain.MeetingState;
 import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 import java.util.List;
-import java.util.Optional;
 
 
 class JpaMeetingRepository extends BaseJpaRepositoryBase<Meeting, Long, Integer> implements MeetingRepository {
@@ -37,5 +37,10 @@ class JpaMeetingRepository extends BaseJpaRepositoryBase<Meeting, Long, Integer>
     @Override
     public Iterable<Meeting> organizedBy(SystemUser user) {
         return match("e.meetingAdmin = :user", "user", user);
+    }
+
+    @Override
+    public List<Meeting> meetingsOfAdminWithState(SystemUser systemUser, MeetingState state) {
+        return match("e.meetingAdmin = :user AND e.state = :state","user",systemUser,"state", state);
     }
 }

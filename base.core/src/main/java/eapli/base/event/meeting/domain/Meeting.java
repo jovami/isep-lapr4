@@ -1,18 +1,11 @@
 package eapli.base.event.meeting.domain;
 
-import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "MEETING")
@@ -29,6 +22,8 @@ public class Meeting implements AggregateRoot<Integer> {
 
     @OneToOne
     private RecurringPattern pattern;
+    @Enumerated(EnumType.STRING)
+    private MeetingState state;
 
     protected Meeting() {
     }
@@ -37,6 +32,7 @@ public class Meeting implements AggregateRoot<Integer> {
         this.meetingAdmin = user;
         this.description = new Description(description);
         this.pattern = pattern;
+        this.state = MeetingState.SCHEDULED;
     }
 
     public SystemUser admin() {
@@ -89,4 +85,11 @@ public class Meeting implements AggregateRoot<Integer> {
         return this.meetingId == id;
     }
 
+    public void cancel() {
+        this.state = MeetingState.CANCELED;
+    }
+
+    public MeetingState getState() {
+        return state;
+    }
 }

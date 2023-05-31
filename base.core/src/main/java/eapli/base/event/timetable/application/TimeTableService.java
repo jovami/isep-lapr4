@@ -1,7 +1,5 @@
 package eapli.base.event.timetable.application;
 
-import eapli.base.event.lecture.domain.Lecture;
-import eapli.base.event.lecture.domain.LectureParticipant;
 import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.timetable.domain.TimeTable;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
@@ -11,6 +9,7 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 import java.util.Collection;
 
+//TODO: ADAPT THIS SERVICE TO USE TRANSACTIONAL CONTEXT
 @UseCaseController
 public class TimeTableService {
 

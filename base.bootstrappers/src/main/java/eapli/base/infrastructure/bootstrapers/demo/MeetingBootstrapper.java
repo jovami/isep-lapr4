@@ -51,6 +51,10 @@ public class MeetingBootstrapper implements Action {
                 LocalDate.of(2027, 1, 1), LocalTime.parse("10:00"), 120);
         registerMeeting(Username.valueOf("johnny"), Username.valueOf("marco1"),Description.valueOf("Study Math"),
                 LocalDate.of(2025, 1, 1), LocalTime.parse("10:00"), 120);
+        registerMeeting(Username.valueOf("johnny"), Username.valueOf("marco1"),Description.valueOf("Study Computers"),
+                LocalDate.of(2027, 1, 1), LocalTime.parse("12:00"), 10);
+        registerMeeting(Username.valueOf("johnny"), Username.valueOf("marco1"),Description.valueOf("Prepare presentation"),
+                LocalDate.of(2027, 3, 6), LocalTime.parse("12:00"), 40);
 
         return true;
     }
