@@ -1,0 +1,65 @@
+@startuml
+
+skinparam packageStyle rect
+skinparam shadowing false
+
+actor User as Actor
+participant CancelMeetingUI as UI <<presentation>> order 1
+participant CancelMeetingController as Controller <<application>> order 2
+participant MeetingDtoMapper as MAPPER <<application>> order 2
+participant MeetingDto as DTO <<application>> order 2
+participant MeetingService as Service <<application>> order 3
+participant "recurringPattern:\nRecurringPattern" as Pattern <<domain>> order 4
+participant MeetingRepository as MeetingRepo <<repository>> order 7
+participant "meeting:\nMeeting" as Meeting <<domain>> order 8
+participant RecurringPatternRepo as Repo <<repository>> order 9
+participant TransactionalContext as TXCTX <<repository>> order 10
+
+Actor -> UI : cancel Meeting
+activate UI
+    UI -> Controller : create
+            note right of Controller : meetingRepository and patternRepository using PersistenceContext
+    loop while user wants to cancel
+            UI -> Controller : meetings()
+    activate Controller
+            Controller -> MeetingRepo : meetingsOfAdminScheduled(user)
+            activate MeetingRepo
+                Controller <-- MeetingRepo : meetings
+            deactivate MeetingRepo
+            Controller -> MAPPER : toDto(meetings)
+            activate MAPPER
+                Controller <-- MAPPER : meetingsDto
+            deactivate MAPPER
+            UI <-- Controller : meetings
+            deactivate Controller
+    deactivate Controller
+    Actor <-- UI : show meetings
+    Actor -> UI : meeting
+    UI -> Controller : cancelMeeting(meeting)
+    activate Controller
+            Controller -> Service : cancelMeeting(meeting)
+            activate Service
+                Service -> TXCTX : begin()
+                note right of Service : the repositories adapt the use of the transactional context
+                Service -> Meeting : cancel()
+                Service -> MeetingRepo : save(meeting)
+                Service -> Pattern : startDate()
+                activate Pattern
+                Service <-- Pattern : startDate
+                Service -> Pattern : addException(pattern)
+                Service <-- Pattern : operation success
+                deactivate Pattern
+                Service -> Repo : save(pattern)
+                Service -> TXCTX : commit()
+
+
+            Controller <-- Service : meeting
+            deactivate Service
+            UI <-- Controller : operation success
+            deactivate Controller
+            Actor <--UI : operation success
+    end
+deactivate UI
+
+@enduml
+
