@@ -273,9 +273,9 @@ public class BoardTest {
 
     @Test
     public void ensureToString() {
-        String expected = "\nBoard: " +
-                "\nboardTitle: " + title +
-                "\nwith " + rows * columns + " cells";
+        String expected = " Board: " +
+                "\nTitle: " + title +
+                ", with " + rows * columns + " Cells";
         assertEquals(expected, board.toString());
 
     }

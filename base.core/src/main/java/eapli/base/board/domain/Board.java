@@ -43,7 +43,6 @@ public class Board implements AggregateRoot<BoardTitle> {
     protected Board() {
     }
 
-    // TODO protected??
 
     public Board(BoardTitle boardTitle, int rows, int columns, SystemUser owner) {
         Preconditions.noneNull(boardTitle, rows, columns, owner);
