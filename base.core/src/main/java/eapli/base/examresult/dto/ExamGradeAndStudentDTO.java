@@ -1,6 +1,6 @@
 package eapli.base.examresult.dto;
 
-import eapli.base.clientusermanagement.domain.users.Student;
+import eapli.base.clientusermanagement.domain.users.MecanographicNumber;
 import eapli.base.exam.domain.regular_exam.RegularExamDate;
 import eapli.base.examresult.domain.ExamGrade;
 
@@ -9,12 +9,12 @@ import java.util.Objects;
 public class ExamGradeAndStudentDTO {
     private final ExamGrade grade;
     private final RegularExamDate date;
-    private final Student student;
+    private final MecanographicNumber mecanographicNumber;
 
-    public ExamGradeAndStudentDTO(ExamGrade grade, RegularExamDate date, Student student) {
+    public ExamGradeAndStudentDTO(ExamGrade grade, RegularExamDate date, MecanographicNumber mecanographicNumber) {
         this.grade = grade;
         this.date = date;
-        this.student = student;
+        this.mecanographicNumber = mecanographicNumber;
     }
 
     public ExamGrade grade() {
@@ -25,8 +25,8 @@ public class ExamGradeAndStudentDTO {
         return this.date;
     }
 
-    public Student student() {
-        return this.student;
+    public MecanographicNumber mecanographicNumber() {
+        return this.mecanographicNumber;
     }
 
     @Override
@@ -36,17 +36,17 @@ public class ExamGradeAndStudentDTO {
         else if (obj == null || obj.getClass() != this.getClass())
             return false;
         var o = (ExamGradeAndStudentDTO) obj;
-        return this.student.equals(o.student) && this.date.equals(o.date) && this.grade.equals(o.grade);
+        return this.mecanographicNumber.equals(o.mecanographicNumber) && this.date.equals(o.date) && this.grade.equals(o.grade);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.student, this.date, this.grade);
+        return Objects.hash(this.mecanographicNumber, this.date, this.grade);
     }
 
     @Override
     public String toString() {
-        return " " + this.student
+        return " " + this.mecanographicNumber
                 + " | Date of exam: (" + this.date
                 + ") | Grade: " + this.grade;
     }
