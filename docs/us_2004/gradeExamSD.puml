@@ -1,0 +1,63 @@
+@startuml
+actor Student as student
+participant TakeExamUI as ui
+participant TakeExamController as ctrl
+
+participant RegularExamRepository as exam_repo
+
+participant GradeExamServiceFactory as grader_factory
+participant GradeExamService as grader_svc
+
+participant CorrectedExamDTO as corrected_dto
+
+participant ExamResult as result
+
+participant RegularExamResultRepository as result_repo
+
+participant ExamResultDTOMapper as result_mapper
+participant ExamResultDTO as result_dto
+
+student --> ui : submits resolution
+activate ui
+    ui --> ctrl : examGrading(resolutionDTO)
+    activate ctrl
+        ctrl --> exam_repo : ofIdentity()
+        activate exam_repo
+            exam_repo --> ctrl : exam
+        deactivate exam_repo
+
+        ctrl --> grader_factory : examGraderService()
+        activate grader_factory
+            note right: grader service obtained via \nproperties file
+        deactivate grader_factory
+
+        ctrl --> grader_svc : correctExam(exam)
+        activate grader_svc
+            note right: exam correction done \nby an external service
+            grader_svc --> corrected_dto : create()
+            activate corrected_dto
+            deactivate corrected_dto
+            grader_svc --> ctrl : resultDTO
+        deactivate grader_svc
+
+        ctrl --> result : create()
+        activate result
+        deactivate result
+
+        ctrl --> result_repo : save()
+        activate result_repo
+        deactivate result_repo
+
+        ctrl --> result_mapper : toDTO()
+        activate result_mapper
+            result_mapper --> result_dto : create()
+            activate result_dto
+            deactivate result_dto
+            result_mapper --> ctrl : resultDTO
+        deactivate result_mapper
+
+        ctrl --> ui : resultDTO
+    deactivate ctrl
+    ui --> student : present result
+deactivate ui
+@enduml

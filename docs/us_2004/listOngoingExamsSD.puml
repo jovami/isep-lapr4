@@ -1,0 +1,53 @@
+@startuml
+actor Student as student
+participant TakeExamUI as ui
+participant TakeExamController as ctrl
+
+participant ListOngoingExamsService as svc
+participant EnrollmentRepository as enrollment_repo
+participant RegularExamRepository as exam_repo
+
+participant OngoingExamDTOMapper as mapper
+participant OngoingExamDTO as dto
+
+
+student --> ui : enter
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui --> ctrl : ongoingExams()
+    activate ctrl
+        ctrl --> svc : forStudent(student)
+        note right : student is retrieved via\nMyUserService.currentStudent()
+        activate svc
+            svc --> enrollment_repo : ongoingCoursesOfStudent(student)
+            activate enrollment_repo
+                enrollment_repo --> svc : courses
+            deactivate enrollment_repo
+
+            svc --> exam_repo : ongoingExams(courses)
+            activate exam_repo
+                exam_repo --> svc : exams
+            deactivate exam_repo
+
+            svc --> ctrl : exams
+        deactivate svc
+
+        ctrl --> mapper : create()
+        activate mapper
+            loop for each exam in exams
+                mapper --> dto : create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl : examDTOList
+        deactivate mapper
+
+        ctrl --> ui : examDTOList
+    deactivate ctrl
+    ui --> student : show
+deactivate ui
+@enduml
