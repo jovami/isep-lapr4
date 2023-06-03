@@ -16,6 +16,14 @@ the exam has occurred)
 Following these rules, when a student asks for the system to display their
 grades, the system should only display the **available** grades.
 
+Furthermore, after **discussing with the Client**, it was decided that
+the system should only display the grades regarding **regular exams**, meaning
+that the grades regarding formative exams should not be displayed. 
+
+(applicable to 
+both US2005 and US2006) 
+![clarification](./client_clarification.png)
+
 ## Unit tests
 
 In order to accurately test this functionality, we need to interact
