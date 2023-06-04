@@ -12,11 +12,13 @@ the exam's specification.
 
 1. From [GAVRIKOVA: US2004 - As Student, I want to take an exam](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23402#p29589)
 > >  when a student finished taking exam, will he want at some point review the exam and see his answers?
+> 
 > This is not required.
 
 > > Do we need to save the exam with the answers of a certain student to be able to
     show it later (if needed), or should we just calculate the final grade and show
     feedback for each question (if applicable)?
+>
 > Just calculate the final grade and show feedback for each question.
   Unless saving of the answers is required as a technical solution for some other
   aspect of your solution you do not need to save the answers.
@@ -26,6 +28,7 @@ the exam's specification.
 
 > > Another question is about types of feedback: on-submission means on submission
     of a question or the whole exam?
+> 
 > On submission of the whole exam.
 
 **Interpretation:** The student does not receive any kind of *real-time feedback* while
@@ -35,6 +38,7 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
 > > A propósito das US's 2004 e 2009, de que forma é que os exames serão apresentados
     ao aluno para o mesmo os realizar? Será semelhante às boards, em que será criada
     uma página em JavaScript?
+> 
 > Apenas a aplicação "shared board app" implementa um servidor http para servir
   o "board viewer".
   Todas as outras funcionalidades da solução devem estar distribuídas pelas outras

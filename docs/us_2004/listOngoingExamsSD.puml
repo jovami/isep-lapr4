@@ -6,6 +6,7 @@ participant TakeExamController as ctrl
 participant ListOngoingExamsService as svc
 participant EnrollmentRepository as enrollment_repo
 participant RegularExamRepository as exam_repo
+participant RegularExamResultRepository as result_repo
 
 participant OngoingExamDTOMapper as mapper
 participant OngoingExamDTO as dto
@@ -32,6 +33,11 @@ activate ui
             activate exam_repo
                 exam_repo --> svc : exams
             deactivate exam_repo
+
+            svc --> result_repo : completedExams(student)
+            activate result_repo
+            deactivate result_repo
+            svc --> svc : filter out completed exams
 
             svc --> ctrl : exams
         deactivate svc

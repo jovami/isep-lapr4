@@ -13,7 +13,7 @@ participant GrammarToolFactory as grepo
 participant GradeExamService as grader_svc
 participant CorrectedExamDTO as corrected_dto
 
-participant ExamResult as result
+participant RegularExamResult as result
 participant RegularExamResultRepository as result_repo
 
 participant ExamResultDTOMapper as result_mapper
