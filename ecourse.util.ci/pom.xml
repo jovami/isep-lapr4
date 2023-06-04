@@ -25,46 +25,52 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.app.bootstrap</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.app.bootstrap</artifactId> -->
+        <!-- </dependency> -->
 
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.app.common.console</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.app.common.console</artifactId> -->
+        <!-- </dependency> -->
 
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.app.manager.console</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.app.manager.console</artifactId> -->
+        <!-- </dependency> -->
 
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.app.student.console</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.app.student.console</artifactId> -->
+        <!-- </dependency> -->
 
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.app.teacher.console</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.app.teacher.console</artifactId> -->
+        <!-- </dependency> -->
 
-        <dependency>
-            <version>1.4.0-SNAPSHOT</version>
-            <groupId>eapli</groupId>
-            <artifactId>base.bootstrappers</artifactId>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <version>1.4.0-SNAPSHOT</version> -->
+        <!--     <groupId>eapli</groupId> -->
+        <!--     <artifactId>base.bootstrappers</artifactId> -->
+        <!-- </dependency> -->
 
         <dependency>
             <version>1.4.0-SNAPSHOT</version>
             <groupId>eapli</groupId>
             <artifactId>base.core</artifactId>
+        </dependency>
+
+        <dependency>
+            <version>1.4.0-SNAPSHOT</version>
+            <groupId>eapli</groupId>
+            <artifactId>jovami.grammar.impl</artifactId>
         </dependency>
 
         <dependency>
