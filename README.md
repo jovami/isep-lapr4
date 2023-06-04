@@ -42,12 +42,12 @@ Run script:
 
 - Linux, macOS, BSD, and other *NIX:
 ```bash
-./run-tests.sh
+./run-coverage.sh
 ```
 
 - Windows:
 ```bat
-.\run-tests.bat
+.\run-coverage.bat
 ```
 
 
