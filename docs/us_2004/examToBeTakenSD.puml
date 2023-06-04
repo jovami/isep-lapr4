@@ -1,12 +1,16 @@
 @startuml
+
 actor Student as student
+
 participant TakeExamUI as ui
 participant TakeExamController as ctrl
 
-participant RegularExamRepository as exam_repo
+participant RegularExamRepository as repo
 
-participant ParseExamServiceFactory as parser_factory
-participant ParseExamService as parser_svc
+participant GrammarContext as ctx
+participant GrammarToolFactory as grepo
+
+participant ParseExamService as svc
 
 participant ExamToBeTakenDTO as taken_dto
 
@@ -14,26 +18,32 @@ student --> ui : chooses exam
 activate ui
     ui --> ctrl : examToBeTaken(examDTO)
     activate ctrl
-        ctrl --> exam_repo : ofIdentity()
-        activate exam_repo
-            exam_repo --> ctrl : exam
-        deactivate exam_repo
+        ctrl --> repo : ofIdentity()
+        activate repo
+            repo --> ctrl : exam
+        deactivate repo
 
-        ctrl --> parser_factory : examParserService()
-        activate parser_factory
-            note right: parser service obtained via \nproperties file
-        deactivate parser_factory
+        ctrl --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : examParserService()
+            activate grepo
+                grepo --> svc : create()
+                activate svc
+                deactivate svc
+            deactivate grepo
+        deactivate ctx
 
-        ctrl --> parser_svc : generateExam(exam)
-        activate parser_svc
+        ctrl --> svc : generateExam(exam)
+        activate svc
             note right: exam generation done \nby an external service
-            parser_svc --> taken_dto : create()
+            svc --> taken_dto : create()
             activate taken_dto
             deactivate taken_dto
-            parser_svc --> ctrl : takenDTO
-        deactivate parser_svc
-        ctrl --> ui : takenDTO
+            svc --> ctrl : examToBeTakenDTO
+        deactivate svc
+        ctrl --> ui : examToBeTakenDTO
     deactivate ctrl
     ui --> student : present exam
 deactivate ui
+
 @enduml

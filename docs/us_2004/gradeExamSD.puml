@@ -1,17 +1,19 @@
 @startuml
+
 actor Student as student
+
 participant TakeExamUI as ui
 participant TakeExamController as ctrl
 
 participant RegularExamRepository as exam_repo
 
-participant GradeExamServiceFactory as grader_factory
-participant GradeExamService as grader_svc
+participant GrammarContext as ctx
+participant GrammarToolFactory as grepo
 
+participant GradeExamService as grader_svc
 participant CorrectedExamDTO as corrected_dto
 
 participant ExamResult as result
-
 participant RegularExamResultRepository as result_repo
 
 participant ExamResultDTOMapper as result_mapper
@@ -26,10 +28,15 @@ activate ui
             exam_repo --> ctrl : exam
         deactivate exam_repo
 
-        ctrl --> grader_factory : examGraderService()
-        activate grader_factory
-            note right: grader service obtained via \nproperties file
-        deactivate grader_factory
+        ctrl --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : examGraderService()
+            activate grepo
+                grepo --> grader_svc : create()
+                activate grader_svc
+                deactivate grader_svc
+            deactivate grepo
+        deactivate ctx
 
         ctrl --> grader_svc : correctExam(exam)
         activate grader_svc
@@ -44,11 +51,13 @@ activate ui
         activate result
         deactivate result
 
-        ctrl --> result_repo : save()
+        ctrl --> result_repo : save(result)
         activate result_repo
         deactivate result_repo
 
-        ctrl --> result_mapper : toDTO()
+        ' NOTE: double-check what to do w/ feedback
+
+        ctrl --> result_mapper : toDTO(result)
         activate result_mapper
             result_mapper --> result_dto : create()
             activate result_dto
@@ -60,4 +69,5 @@ activate ui
     deactivate ctrl
     ui --> student : present result
 deactivate ui
+
 @enduml
