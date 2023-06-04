@@ -13,7 +13,7 @@ participant RegularExamDate as regularExamDate <<domain>>
 participant RegularExamSpecification as regularSpec<<domain>>
 
 participant GrammarContext as ctx <<grammar>>
-participant GrammarToolRepository as grepo <<factory>>
+participant GrammarToolFactory as grepo <<factory>>
 participant RegularExamValidatorService as service <<service>>
 
 participant PersistenceContext as persistence <<persistence>>

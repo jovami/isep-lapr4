@@ -78,7 +78,7 @@ comply with the aforementioned grammar.
 In order to ensure that questions are **always** created with a valid specification,
 a **Factory** class will be used to abstract the process.
 
-**NOTE:** Constructors for Question and QuestionSpecification will have **protected** visibility.
+> **Note**: Constructors for Question and QuestionSpecification will have **protected** visibility.
 
 ## Sequence diagram
 

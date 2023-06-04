@@ -12,7 +12,7 @@ participant Teacher as teacher
 participant CourseRepository as c_repo
 
 participant GrammarContext as ctx
-participant GrammarToolRepository as grepo
+participant GrammarToolFactory as grepo
 
 participant FormativeExamFactory as fact
 participant FormativeExamValidatorService as svc

@@ -17,7 +17,7 @@ participant AuthzRegistry as authz <<application>>
 participant AuthorizationService as authzService <<application>>
 
 participant GrammarContext as ctx <<grammar>>
-participant GrammarToolRepository as grepo <<factory>>
+participant GrammarToolFactory as grepo <<factory>>
 participant RegularExamValidatorService as resservice <<application>>
 
 participant BailErrorListener as listener <<application>>

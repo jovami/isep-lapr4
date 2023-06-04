@@ -25,7 +25,7 @@ The **ANTLR** tool should be used to design the specification grammar
 - The **system** should randomly create the questions based on the type.
 - Questions **may not** repeat within a formative exam.
 
-**NOTE:** "the system should randomly create the questions (...)" is being understood as the
+> **Note**: "the system should randomly create the questions (...)" is being understood as the
 system using the existing question repository to fill in questions based on their type.
 
 ## Unit Tests
