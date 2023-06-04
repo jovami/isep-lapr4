@@ -14,7 +14,7 @@ import eapli.framework.domain.model.DomainEntities;
 
 @Entity
 public class RegularExam implements AggregateRoot<Integer> {
-
+    // TODO: unique ExamTitle to identify the exam
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

@@ -12,4 +12,6 @@ public interface RegularExamRepository extends DomainRepository<Integer, Regular
     Iterable<RegularExam> findByCourse(Course course);
 
     Iterable<RegularExam> examsOfCoursesAfterTime(LocalDateTime time, Set<Course> courses);
+
+    Iterable<RegularExam> ongoingExams(Set<Course> courses);
 }

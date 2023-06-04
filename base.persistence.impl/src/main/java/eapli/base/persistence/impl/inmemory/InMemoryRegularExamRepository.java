@@ -31,4 +31,13 @@ class InMemoryRegularExamRepository extends InMemoryDomainRepository<RegularExam
                 .filter(exam -> courses.contains(exam.course()) && exam.regularExamDate().openDate().isAfter(time))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Iterable<RegularExam> ongoingExams(Set<Course> courses) {
+        return valuesStream()
+                .filter(exam -> courses.contains(exam.course())
+                        && exam.regularExamDate().openDate().isBefore(LocalDateTime.now())
+                        && exam.regularExamDate().closeDate().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
 }

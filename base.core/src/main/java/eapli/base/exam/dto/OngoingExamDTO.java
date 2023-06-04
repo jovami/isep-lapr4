@@ -1,0 +1,43 @@
+package eapli.base.exam.dto;
+
+import eapli.base.course.domain.CourseID;
+import eapli.base.exam.domain.regular_exam.RegularExamDate;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class OngoingExamDTO {
+    private static final DateTimeFormatter fmt;
+
+    static {
+        fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    }
+
+    private final CourseID course;
+    private final LocalDateTime startTime;
+    private final LocalDateTime endTime;
+
+    public OngoingExamDTO(final CourseID name, final RegularExamDate date) {
+        this.course = name;
+        this.startTime = date.openDate();
+        this.endTime = date.closeDate();
+    }
+
+    public CourseID id() {
+        return this.course;
+    }
+
+    public LocalDateTime startTime() {
+        return this.startTime;
+    }
+
+    public LocalDateTime endTime() {
+        return this.endTime;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s: From %s To %s", this.course, fmt.format(this.startTime),
+                fmt.format(this.endTime));
+    }
+}

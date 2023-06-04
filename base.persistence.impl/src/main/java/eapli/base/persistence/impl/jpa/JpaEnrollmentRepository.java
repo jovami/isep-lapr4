@@ -39,4 +39,13 @@ class JpaEnrollmentRepository extends BaseJpaRepositoryBase<Enrollment, Long, In
         query.setParameter("course", c);
         return query.getResultList();
     }
+
+    @Override
+    public Iterable<Course> ongoingCoursesOfStudent(Student s) {
+        final var query = entityManager().createQuery(
+                "SELECT e.course FROM Enrollment e WHERE e.student = :student AND e.course.state = 'INPROGRESS'",
+                Course.class);
+        query.setParameter("student", s);
+        return query.getResultList();
+    }
 }
