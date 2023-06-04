@@ -20,30 +20,17 @@ import eapli.framework.functional.Either;
 @UseCaseController
 public final class OpenCloseCourseController {
     private final CourseRepository repo;
-    private final ListCoursesService svc;
 
     public OpenCloseCourseController() {
         this.repo = PersistenceContext.repositories().courses();
-        this.svc = new ListCoursesService(this.repo);
     }
-
-    private List<CourseAndStateDTO> getCourses(Supplier<Iterable<Course>> courses) {
-        return new CourseAndStateDTOMapper().toDTO(courses.get(), Comparator.comparing(Course::identity));
-    }
-
-    private Course fromDTO(CourseAndStateDTO dto) throws ConcurrencyException {
-        return this.repo.ofIdentity(dto.courseId())
-                        .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
-    }
-
-    // Available to the UIs
 
     public List<CourseAndStateDTO> openableCourses() {
-        return this.getCourses(this.svc::openable);
+        return this.getCourses(this.repo::openable);
     }
 
     public List<CourseAndStateDTO> closableCourses() {
-        return this.getCourses(this.svc::closable);
+        return this.getCourses(this.repo::closable);
     }
 
     public Either<String, CourseState> openCourse(CourseAndStateDTO chosen) {
@@ -60,5 +47,14 @@ public final class OpenCloseCourseController {
         var result = course.close();
         this.repo.save(course);
         return result;
+    }
+
+    private List<CourseAndStateDTO> getCourses(Supplier<Iterable<Course>> courses) {
+        return new CourseAndStateDTOMapper().toDTO(courses.get(), Comparator.comparing(Course::identity));
+    }
+
+    private Course fromDTO(CourseAndStateDTO dto) throws ConcurrencyException {
+        return this.repo.ofIdentity(dto.courseId())
+                .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
     }
 }

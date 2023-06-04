@@ -72,7 +72,7 @@ public class LoginUI extends AbstractUI {
                 System.out.println("WARNING: Console is null. Password will be visible.");
                 password = Console.readLine("Password:");
             } else {
-                password = ConsoleUtils.readPassword("Password:");
+                password = ConsoleUtils.readPassword("Password: ");
             }
 
             if (authenticationService.authenticate(username, password, onlyWithThis).isPresent()) {

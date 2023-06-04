@@ -13,6 +13,14 @@ public interface CourseRepository extends DomainRepository<CourseID, Course> {
 
     Iterable<Course> ofStates(Set<CourseState> states);
 
+    default Iterable<Course> openable() {
+        return ofState(CourseState.CLOSE);
+    }
+
+    default Iterable<Course> closable() {
+        return ofStates(Set.of(CourseState.CLOSE, CourseState.OPEN, CourseState.ENROLL, CourseState.INPROGRESS));
+    }
+
     default Iterable<Course> openableToEnrollments() {
         return ofState(CourseState.OPEN);
     }
