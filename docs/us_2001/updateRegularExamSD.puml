@@ -11,7 +11,10 @@ participant Teacher as teacher
 participant RegularExam as regularExam <<domain>>
 participant RegularExamDate as regularExamDate <<domain>>
 participant RegularExamSpecification as regularSpec<<domain>>
-participant ValidateRegularExamSpecificationService as service <<service>>
+
+participant GrammarContext as ctx <<grammar>>
+participant GrammarToolRepository as grepo <<factory>>
+participant RegularExamValidatorService as service <<service>>
 
 participant PersistenceContext as persistence <<persistence>>
 participant RepositoryFactory as factory <<factory>>
@@ -151,6 +154,16 @@ loop
 
         UI -> controller : updateRegularExamSpecification\n(regularExam,file)
         activate controller
+            controller --> ctx : grammarTools()
+            activate ctx
+                ctx --> grepo : regularExamValidator()
+                activate grepo
+                    grepo --> service : create()
+                    activate service
+                    deactivate service
+                deactivate grepo
+            deactivate ctx
+
             controller -> service : validate(file)
             activate service
             deactivate service

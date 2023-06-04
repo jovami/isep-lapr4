@@ -34,10 +34,6 @@ public class FormativeExamSpecification implements ValueObject {
         Preconditions.nonNull(spec, "Specification cannot be null");
         Preconditions.nonEmpty(spec, "Specification cannot be empty");
 
-        // not covered by Preconditions
-        if (spec.isBlank())
-            throw new IllegalArgumentException("Specification cannot be blank");
-
         this.spec = spec;
     }
 

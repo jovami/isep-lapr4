@@ -16,6 +16,19 @@ US 2001 -- As Teacher, I want to create an exam
 
 # Design
 
+Even though the client has specified that the **ANTLR** should be used,
+since this is essentially a service exterior to our domain, code that
+interacts with the ANTLR/grammar components must **protected from future variations**.
+
+Therefore, a mechanism similar to that of the persistence layer should be implemented:
+
+- Creation of a **GrammarContext** class that handles the **GrammarToolsFactory**
+- Implementation of a grammar validator for formative exams/regular exams/questions
+for each of the supported backends (currently only ANTLR)
+- Dynamic loading of the appropriate classes using the Java Reflections API®.
+
+
+
 - Used a parser to file related to regular exam specification, the file is validated by the grammar.
 - Find courses taught by the teacher logged.
 - Validate the file used to test the grammar created.
@@ -41,8 +54,9 @@ US 2001 -- As Teacher, I want to create an exam
     + **AuthzRegistry**
     + **AuthorizationService**
     + **UserSession**
-    + **ValidateRegularExamSpecificationService**
     + **BailErrorListener**
+- Grammar:
+    + **RegularExamValidatorService**
 - Repository:
     + **RepositoryFactory**
     + **RegularExamRepository**
@@ -52,7 +66,7 @@ US 2001 -- As Teacher, I want to create an exam
 - Persistence:
     + **PersistenceContext**
 - Others:
-  + **CommonTokenStream**
+    + **CommonTokenStream**
 
 
 ## Sequence Diagram

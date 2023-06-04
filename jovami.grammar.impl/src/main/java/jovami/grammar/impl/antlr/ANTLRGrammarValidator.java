@@ -1,29 +1,34 @@
-package jovami.util.grammar;
+package jovami.grammar.impl.antlr;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
+import jovami.util.grammar.GrammarValidator;
+
 /**
  * AbstractGrammarValidator
+ *
+ * @param <L> {@link Lexer} type
+ * @param <P> {@link Parser} type
  */
-public abstract class AbstractGrammarValidator {
+abstract class ANTLRGrammarValidator<L extends Lexer, P extends Parser> implements GrammarValidator {
 
     /**
      * Inner class to act as a Fail-Fast Error Listener,
      * as we're only concerned with whether the input syntax is valid
      */
-    public final class BailErrorListener extends BaseErrorListener {
+    private final class BailErrorListener extends BaseErrorListener {
         @Override
         public void syntaxError(
                 final Recognizer<?, ?> recognizer,
@@ -44,71 +49,40 @@ public abstract class AbstractGrammarValidator {
     }
 
     /**
-     * ANTLR does not provide a generic way of running the parser
-     * starting from the initial symbol; so have to make our own
+     * {@inheritDoc}
      */
-    @FunctionalInterface
-    public interface ParserWrapper {
-
-        ParserRuleContext runParser();
-    }
-
-    /**
-     * Work around for method reference syntax not being able to provide arguments.
-     * This interface is meant to be assigned by YourGrammarLexer::new
-     */
-    @FunctionalInterface
-    public interface LexerWrapper {
-
-        Lexer getLexer(CharStream stream);
-    }
-
-    /**
-     * Wrapper around generating a ParserWrapper; yeah it's ugly, but it works
-     */
-    @FunctionalInterface
-    public interface ParserWrapperFactory {
-        ParserWrapper getParser(CommonTokenStream stream, ANTLRErrorListener errListener);
-    }
-
-    private final LexerWrapper lexerWrp;
-
-    private final ParserWrapperFactory parserWrp;
-
-    protected AbstractGrammarValidator(LexerWrapper lexer, ParserWrapperFactory parser) {
-        this.lexerWrp = lexer;
-        this.parserWrp = parser;
-    }
-
-    /**
-     * @param specFile File path to the formative exam specification
-     * @return whether the provided file obeys the specification grammar
-     * @throws IOException
-     */
+    @Override
     public final boolean validate(File specFile) throws IOException {
         return this.isValid(CharStreams.fromPath(specFile.toPath()));
     }
 
     /**
-     * @param spec string that contains the entire formative exam specification
-     * @return whether the provided file obeys the specification grammar
+     * {@inheritDoc}
      */
+    @Override
     public final boolean validate(String spec) {
         return this.isValid(CharStreams.fromString(spec));
     }
+
+    protected abstract L getLexer(CharStream stream);
+
+    protected abstract P getParser(CommonTokenStream stream);
+
+    protected abstract ParserRuleContext runParser(P parser) throws ParseCancellationException;
 
     /**
      * @param stream the CharStream to read the tokens from
      * @return whether the provided file obeys the specification grammar
      */
-    protected boolean isValid(CharStream stream) {
-        var lexer = this.lexerWrp.getLexer(stream);
+    protected final boolean isValid(CharStream stream) {
+        var lexer = getLexer(stream);
         lexer.addErrorListener(new BailErrorListener());
 
-        var parser = this.parserWrp.getParser(new CommonTokenStream(lexer), new BailErrorListener());
+        var parser = getParser(new CommonTokenStream(lexer));
+        parser.addErrorListener(new BailErrorListener());
 
         try {
-            parser.runParser();
+            runParser(parser);
         } catch (ParseCancellationException e) {
             return false;
         }

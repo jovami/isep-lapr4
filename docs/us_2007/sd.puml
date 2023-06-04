@@ -11,8 +11,11 @@ participant Teacher as teacher
 
 participant CourseRepository as c_repo
 
+participant GrammarContext as ctx
+participant GrammarToolRepository as grepo
+
 participant QuestionFactory as fact
-participant ValidateQuestionSpecificationService as svc
+participant QuestionValidatorService as svc
 
 participant Question as question
 
@@ -86,6 +89,20 @@ activate ui
         activate c_repo
             c_repo --> ctrl : course
         deactivate c_repo
+
+        ctrl --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : questionValidator()
+            activate grepo
+                grepo --> svc : create()
+                activate svc
+                deactivate svc
+            deactivate grepo
+        deactivate ctx
+
+        ctrl --> fact : create(questionValidator)
+        activate fact
+        deactivate fact
 
         ctrl --> fact : build(course, file)
         activate fact

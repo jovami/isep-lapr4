@@ -10,18 +10,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eapli.base.course.domain.Course;
-import eapli.base.question.application.ValidateQuestionSpecificationService;
+import eapli.base.question.application.parser.QuestionValidatorService;
 
 /**
  * QuestionFactory
  */
 public final class QuestionFactory {
 
-    private final ValidateQuestionSpecificationService svc;
+    private final QuestionValidatorService svc;
 
-    public QuestionFactory() {
+    public QuestionFactory(QuestionValidatorService svc) {
         super();
-        this.svc = new ValidateQuestionSpecificationService();
+        this.svc = svc;
     }
 
     /**

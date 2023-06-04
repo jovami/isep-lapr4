@@ -10,18 +10,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eapli.base.course.domain.Course;
-import eapli.base.formativeexam.application.ValidateFormativeExamSpecificationService;
+import eapli.base.formativeexam.application.parser.FormativeExamValidatorService;
 
 /**
  * FormativeExamFactory
  */
 public final class FormativeExamFactory {
 
-    private final ValidateFormativeExamSpecificationService svc;
+    private final FormativeExamValidatorService svc;
 
-    public FormativeExamFactory() {
+    public FormativeExamFactory(FormativeExamValidatorService svc) {
         super();
-        this.svc = new ValidateFormativeExamSpecificationService();
+        this.svc = svc;
     }
 
     /**

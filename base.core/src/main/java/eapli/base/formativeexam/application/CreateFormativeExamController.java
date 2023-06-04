@@ -14,6 +14,7 @@ import eapli.base.course.repositories.StaffRepository;
 import eapli.base.formativeexam.domain.FormativeExam;
 import eapli.base.formativeexam.domain.FormativeExamFactory;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
 import eapli.framework.domain.repositories.ConcurrencyException;
@@ -52,7 +53,8 @@ public class CreateFormativeExamController {
         var course = this.courseRepo.ofIdentity(courseDTO.courseId())
                 .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
-        Optional<FormativeExam> fexam = new FormativeExamFactory().build(course, file);
+        var validator = GrammarContext.grammarTools().formativeExamValidator();
+        Optional<FormativeExam> fexam = new FormativeExamFactory(validator).build(course, file);
 
         fexam.ifPresent(this.repo::save);
         return fexam.isPresent();

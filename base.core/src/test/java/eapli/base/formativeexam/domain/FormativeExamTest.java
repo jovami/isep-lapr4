@@ -1,5 +1,6 @@
 package eapli.base.formativeexam.domain;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -50,6 +51,8 @@ public class FormativeExamTest {
         var spec = new FormativeExamSpecification("test");
 
         assertThrows(IllegalArgumentException.class, () -> new FormativeExam(null, spec));
+
+        assertDoesNotThrow(() -> new FormativeExam(MATEMATICA, spec));
     }
 
     @Test

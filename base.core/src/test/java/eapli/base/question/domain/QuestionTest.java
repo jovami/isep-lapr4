@@ -1,5 +1,6 @@
 package eapli.base.question.domain;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -38,14 +39,15 @@ public class QuestionTest {
         /*
          * NOTE:
          * The validity of the specification itself is tested in the
-         * FormativeExamFactory
-         * class since that's the only place it can actually be created in the normal
-         * application, since constructors for FormativeExam and specification have
-         * visibility ***protected***
+         * QuestionFactory class since that's the only place it can actually
+         * be created in the normal application, since constructors for
+         * Question and specification have visibility ***protected***
          */
         var spec = new QuestionSpecification("test");
 
         assertThrows(IllegalArgumentException.class, () -> new Question(null, spec));
+
+        assertDoesNotThrow(() -> new Question(MATEMATICA, spec));
     }
 
     @Test

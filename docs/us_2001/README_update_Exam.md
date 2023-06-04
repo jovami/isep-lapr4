@@ -23,6 +23,17 @@ US 2001 -- As Teacher, I want to update an exam
 - Verify if the dates used to update an exam are valid.
 
 ## Classes
+Even though the client has specified that the **ANTLR** should be used,
+since this is essentially a service exterior to our domain, code that
+interacts with the ANTLR/grammar components must **protected from future variations**.
+
+Therefore, a mechanism similar to that of the persistence layer should be implemented:
+
+- Creation of a **GrammarContext** class that handles the **GrammarToolsFactory**
+- Implementation of a grammar validator for formative exams/regular exams/questions
+for each of the supported backends (currently only ANTLR)
+- Dynamic loading of the appropriate classes using the Java Reflections API®.
+
 
 - Domain:
     + **RegularExamSpecification**
@@ -32,7 +43,8 @@ US 2001 -- As Teacher, I want to update an exam
     + **UpdateRegularExamUI**
 - Application:
     + **UpdateRegularExamController**
-    + **ValidateRegularExamSpecificationService**
+- Grammar:
+    + **RegularExamValidatorService**
 - Repository:
     + **RepositoryFactory**
     + **RegularExamRepository**
@@ -42,8 +54,8 @@ US 2001 -- As Teacher, I want to update an exam
 - Persistence:
     + **PersistenceContext**
 - DTO:
-   + **CourseAndDescriptionDTOMapper**
-   + **CourseAndDescriptionDTO**
+    + **CourseAndDescriptionDTOMapper**
+    + **CourseAndDescriptionDTO**
 
 
 ## Sequence Diagram

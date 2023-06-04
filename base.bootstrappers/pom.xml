@@ -31,5 +31,11 @@
             <artifactId>base.core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>eapli</groupId>
+            <artifactId>jovami.grammar.impl</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -48,23 +48,31 @@ system using the existing question repository to fill in questions based on thei
 
 # Design
 
+Even though the client has specified that the **ANTLR** should be used,
+since this is essentially a service exterior to our domain, code that
+interacts with the ANTLR/grammar components must **protected from future variations**.
+
+Therefore, a mechanism similar to that of the persistence layer should be implemented:
+
+- Creation of a **GrammarContext** class that handles the **GrammarToolsFactory**
+- Implementation of a grammar validator for formative exams/regular exams/questions
+for each of the supported backends (currently only ANTLR)
+- Dynamic loading of the appropriate classes using the Java Reflections API®.
+
 - Use a layer based approach
 - Domain classes:
     + **FormativeExam**
     + **FormativeExamSpecification**
     + **FormativeExamFactory**
-    <!-- + **Question** -->
-    <!-- + **QuestionType** (enum) -->
 - Controller:
     + **CreateFormativeExamController**
-    + **ValidateFormativeExamSpecificationService**
-    <!-- + **GenerateFormativeExamService** -->
+- Grammar:
+    + **FormativeExamValidatorService**
 - Repository:
     + **FormativeExamRepository**
     + **TeacherRepository**
     + **StaffMemberRepository**
     + **CourseRepository**
-    <!-- + **QuestionRepository** -->
 
 The teacher creating the formative exam **must** select a course they teach in; in order to
 decrease the coupling between UI and Domain, **DTO** objects will be used to report to the UI.

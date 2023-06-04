@@ -11,6 +11,7 @@ import eapli.base.course.dto.AvailableCourseDTO;
 import eapli.base.course.dto.AvailableCourseDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
+import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.question.domain.Question;
 import eapli.base.question.domain.QuestionFactory;
@@ -51,7 +52,8 @@ public class AddExamQuestionsController {
         var course = this.courseRepo.ofIdentity(courseDTO.courseId())
                 .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
-        Optional<Question> question = new QuestionFactory().build(course, file);
+        var validator = GrammarContext.grammarTools().questionValidator();
+        Optional<Question> question = new QuestionFactory(validator).build(course, file);
 
         question.ifPresent(this.repo::save);
         return question.isPresent();

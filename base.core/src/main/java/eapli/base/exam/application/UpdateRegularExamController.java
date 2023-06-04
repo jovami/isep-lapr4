@@ -13,10 +13,12 @@ import eapli.base.course.dto.CourseAndDescriptionDTO;
 import eapli.base.course.dto.CourseAndDescriptionDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
+import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.domain.regular_exam.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.application.UseCaseController;
@@ -28,6 +30,7 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 public class UpdateRegularExamController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
+    private final RegularExamValidatorService svc;
     private final RepositoryFactory repositoryFactory;
     private final RegularExamRepository repoRegularExam;
 
@@ -40,6 +43,7 @@ public class UpdateRegularExamController {
         this.repoRegularExam = repositoryFactory.regularExams();
         this.repoStaff = repositoryFactory.staffs();
         this.repoCourse = repositoryFactory.courses();
+        this.svc = GrammarContext.grammarTools().regularExamValidator();
     }
 
     private List<CourseAndDescriptionDTO> getCourses(Iterable<Course> courses) {
@@ -69,7 +73,7 @@ public class UpdateRegularExamController {
 
     public boolean updateRegularExamSpecification(RegularExam regularExam, File file) throws IOException {
 
-        if (!new ValidateRegularExamSpecificationService().validate(file))
+        if (!this.svc.validate(file))
             return false;
 
         regularExam.updateRegularExamSpecification(RegularExamSpecification.valueOf(file));

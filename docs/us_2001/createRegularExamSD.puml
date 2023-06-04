@@ -15,7 +15,11 @@ database StaffRepository as repoStaff <<repository>>
 database CourseRepository as repoCourse <<repository>>
 participant AuthzRegistry as authz <<application>>
 participant AuthorizationService as authzService <<application>>
-participant ValidateRegularExamSpecificationService as resservice <<application>>
+
+participant GrammarContext as ctx <<grammar>>
+participant GrammarToolRepository as grepo <<factory>>
+participant RegularExamValidatorService as resservice <<application>>
+
 participant BailErrorListener as listener <<application>>
 participant ExamSpecLexer as lexer <<domain>>
 participant ExamSpecParser as parser <<domain>>
@@ -117,9 +121,18 @@ activate UI
             repoCourse -> controller : Course
         deactivate repoCourse
 
-        controller -> resservice : create
+        controller --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : regularExamValidator()
+            activate grepo
+                grepo --> resservice : create()
+                activate resservice
+                deactivate resservice
+            deactivate grepo
+        deactivate ctx
+
+        controller -> resservice : validate(file)
         activate resservice
-            resservice -> resservice : validate(file)
             resservice -> resservice : isValid(stream)
 
                 resservice -> lexer :create(stream)

@@ -22,7 +22,7 @@ public class FormativeExamSpecificationTest {
         IntStream
                 .range(0, 100)
                 .boxed()
-                .map(""::repeat)
+                .map(" "::repeat)
                 .forEach(str -> assertThrows(
                         IllegalArgumentException.class,
                         () -> new FormativeExamSpecification(str)));

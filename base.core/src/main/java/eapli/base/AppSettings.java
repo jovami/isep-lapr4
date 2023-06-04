@@ -44,6 +44,7 @@ public class AppSettings {
     private static final String PERSISTENCE_UNIT_KEY = "persistence.persistenceUnit";
     private static final String SCHEMA_GENERATION_KEY = "javax.persistence.schema-generation.database.action";
     private static final String HIGH_CALORIES_DISH_LIMIT = "HighCaloriesDishLimit";
+    private static final String GRAMMAR_TOOLS_FACTORY_KEY = "grammar.toolsFactory";
 
     private final Properties applicationProperties = new Properties();
 
@@ -70,6 +71,9 @@ public class AppSettings {
     private void setDefaultProperties() {
         this.applicationProperties.setProperty(REPOSITORY_FACTORY_KEY,
                 "eapli.base.persistence.jpa.JpaRepositoryFactory");
+        this.applicationProperties.setProperty(GRAMMAR_TOOLS_FACTORY_KEY,
+                "jovami.grammar.impl.antlr.ANTLRGrammarToolsFactory");
+
         this.applicationProperties.setProperty(UI_MENU_LAYOUT_KEY, "horizontal");
         this.applicationProperties.setProperty(PERSISTENCE_UNIT_KEY, "eapli"
                 + ".base");
@@ -87,6 +91,10 @@ public class AppSettings {
 
     public String getRepositoryFactory() {
         return this.applicationProperties.getProperty(REPOSITORY_FACTORY_KEY);
+    }
+
+    public String getGrammarToolsFactory() {
+        return this.applicationProperties.getProperty(GRAMMAR_TOOLS_FACTORY_KEY);
     }
 
     public Integer getHighCaloriesDishLimit() {

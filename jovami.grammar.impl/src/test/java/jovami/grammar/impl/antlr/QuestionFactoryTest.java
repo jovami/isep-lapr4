@@ -1,4 +1,4 @@
-package eapli.base.question.domain;
+package jovami.grammar.impl.antlr;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +12,7 @@ import org.junit.Test;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseFactory;
 import eapli.base.course.dto.CreateCourseDTO;
+import eapli.base.question.domain.QuestionFactory;
 
 /**
  * FormativeExamFactoryTest
@@ -23,7 +24,7 @@ public class QuestionFactoryTest {
 
     @Before
     public void makeFactory() {
-        this.factory = new QuestionFactory();
+        this.factory = new QuestionFactory(new ANTLRQuestionValidator());
     }
 
     @Before

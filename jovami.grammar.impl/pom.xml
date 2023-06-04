@@ -1,23 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>eapli</groupId>
         <artifactId>base</artifactId>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>base.app.common.console</artifactId>
+    <artifactId>jovami.grammar.impl</artifactId>
     <packaging>jar</packaging>
 
-    <name>base.app.common.console</name>
+    <name>jovami.grammar.impl</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <slf4jVersion>1.7.20</slf4jVersion>
     </properties>
 
     <dependencies>
@@ -25,12 +24,6 @@
             <groupId>eapli</groupId>
             <artifactId>base.core</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eapli</groupId>
-            <artifactId>jovami.grammar.impl</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>
