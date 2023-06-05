@@ -23,6 +23,7 @@ public class EnableUserUI extends AbstractUI {
             final Iterable<SystemUserNameEmailDTO> iterable = this.theController.disabledUsers();
             if (!iterable.iterator().hasNext()) {
                 System.out.println("There is no users disabled");
+                keepEnabling = false;
             } else {
                 SelectWidget<SystemUserNameEmailDTO> selec = new SelectWidget<>("Choose a user no enable", iterable);
                 selec.show();
@@ -30,7 +31,7 @@ public class EnableUserUI extends AbstractUI {
                 if (keepEnabling) {
                     try {
                         if (this.theController.enableUser(selec.selectedElement())) {
-                            System.out.printf("%s was successfully enabled", selec.selectedElement().username());
+                            System.out.printf("%s was successfully enabled\n", selec.selectedElement().username());
                         } else {
                             System.out.printf("There was an error enabling %s\n", selec.selectedElement().username());
                         }
