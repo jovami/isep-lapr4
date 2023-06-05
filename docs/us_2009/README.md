@@ -98,5 +98,16 @@ Some of the major implementation differences:
     + **FormativeExamResultDTOMapper**
 
 ## Sequence diagram
-<!-- TODO -->
-WIP.
+This use case was broken down into three parts:
+
+1. Provide the student with a list of exams they can currently take.
+
+![[diagram](./1-list-fexams.svg)](./1-list-fexams.svg)
+
+2. Generate the exam from the stored specification and provide it to the user.
+
+![[diagram](./2-fexam-to-be-taken.svg)](./2-fexam-to-be-taken.svg)
+
+3. Compute the student's grade and per-question feedback.
+
+![[diagram](./3-grade-fexam.svg)](./3-grade-fexam.svg)

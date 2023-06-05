@@ -1,0 +1,50 @@
+@startuml
+
+actor Student as student
+
+participant TakeFormativeExamUI as ui
+participant TakeFormativeExamController as ctrl
+
+participant EnrollmentRepository as enrollment_repo
+participant FormativeExamRepository as fexam_repo
+
+participant FormativeExamDTOMapper as mapper
+participant FormativeExamDTO as dto
+
+
+student --> ui : enter
+activate ui
+    ui --> ctrl : create()
+    activate ctrl
+        note right : repositories are retrieved via\nPersistenceContext.repositories()
+    deactivate ctrl
+
+    ui --> ctrl : formativeExams()
+    activate ctrl
+        ctrl --> enrollment_repo : ongoingCoursesOfStudent(student)
+        activate enrollment_repo
+            enrollment_repo --> ctrl : courses
+        deactivate enrollment_repo
+
+        ctrl --> fexam_repo : formativeExamsOfCourses(courses)
+        activate fexam_repo
+            fexam_repo --> ctrl : exams
+        deactivate fexam_repo
+
+        ctrl --> mapper : create()
+        activate mapper
+            loop for each exam in exams
+                mapper --> dto : create()
+                activate dto
+                deactivate dto
+            end loop
+            mapper --> ctrl : examDTOList
+        deactivate mapper
+
+        ctrl --> ui : examDTOList
+    deactivate ctrl
+
+    ui --> student : show
+deactivate ui
+
+@enduml

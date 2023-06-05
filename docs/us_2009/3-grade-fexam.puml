@@ -1,0 +1,63 @@
+@startuml
+
+actor Student as student
+
+participant TakeFormativeExamUI as ui
+participant TakeFormativeExamController as ctrl
+
+participant FormativeExamToBeTakenDTOUnMapper as unmap
+participant QuestionRepository as q_repo
+
+participant GrammarContext as ctx
+participant GrammarToolFactory as grepo
+
+participant GradeFormativeExamService as svc
+
+participant FormativeExamResultDTO as dto
+
+student --> ui : submits resolution
+activate ui
+    ui --> ctrl : examGrading(resolutionDTO)
+    activate ctrl
+
+        ctrl --> unmap : fromDTO(resolutionDTO)
+        activate unmap
+            loop for each question_answer in resolutionDTO
+                unmap --> q_repo : ofIdentity(question_answer)
+                activate q_repo
+                    q_repo --> unmap : question
+                deactivate q_repo
+            end loop
+
+            unmap --> ctrl : questions
+        deactivate unmap
+
+        ctrl --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : formativeExamGrader()
+            activate grepo
+                grepo --> svc : create()
+                activate svc
+                deactivate svc
+            deactivate grepo
+        deactivate ctx
+
+        ctrl --> svc : correctExam(resolutionDTO, questions)
+        activate svc
+            note right: exam correction done \nby an external service
+
+            svc --> dto : create()
+            activate dto
+            deactivate dto
+
+            svc --> ctrl : resultDTO
+        deactivate svc
+
+        ' NOTE: maybe pass a different DTO to the UI
+        ctrl --> ui : resultDTO
+    deactivate ctrl
+
+    ui --> student : show exam results
+deactivate ui
+
+@enduml

@@ -1,0 +1,62 @@
+@startuml
+
+actor Student as student
+
+participant TakeFormativeExamUI as ui
+participant TakeFormativeExamController as ctrl
+
+participant FormativeExamRepository as repo
+participant EnrollmentRepository as e_repo
+participant QuestionRepository as q_repo
+
+participant GrammarContext as ctx
+participant GrammarToolFactory as grepo
+
+participant GenerateFormativeExamService as svc
+participant FormativeExamToBeTakenDTO as dto
+
+student --> ui : chooses exam
+activate ui
+    ui --> ctrl : generateFormativeExam(examDTO)
+    activate ctrl
+        ctrl --> repo : ofIdentity()
+        activate repo
+            repo --> ctrl : exam
+        deactivate repo
+
+        ctrl --> e_repo : ongoingCoursesOfStudent(student)
+        activate e_repo
+            e_repo --> ctrl : courses
+        deactivate e_repo
+
+        ctrl --> q_repo : questionsOfCourses(courses)
+        activate q_repo
+            q_repo --> ctrl : questions
+        deactivate q_repo
+
+        ctrl --> ctx : grammarTools()
+        activate ctx
+            ctx --> grepo : formativeExamGenerator()
+            activate grepo
+                grepo --> svc : create()
+                activate svc
+                deactivate svc
+            deactivate grepo
+        deactivate ctx
+
+        ctrl --> svc : generate(exam, questions)
+        activate svc
+            note right: exam generation done \nby an external service
+            svc --> dto : create()
+            activate dto
+            deactivate dto
+            svc --> ctrl : examToBeTakenDTO
+        deactivate svc
+
+        ctrl --> ui : examToBeTakenDTO
+    deactivate ctrl
+
+    ui --> student : display exam
+deactivate ui
+
+@enduml
