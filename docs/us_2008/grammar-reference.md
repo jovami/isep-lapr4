@@ -18,7 +18,7 @@ FORMATIVE EXAM {
 ```
 
 **Note:** two forward slashed (i.e **//**) initiate a comment, meaning the remaining of the line will be ignored
-when parsing the specification. This can be useful two add notes/reminders to the writer of the specification.
+when parsing the specification. This can be useful to add notes/reminders to the writer of the specification.
 
 ## Defining the Title
 To define the title, use the **TITLE** keyword, followed by a colon, and then the
