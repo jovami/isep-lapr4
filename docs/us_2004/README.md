@@ -86,8 +86,13 @@ This requires the implementation of this Use Case to use **Dependency inversion*
 **Protected variations** in order to make future changes --- i.e changing to
 a different tool from ANTLR --- a plug-n'-play task.
 
-Thus, the currently implemented **GrammarContext** system will be used to handle
-parser implementations from different systems.
+- The currently implemented **GrammarContext** system will be used to handle
+  parser implementations from different systems.
+- System components that interact with the grammar context will do so via an
+  interface that each grammar implementation (*currently only ANTLR is supported*)
+  needs to adhere to.
+- **DTO** objects will be used to ensure intermediate system layers need not be
+  altered if there is a change in requirements/tooling to use.
 
 <!-- TODO: mention frontend-backend details after the client's answer -->
 <!-- TODO: mention feedback -->
