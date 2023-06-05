@@ -24,7 +24,6 @@ when parsing the specification. This can be useful to add notes/reminders to the
 To define the title, use the **TITLE** keyword, followed by a colon, and then the
 exam title which **must** be in between **quotes**.
 
-
 ```
 // Good:
 FORMATIVE EXAM {
@@ -67,6 +66,7 @@ The following is also valid:
 FORMATIVE EXAM {
     TITLE: "Test formative exam"
 
+    // No header !!
     // Remaining of the specification //
 }
 ```
@@ -130,7 +130,7 @@ FORMATIVE EXAM {
 Inside each section, a sequence of **at least one** question type(s) must be specified.
 Sections with no question types are **invalid** and will result in a parse **error**.
 
-To specify a question types, the **QUESTION** keyword is used, followed by a colon and
+To specify a question type, the **QUESTION** keyword is used, followed by a colon and
 one of the **predefined** question types:
 
 1. **MATCHING**
@@ -141,22 +141,22 @@ one of the **predefined** question types:
 6. **TRUE_FALSE**
 
 Question types do not need to (*and cannot be*) in between quotes; instead an identifier
-written **exactly** like the above ones must be used.
+written **exactly** like the ones above must be used.
 
 Additionally, question types may repeat within the same section, as well as across different sections.
 However, one should be careful not to repeat the same question number within the same section,
 as that will also result in a parse **erorr**.
 
 The following is thus an example of a **valid** formative exam:
-
 ```
 FORMATIVE EXAM {
-    // other components...
-    // ...
+    TITLE: "Example Formative exam"
+
+    HEADER {
+        DESCRIPTION: "It is not that difficult!!"
+    }
 
     SECTION 1 {
-        // section specification
-
         DESCRIPTION: "This component is optional. Syntax is identical to the global description!"
 
         QUESTION 1: MATCHING
