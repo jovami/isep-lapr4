@@ -12,7 +12,7 @@ the exam's specification.
 
 1. From [GAVRIKOVA: US2004 - As Student, I want to take an exam](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23402#p29589)
 > >  when a student finished taking exam, will he want at some point review the exam and see his answers?
-> 
+>
 > This is not required.
 
 > > Do we need to save the exam with the answers of a certain student to be able to
@@ -28,7 +28,7 @@ the exam's specification.
 
 > > Another question is about types of feedback: on-submission means on submission
     of a question or the whole exam?
-> 
+>
 > On submission of the whole exam.
 
 **Interpretation:** The student does not receive any kind of *real-time feedback* while
@@ -38,7 +38,7 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
 > > A propósito das US's 2004 e 2009, de que forma é que os exames serão apresentados
     ao aluno para o mesmo os realizar? Será semelhante às boards, em que será criada
     uma página em JavaScript?
-> 
+>
 > Apenas a aplicação "shared board app" implementa um servidor http para servir
   o "board viewer".
   Todas as outras funcionalidades da solução devem estar distribuídas pelas outras
@@ -62,8 +62,18 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
 
 <!-- TODO check answer -->
 
+4. From [GAVRIKOVA: US2004 - Take an exam - Number of attempts](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23481#p29707)
+> > When a student takes an exam, should we assume that he has only one attempt,
+    or the number of attempts should be specified in the exam grammar?
+>
+> There is no mention regarding attempts in the specification,
+  therefore there is no need to support that functionality.
+
+**Interpretation:** Since the maximum number of attempts is unspecified, students
+will only have a single attempt when taking exams.
+
 ## Business rules
-N/A
+- Students cannot submit an exam after its closing date.
 
 ## Unit tests
 
