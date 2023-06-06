@@ -50,8 +50,6 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
   Mas a sua implementação não necessita de ser realizada em HTML
   (ou seja, não é esperado que o façam).
 
-<!-- TODO check answer -->
-
 3. From [RENTE: US2004 - Realizar um exame](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23476#p29702)
 > > Relativamente à funcionalidade de realizar um exame, mais concretamente
     à parte de mostrar a nota/feedback com a propriedade "after-closing"
@@ -59,8 +57,20 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
     mal a data de fecho do exame seja atingida ou pretende-se apenas que a nota
     possa ser visualizada a partir da funcionalidade correspondente à US2005/2006.
     Caso pretenda que o aluno seja notificado, pergunto-lhe se isto deve ser feito através de uma notificação do sistema ou através de um serviço, por exemplo, email.
-
-<!-- TODO check answer -->
+>
+> Não consigo encontrar nenhuma referência a uma notificação depois da data de fecho do exame. 
+  O que vejo é que o sistema deve mostrar o resultado e o feedback no final do exame.
+  A questão que se pode colocar é quando é que acontece o "fim do exame". 
+  Podemos entender que é quando o aluno submete o seu exame ou quando atingimos a data de fecho do exame ("close date"). 
+  Como cliente posso indicar que aceito a primeira interpretação, ou seja, assim que o aluno submete o seu exame, este 
+  recebe o feedback e nota (de forma sincrona). Penso que em termos de solução será a situação mais simples.
+> 
+> > Tendo em conta que aceita primeira interpretação, qual será a diferença entre on-submission e after-closing?
+    A minha dúvida é principalmente acerca do funcionamento da propriedade after-closing.
+> 
+> A minha indicação anterior é a de que o aluno recebe o feedback e a nota quando submete o exame. 
+  Em principio o aluno tem de submeter o exame antes do tempo de fecho do exame.
+  Se o aluno tentar submeter um exame depois do seu fecho o sistema deve simplesmente não aceitar a entrega/submissão.
 
 4. From [GAVRIKOVA: US2004 - Take an exam - Number of attempts](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23481#p29707)
 > > When a student takes an exam, should we assume that he has only one attempt,
