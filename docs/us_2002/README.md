@@ -35,8 +35,8 @@ In order to reduce coupling between the Domain and Presentation classes,
     + **EnrollmentRepository**
     + **RegularExamRepository**
 - DTO:
-    **FutureExamDTO**
-    **FutureExamDTOMapper**
+    + **FutureExamDTO**
+    + **FutureExamDTOMapper**
 
 ## Sequence diagram
 ![diagram](./sd.svg)
