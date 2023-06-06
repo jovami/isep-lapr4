@@ -1,15 +1,15 @@
 package eapli.base.persistence.impl.jpa;
 
-import java.util.Optional;
-
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 
-class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, Integer> implements BoardRepository {
+import java.util.Optional;
+
+class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, BoardTitle> implements BoardRepository {
 
     JpaBoardRepository(String persistenceUnitName) {
-        super(persistenceUnitName, "BoardTitle");
+        super(persistenceUnitName, "boardTitle");
     }
 
     public boolean hasCellPostIt(int cellId) {
@@ -23,16 +23,5 @@ class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, Integer> imp
         Optional<Board> findIfBoardTitleIsUnique = matchOne(
                 "e.title = :otherBoardTitle", otherBoardTitle);
         return findIfBoardTitleIsUnique.isEmpty();
-
-    }
-
-    @Override
-    public Optional<Board> ofIdentity(BoardTitle id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void deleteOfIdentity(BoardTitle entityId) {
-
     }
 }
