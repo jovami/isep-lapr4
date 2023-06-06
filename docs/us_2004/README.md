@@ -69,6 +69,23 @@ taking the exam; only when they submit it (provided the feedback type is *on-sub
 > There is no mention regarding attempts in the specification,
   therefore there is no need to support that functionality.
 
+5. From [ALVES: US 2004/2009](https://moodle.isep.ipp.pt/mod/forum/discuss.php?d=23236#p29402)
+> > First we would like to know if you wish that the grades are saved in the program database. 
+    Second we would like for you to clarify the expected flow of both feedback and grade types.
+> 
+> Regarding the first question, if you do not save the grades how do you implement the functionalities of FRE05 and FRE06?
+  Regarding the second question, the ideia is to have something very similar to the Moodle platform. 
+  According to the specification "The system must also support the automatic production of feedback and grading for the 
+  answers given by students when they take the exam. Usually this is done at the end of the exam." 
+  So, the grade and the feedback should be provided only and the end of the exam. 
+  At the end of the exam, the system should display to the student the resulting grade 
+  of the exam as well as the grade and feedback for each question/answer.
+  You may find a simple workflow on how to create moodle tests(quiz) in [Youtube](https://youtu.be/dCDPS7ufGuQ).
+  Regarding grades, each question will have points when the answer is correct. 
+  If you sum all the points form all the answers you will have the grade of the exam.
+  Please consider only the question types that are presented in the specification document.
+  For each question type you will find further details on the specifics of the grading logic.
+
 **Interpretation:** Since the maximum number of attempts is unspecified, students
 will only have a single attempt when taking exams.
 
