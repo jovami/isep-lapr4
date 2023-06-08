@@ -297,7 +297,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
     @Override
     public String visitNumerical_solution(Numerical_solutionContext ctx) {
-        return String.format("%s\n%s", visit(ctx.combinations()), ctx.points);
+        return String.format("%s\n%s", visit(ctx.combinations()), ctx.points.getText());
     }
 
     @Override
