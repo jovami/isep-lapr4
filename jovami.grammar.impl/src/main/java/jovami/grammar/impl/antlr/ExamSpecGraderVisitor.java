@@ -43,6 +43,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     private List<Answer> answers;
 
     private float finalPoints;
+    private float maxPoints = 0;
 
     private float points = 0.f;
     private String feedback = "";
@@ -76,7 +77,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         ctx.section().forEach(this::visit);
         // visitChildren(ctx);
 
-        this.result = new ExamResultDTO(this.sections, this.finalPoints);
+        this.result = new ExamResultDTO(this.sections, this.finalPoints, this.maxPoints);
 
         return null;
     }
@@ -117,7 +118,8 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
         if (answer.equals(x)) {
             this.points = Float.parseFloat(ctx.points.getText());
-            this.finalPoints += points;
+            this.maxPoints += this.points;
+            this.finalPoints += this.points;
             this.feedback = "";
         }
 
@@ -158,6 +160,12 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             }
         }
 
+        ctx.string_solution()
+                .stream()
+                .mapToDouble(node -> Float.parseFloat(visitString_solution(node).split("\n")[1]))
+                .max()
+                .ifPresent(max -> this.maxPoints += max);
+
         return null;
     }
 
@@ -181,7 +189,10 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
         for (var solutionCtx : ctx.matching_solution()) {
             var solution = visitMatching_solution(solutionCtx).split("\n");
-            map.put(solution[0], Float.parseFloat(solution[1]));
+            var points = Float.parseFloat(solution[1]);
+            this.maxPoints += points;
+
+            map.put(solution[0], points);
         }
 
         this.feedback = "";
@@ -228,6 +239,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .split("\n");
         var expected = Float.parseFloat(numericalSolution[0]);
         var points = Float.parseFloat(numericalSolution[1]);
+        this.maxPoints += points;
 
         var answer = Float.parseFloat(this.resolution.sections()
                 .get(sectionCounter)
@@ -276,10 +288,17 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         }
 
         var map = new HashMap<String, Float>();
+        var maxPoints = 0.f;
         for (var solutionCtx : ctx.numerical_solution()) {
             var expected = visitNumerical_solution(solutionCtx).split("\n");
-            map.put(expected[0], Float.parseFloat(expected[1]));
+            var points = Float.parseFloat(expected[1]);
+            if (points > maxPoints)
+                maxPoints = points;
+
+            map.put(expected[0], points);
         }
+
+        this.maxPoints += maxPoints;
 
         var points = map.get(answer);
         if (points != null)
@@ -321,10 +340,18 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         for (var choice : ctx.choice()) {
             var id = Integer.parseInt(choice.id.getText());
             var solutions = new HashMap<String, Float>();
-            choice.string_solution().forEach(solutionCtx -> {
+            var maxPoints = 0.f;
+
+            for (var solutionCtx : choice.string_solution()){
                 var solution = visitString_solution(solutionCtx).split("\n");
-                solutions.put(solution[0], Float.parseFloat(solution[1]));
-            });
+                var points = Float.parseFloat(solution[1]);
+                if (points > maxPoints)
+                    maxPoints = points;
+
+                solutions.put(solution[0], points);
+            }
+            this.maxPoints += maxPoints;
+
             map.put(id, solutions);
         }
 
@@ -348,6 +375,4 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
         return null;
     }
-
-
 }

@@ -21,7 +21,6 @@ public final class ExamResolutionDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static final class Section {
-
         private List<String> answers;
     }
 

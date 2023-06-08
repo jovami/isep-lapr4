@@ -29,12 +29,11 @@ public class ExamResultDTO {
     @AllArgsConstructor
     @ToString
     public static final class Answer {
-
         private final float points;
         private final String feedback;
     }
 
     private final List<Section> sections;
-    private final Float totalPoints;
-
+    private final Float grade;
+    private final Float maxGrade;
 }
