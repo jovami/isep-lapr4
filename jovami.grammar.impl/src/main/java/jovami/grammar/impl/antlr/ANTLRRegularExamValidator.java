@@ -1,13 +1,14 @@
 package jovami.grammar.impl.antlr;
 
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecLexer;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import eapli.base.exam.application.parser.RegularExamValidatorService;
-import eapli.base.exam.application.parser.autogen.ExamSpecLexer;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser;
+
 
 public class ANTLRRegularExamValidator
         extends ANTLRGrammarValidator<ExamSpecLexer, ExamSpecParser>

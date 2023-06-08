@@ -1,9 +1,9 @@
 package jovami.grammar.impl.antlr;
 
-import eapli.base.exam.application.parser.autogen.ExamSpecBaseVisitor;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser;
 import eapli.base.exam.domain.regular_exam.antlr.*;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.*;

@@ -23,52 +23,6 @@
     <dependencies>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.12.0</version>
-                <configuration>
-                    <arguments>
-                        <argument>-visitor</argument>
-                        <argument>-no-listener</argument>
-                    </arguments>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>rexam</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/antlr4/exam</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/eapli/base/exam/application/parser/autogen</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>fexam</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/antlr4/formativeexam</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/eapli/base/formativeexam/application/parser/autogen</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>question</id>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/antlr4/question</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/java/eapli/base/question/application/parser/autogen</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>
 

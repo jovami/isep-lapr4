@@ -3,7 +3,7 @@
 grammar Question;
 
 @header{
-package eapli.base.question.application.parser.autogen;
+package jovami.grammar.impl.antlr.question.autogen;
 }
 
 /* Entry point */

@@ -3,7 +3,7 @@
 grammar FormativeExam;
 
 @header{
-package eapli.base.formativeexam.application.parser.autogen;
+package jovami.grammar.impl.antlr.formativeexam.autogen;
 }
 
 /* Entry point */

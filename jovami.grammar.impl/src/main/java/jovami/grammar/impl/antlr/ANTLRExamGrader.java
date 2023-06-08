@@ -1,11 +1,11 @@
 package jovami.grammar.impl.antlr;
 
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import eapli.base.exam.application.parser.GradeExamService;
-import eapli.base.exam.application.parser.autogen.ExamSpecLexer;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecLexer;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import eapli.base.examresult.dto.grade.ExamResultDTO;

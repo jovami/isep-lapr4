@@ -67,5 +67,8 @@ TEST*.xml
 README.html
 *.png
 
-# Shared-boards (SCOMP)
-*/.cache/*
+# ANTLR grammar files
+src/main/java/jovami/grammar/impl/antlr/exam/autogen/
+src/main/java/jovami/grammar/impl/antlr/formativeexam/autogen/
+src/main/java/jovami/grammar/impl/antlr/question/autogen/
+

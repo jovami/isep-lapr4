@@ -1,13 +1,13 @@
 package jovami.grammar.impl.antlr;
 
+import jovami.grammar.impl.antlr.question.autogen.QuestionLexer;
+import jovami.grammar.impl.antlr.question.autogen.QuestionParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import eapli.base.question.application.parser.QuestionValidatorService;
-import eapli.base.question.application.parser.autogen.QuestionLexer;
-import eapli.base.question.application.parser.autogen.QuestionParser;
 
 /**
  * ValidateQuestionSpecification

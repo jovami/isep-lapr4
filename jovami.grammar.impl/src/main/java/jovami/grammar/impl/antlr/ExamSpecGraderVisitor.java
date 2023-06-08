@@ -3,28 +3,11 @@ package jovami.grammar.impl.antlr;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import eapli.base.exam.application.parser.autogen.ExamSpecParser;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
-import eapli.base.exam.application.parser.autogen.ExamSpecBaseVisitor;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Boolean_solutionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Case_sensitiveContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Choice_typeContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.CombinationsContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.ErrorContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.ExamContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.MatchContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.MatchingContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Matching_solutionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Multiple_choiceContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.NumericalContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Numerical_solutionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.QuestionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.SectionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.Short_answerContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.String_solutionContext;
-import eapli.base.exam.application.parser.autogen.ExamSpecParser.T_numerical_solutionContext;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import eapli.base.examresult.dto.grade.ExamResultDTO;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Answer;
@@ -301,10 +284,10 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         this.maxPoints += maxPoints;
 
         var points = map.get(answer);
-        if (points != null)
-            this.points = points;
-        else
-            this.points = 0;
+        if (points == null)
+            points = 0.f;
+
+        this.points = points;
         this.feedback = "";
         this.finalPoints += points;
 
@@ -334,7 +317,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     // ============================ Missing Words ============================//
 
     @Override
-    public String visitMissing_words(ExamSpecParser.Missing_wordsContext ctx) {
+    public String visitMissing_words(Missing_wordsContext ctx) {
         var map = new HashMap<Integer, HashMap<String, Float>>();
 
         for (var choice : ctx.choice()) {

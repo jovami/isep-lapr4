@@ -9,7 +9,7 @@ grammar ExamSpec;
  */
 
 @header{
-package eapli.base.exam.application.parser.autogen;
+package jovami.grammar.impl.antlr.exam.autogen;
 }
 
 // Entry point
