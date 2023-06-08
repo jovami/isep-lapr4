@@ -103,9 +103,11 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .answers()
                 .get(questionCounter);
 
+        var points = Float.parseFloat(ctx.points.getText());
+        this.maxPoints += points;
+
         if (answer.equals(x)) {
-            this.points = Float.parseFloat(ctx.points.getText());
-            this.maxPoints += this.points;
+            this.points = points;
             this.finalPoints += this.points;
             this.feedback = "";
         }
