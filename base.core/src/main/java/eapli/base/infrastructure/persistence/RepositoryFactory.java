@@ -20,6 +20,8 @@
  */
 package eapli.base.infrastructure.persistence;
 
+import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.ManagerRepository;
@@ -131,6 +133,8 @@ public interface RepositoryFactory {
      * @return
      */
     BoardRepository boards();
+
+    BoardParticipantRepository boardParticipants();
 
     CourseRepository courses();
 

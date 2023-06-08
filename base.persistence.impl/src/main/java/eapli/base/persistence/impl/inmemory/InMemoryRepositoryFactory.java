@@ -20,6 +20,8 @@
  */
 package eapli.base.persistence.impl.inmemory;
 
+import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.repositories.ClientUserRepository;
 import eapli.base.clientusermanagement.repositories.ManagerRepository;
@@ -122,6 +124,9 @@ public class InMemoryRepositoryFactory implements RepositoryFactory {
         // in memory does not support transactions...
         return null;
     }
+
+    @Override
+    public BoardParticipantRepository boardParticipants(){return new InMemoryBoardParticipantRepository();}
 
     @Override
     public StudentRepository students() {

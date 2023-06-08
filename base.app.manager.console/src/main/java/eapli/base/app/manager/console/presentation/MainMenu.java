@@ -30,6 +30,7 @@ import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
 import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
 import eapli.base.app.common.console.presentation.authz.ListBoardUI;
 import eapli.base.app.common.console.presentation.authz.MyUserMenu;
+import eapli.base.app.common.console.presentation.authz.ShareBoardUI;
 import eapli.base.app.manager.console.presentation.authz.AddUserUI;
 import eapli.base.app.manager.console.presentation.authz.DisableUserAction;
 import eapli.base.app.manager.console.presentation.authz.EnableUserAction;
@@ -67,6 +68,8 @@ public class MainMenu extends AbstractUI {
     // Boards
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
+
+    private static final int SHARE_BOARD_OPTION = 3;
 
     // COURSE
     private static final int ADD_COURSE_OPTION = 1;
@@ -183,6 +186,7 @@ public class MainMenu extends AbstractUI {
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
         menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
+        menu.addItem(SHARE_BOARD_OPTION, "Share Boards", new ShareBoardUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

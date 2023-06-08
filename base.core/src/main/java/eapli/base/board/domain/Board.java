@@ -102,6 +102,8 @@ public class Board implements AggregateRoot<BoardTitle> {
         return boardTitle;
     }
 
+    public SystemUser boardOwner(){return owner;}
+
     public void setupBoard(int rows, int columns) {
         addRowIds(rows);
         addColumnIds(columns);
