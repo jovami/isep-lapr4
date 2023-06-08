@@ -5,6 +5,7 @@ actor Student as student
 participant TakeFormativeExamUI as ui
 participant TakeFormativeExamController as ctrl
 
+participant ListFormativeExamsService as svc
 participant EnrollmentRepository as enrollment_repo
 participant FormativeExamRepository as fexam_repo
 
@@ -21,15 +22,19 @@ activate ui
 
     ui --> ctrl : formativeExams()
     activate ctrl
-        ctrl --> enrollment_repo : ongoingCoursesOfStudent(student)
-        activate enrollment_repo
-            enrollment_repo --> ctrl : courses
-        deactivate enrollment_repo
+        ctrl --> svc : forStudent(student)
+        activate svc
+            note right : student obtained via the framework's\nAuthz package + StudentRepository
+            svc --> enrollment_repo : ongoingCoursesOfStudent(student)
+            activate enrollment_repo
+                enrollment_repo --> svc : courses
+            deactivate enrollment_repo
 
-        ctrl --> fexam_repo : formativeExamsOfCourses(courses)
-        activate fexam_repo
-            fexam_repo --> ctrl : exams
-        deactivate fexam_repo
+            svc --> fexam_repo : formativeExamsOfCourses(courses)
+            activate fexam_repo
+                fexam_repo --> svc : exams
+            deactivate fexam_repo
+        deactivate svc
 
         ctrl --> mapper : create()
         activate mapper

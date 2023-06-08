@@ -48,6 +48,10 @@ public class FormativeExam implements AggregateRoot<Long> {
         return this.spec;
     }
 
+    public Course course() {
+        return this.course;
+    }
+
     @Override
     public boolean sameAs(Object other) {
         if (this == other)

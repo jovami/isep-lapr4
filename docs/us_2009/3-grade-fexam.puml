@@ -5,7 +5,7 @@ actor Student as student
 participant TakeFormativeExamUI as ui
 participant TakeFormativeExamController as ctrl
 
-participant FormativeExamToBeTakenDTOUnMapper as unmap
+participant FormativeExamResolutionDTOUnmapper as unmap
 participant QuestionRepository as q_repo
 
 participant GrammarContext as ctx
@@ -23,7 +23,7 @@ activate ui
         ctrl --> unmap : fromDTO(resolutionDTO)
         activate unmap
             loop for each question_answer in resolutionDTO
-                unmap --> q_repo : ofIdentity(question_answer)
+                unmap --> q_repo : ofIdentity(question_answer.id
                 activate q_repo
                     q_repo --> unmap : question
                 deactivate q_repo
