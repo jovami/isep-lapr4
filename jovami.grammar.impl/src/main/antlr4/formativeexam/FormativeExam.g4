@@ -12,16 +12,16 @@ exam: 'FORMATIVE' 'EXAM' LEFT_BRACE title header? section+ RIGHT_BRACE ;
 
 
 // Grammar rules for the title and header sections
-title: 'TITLE' COLON STRING;
+title: 'TITLE' COLON value=STRING;
 header: 'HEADER' LEFT_BRACE description RIGHT_BRACE;
 
 // Grammar rules for header properties
-description: 'DESCRIPTION' COLON STRING;
+description: 'DESCRIPTION' COLON value=STRING;
 
 // Grammar rules for the sections of the exam
-section: 'SECTION' INT LEFT_BRACE description? question_type+ RIGHT_BRACE;
+section: 'SECTION' id=INT LEFT_BRACE description? question_type+ RIGHT_BRACE;
 
-question_type: 'QUESTION' INT COLON type;
+question_type: 'QUESTION' id=INT COLON type;
 
 type: 'MATCHING'
     | 'MULTIPLE_CHOICE'

@@ -48,7 +48,7 @@ public class RegularExam implements AggregateRoot<Integer> {
         return this.regularExamDate;
     }
 
-    public RegularExamSpecification regularExamSpecification() {
+    public RegularExamSpecification specification() {
         return this.regularExamSpecification;
     }
 

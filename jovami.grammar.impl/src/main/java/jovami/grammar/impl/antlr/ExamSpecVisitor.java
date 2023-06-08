@@ -28,7 +28,7 @@ public class ExamSpecVisitor extends ExamSpecBaseVisitor<String> {
     @Override
     public String visitExam(ExamSpecParser.ExamContext ctx) {
         var title = visitTitle(ctx.title());
-        String description = null;
+        String description = "No description provided";
 
         var descriptionCtx = ctx.header().description();
         if (descriptionCtx != null)
@@ -52,7 +52,7 @@ public class ExamSpecVisitor extends ExamSpecBaseVisitor<String> {
     @Override
     public String visitSection(ExamSpecParser.SectionContext ctx) {
         var id = Integer.parseInt(ctx.id.getText());
-        String description = null;
+        String description = "No description provided";
 
         var descriptionCtx = ctx.description();
         if (descriptionCtx != null)

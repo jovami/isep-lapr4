@@ -4,6 +4,8 @@ import eapli.base.exam.application.parser.GradeExamService;
 import eapli.base.exam.application.parser.ParserExamService;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.formativeexam.application.parser.FormativeExamValidatorService;
+import eapli.base.formativeexam.application.parser.GenerateFormativeExamService;
+import eapli.base.formativeexam.application.parser.GradeFormativeExamService;
 import eapli.base.question.application.parser.QuestionValidatorService;
 
 /**
@@ -20,4 +22,8 @@ public interface GrammarToolFactory {
     ParserExamService examParserService();
 
     GradeExamService examGrader();
+
+    GenerateFormativeExamService formativeExamGenerator();
+
+    GradeFormativeExamService formativeExamGrader();
 }

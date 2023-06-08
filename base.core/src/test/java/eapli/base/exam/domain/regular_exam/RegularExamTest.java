@@ -151,7 +151,7 @@ public class RegularExamTest {
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
 
         // Execute
-        RegularExamSpecification result = exam.regularExamSpecification();
+        RegularExamSpecification result = exam.specification();
 
         // Verify
         assertEquals(specification, result);
@@ -163,7 +163,7 @@ public class RegularExamTest {
         RegularExam exam = new RegularExam();
 
         // Verify
-        assertNull(exam.regularExamSpecification());
+        assertNull(exam.specification());
         assertNull(exam.regularExamDate());
         assertNull(exam.course());
     }
@@ -192,6 +192,6 @@ public class RegularExamTest {
         exam.updateRegularExamSpecification(newSpecification);
 
         // Assert
-        assertEquals(newSpecification, exam.regularExamSpecification());
+        assertEquals(newSpecification, exam.specification());
     }
 }

@@ -18,7 +18,7 @@ public class ANTLRExamGrader implements GradeExamService {
     @Override
     public ExamResultDTO correctExam(RegularExam exam, ExamResolutionDTO resolution) {
         var lexer = new ExamSpecLexer(CharStreams.fromString(
-                exam.regularExamSpecification().specificationString()));
+                exam.specification().specificationString()));
         var parser = new ExamSpecParser(new CommonTokenStream(lexer));
 
         return new ExamSpecGraderVisitor(resolution).dto(parser.exam());

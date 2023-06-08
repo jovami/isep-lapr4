@@ -252,7 +252,7 @@ public class QuestionFactoryTest {
                 "}",
 
                 "CHOICE 1 {",
-                " SOLUTION 1: 1 [1.5]",
+                " SOLUTION 1: \"fly\" [1.5]",
                 " FROM_GROUP: \"verbs\"",
                 "}",
                 "}");

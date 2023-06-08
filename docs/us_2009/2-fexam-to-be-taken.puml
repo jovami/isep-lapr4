@@ -6,7 +6,6 @@ participant TakeFormativeExamUI as ui
 participant TakeFormativeExamController as ctrl
 
 participant FormativeExamRepository as repo
-participant EnrollmentRepository as e_repo
 participant QuestionRepository as q_repo
 
 participant GrammarContext as ctx
@@ -24,12 +23,7 @@ activate ui
             repo --> ctrl : exam
         deactivate repo
 
-        ctrl --> e_repo : ongoingCoursesOfStudent(student)
-        activate e_repo
-            e_repo --> ctrl : courses
-        deactivate e_repo
-
-        ctrl --> q_repo : questionsOfCourses(courses)
+        ctrl --> q_repo : questionsOfCourse(exam.course)
         activate q_repo
             q_repo --> ctrl : questions
         deactivate q_repo

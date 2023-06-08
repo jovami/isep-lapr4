@@ -44,6 +44,14 @@ public class Question implements AggregateRoot<Long> {
         this.spec = spec;
     }
 
+    public QuestionSpecification specification() {
+        return this.spec;
+    }
+
+    public Course course() {
+        return this.course;
+    }
+
     @Override
     public boolean sameAs(Object other) {
         if (this == other)

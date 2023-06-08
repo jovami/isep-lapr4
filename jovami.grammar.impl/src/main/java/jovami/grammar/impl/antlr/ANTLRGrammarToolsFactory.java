@@ -4,6 +4,8 @@ import eapli.base.exam.application.parser.GradeExamService;
 import eapli.base.exam.application.parser.ParserExamService;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.formativeexam.application.parser.FormativeExamValidatorService;
+import eapli.base.formativeexam.application.parser.GenerateFormativeExamService;
+import eapli.base.formativeexam.application.parser.GradeFormativeExamService;
 import eapli.base.infrastructure.grammar.GrammarToolFactory;
 import eapli.base.question.application.parser.QuestionValidatorService;
 
@@ -35,5 +37,15 @@ public class ANTLRGrammarToolsFactory implements GrammarToolFactory {
     @Override
     public GradeExamService examGrader() {
         return new ANTLRExamGrader();
+    }
+
+    @Override
+    public GenerateFormativeExamService formativeExamGenerator() {
+        return new ANTLRFormativeExamGenerator();
+    }
+
+    @Override
+    public GradeFormativeExamService formativeExamGrader() {
+        return new ANTLRFormativeExamGrader();
     }
 }

@@ -7,11 +7,11 @@ import java.util.Map;
 public enum QuestionType {
 
     MATCHING(0),
-    MULTIPLE_CHOICES(1),
+    MULTIPLE_CHOICE(1),
     SHORT_ANSWER(2),
     NUMERICAL(3),
-    SELECT_MISSING_WORD(4),
-    TRUE_OR_FALSE(5);
+    MISSING_WORDS(4),
+    TRUE_FALSE(5);
 
     private static Map<Integer, QuestionType> lookup;
 

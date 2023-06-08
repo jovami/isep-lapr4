@@ -1,6 +1,10 @@
 package eapli.base.exam.application.parser;
 
-import jovami.util.grammar.ExamParser;
+import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.dto.ExamToBeTakenDTO;
 
-public interface ParserExamService extends ExamParser {
+import java.io.IOException;
+
+public interface ParserExamService {
+    ExamToBeTakenDTO generateExam(RegularExam exam) throws IOException;
 }
