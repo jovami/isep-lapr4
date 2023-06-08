@@ -62,7 +62,7 @@ error: 'ERROR' COLON value=FLOAT;
 missing_words: 'MISSING_WORDS' LEFT_BRACE description group+ choice+ RIGHT_BRACE;
 group: 'GROUP' id=(STRING | INT) LEFT_BRACE item+ RIGHT_BRACE;
 item: 'ITEM' id=INT COLON value=STRING;
-choice: 'CHOICE' id=INT LEFT_BRACE numerical_solution+ from_group RIGHT_BRACE;
+choice: 'CHOICE' id=INT LEFT_BRACE string_solution+ from_group RIGHT_BRACE;
 from_group: 'FROM_GROUP' COLON id=(STRING | INT);
 
 // Grammar rules for true/false questions

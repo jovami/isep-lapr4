@@ -1,12 +1,9 @@
 package jovami.grammar.impl.antlr;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import eapli.base.exam.application.parser.autogen.ExamSpecParser;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
@@ -314,4 +311,43 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
     }
+
+    // ============================ Missing Words ============================//
+
+    @Override
+    public String visitMissing_words(ExamSpecParser.Missing_wordsContext ctx) {
+        var map = new HashMap<Integer, HashMap<String, Float>>();
+
+        for (var choice : ctx.choice()) {
+            var id = Integer.parseInt(choice.id.getText());
+            var solutions = new HashMap<String, Float>();
+            choice.string_solution().forEach(solutionCtx -> {
+                var solution = visitString_solution(solutionCtx).split("\n");
+                solutions.put(solution[0], Float.parseFloat(solution[1]));
+            });
+            map.put(id, solutions);
+        }
+
+        var answers = this.resolution.sections()
+                .get(sectionCounter)
+                .answers()
+                .get(questionCounter)
+                .split("\n");
+
+        // TODO: we have to make sure that the missing words gaps start at 1 and are consecutive
+        for (int i = 0; i < answers.length; i++) {
+            var solution = map.get(i + 1);
+
+            var points = solution.get(answers[i]);
+            if (points != null)
+                this.points += points;
+        }
+
+        this.feedback = "";
+        this.finalPoints += points;
+
+        return null;
+    }
+
+
 }
