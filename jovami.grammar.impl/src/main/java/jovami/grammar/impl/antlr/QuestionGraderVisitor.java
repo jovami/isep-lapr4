@@ -1,35 +1,50 @@
 package jovami.grammar.impl.antlr;
 
-import eapli.base.examresult.dto.grade.ExamResultDTO;
-import jovami.grammar.impl.antlr.question.autogen.QuestionParser.*;
-import jovami.grammar.impl.antlr.question.autogen.QuestionBaseVisitor;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import jovami.grammar.impl.antlr.question.autogen.QuestionBaseVisitor;
+import jovami.grammar.impl.antlr.question.autogen.QuestionParser.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
     private final String resolution;
-    private ExamResultDTO result;
+    private GradedQuestion result;
 
-    private float finalPoints;
-    private float maxPoints = 0;
+    private float maxPoints;
+    private float points;
+    private String feedback;
 
-    private float points = 0.f;
-    private String feedback = "";
-
+    @Accessors(fluent = true)
+    @Getter
+    @AllArgsConstructor
+    public static final class GradedQuestion {
+        private final float points;
+        private final float maxPoints;
+        private final String feedback;
+    }
 
     public QuestionGraderVisitor(String resolution) {
         super();
+
         this.resolution = resolution;
         this.result = null;
 
-        this.finalPoints = 0.f;
+        this.maxPoints = 0.f;
+        this.points = 0.f;
+        this.feedback = "";
     }
 
     // HACK: do this the proper way
-    public ExamResultDTO dto(ParseTree tree) {
+    public GradedQuestion dto(ParseTree tree) {
         visit(tree);
         return this.result;
     }
@@ -41,6 +56,8 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
         visitChildren(ctx);
 
+        this.result = new GradedQuestion(this.points, this.maxPoints, this.feedback);
+
         return null;
     }
 
@@ -49,10 +66,11 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
     public String visitBoolean_solution(Boolean_solutionContext ctx) {
         var x = ctx.value.getText();
 
+        var points = Float.parseFloat(ctx.points.getText());
+        this.maxPoints += this.points;
+
         if (this.resolution.equals(x)) {
-            this.points = Float.parseFloat(ctx.points.getText());
-            this.maxPoints += this.points;
-            this.finalPoints += this.points;
+            this.points = points;
             this.feedback = "";
         }
 
@@ -84,7 +102,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
             if (answer.equals(expected)) {
                 this.points = points;
-                this.finalPoints += points;
                 this.feedback = "";
                 break;
             }
@@ -134,7 +151,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
                 this.points += points;
         }
 
-        this.finalPoints += this.points;
         return null;
     }
 
@@ -169,7 +185,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
         if (answer >= expected - margin && answer <= expected + margin) {
             this.points = points;
-            this.finalPoints += points;
             this.feedback = "";
         } else {
             this.points = 0;
@@ -224,7 +239,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
         this.points = points;
         this.feedback = "";
-        this.finalPoints += points;
 
         return null;
     }
@@ -260,7 +274,7 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
             var solutions = new HashMap<String, Float>();
             var maxPoints = 0.f;
 
-            for (var solutionCtx : choice.string_solution()){
+            for (var solutionCtx : choice.string_solution()) {
                 var solution = visitString_solution(solutionCtx).split("\n");
                 var points = Float.parseFloat(solution[1]);
                 if (points > maxPoints)
@@ -275,7 +289,8 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
         var answers = this.resolution.split("\n");
 
-        // TODO: we have to make sure that the missing words gaps start at 1 and are consecutive
+        // TODO: we have to make sure that the missing words gaps start at 1 and are
+        // consecutive
         for (int i = 0; i < answers.length; i++) {
             var solution = map.get(i + 1);
 
@@ -285,7 +300,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
         }
 
         this.feedback = "";
-        this.finalPoints += points;
 
         return null;
     }

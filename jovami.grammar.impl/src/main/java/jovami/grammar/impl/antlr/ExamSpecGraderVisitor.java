@@ -1,10 +1,12 @@
 package jovami.grammar.impl.antlr;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
-import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +14,8 @@ import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import eapli.base.examresult.dto.grade.ExamResultDTO;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Answer;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Section;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser.*;
 
 /**
  * ExamSpecGraderVisitor
