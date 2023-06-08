@@ -2,6 +2,8 @@
 
 grammar ExamSpec;
 
+// TODO: update ../question/Question.g4
+
 /*
  * Parser Rules
  */
@@ -40,10 +42,9 @@ match: subquestion_id=INT DASH answer_id=INT;
 
 // Grammar rules for multiple choice questions
 multiple_choice: 'MULTIPLE_CHOICE' LEFT_BRACE choice_type description answer+ numerical_solution+ RIGHT_BRACE;
+// TODO: change name
 numerical_solution: 'SOLUTION' id=INT COLON combinations LEFT_BRACKET points=FLOAT RIGHT_BRACKET;
-combinations: val1=INT
-            | val2=INT ',' combinations
-            ;
+combinations: INT (',' INT)*;
 choice_type: 'CHOICE_TYPE' COLON value=('single-answer' | 'multiple-answer');
 
 // Grammar rules for short answer questions
@@ -52,7 +53,9 @@ string_solution: 'SOLUTION' id=INT COLON value=STRING LEFT_BRACKET points=FLOAT 
 case_sensitive: 'CASE_SENSITIVE:' value=BOOL;
 
 // Grammar rules for numerical questions
-numerical: 'NUMERICAL' LEFT_BRACE description error? numerical_solution+ RIGHT_BRACE;
+numerical: 'NUMERICAL' LEFT_BRACE description error? t_numerical_solution RIGHT_BRACE;
+// TODO: change name
+t_numerical_solution: 'SOLUTION' id=INT COLON value=INT LEFT_BRACKET points=FLOAT RIGHT_BRACKET;
 error: 'ERROR' COLON value=FLOAT;
 
 // Grammar rules for missing words questions

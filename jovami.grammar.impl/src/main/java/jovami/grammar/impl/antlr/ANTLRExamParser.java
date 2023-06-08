@@ -13,7 +13,8 @@ import java.io.IOException;
 public class ANTLRExamParser implements ParserExamService {
     @Override
     public ExamToBeTakenDTO generateExam(RegularExam exam) throws IOException {
-        var lexer = new ExamSpecLexer(CharStreams.fromFileName("data.txt")); CommonTokenStream tokens = new CommonTokenStream(lexer);
+        var lexer = new ExamSpecLexer(CharStreams.fromFileName("data.txt"));
+        var tokens = new CommonTokenStream(lexer);
         var parser = new ExamSpecParser(tokens);
         var tree = parser.exam(); // parse
         new ExamSpecVisitor().visit(tree);

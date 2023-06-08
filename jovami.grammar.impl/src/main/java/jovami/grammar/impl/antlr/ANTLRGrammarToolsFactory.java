@@ -1,5 +1,6 @@
 package jovami.grammar.impl.antlr;
 
+import eapli.base.exam.application.parser.GradeExamService;
 import eapli.base.exam.application.parser.ParserExamService;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.formativeexam.application.parser.FormativeExamValidatorService;
@@ -29,5 +30,10 @@ public class ANTLRGrammarToolsFactory implements GrammarToolFactory {
     @Override
     public ParserExamService examParserService() {
         return new ANTLRExamParser();
+    }
+
+    @Override
+    public GradeExamService examGrader() {
+        return new ANTLRExamGrader();
     }
 }

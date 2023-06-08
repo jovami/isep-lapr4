@@ -1,5 +1,6 @@
 package eapli.base.infrastructure.grammar;
 
+import eapli.base.exam.application.parser.GradeExamService;
 import eapli.base.exam.application.parser.ParserExamService;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.formativeexam.application.parser.FormativeExamValidatorService;
@@ -17,4 +18,6 @@ public interface GrammarToolFactory {
     QuestionValidatorService questionValidator();
 
     ParserExamService examParserService();
+
+    GradeExamService examGrader();
 }
