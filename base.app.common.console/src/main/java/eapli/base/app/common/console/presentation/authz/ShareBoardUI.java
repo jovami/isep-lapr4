@@ -2,7 +2,6 @@ package eapli.base.app.common.console.presentation.authz;
 
 
 import eapli.base.board.application.ShareBoardController;
-import eapli.base.board.domain.BoardParticipant;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.presentation.console.AbstractUI;
