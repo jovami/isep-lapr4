@@ -2,24 +2,32 @@ package eapli.base.exam.dto.resolution;
 
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
  * ExamResolutionDTO
  */
+/* for jackson */
+@Setter(value = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//======//
 @Accessors(fluent = true)
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public final class ExamResolutionDTO {
 
+    /* for jackson */
+    @Setter(value = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    //======//
     @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
-    @NoArgsConstructor
     public static final class Section {
         private List<String> answers;
     }
