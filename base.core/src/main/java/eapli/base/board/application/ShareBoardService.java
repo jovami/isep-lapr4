@@ -2,6 +2,10 @@ package eapli.base.board.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.dto.BoardDTO;
+import eapli.base.board.dto.BoardMapper;
+import eapli.base.board.dto.BoardParticipantDTO;
+import eapli.base.board.dto.BoardParticipantMapper;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
@@ -38,25 +42,23 @@ public class ShareBoardService {
         userRepository = PersistenceContext.repositories().users();
         users = (ArrayList<SystemUser>) userRepository.findAll();
 
-
-
     }
 
-    public Iterable<Board> listBoardsUserOwns() {
+    public List<BoardDTO> listBoardsUserOwns() {
 
-        return this.boardRepository.listBoardsUserOwns(userRepository.ofIdentity(authz.session()
+        return new BoardMapper().toDTO(this.boardRepository.listBoardsUserOwns(userRepository.ofIdentity(authz.session()
                 .orElseThrow()
                 .authenticatedUser()
-                .identity()).orElseThrow());
+                .identity()).orElseThrow()));
     }
 
-    public boolean shareBoard(Board board, List<SystemUserNameEmailDTO> users)
+    public boolean shareBoard(BoardDTO board, List<SystemUserNameEmailDTO> users)
     {
         txCtx.beginTransaction();
 
         for (SystemUserNameEmailDTO user : users) {
             SystemUser us = fromDTO(user);
-            BoardParticipant boardParticipant = new BoardParticipant(board, us);
+            BoardParticipant boardParticipant = new BoardParticipant(board.board(), us);
             boardParticipantRepository.save(boardParticipant);
         }
 
@@ -66,9 +68,9 @@ public class ShareBoardService {
 
     }
 
-    public Iterable<BoardParticipant> boardParticipants(Board board)
+    public List<BoardParticipantDTO> boardParticipants(BoardDTO board)
     {
-        return boardParticipantRepository.listBoardParticipants(board);
+        return new BoardParticipantMapper().toDTO(boardParticipantRepository.listBoardParticipants(board.board()));
     }
 
     private SystemUser fromDTO(SystemUserNameEmailDTO dto) throws ConcurrencyException {
@@ -79,5 +81,7 @@ public class ShareBoardService {
     public List<SystemUserNameEmailDTO> Users() {
         return new SystemUserNameEmailDTOMapper().toDTO(users, Comparator.comparing(SystemUser::identity));
     }
+
+
 
 }

@@ -9,4 +9,6 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 public interface BoardParticipantRepository extends DomainRepository<Integer,BoardParticipant> {
 
     Iterable<BoardParticipant> listBoardParticipants(Board board);
+
+    //Iterable<SystemUser> listBoardUsers(Board board);
 }
