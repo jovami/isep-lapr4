@@ -26,7 +26,7 @@ class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, 
     @Override
     public Iterable<RegularExam> examsOfCoursesAfterTime(LocalDateTime time, Set<Course> courses) {
         return match("e.course IN :courses AND e.regularExamDate.start > :time",
-                "courses", courses, "date", time);
+                "courses", courses, "time", time);
     }
 
     @Override
