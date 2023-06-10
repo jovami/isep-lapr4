@@ -130,9 +130,18 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-    public PostIt createPostIt(int cellId) {
-        return new PostIt(cellId);
+    public PostIt createPostIt(int cellId)
+    {
+        PostIt postIt = new PostIt(cellId);
+        cells.get(cellId).addPostIt(postIt);
+        return postIt;
     }
+
+    public boolean registerChangeInPostIt(int cellId, PostIt postIt)
+    {
+        return cells.get(cellId).addPostIt(postIt);
+    }
+
 
     /*
      * public void movePostIt(int newCellId, PostIt postIt) {

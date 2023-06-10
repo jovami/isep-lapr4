@@ -1,16 +1,13 @@
 package eapli.base.board.domain;
 
+import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 @Entity
 public class PostIt {
@@ -22,11 +19,23 @@ public class PostIt {
     @Column(nullable = false, unique = true)
     private int cellId;
 
+    @ElementCollection(targetClass = LocalDate.class)
+    private List<LocalDate> changesInPostIt ;
+
+    @Lob
+    private String text;
+
+    @Lob
+    private File image;
+
+
     protected PostIt() {
     }
 
     public PostIt(int cellId) {
         this.cellId = cellId;
+        this.changesInPostIt = new ArrayList<>();
+        changesInPostIt.add(LocalDate.now());
     }
 
     public void alterCell(int cellId) {
@@ -36,6 +45,31 @@ public class PostIt {
     public int getCellId() {
         return cellId;
     }
+
+    public List<LocalDate> changesInPostIt(){return this.changesInPostIt;}
+
+    public boolean changePostItText(String text)
+    {
+        this.text = text;
+        return changesInPostIt.add(LocalDate.now());
+    }
+
+    public boolean changePostItImage(File image)
+    {
+        this.image = image;
+        return changesInPostIt.add(LocalDate.now());
+    }
+
+    public boolean undoLastChangeInPostIt()
+    {
+        if (!changesInPostIt.isEmpty()) {
+            changesInPostIt.remove(changesInPostIt.size() - 1);
+            return true;
+        }
+        return false;
+    }
+
+
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

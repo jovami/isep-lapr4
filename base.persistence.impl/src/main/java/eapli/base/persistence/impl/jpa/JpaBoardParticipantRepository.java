@@ -22,6 +22,19 @@ public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardPa
         return query.getResultList();
 
     }
+
+    @Override
+    public Iterable<BoardParticipant> listBoardUserLoggedParticipates(SystemUser systemUser) {
+
+        final var query = entityManager().createQuery(
+                "SELECT sm FROM BoardParticipant sm WHERE sm.participant = :systemUser",
+                BoardParticipant.class);
+        query.setParameter("systemUser", systemUser);
+        return query.getResultList();
+
+    }
+
+
 /*
     public Iterable<SystemUser> listBoardUsers(Board board) {
 

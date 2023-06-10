@@ -10,5 +10,7 @@ public interface BoardParticipantRepository extends DomainRepository<Integer,Boa
 
     Iterable<BoardParticipant> listBoardParticipants(Board board);
 
+    Iterable<BoardParticipant> listBoardUserLoggedParticipates(SystemUser systemUser);
+
     //Iterable<SystemUser> listBoardUsers(Board board);
 }

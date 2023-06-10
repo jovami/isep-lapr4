@@ -28,10 +28,7 @@ import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.CancelMeetingUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
-import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
-import eapli.base.app.common.console.presentation.authz.ListBoardUI;
-import eapli.base.app.common.console.presentation.authz.MyUserMenu;
-import eapli.base.app.common.console.presentation.authz.ShareBoardUI;
+import eapli.base.app.common.console.presentation.authz.*;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
@@ -62,6 +59,7 @@ public class MainMenu extends AbstractUI {
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
     private static final int SHARE_BOARD_OPTION= 3;
+    private static final int CREATE_POSTIT_OPTION= 4;
 
     // MEETING
     private static final int MEETING_OPTION = 5;
@@ -167,6 +165,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
         menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
         menu.addItem(SHARE_BOARD_OPTION, "Share Boards", new ShareBoardUI()::show);
+        menu.addItem(CREATE_POSTIT_OPTION, "Create PostIt", new CreatePostItUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

@@ -23,5 +23,14 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
 
     }
 
+    @Override
+    public Iterable<BoardParticipant> listBoardUserLoggedParticipates(SystemUser systemUser) {
+
+        return valuesStream()
+                .filter(boardParticipant -> boardParticipant.sameAs(systemUser))
+                .collect(Collectors.toList());
+
+    }
+
 
 }
