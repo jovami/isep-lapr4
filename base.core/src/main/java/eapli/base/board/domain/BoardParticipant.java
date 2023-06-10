@@ -14,26 +14,37 @@ public class BoardParticipant implements AggregateRoot<Integer> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @OneToOne
+    @ManyToOne
     private SystemUser participant;
 
-    @OneToOne
+    @ManyToOne
     private Board board;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BoardParticipantPermissions permissions;
 
     protected BoardParticipant()
     {
     }
+
     public BoardParticipant(Board board, SystemUser participant)
     {
         this.board = board;
         this.participant = participant;
+    }
+    public BoardParticipant(Board board, SystemUser participant,BoardParticipantPermissions permissions)
+    {
+        this.board = board;
+        this.participant = participant;
+        this.permissions = permissions;
     }
 
     public SystemUser participant()
     {
         return this.participant;
     }
+    public Board board(){return this.board;}
 
     @Override
     public boolean equals(final Object o) {
@@ -57,6 +68,14 @@ public class BoardParticipant implements AggregateRoot<Integer> {
         }
 
         return identity().equals(that.identity());
+    }
+
+    public boolean hasWritePermissions(){
+        return permissions()==BoardParticipantPermissions.WRITE;
+    }
+
+    private BoardParticipantPermissions permissions(){
+        return this.permissions;
     }
 
     @Override

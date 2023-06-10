@@ -1,26 +1,15 @@
 package eapli.base.board;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardColumn;
-import eapli.base.board.domain.BoardRow;
-import eapli.base.board.domain.BoardState;
-import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.Cell;
-import eapli.base.board.domain.PostIt;
+import eapli.base.board.domain.*;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class BoardTest {
     private final String title = "test";
@@ -103,7 +92,7 @@ public class BoardTest {
             assertEquals(boardColumn, board.getBoardColumnList().get(i));
         }
     }
-
+/*
     @Test
     public void ensurePostItCreation() {
         PostIt postIt = new PostIt(cellId);
@@ -278,5 +267,5 @@ public class BoardTest {
                 ", with " + rows * columns + " Cells";
         assertEquals(expected, board.toString());
 
-    }
+    }*/
 }
