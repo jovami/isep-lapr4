@@ -9,8 +9,6 @@ package jovami.grammar.impl.antlr.formativeexam.autogen;
 /* Entry point */
 exam: 'FORMATIVE' 'EXAM' LEFT_BRACE title header? section+ RIGHT_BRACE ;
 
-
-
 // Grammar rules for the title and header sections
 title: 'TITLE' COLON value=STRING;
 header: 'HEADER' LEFT_BRACE description RIGHT_BRACE;

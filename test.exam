@@ -26,6 +26,11 @@ EXAM {
             SOLUTION 2: 2-1 [1.0]
             SOLUTION 3: 3-3 [1.0]
             SOLUTION 4: 4-4 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Right!"
+                WRONG_ANSWER: "Wronggg..."
+            }
         }
 
         MULTIPLE_CHOICE {
@@ -38,6 +43,11 @@ EXAM {
             ANSWER 4: "Yuri Gagarin"
 
             SOLUTION 1: 2 [5.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "That's it!"
+                WRONG_ANSWER: "Nop"
+            }
         }
 
         MULTIPLE_CHOICE {
@@ -56,6 +66,11 @@ EXAM {
             SOLUTION 5: 1 [0.2]
             SOLUTION 6: 3 [0.2]
             SOLUTION 7: 4 [0.1]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Perfect"
+                WRONG_ANSWER: "Could be better"
+            }
         }
     }
 
@@ -68,6 +83,11 @@ EXAM {
 
             SOLUTION 1: "Boavista" [0.5]
             SOLUTION 2: "Avenida da Boavista" [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Yep, that's it!"
+                WRONG_ANSWER: "Completely wrong :/"
+            }
         }
 
         NUMERICAL {
@@ -75,11 +95,22 @@ EXAM {
             ERROR: 0.5
 
             SOLUTION 1: 2 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Good job"
+                WRONG_ANSWER: "Better luck next time..."
+            }
         }
 
         TRUE_FALSE {
             DESCRIPTION: "Water boils at 100 degrees Celsius."
+
             SOLUTION 1: true [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "It is right!"
+                WRONG_ANSWER: "You have to study a little more..."
+            }
         }
 
         MISSING_WORDS {
@@ -107,6 +138,11 @@ EXAM {
                 SOLUTION 1: "smart" [1.5]
                 SOLUTION 2: "brave" [2.0]
                 FROM_GROUP: "adjectives"
+            }
+
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
             }
         }
     }

@@ -34,6 +34,8 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
     private float points = 0.f;
     private String feedback = "";
+    private boolean isCorrect;
+    private static final String DEFAULT_FEEDBACK = "No feedback provided";
 
     private int sectionCounter;
     private int questionCounter;
@@ -84,8 +86,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
     @Override
     public String visitQuestion(QuestionContext ctx) {
+        this.isCorrect = false;
         this.points = 0.f;
-        this.feedback = "";
+        this.feedback = DEFAULT_FEEDBACK;
 
         visitChildren(ctx);
 
@@ -93,7 +96,34 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         return null;
     }
 
+    @Override
+    public String visitFeedback_text(Feedback_textContext ctx) {
+        var combinationCtx = ctx.feedback_combination();
+
+        var correctCtx = combinationCtx.correct_answer();
+        var wrongCtx = combinationCtx.wrong_answer();
+
+        String feedback;
+        if (isCorrect)
+            feedback = correctCtx != null ? correctCtx.value.getText().replaceAll("\"", "") : DEFAULT_FEEDBACK;
+        else
+            feedback = wrongCtx != null ? wrongCtx.value.getText().replaceAll("\"", "") : DEFAULT_FEEDBACK;
+
+        return feedback;
+    }
+
     // ============================== True/False ==============================//
+    @Override
+    public String visitTrue_false(True_falseContext ctx) {
+        visitBoolean_solution(ctx.boolean_solution());
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
+
+        return null;
+    }
+
     @Override
     public String visitBoolean_solution(Boolean_solutionContext ctx) {
         var x = ctx.value.getText();
@@ -109,7 +139,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         if (answer.equals(x)) {
             this.points = points;
             this.finalPoints += this.points;
-            this.feedback = "";
+            this.isCorrect = true;
         }
 
         return null;
@@ -130,7 +160,6 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             answer = StringUtils.stripAccents(answer.toLowerCase());
 
         this.points = 0;
-        this.feedback = "";
 
         for (var solutionCtx : ctx.string_solution()) {
             var stringSolution = visitString_solution(solutionCtx).split("\n");
@@ -144,7 +173,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             if (answer.equals(expected)) {
                 this.points = points;
                 this.finalPoints += points;
-                this.feedback = "";
+                this.isCorrect = true;
                 break;
             }
         }
@@ -154,6 +183,10 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .mapToDouble(node -> Float.parseFloat(visitString_solution(node).split("\n")[1]))
                 .max()
                 .ifPresent(max -> this.maxPoints += max);
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
 
         return null;
     }
@@ -176,15 +209,16 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
         var map = new HashMap<String, Float>();
 
+        var max = 0.f;
         for (var solutionCtx : ctx.matching_solution()) {
             var solution = visitMatching_solution(solutionCtx).split("\n");
             var points = Float.parseFloat(solution[1]);
-            this.maxPoints += points;
+            max += points;
 
             map.put(solution[0], points);
         }
+        this.maxPoints += max;
 
-        this.feedback = "";
         this.points = 0.f;
 
         var answers = this.resolution.sections()
@@ -198,6 +232,13 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             if (points != null)
                 this.points += points;
         }
+
+        if (this.points == max)
+            this.isCorrect = true;
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
 
         this.finalPoints += this.points;
         return null;
@@ -238,11 +279,14 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         if (answer >= expected - margin && answer <= expected + margin) {
             this.points = points;
             this.finalPoints += points;
-            this.feedback = "";
+            this.isCorrect = true;
         } else {
             this.points = 0;
-            this.feedback = "";
         }
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
 
         return null;
     }
@@ -286,16 +330,20 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
             map.put(expected[0], points);
         }
-
         this.maxPoints += maxPoints;
 
         var points = map.get(answer);
         if (points == null)
             points = 0.f;
+        else if (points == maxPoints)
+            this.isCorrect = true;
 
         this.points = points;
-        this.feedback = "";
         this.finalPoints += points;
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
 
         return null;
     }
@@ -325,6 +373,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     @Override
     public String visitMissing_words(Missing_wordsContext ctx) {
         var map = new HashMap<Integer, HashMap<String, Float>>();
+        var max = 0.f;
 
         for (var choice : ctx.choice()) {
             var id = Integer.parseInt(choice.id.getText());
@@ -340,6 +389,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 solutions.put(solution[0], points);
             }
             this.maxPoints += maxPoints;
+            max += maxPoints;
 
             map.put(id, solutions);
         }
@@ -359,8 +409,14 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 this.points += points;
         }
 
-        this.feedback = "";
+        if (this.points == max)
+            this.isCorrect = true;
+
         this.finalPoints += points;
+
+        var feedbackCtx = ctx.feedback_text();
+        if (feedbackCtx != null)
+            this.feedback = visitFeedback_text(feedbackCtx);
 
         return null;
     }
