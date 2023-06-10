@@ -37,6 +37,7 @@
         <module>base.core</module>
         <module>base.persistence.impl</module>
         <module>jovami.grammar.impl</module>
+        <module>base.app.board.web</module>
         <!-- CI builds only -->
         <module>ecourse.util.ci</module>
     </modules>
