@@ -2,9 +2,11 @@ package eapli.base.board.application;
 
 
 import eapli.base.board.domain.Board;
-import eapli.base.board.domain.Cell;
 import eapli.base.board.domain.PostIt;
-import eapli.base.board.dto.*;
+import eapli.base.board.dto.BoardParticipantDTO;
+import eapli.base.board.dto.BoardParticipantMapper;
+import eapli.base.board.dto.PostItDTO;
+import eapli.base.board.dto.PostItMapper;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
@@ -12,8 +14,6 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostItService {
@@ -54,7 +54,7 @@ public class PostItService {
         postIt.changePostItImage(image);
         return board.registerChangeInPostIt(cellId,postIt);
     }
-
+/*
     public boolean undoLastChangeInPostIt(Board board, PostIt postIt, int cellId)
     {
         return board.getCells().get(cellId).undoLastChangeInPostIt(postIt);
@@ -80,6 +80,6 @@ public class PostItService {
         }
 
         return changesInBoard;
-    }
+    }*/
 
 }

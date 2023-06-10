@@ -3,8 +3,9 @@ package eapli.base.persistence.impl.jpa;
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
 import eapli.base.board.repositories.BoardParticipantRepository;
-import eapli.base.event.lecture.domain.Lecture;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+
+import java.util.List;
 
 public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardParticipant, Long, Integer> implements BoardParticipantRepository {
 
@@ -35,14 +36,13 @@ public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardPa
     }
 
 
-/*
-    public Iterable<SystemUser> listBoardUsers(Board board) {
+    public List<Board> listBoardsByParticipant(SystemUser user) {
 
         final var query = entityManager().createQuery(
-                "SELECT sm.participant FROM BoardParticipant sm WHERE sm.board = :board",
-                BoardParticipant.class);
-        query.setParameter("board", board);
+                "SELECT bp.board FROM BoardParticipant bp WHERE bp.participant = :user",
+                Board.class);
+        query.setParameter("user", user);
         return query.getResultList();
 
-    }*/
+    }
 }

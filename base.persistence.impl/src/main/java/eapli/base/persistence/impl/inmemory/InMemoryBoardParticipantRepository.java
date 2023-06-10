@@ -14,6 +14,7 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
     static {
         InMemoryInitializer.init();
     }
+
     @Override
     public Iterable<BoardParticipant> listBoardParticipants(Board board) {
 
@@ -29,7 +30,14 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
         return valuesStream()
                 .filter(boardParticipant -> boardParticipant.sameAs(systemUser))
                 .collect(Collectors.toList());
+    }
 
+
+    @Override
+    public Iterable<Board> listBoardsByParticipant(SystemUser user) {
+        return valuesStream()
+                .filter(boardParticipant -> boardParticipant.sameAs(user))
+                .map(BoardParticipant::board).collect(Collectors.toList());
     }
 
 

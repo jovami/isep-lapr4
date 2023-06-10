@@ -1,11 +1,7 @@
 package eapli.base.board.application;
 
-import eapli.base.board.domain.BoardParticipant;
-import eapli.base.board.dto.BoardDTO;
 import eapli.base.board.dto.BoardParticipantDTO;
-import eapli.base.board.dto.PostItDTO;
 
-import java.io.File;
 import java.util.List;
 
 public class CreatePostItOnBoardController {
@@ -20,7 +16,7 @@ public class CreatePostItOnBoardController {
     public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
         return this.svc.listBoardUserLoggedParticipates();
     }
-
+/*
     public PostItDTO createPostIt(BoardDTO boardDTO, int cellId)
     {
         return svc.createPostIt(boardDTO.board(),cellId);
@@ -35,5 +31,5 @@ public class CreatePostItOnBoardController {
     {
         return svc.addImageToPostIT(boardDTO.board(),cellId,postItDTO.postIt(),image);
     }
-
+*/
 }

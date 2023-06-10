@@ -1,19 +1,16 @@
 package eapli.base.board.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.*;
-
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "BOARD")
 public class Board implements AggregateRoot<BoardTitle> {
-
-
     @Id
     private BoardTitle boardTitle;
     @Transient
@@ -21,9 +18,9 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Transient
     public static int MAX_COLUMNS;
     @Column(nullable = false)
-    private int num_rows;
+    private int numRows;
     @Column(nullable = false)
-    private int num_columns;
+    private int numColumns;
     @OneToOne
     private SystemUser owner;
 
@@ -43,6 +40,13 @@ public class Board implements AggregateRoot<BoardTitle> {
     protected Board() {
     }
 
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
 
     public Board(BoardTitle boardTitle, int rows, int columns, SystemUser owner) {
         Preconditions.noneNull(boardTitle, rows, columns, owner);
@@ -54,12 +58,12 @@ public class Board implements AggregateRoot<BoardTitle> {
         setupBoard(rows, columns);
     }
 
-    public void setDimension(int num_rows,int num_columns) {
-        if (num_rows > MAX_ROWS || num_columns > MAX_COLUMNS || num_rows < 1 || num_columns < 1) {
+    public void setDimension(int numRows,int numColumns) {
+        if (numRows > MAX_ROWS || numColumns > MAX_COLUMNS || numRows < 1 || numColumns < 1) {
             throw new IllegalArgumentException("Board dimension is not valid");
         }
-        this.num_rows = num_rows;
-        this.num_columns = num_columns;
+        this.numRows = numRows;
+        this.numColumns = numColumns;
     }
 
 
@@ -139,7 +143,8 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     public boolean registerChangeInPostIt(int cellId, PostIt postIt)
     {
-        return cells.get(cellId).addPostIt(postIt);
+        //return cells.get(cellId).addPostIt(postIt);
+        return false;
     }
 
 

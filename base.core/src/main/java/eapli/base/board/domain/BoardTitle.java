@@ -1,11 +1,11 @@
 package eapli.base.board.domain;
 
-import java.util.Objects;
-
-import javax.persistence.Embeddable;
-
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
+
+import javax.persistence.Embeddable;
+import java.util.Objects;
+
 
 @Embeddable
 public class BoardTitle implements Comparable<BoardTitle>, ValueObject {

@@ -1,11 +1,10 @@
 package eapli.base.board.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import javax.persistence.*;
 
 @Entity
 public class Cell implements Serializable {
@@ -14,23 +13,29 @@ public class Cell implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int cellId;
 
+    @Embedded
     private BoardRow row;
+
+    @Embedded
     private BoardColumn column;
+    @OneToOne
+    private PostIt postIt;
 
     /*
      * @OneToOne(mappedBy = "cell")
      * private PostIt postIt;
-     */
 
      @OneToMany
      private final List<PostIt> postIts = new ArrayList<>();
 
+     */
     protected Cell() {
     }
 
     public Cell(BoardRow row, BoardColumn column) {
         this.row = row;
         this.column = column;
+        this.postIt = null;
     }
 
     public BoardRow getRow() {
@@ -40,7 +45,7 @@ public class Cell implements Serializable {
     public BoardColumn getColumn() {
         return column;
     }
-
+/*
     public List<PostIt> getPostIts(){return this.postIts;}
 
     public boolean addPostIt(PostIt postIt)
@@ -60,7 +65,7 @@ public class Cell implements Serializable {
             return false;
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -75,5 +80,18 @@ public class Cell implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(row, column);
+    }
+
+    //TODO: implement
+    public boolean hasPostIt() {
+        return this.postIt!=null;
+    }
+
+    public void addPostIt(PostIt postIt){
+        this.postIt=postIt;
+    }
+
+    public PostIt getPostIt() {
+        return this.postIt;
     }
 }

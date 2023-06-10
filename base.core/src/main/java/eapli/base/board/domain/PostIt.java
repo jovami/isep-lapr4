@@ -1,13 +1,11 @@
 package eapli.base.board.domain;
 
+import javax.persistence.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import javax.persistence.*;
 
 @Entity
 public class PostIt {
@@ -74,7 +72,23 @@ public class PostIt {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "DATA")
-    private byte[] postItData;
+    private String postItData;
+
+    //TODO: IMPLEMENT
+    public String addContent(String data){
+        return this.postItData;
+    }
+    public String getData(){
+        return this.postItData;
+    }
+    public boolean hasData(){
+        return this.postItData!=null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postItId, cellId, postItData);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -83,13 +97,7 @@ public class PostIt {
         if (o == null || getClass() != o.getClass())
             return false;
         PostIt postIt = (PostIt) o;
-        return postItId == postIt.postItId && cellId == postIt.cellId && Arrays.equals(postItData, postIt.postItData);
+        return postItId == postIt.postItId && cellId == postIt.cellId && postItData.equals(postIt.postItData);
     }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(postItId, cellId);
-        result = 31 * result + Arrays.hashCode(postItData);
-        return result;
-    }
 }

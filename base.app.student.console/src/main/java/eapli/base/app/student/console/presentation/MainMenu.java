@@ -58,8 +58,7 @@ public class MainMenu extends AbstractUI {
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
     private static final int LIST_BOARD_OPTION = 2;
-    private static final int SHARE_BOARD_OPTION= 3;
-    private static final int CREATE_POSTIT_OPTION= 4;
+    private static final int CREATE_POSTIT_OPTION= 3;
 
     // MEETING
     private static final int MEETING_OPTION = 5;
@@ -163,8 +162,7 @@ public class MainMenu extends AbstractUI {
         final Menu menu = new Menu("Boards");
 
         menu.addItem(CREATE_BOARD_OPTION, "Create Board", new CreateBoardUI()::show);
-        menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);
-        menu.addItem(SHARE_BOARD_OPTION, "Share Boards", new ShareBoardUI()::show);
+        menu.addItem(LIST_BOARD_OPTION, "List Boards", new ListBoardUI()::show);;
         menu.addItem(CREATE_POSTIT_OPTION, "Create PostIt", new CreatePostItUI()::show);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
