@@ -3,7 +3,6 @@
 DEST='../src/main/resources/static'
 SRC='./dist'
 
-
 TEMPLATES='../src/main/resources/templates'
 
 npm run build || exit 1
@@ -17,4 +16,5 @@ echo
 cp -rv "${SRC}" "${DEST}"
 
 # HACK: application.properties isn't being read for some reason
+mkdir -p "${TEMPLATES}"
 mv -v "${DEST}/index.html" "${TEMPLATES}"
