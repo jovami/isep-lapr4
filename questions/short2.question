@@ -1,0 +1,7 @@
+SHORT_ANSWER {
+    DESCRIPTION: "What is the capital of Mexico?"
+    CASE_SENSITIVE: false
+
+    SOLUTION 1: "Mexico" [0.5]
+    SOLUTION 2: "Mexico City" [1.0]
+}

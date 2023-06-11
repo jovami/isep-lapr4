@@ -1,0 +1,18 @@
+MATCHING {
+    DESCRIPTION: "Match the countries with their capital cities"
+
+    SUBQUESTION 1: "Portugal"
+    SUBQUESTION 2: "Spain"
+    SUBQUESTION 3: "France"
+    SUBQUESTION 4: "Italy"
+
+    ANSWER 1: "Lisbon"
+    ANSWER 2: "Madrid"
+    ANSWER 3: "Paris"
+    ANSWER 4: "Rome"
+
+    SOLUTION 1: 1-2 [1.0]
+    SOLUTION 2: 2-1 [1.0]
+    SOLUTION 3: 3-3 [1.0]
+    SOLUTION 4: 4-4 [1.0]
+}

@@ -1,0 +1,7 @@
+SHORT_ANSWER {
+    DESCRIPTION: "Where is Casa da Música located?"
+    CASE_SENSITIVE: false
+
+    SOLUTION 1: "Boavista" [0.5]
+    SOLUTION 2: "Avenida da Boavista" [1.0]
+}

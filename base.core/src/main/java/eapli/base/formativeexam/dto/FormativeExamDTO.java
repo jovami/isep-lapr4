@@ -2,21 +2,23 @@ package eapli.base.formativeexam.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * FormativeExamDTO
  */
-@Accessors(fluent = true)
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class FormativeExamDTO {
 
     @Deprecated
-    private final Long examId;
+    private Long examId;
 
-    private final String examName = "";
-    private final String courseName;
+    private String examName;
+    private String courseName;
 
     @Override
     public String toString() {

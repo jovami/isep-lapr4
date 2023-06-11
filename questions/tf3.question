@@ -1,0 +1,4 @@
+TRUE_FALSE {
+    DESCRIPTION: "Sweden's flag has a blue cross"
+    SOLUTION 1: false [1.0]
+}

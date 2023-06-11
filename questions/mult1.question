@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "Who was the first female astronaut to travel to space?"
+
+    ANSWER 1: "Sally Ride"
+    ANSWER 2: "Valentina Tereshkova"
+    ANSWER 3: "Mae Jemison"
+    ANSWER 4: "Yuri Gagarin"
+
+    SOLUTION 1: 2 [5.0]
+}

@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 import java.util.Map;
 
-@Accessors(fluent = true)
+// @Accessors(fluent = true)
 @Getter
 public class MissingWordsQuestion extends Question {
     private final String description;

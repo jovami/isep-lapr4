@@ -4,7 +4,7 @@ import eapli.base.exam.domain.question.QuestionType;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
+// @Accessors(fluent = true)
 @Getter
 public class ShortAnswerQuestion extends Question {
     private final String description;

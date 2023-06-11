@@ -1,0 +1,14 @@
+MISSING_WORDS {
+    DESCRIPTION: "The Wright brothers were the first to successfully [1] an airplane."
+
+    GROUP "verbs" {
+        ITEM 1: "fly"
+        ITEM 2: "drive"
+        ITEM 3: "swim"
+    }
+
+    CHOICE 1 {
+        SOLUTION 1: "1" [1.5]
+        FROM_GROUP: "verbs"
+    }
+}

@@ -40,7 +40,7 @@ public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService
     randomGroupByType(Iterable<eapli.base.exam.domain.regular_exam.antlr.Question> questions) {
         var map = new EnumMap<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>>(QuestionType.class);
         for (final var question : questions){
-            var type = question.type();
+            var type = question.getType();
             map.putIfAbsent(type, new LinkedList<>());
             map.get(type).push(question);
         }

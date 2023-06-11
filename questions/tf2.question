@@ -1,0 +1,4 @@
+TRUE_FALSE {
+    DESCRIPTION: "Lisbon is the Capital of Portugal"
+    SOLUTION 1: true [1.0]
+}

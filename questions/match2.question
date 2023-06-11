@@ -1,0 +1,18 @@
+MATCHING {
+    DESCRIPTION: "Match the colors with their Kanji spelling"
+
+    SUBQUESTION 1: "Red"
+    SUBQUESTION 2: "Purple"
+    SUBQUESTION 3: "Green"
+    SUBQUESTION 4: "Yellow"
+
+    ANSWER 1: "赤"
+    ANSWER 2: "黄色"
+    ANSWER 3: "緑"
+    ANSWER 4: "紫"
+
+    SOLUTION 1: 1-1 [1.0]
+    SOLUTION 2: 2-4 [1.0]
+    SOLUTION 3: 3-3 [1.0]
+    SOLUTION 4: 2-4 [1.0]
+}

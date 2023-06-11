@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Accessors(fluent = true)
+// @Accessors(fluent = true)
 @Getter
 public class MatchingQuestion extends Question {
     private final String description;

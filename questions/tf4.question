@@ -1,0 +1,4 @@
+TRUE_FALSE {
+    DESCRIPTION: "Antigua and Barbuda is located in the northern hemisphere"
+    SOLUTION 1: true [1.0]
+}

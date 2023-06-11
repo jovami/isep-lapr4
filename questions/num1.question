@@ -1,0 +1,6 @@
+NUMERICAL {
+    DESCRIPTION: "What's 9 + 10"
+    ERROR: 0.5
+
+    SOLUTION 1: 21 [1.0]
+}
