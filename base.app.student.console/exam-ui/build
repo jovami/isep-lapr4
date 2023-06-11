@@ -1,0 +1,20 @@
+#!/bin/sh
+
+DEST='../src/main/resources/static'
+SRC='./dist'
+
+
+TEMPLATES='../src/main/resources/templates'
+
+npm run build || exit 1
+
+echo
+
+[ -d "${DEST}" ] && rm -rfv "${DEST}"
+
+echo
+
+cp -rv "${SRC}" "${DEST}"
+
+# HACK: application.properties isn't being read for some reason
+mv -v "${DEST}/index.html" "${TEMPLATES}"
