@@ -22,6 +22,7 @@ package eapli.base.app.common.console;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.boot.CommandLineRunner;
 
 import eapli.base.Application;
 import eapli.framework.infrastructure.pubsub.EventDispatcher;
@@ -32,7 +33,7 @@ import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPub
  * @author Paulo Gandra Sousa
  */
 @SuppressWarnings("squid:S106")
-public abstract class BaseApplication {
+public abstract class BaseApplication implements CommandLineRunner {
 
     // we are assuming we will always use the in process event
     // dispatcher. check the Spring version of the eCafeteria project
@@ -45,7 +46,7 @@ public abstract class BaseApplication {
     /**
      * @param args the command line arguments
      */
-    public void run(final String[] args) {
+    public void run(final String... args) {
         printHeader();
 
         try {
@@ -57,7 +58,8 @@ public abstract class BaseApplication {
         } catch (final Exception e) {
             System.out.println(
                     "Something unexpected has happened and the application will terminate. Please check the logs.\n");
-            LOGGER.error(e);
+            e.printStackTrace();
+            LOGGER.error("Error:", e);
         } finally {
             clearEventHandlers();
         }

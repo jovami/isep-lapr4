@@ -2,6 +2,12 @@ package eapli.base.formativeexam.application;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
@@ -22,6 +28,8 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
  * TakeFormativeExamController
  */
 @UseCaseController
+@RestController
+@RequestMapping("api/examtaking")
 public final class TakeFormativeExamController {
     private final AuthorizationService authz;
 
@@ -37,19 +45,25 @@ public final class TakeFormativeExamController {
         this.questionRepo = repos.questions();
     }
 
+    @GetMapping("/formative-exams")
     public List<FormativeExamDTO> formativeExams() {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
-        var exams = new ListFormativeExamsService().forStudent(new MyUserService().currentStudent());
+        var exams = new ListFormativeExamsService().forStudent(
+                new MyUserService().currentStudent());
         return new FormativeExamDTOMapper().toDTO(exams);
     }
 
-    public ExamToBeTakenDTO generateFormativeExam(Object/* TODO */examDTO) {
+    @RequestMapping("/take")
+    public ResponseEntity<ExamToBeTakenDTO> generateFormativeExam(@RequestBody FormativeExamDTO examDTO) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
-        var exam = this.fexamRepo.ofIdentity(null/* TODO */).orElseThrow(IllegalStateException::new);
+        var exam = this.fexamRepo.ofIdentity(examDTO.getExamId())
+                .orElseThrow(IllegalStateException::new);
         var questions = this.questionRepo.questionsOfCourse(exam.course());
-        return GrammarContext.grammarTools().formativeExamGenerator().generate(exam, questions);
+        var dto = GrammarContext.grammarTools().formativeExamGenerator().generate(exam, questions);
+
+        return ResponseEntity.ok(dto);
     }
 
     public ExamResultDTO examGrading(FormativeExamResolutionDTO resolutionDTO) {

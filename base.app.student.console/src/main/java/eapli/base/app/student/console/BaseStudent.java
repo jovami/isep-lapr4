@@ -23,6 +23,14 @@
  */
 package eapli.base.app.student.console;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+
 import eapli.base.app.common.console.BaseApplication;
 import eapli.base.app.common.console.presentation.authz.LoginUI;
 import eapli.base.app.student.console.presentation.MainMenu;
@@ -40,24 +48,30 @@ import eapli.framework.infrastructure.pubsub.EventDispatcher;
  *
  * @author Paulo Gandra Sousa
  */
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class,
+        SecurityAutoConfiguration.class,
+})
+@ComponentScan(basePackages = {
+    "eapli.base.infrastructure.spring",
+    "eapli.base.app.student.console.presentation",
+    "eapli.base.exam",
+    "eapli.base.formativeexam",
+})
 @SuppressWarnings("squid:S106")
-public final class BaseStudent extends BaseApplication {
-
-    /**
-     * avoid instantiation of this class.
-     */
-    private BaseStudent() {
-    }
+public class BaseStudent extends BaseApplication {
 
     /**
      * @param args the command line arguments
      */
     public static void main(final String[] args) {
-
-        AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
+        AuthzRegistry.configure(PersistenceContext.repositories().users(),
+                new BasePasswordPolicy(),
                 new PlainTextEncoder());
 
-        new BaseStudent().run(args);
+        SpringApplication.run(BaseStudent.class, args);
     }
 
     @Override
