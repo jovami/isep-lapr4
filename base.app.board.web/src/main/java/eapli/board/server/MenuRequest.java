@@ -1,8 +1,9 @@
 package eapli.board.server;
 
-import eapli.board.SBPMessage;
+import eapli.board.SBProtocol;
 import eapli.board.server.application.AuthRequestHandler;
 import eapli.board.server.application.DisconnRequestHandler;
+import eapli.board.server.application.ShareBoardHandler;
 import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -26,7 +27,7 @@ public class MenuRequest extends Thread {
         try {
             DataInputStream inS = new DataInputStream(sock.getInputStream());
 
-            SBPMessage request = new SBPMessage(inS);
+            SBProtocol request = new SBProtocol(inS);
 
             // If this IP is not registered yet in the system , only allow codes lower than 4
             if (activeAuths.get(sock.getInetAddress()) == null && request.getCode() > 4) {
@@ -38,22 +39,22 @@ public class MenuRequest extends Thread {
             //depending on the SBPMessageCode
 
             switch (request.getCode()) {
-                case SBPMessage.AUTH:
+                case SBProtocol.AUTH:
                     AuthRequestHandler authRequest = new AuthRequestHandler(sock, request);
                     authRequest.run();
                     break;
-                case SBPMessage.DISCONN:
+                case SBProtocol.DISCONN:
                     DisconnRequestHandler disconn = new DisconnRequestHandler(sock, request);
                     disconn.run();
                     break;
-                /*case SBPMessage.GET_BOARDS_OWNED:
+                case SBProtocol.GET_BOARDS_OWNED:
                     ShareBoardHandler getBoardsOwner = new ShareBoardHandler(sock, request);
                     getBoardsOwner.run();
                     break;
-                case SBPMessage.VIEW_ALL_BOARDS:
+                case SBProtocol.VIEW_ALL_BOARDS:
                     ViewBoardRequestHandler view_boards = new ViewBoardRequestHandler(sock, request);
                     view_boards.run();
-                    break;*/
+                    break;
             }
 
         } catch (IOException ex) {
@@ -67,7 +68,9 @@ public class MenuRequest extends Thread {
     public synchronized static boolean addInetAddress(SystemUser user, InetAddress inetAddress) {
         return activeAuths.putIfAbsent(inetAddress, new Client(inetAddress, user)) == null;
     }
-
+    public synchronized static Client clientBySock(InetAddress addr) {
+        return activeAuths.get(addr);
+    }
     public synchronized static Client remove(InetAddress inetAddress) {
         return activeAuths.remove(inetAddress);
     }

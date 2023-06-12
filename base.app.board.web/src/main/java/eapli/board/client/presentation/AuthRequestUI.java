@@ -1,7 +1,6 @@
 package eapli.board.client.presentation;
 
 import eapli.board.client.application.AuthRequestController;
-import eapli.board.client.SBPClientApp;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import jovami.util.io.ConsoleUtils;
@@ -34,7 +33,6 @@ public class AuthRequestUI extends AbstractUI {
 
                 if (status.equals("ACK")) {
                     System.out.println("Logged in Successfully");
-                    SBPClientApp.setUsername(username);
                     return true;
                 } else {
                     attempts++;

@@ -1,6 +1,6 @@
 package eapli.board.client.application;
 
-import eapli.board.SBPMessage;
+import eapli.board.SBProtocol;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
@@ -27,9 +27,9 @@ public class AuthRequestController {
     }
 
     public String requestAuth(String username, String password) {
-        SBPMessage request = new SBPMessage();
+        SBProtocol request = new SBProtocol();
 
-        request.setCode(SBPMessage.AUTH);
+        request.setCode(SBProtocol.AUTH);
         request.setDataLength(username.length() + password.length() + 2);
 
         String buff = username + "\0" + password + "\0";
@@ -49,7 +49,7 @@ public class AuthRequestController {
     private String authStatus() {
 
         try {
-            SBPMessage response = new SBPMessage(inS);
+            SBProtocol response = new SBProtocol(inS);
         } catch (IOException e){
             throw new RuntimeException(e);
         }catch (ReceivedERRCode e) {

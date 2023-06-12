@@ -1,5 +1,7 @@
 package eapli.board.client;
 
+import eapli.board.client.presentation.ShareBoardUI;
+import eapli.board.client.presentation.ViewBoardRequestUI;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.presentation.console.AbstractUI;
@@ -60,6 +62,8 @@ public class MainMenu extends AbstractUI {
     private Menu buildMainMenu() {
         Menu menu = new Menu("Shared Board App - SBP ");
         menu.addItem(MenuItem.separator(SEPARATOR_LABEL));
+        menu.addItem(SHARE_BOARD, "Share board ", new ShareBoardUI(serverIP, serverPort)::show);
+        menu.addItem(VIEW_BOARD, "View board ", new ViewBoardRequestUI(serverIP, serverPort)::show);
 
         menu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
         return menu;

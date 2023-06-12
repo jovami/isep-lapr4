@@ -4,7 +4,7 @@ import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.*;
 
-public class SBPMessage {
+public class SBProtocol implements MessageProtocol{
     private static final Integer SBPRROTOCOL_VERSION = 1;
     private Integer code;
     private Integer dataLength;
@@ -25,7 +25,7 @@ public class SBPMessage {
     public static final int GET_BOARD = 9;
     public static final int GET_BOARDS_OWNED = 10;
 
-    public SBPMessage(DataInputStream in) throws IOException, ReceivedERRCode {
+    public SBProtocol(DataInputStream in) throws IOException, ReceivedERRCode {
 
         // SBProtocol PARAMETERS
         boolean isCompatible = (SBPRROTOCOL_VERSION == parseByte(in.readByte()));
@@ -37,9 +37,9 @@ public class SBPMessage {
 
             in.readFully(content, 0, dataLength);
 
-            if (code == SBPMessage.ERR && dataLength != 0) {
+            if (code == SBProtocol.ERR && dataLength != 0) {
                 throw new ReceivedERRCode(getContentAsString());
-            } else if (code == SBPMessage.ERR) {
+            } else if (code == SBProtocol.ERR) {
                 throw new ReceivedERRCode();
             }
         } else {
@@ -47,7 +47,7 @@ public class SBPMessage {
         }
     }
 
-    public SBPMessage() {
+    public SBProtocol() {
         code = -1;
         dataLength = -1;
         content = null;

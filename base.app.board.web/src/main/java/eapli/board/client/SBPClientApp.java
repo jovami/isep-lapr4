@@ -1,19 +1,40 @@
 package eapli.board.client;
 
-import eapli.board.client.presentation.AuthRequestUI;
+import eapli.base.app.common.console.BaseApplication;
+import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
+import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
+import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.client.application.DisconnRequestController;
+import eapli.board.client.presentation.AuthRequestUI;
+import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
+import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.pubsub.EventDispatcher;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class SBPClientApp {
+public class SBPClientApp extends BaseApplication {
     static private InetAddress serverIP;
     static private int serverPort;
     private static final String SEPARATOR_LABEL = "------------------------------";
-    public static String username;
 
+    private SBPClientApp() {
+    }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(final String[] args) {
+
+        AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
+                new PlainTextEncoder());
+
+        new SBPClientApp().run(args);
+    }
+
+    @Override
+    protected void doMain(final String[] args) {
         parseArgs(args);
 
         //Before any action, the user is forced to login
@@ -33,8 +54,8 @@ public class SBPClientApp {
         } finally {
             disconnect();
         }
+    }
 
-    } // MAIN METHOD
 
     private static void disconnect() {
         DisconnRequestController ctrl = new DisconnRequestController(serverIP, serverPort);
@@ -79,7 +100,19 @@ public class SBPClientApp {
         }
     }
 
-    public static void setUsername(String username) {
-        SBPClientApp.username = username;
+    @Override
+    protected String appTitle() {
+        return "SBApp";
+    }
+
+    @Override
+    protected String appGoodbye() {
+        return "SBApp";
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void doSetupEventHandlers(final EventDispatcher dispatcher) {
+        dispatcher.subscribe(new NewChangeWatchDog(), NewUserRegisteredFromSignupEvent.class);
     }
 } // CLASS

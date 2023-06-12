@@ -1,6 +1,6 @@
 package eapli.board.client.application;
 
-import eapli.board.SBPMessage;
+import eapli.board.SBProtocol;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
@@ -32,15 +32,15 @@ public class DisconnRequestController {
                 inS = new DataInputStream(sock.getInputStream());
                 outS = new DataOutputStream(sock.getOutputStream());
 
-                SBPMessage request = new SBPMessage();
-                request.setCode(SBPMessage.DISCONN);
+                SBProtocol request = new SBProtocol();
+                request.setCode(SBProtocol.DISCONN);
                 //sends request to server
                 request.send(outS);
                 //reads server response
-                SBPMessage response = new SBPMessage(inS);
+                SBProtocol response = new SBProtocol(inS);
 
                 //VERIFY IF THE DISCONN WAS SUCCESSFUL
-                disconnected = response.getCode() == SBPMessage.ACK;
+                disconnected = response.getCode() == SBProtocol.ACK;
 
                 try {
                     sock.close();
