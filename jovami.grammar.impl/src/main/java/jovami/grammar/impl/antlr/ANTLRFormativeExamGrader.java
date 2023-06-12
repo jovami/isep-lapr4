@@ -23,29 +23,32 @@ public class ANTLRFormativeExamGrader implements GradeFormativeExamService {
             final FormativeExamResolutionDTO resolution,
             final Map<Long, Question> questions) {
 
-        var maxPoints = 0.f;
-        var finalPoints = 0.f;
+        var maxGrade = 0.f;
+        var grade = 0.f;
 
-        final var resultSections = new ArrayList<Section>(resolution.sectionAnswers().size());
+        final var resultSections = new ArrayList<Section>(resolution.getSectionAnswers().size());
 
-        for (final var section : resolution.sectionAnswers()) {
-            final var resultAnswers = new ArrayList<Answer>(section.answers().size());
+        int i = 0;
+        for (final var section : resolution.getSectionAnswers()) {
+            final var resultAnswers = new ArrayList<Answer>(section.getAnswers().size());
 
-            for (final var answer : section.answers()) {
-                final var question = questions.get(answer.questionID());
+            for (final var answer : section.getAnswers()) {
+                final var question = questions.get(answer.getQuestionID());
 
-                final var result = gradeQuestion(question, answer.answer());
+                final var result = gradeQuestion(question, answer.getAnswer());
                 final var points = result.points();
-                finalPoints += points;
-                maxPoints = result.maxPoints();
+                grade += points;
+                System.out.println(i + " " + result.maxPoints());
+                maxGrade += result.maxPoints();
 
                 resultAnswers.add(new Answer(points, result.feedback()));
+                i++;
             }
 
             resultSections.add(new Section(resultAnswers));
         }
 
-        return new ExamResultDTO(resultSections, finalPoints, maxPoints);
+        return new ExamResultDTO(resultSections, grade, maxGrade);
     }
 
     private GradedQuestion gradeQuestion(Question question, String givenAnswer) {

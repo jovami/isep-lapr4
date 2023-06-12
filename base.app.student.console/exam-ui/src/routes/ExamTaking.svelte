@@ -63,8 +63,7 @@
         }
     }
 
-    function handleSubmit(event) {
-        event.preventDefault();
+    function handleSubmit() {
         const form = document.getElementById("exam") as HTMLFormElement;
 
         type GivenAnswer = {
@@ -100,13 +99,13 @@
             }
 
             if (sectionAnswers[sectionId].answers[questionIdx] === undefined) {
-                sectionAnswers[sectionId].answers[questionIdx] = {answer: "", questionId: null};
+                sectionAnswers[sectionId].answers[questionIdx] = {answer: "", questionID: null};
             }
 
             if (sectionAnswers[sectionId].answers[questionIdx].answer.length > 0) {
                 sectionAnswers[sectionId].answers[questionIdx].answer += "\n" + answer;
             } else {
-                sectionAnswers[sectionId].answers[questionIdx].questionId = id;
+                sectionAnswers[sectionId].answers[questionIdx].questionID = parseInt(id);
                 sectionAnswers[sectionId].answers[questionIdx].answer = answer;
             }
         }
@@ -125,7 +124,7 @@
     </h1>
     <hr/>
     <br/>
-    <form on:submit={handleSubmit} id="exam">
+    <form on:submit|preventDefault={handleSubmit} id="exam">
         {#each exam.sections as section, i}
             <h2>
                 Section {i + 1} &mdash; {section.description}
@@ -140,18 +139,18 @@
                 {#if question.type === "MULTIPLE_CHOICE"}
                     {#if question.singleAnswer}
                         <div>
-                            {#each question.options as choice}
+                            {#each question.options as choice, k}
                                 <div
                                         class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
                                 hover:cursor-pointer"
                                 >
-
                                     <input
                                             class="align-middle hover:cursor-pointer"
                                             type="radio"
                                             id={choice + 1}
                                             name={i + "_" + j + "_" + question.id}
-                                            value={choice}
+                                            value={k+1}
+                                            required
                                     />
                                     <label
                                             class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
@@ -162,7 +161,7 @@
                         </div>
                     {:else}
                         <div>
-                            {#each question.options as choice}
+                            {#each question.options as choice, k}
                                 <div
                                         class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
                                 hover:cursor-pointer"
@@ -171,8 +170,8 @@
                                             class="align-middle hover:cursor-pointer"
                                             type="checkbox"
                                             id={choice}
-                                            name={i + "_" + j + "_" + question.id}
-                                            value={choice}
+                                            name={i + "_" + j + "_" + question.id + "_" + k}
+                                            value={k+1}
                                     />
                                     <label
                                             class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
@@ -194,6 +193,7 @@
                                         id={"true" + i + "-" + j}
                                         name={i + "_" + j + "_" + question.id}
                                         value="true"
+                                        required
                                 />
                                 <label
                                         class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
@@ -210,6 +210,7 @@
                                         id={"false" + i + "-" + j}
                                         name={i + "_" + j + "_" + question.id}
                                         value="false"
+                                        required
                                 />
                                 <label
                                         class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
@@ -226,8 +227,9 @@
                             <p>
                                 [{k + 1}] &#8594;
                                 <select
-                                        name={i + "_" + j + "_" + question.id}
+                                        name={i + "_" + j + "_" + question.id + "_" + k}
                                         class="hover:cursor-pointer"
+                                        required
                                 >
                                     {#each question.groups[from_group] as group}
                                         <option value={group}>{group}</option>
@@ -243,6 +245,7 @@
                                 id="short_answer"
                                 name={i + "_" + j + "_" + question.id}
                                 value=""
+                                required
                         />
                     </div>
                 {:else if question.type === "NUMERICAL"}
@@ -252,12 +255,13 @@
                                 id="numerical_answer"
                                 name={i + "_" + j + "_" + question.id}
                                 value=""
+                                required
                         />
                     </div>
                 {:else if question.type === "MATCHING"}
                     <!-- https://www.inmotionhosting.com/support/wp-content/uploads/2012/11/edu_moodle_104_matching-question_matching-question-5-final.gif -->
                     <div>
-                        {#each question.phrase1 as phrase1}
+                        {#each question.phrase1 as phrase1, k}
                             <!-- TODO: right align phrase1, left align select -->
                             <!-- Like so:
                                 Portugal -> Lisbon
@@ -272,9 +276,10 @@
 
                                 <select
                                         name={i + "_" + j + "_" + question.id + "_" + phrase1}
-                                        class="hover:cursor-pointer">
-                                    {#each question.phrase2 as phrase2}
-                                        <option value={phrase2}>{phrase2}</option>
+                                        class="hover:cursor-pointer"
+                                        required>
+                                    {#each question.phrase2 as phrase2, l}
+                                        <option value={(k+1) + "-" + (l+1)}>{phrase2}</option>
                                     {/each}
                                 </select>
                             </div>
@@ -285,7 +290,18 @@
             {/each}
             <br/>
         {/each}
-        <button type="submit">Submit</button>
+        <div class="inline-flex">
+            <button type="submit"
+                    class="flex rounded-lg mt-16 bg-indigo-500 py-2 px-8 font-sans font-bold
+                    uppercase text-white shadow-md shadow-indigo-500/20 transition-all
+                    hover:shadow-lg hover:shadow-indigo-500/40 focus:opacity-[0.85]
+                    focus:shadow-none active:opacity-[0.85] active:shadow-none
+                    disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    data-ripple-light="true"
+            >
+                Submit
+            </button>
+        </div>
     </form>
 {:catch error}
     <p>

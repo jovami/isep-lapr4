@@ -99,7 +99,7 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
         var x = ctx.value.getText();
 
         var points = Float.parseFloat(ctx.points.getText());
-        this.maxPoints += this.points;
+        this.maxPoints += points;
 
         if (this.resolution.equals(x)) {
             this.points = points;
@@ -258,7 +258,7 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
         var answer = this.resolution;
 
         if (!singleAnswer) {
-            answer = Arrays.stream(answer.split(","))
+            answer = Arrays.stream(answer.split("\n"))
                     .mapToInt(Integer::parseInt)
                     .sorted()
                     .boxed()

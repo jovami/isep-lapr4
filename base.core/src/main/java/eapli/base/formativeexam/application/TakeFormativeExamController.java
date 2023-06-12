@@ -68,7 +68,7 @@ public final class TakeFormativeExamController {
     }
 
     @RequestMapping("/grade")
-    public ResponseEntity<ExamResultDTO> examGrading(FormativeExamResolutionDTO resolutionDTO) {
+    public ResponseEntity<ExamResultDTO> examGrading(@RequestBody FormativeExamResolutionDTO resolutionDTO) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
         var questions = new FormativeExamResolutionDTOUnmapper().fromDTO(resolutionDTO);

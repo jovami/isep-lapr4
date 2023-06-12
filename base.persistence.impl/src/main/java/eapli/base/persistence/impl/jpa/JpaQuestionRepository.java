@@ -10,7 +10,7 @@ import eapli.base.question.repositories.QuestionRepository;
 class JpaQuestionRepository extends BaseJpaRepositoryBase<Question, Long, Long> implements QuestionRepository {
 
     JpaQuestionRepository(String identityFieldName) {
-        super(identityFieldName, "questionId");
+        super(identityFieldName, "id");
     }
 
 

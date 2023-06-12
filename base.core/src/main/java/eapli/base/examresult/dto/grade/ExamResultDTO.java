@@ -10,13 +10,11 @@ import lombok.experimental.Accessors;
 /**
  * ExamResultDTO
  */
-@Accessors(fluent = true)
 @Getter
 @AllArgsConstructor
 @ToString
 public class ExamResultDTO {
 
-    @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
     @ToString
@@ -24,7 +22,6 @@ public class ExamResultDTO {
         private final List<Answer> answers;
     }
 
-    @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
     @ToString

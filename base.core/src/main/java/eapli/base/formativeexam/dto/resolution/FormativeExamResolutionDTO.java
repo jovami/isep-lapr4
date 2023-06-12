@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 @Setter(value = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //======//
-@Accessors(fluent = true)
 @Getter
 @AllArgsConstructor
 public final class FormativeExamResolutionDTO {
@@ -25,7 +24,6 @@ public final class FormativeExamResolutionDTO {
     @Setter(value = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     //======//
-    @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
     public static final class SectionAnswers {
@@ -36,7 +34,6 @@ public final class FormativeExamResolutionDTO {
     @Setter(value = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     //======//
-    @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
     public static final class GivenAnswer {
@@ -45,5 +42,4 @@ public final class FormativeExamResolutionDTO {
     }
 
     private List<SectionAnswers> sectionAnswers;
-
 }

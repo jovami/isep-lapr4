@@ -73,9 +73,9 @@ public class RegularExamBootstrapper implements Action {
 
             var resolution = new ExamResolutionDTO(
                     List.of(new Section(
-                            List.of("1-2\n2-1\n3-3\n4-4\n", "2", "1,3")),
+                            List.of("1-2\n2-1\n3-3\n4-4\n", "2", "1\n3")),
                         new Section(
-                            List.of("Avenida da Boavista", "2", "true", "fly\nbrave\n")
+                            List.of("Avenida da Boavista", "2", "true", "fly\nbrave")
                             )));
 
             var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);

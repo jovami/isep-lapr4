@@ -128,9 +128,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     public String visitBoolean_solution(Boolean_solutionContext ctx) {
         var x = ctx.value.getText();
 
-        var answer = this.resolution.sections()
+        var answer = this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter);
 
         var points = Float.parseFloat(ctx.points.getText());
@@ -151,9 +151,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         var caseSensitive = Boolean.parseBoolean(
                 visitCase_sensitive(ctx.case_sensitive()));
 
-        var answer = this.resolution.sections()
+        var answer = this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter);
 
         if (!caseSensitive)
@@ -221,9 +221,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
         this.points = 0.f;
 
-        var answers = this.resolution.sections()
+        var answers = this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter)
                 .split("\n");
 
@@ -271,9 +271,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
         var points = Float.parseFloat(numericalSolution[1]);
         this.maxPoints += points;
 
-        var answer = Float.parseFloat(this.resolution.sections()
+        var answer = Float.parseFloat(this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter));
 
         if (answer >= expected - margin && answer <= expected + margin) {
@@ -306,13 +306,13 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     public String visitMultiple_choice(Multiple_choiceContext ctx) {
         var singleAnswer = visitChoice_type(ctx.choice_type()).equals("single-answer");
 
-        var answer = this.resolution.sections()
+        var answer = this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter);
 
         if (!singleAnswer) {
-            answer = Arrays.stream(answer.split(","))
+            answer = Arrays.stream(answer.split("\n"))
                     .mapToInt(Integer::parseInt)
                     .sorted()
                     .boxed()
@@ -394,9 +394,9 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             map.put(id, solutions);
         }
 
-        var answers = this.resolution.sections()
+        var answers = this.resolution.getSections()
                 .get(sectionCounter)
-                .answers()
+                .getAnswers()
                 .get(questionCounter)
                 .split("\n");
 

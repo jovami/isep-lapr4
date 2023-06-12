@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 @Setter(value = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 //======//
-@Accessors(fluent = true)
 @Getter
 @AllArgsConstructor
 public final class ExamResolutionDTO {
@@ -25,7 +24,6 @@ public final class ExamResolutionDTO {
     @Setter(value = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     //======//
-    @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
     public static final class Section {
