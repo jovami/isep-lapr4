@@ -3,6 +3,7 @@
 
     import ExamList from "./routes/ExamList.svelte";
     import ExamTaking from "./routes/ExamTaking.svelte";
+    import ExamGrading from "./routes/ExamGrading.svelte";
 </script>
 
 <Router
@@ -10,5 +11,6 @@
         "/": ExamList, // TODO
         "/formative-exams": ExamList,
         "/take": ExamTaking,
+        "/grade": ExamGrading,
     }}
 />

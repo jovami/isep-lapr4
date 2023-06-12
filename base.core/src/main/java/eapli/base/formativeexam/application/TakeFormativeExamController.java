@@ -2,6 +2,7 @@ package eapli.base.formativeexam.application;
 
 import java.util.List;
 
+import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,10 +67,13 @@ public final class TakeFormativeExamController {
         return ResponseEntity.ok(dto);
     }
 
-    public ExamResultDTO examGrading(FormativeExamResolutionDTO resolutionDTO) {
+    @RequestMapping("/grade")
+    public ResponseEntity<ExamResultDTO> examGrading(FormativeExamResolutionDTO resolutionDTO) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
         var questions = new FormativeExamResolutionDTOUnmapper().fromDTO(resolutionDTO);
-        return GrammarContext.grammarTools().formativeExamGrader().correctExam(resolutionDTO, questions);
+        var dto = GrammarContext.grammarTools().formativeExamGrader().correctExam(resolutionDTO, questions);
+
+        return ResponseEntity.ok(dto);
     }
 }

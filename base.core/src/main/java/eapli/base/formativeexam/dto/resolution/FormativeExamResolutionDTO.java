@@ -28,7 +28,7 @@ public final class FormativeExamResolutionDTO {
     @Accessors(fluent = true)
     @Getter
     @AllArgsConstructor
-    public static final class Section {
+    public static final class SectionAnswers {
         private List<GivenAnswer> answers;
     }
 
@@ -44,6 +44,6 @@ public final class FormativeExamResolutionDTO {
         private Long questionID;
     }
 
-    private List<Section> sections;
+    private List<SectionAnswers> sectionAnswers;
 
 }

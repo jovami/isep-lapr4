@@ -20,7 +20,7 @@ public final class FormativeExamResolutionDTOUnmapper {
     }
 
     public Map<Long, Question> fromDTO(FormativeExamResolutionDTO resolutionDTO) {
-        return resolutionDTO.sections().stream()
+        return resolutionDTO.sectionAnswers().stream()
                 .flatMap(sec -> sec.answers().stream())
                 .map(answer -> this.repo.ofIdentity(answer.questionID()).orElseThrow(IllegalStateException::new))
                 .collect(Collectors.toMap(Question::identity, Function.identity()));

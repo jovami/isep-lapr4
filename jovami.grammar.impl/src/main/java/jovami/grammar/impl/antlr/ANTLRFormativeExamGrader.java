@@ -26,9 +26,9 @@ public class ANTLRFormativeExamGrader implements GradeFormativeExamService {
         var maxPoints = 0.f;
         var finalPoints = 0.f;
 
-        final var resultSections = new ArrayList<Section>(resolution.sections().size());
+        final var resultSections = new ArrayList<Section>(resolution.sectionAnswers().size());
 
-        for (final var section : resolution.sections()) {
+        for (final var section : resolution.sectionAnswers()) {
             final var resultAnswers = new ArrayList<Answer>(section.answers().size());
 
             for (final var answer : section.answers()) {
