@@ -36,4 +36,24 @@ class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, BoardTitle> 
         query.setParameter("owner", owner);
         return query.getResultList();
     }
+
+    @Override
+    public Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner)
+    {
+        final var query = entityManager().createQuery(
+                "SELECT e FROM Board e WHERE e.owner = :owner And e.state <> 'ARCHIVED'",
+                Board.class);
+        query.setParameter("owner", owner);
+        return query.getResultList();
+    }
+
+    @Override
+    public Iterable<Board> listBoardsUserOwnsArchived(SystemUser owner)
+    {
+        final var query = entityManager().createQuery(
+                "SELECT e FROM Board e WHERE e.owner = :owner And e.state = 'ARCHIVED'",
+                Board.class);
+        query.setParameter("owner", owner);
+        return query.getResultList();
+    }
 }

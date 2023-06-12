@@ -35,6 +35,14 @@ public class ShareBoardService {
         return (ArrayList<Board>) boardRepository.listBoardsUserOwns(user);
     }
 
+    public List<Board> listBoardsUserOwnsNotArchived(SystemUser user) {
+        return (ArrayList<Board>) boardRepository.listBoardsUserOwnsNotArchived(user);
+    }
+
+    public List<Board> listBoardsUserOwnsArchived(SystemUser user) {
+        return (ArrayList<Board>) boardRepository.listBoardsUserOwnsArchived(user);
+    }
+
     public boolean shareBoard(Board board, List<Pair<SystemUser,BoardParticipantPermissions>> users) {
         //txCtx.beginTransaction();
 

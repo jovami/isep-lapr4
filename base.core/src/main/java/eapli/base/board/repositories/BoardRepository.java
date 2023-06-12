@@ -11,5 +11,7 @@ public interface BoardRepository extends DomainRepository<BoardTitle, Board> {
 
     boolean isBoardTitleUnique(String boardTitle);
     Iterable<Board> listBoardsUserOwns(SystemUser owner);
+    Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner);
 
+    Iterable<Board> listBoardsUserOwnsArchived(SystemUser owner);
 }

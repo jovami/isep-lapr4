@@ -1,6 +1,7 @@
 package eapli.board.server;
 
 import eapli.board.SBProtocol;
+import eapli.board.server.application.ArchiveBoardHandler;
 import eapli.board.server.application.AuthRequestHandler;
 import eapli.board.server.application.DisconnRequestHandler;
 import eapli.board.server.application.ShareBoardHandler;
@@ -55,6 +56,11 @@ public class MenuRequest extends Thread {
                     ViewBoardRequestHandler view_boards = new ViewBoardRequestHandler(sock, request);
                     view_boards.run();
                     break;
+                case SBProtocol.GET_BOARDS_OWNED_NOT_ARCHIVED:
+                    ArchiveBoardHandler getBoardsOwnerNotArchived = new ArchiveBoardHandler(sock,request);
+                    getBoardsOwnerNotArchived.run();
+                    break;
+
             }
 
         } catch (IOException ex) {

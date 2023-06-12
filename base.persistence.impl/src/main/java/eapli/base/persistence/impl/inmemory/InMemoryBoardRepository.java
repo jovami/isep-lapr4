@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardState;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.course.domain.CourseState;
@@ -38,6 +39,20 @@ public class InMemoryBoardRepository
     {
         return valuesStream()
                 .filter(board -> board.boardOwner().sameAs(owner))
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner)
+    {
+        return valuesStream()
+                .filter(board -> board.boardOwner().sameAs(owner) && board.getState() != BoardState.ARCHIVED)
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<Board> listBoardsUserOwnsArchived(SystemUser owner)
+    {
+        return valuesStream()
+                .filter(board -> board.boardOwner().sameAs(owner) && board.getState() == BoardState.ARCHIVED)
                 .collect(Collectors.toList());
     }
 

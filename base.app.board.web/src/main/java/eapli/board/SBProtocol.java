@@ -24,6 +24,8 @@ public class SBProtocol implements MessageProtocol{
     public static final int CHOOSE_BOARD = 8;
     public static final int GET_BOARD = 9;
     public static final int GET_BOARDS_OWNED = 10;
+    public static final int GET_BOARDS_OWNED_NOT_ARCHIVED = 11;
+    public static final int GET_BOARDS_OWNED_ARCHIVED = 12;
 
     public SBProtocol(DataInputStream in) throws IOException, ReceivedERRCode {
 
