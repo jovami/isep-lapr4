@@ -1,13 +1,11 @@
 <script lang="ts">
-    import {examStore} from "../store";
+    import { examStore } from "../store";
 
     type Question = {
         id: number;
         description: string;
 
-        groups?: {
-            [key: string]: string[];
-        };
+        groups?: { [key: string]: string[] };
         choices?: string[];
 
         phrase1?: string[];
@@ -35,23 +33,21 @@
         sections: Section[];
     };
 
-    const ola = "/formative-exams";
     let selectedExam = null;
     examStore.subscribe((value) => {
-        selectedExam = value;
+        if (value !== null) selectedExam = value;
     });
 
     const chooseExam = async (): Promise<Exam> => {
         if (selectedExam === null) {
-            console.log("ola");
             throw new Error("No exam selected!");
         }
 
         console.log(selectedExam);
 
-        const res = await fetch("http://localhost:8090/api/examtaking/take", {
+        const res = await fetch("api/examtaking/take", {
             method: "POST",
-            headers: {"Content-type": "application/json"},
+            headers: { "Content-type": "application/json" },
             body: JSON.stringify(selectedExam),
         });
 
@@ -70,48 +66,92 @@
     <p>Loading...</p>
 {:then exam}
     <h1>
-        Title: {exam.title}
+        <strong>{exam.title}</strong>
     </h1>
-    <hr/>
-    <br/>
+    <hr />
+    <br />
     {#each exam.sections as section, i}
         <h2>
-            Section {i + 1}: {section.description}
+            Section {i + 1} &mdash; {section.description}
         </h2>
-        <hr/>
-        <br/>
+        <hr />
+        <br />
         {#each section.questions as question, j}
             <h3>
-                Question {j + 1}: {question.description}
+                Question {j + 1} &mdash; {question.description}
             </h3>
+            <!-- FIXME: id's in <input> should probably be unique -->
             {#if question.type === "MULTIPLE_CHOICE"}
                 <form>
-                    {#each question.options as choice, k}
-                        <input type="radio" id={choice} name={question.id} value={choice}/>
-                        <label for={choice}>{choice}</label><br/>
+                    <!-- <div class="justify-center"> -->
+                    {#each question.options as choice}
+                        <div
+                            class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
+                                hover:cursor-pointer"
+                        >
+                            <input
+                                class="align-middle hover:cursor-pointer"
+                                type="radio"
+                                id={choice}
+                                name={question.id.toString()}
+                                value={choice}
+                            />
+                            <label
+                                class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                for={choice}>{choice}</label
+                            >
+                        </div>
                     {/each}
+                    <!-- </div> -->
                 </form>
             {:else if question.type === "TRUE_FALSE"}
                 <form>
                     <div class="flex justify-center">
-                        <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                            <input type="radio" id="true" name={question.id} value="true"/>
-                            <label for="true">True</label>
+                        <div
+                            class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
+                        >
+                            <input
+                                class="hover:cursor-pointer"
+                                type="radio"
+                                id={"true" + i + "-" + j}
+                                name={question.id.toString()}
+                                value="true"
+                            />
+                            <label
+                                class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                for={"true" + i + "-" + j}
+                            >
+                                True
+                            </label>
                         </div>
-                        <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                            <input type="radio" id="false" name={question.id} value="false"/>
-                            <label for="false">False</label>
+                        <div
+                            class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
+                        >
+                            <input
+                                type="radio"
+                                id={"false" + i + "-" + j}
+                                name={question.id.toString()}
+                                value="false"
+                            />
+                            <label
+                                class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                for={"false" + i + "-" + j}
+                            >
+                                False
+                            </label>
                         </div>
                     </div>
-
                 </form>
             {:else if question.type === "MISSING_WORDS"}
                 <form>
                     {#each question.choices as from_group, k}
                         <p>
                             [{k + 1}] &#8594;
-                            <select name={from_group}>
-                                {#each question.groups[from_group] as group, l}
+                            <select
+                                name={from_group}
+                                class="hover:cursor-pointer"
+                            >
+                                {#each question.groups[from_group] as group}
                                     <option value={group}>{group}</option>
                                 {/each}
                             </select>
@@ -120,33 +160,50 @@
                 </form>
             {:else if question.type === "SHORT_ANSWER"}
                 <form>
-                    <input type="text" id="short_answer" name={question.id} value=""/>
+                    <input
+                        type="text"
+                        id="short_answer"
+                        name={question.id.toString()}
+                        value=""
+                    />
                 </form>
             {:else if question.type === "NUMERICAL"}
                 <form>
-                    <input type="number" id="numerical_answer" name={question.id} value=""/>
+                    <input
+                        type="number"
+                        id="numerical_answer"
+                        name={question.id.toString()}
+                        value=""
+                    />
                 </form>
             {:else if question.type === "MATCHING"}
                 <!-- https://www.inmotionhosting.com/support/wp-content/uploads/2012/11/edu_moodle_104_matching-question_matching-question-5-final.gif -->
                 <form>
-                    {#each question.phrase1 as phrase1, k}
-                        <p>
-                            {phrase1} &#8594;
-                            <select name={phrase1}>
-                                {#each question.phrase2 as phrase2, l}
+                    {#each question.phrase1 as phrase1}
+                        <!-- TODO: right align phrase1, left align select -->
+                        <!-- Like so:
+                            Portugal -> Lisbon
+                               Spain -> Madrid
+                              France -> Paris
+                            -->
+                        <div
+                            class="flex mt-2 justify-center justify-items-center"
+                        >
+                            {phrase1}
+                            &#8594;
+                            <select name={phrase1} class="hover:cursor-pointer">
+                                {#each question.phrase2 as phrase2}
                                     <option value={phrase2}>{phrase2}</option>
                                 {/each}
                             </select>
-                        </p>
+                        </div>
                     {/each}
-
                 </form>
             {/if}
-            <br/>
+            <br />
         {/each}
-        <br/>
+        <br />
     {/each}
-
 {:catch error}
     <p>
         Error: {error.message}
