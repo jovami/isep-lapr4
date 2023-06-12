@@ -98,14 +98,21 @@ public class ExamSpecVisitor extends ExamSpecBaseVisitor<String> {
     public String visitMultiple_choice(ExamSpecParser.Multiple_choiceContext ctx) {
         List<String> options = new ArrayList<>();
 
+        var singleAnswer = visitChoice_type(ctx.choice_type()).equals("single-answer");
+
         for (var answerContext : ctx.answer()) {
             options.add(visitAnswer(answerContext));
         }
 
         var description = visitDescription(ctx.description());
 
-        this.questions.add(new MultipleChoiceQuestion(description, options));
+        this.questions.add(new MultipleChoiceQuestion(singleAnswer, description, options));
         return null;
+    }
+
+    @Override
+    public String visitChoice_type(ExamSpecParser.Choice_typeContext ctx) {
+        return ctx.value.getText();
     }
 
     @Override

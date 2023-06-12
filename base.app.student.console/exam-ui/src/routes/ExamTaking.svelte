@@ -12,6 +12,7 @@
         phrase1?: string[];
         phrase2?: string[];
 
+        singleAnswer?: boolean;
         options?: [];
         type:
             | "MATCHING"
@@ -62,13 +63,13 @@
         }
     }
 
-    function handleSubmit(event){
+    function handleSubmit(event) {
         event.preventDefault();
         const form = document.getElementById("exam") as HTMLFormElement;
 
         type GivenAnswer = {
             answer: string;
-            questionId: number;
+            questionID: number;
         };
 
         type SectionAnswers = {
@@ -137,28 +138,50 @@
                 </h3>
                 <!-- FIXME: id's in <input> should probably be unique -->
                 {#if question.type === "MULTIPLE_CHOICE"}
-                    <div>
-                        <!-- <div class="justify-center"> -->
-                        {#each question.options as choice}
-                            <div
-                                    class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
+                    {#if question.singleAnswer}
+                        <div>
+                            {#each question.options as choice}
+                                <div
+                                        class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
                                 hover:cursor-pointer"
-                            >
-                                <input
-                                        class="align-middle hover:cursor-pointer"
-                                        type="radio"
-                                        id={choice}
-                                        name={i + "_" + j + "_" + question.id + "_" + choice}
-                                        value={choice}
-                                />
-                                <label
-                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                        for={choice}>{choice}</label
                                 >
-                            </div>
-                        {/each}
-                        <!-- </div> -->
-                    </div>
+
+                                    <input
+                                            class="align-middle hover:cursor-pointer"
+                                            type="radio"
+                                            id={choice + 1}
+                                            name={i + "_" + j + "_" + question.id}
+                                            value={choice}
+                                    />
+                                    <label
+                                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                            for={choice + 1}>{choice}</label
+                                    >
+                                </div>
+                            {/each}
+                        </div>
+                    {:else}
+                        <div>
+                            {#each question.options as choice}
+                                <div
+                                        class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
+                                hover:cursor-pointer"
+                                >
+                                    <input
+                                            class="align-middle hover:cursor-pointer"
+                                            type="checkbox"
+                                            id={choice}
+                                            name={i + "_" + j + "_" + question.id}
+                                            value={choice}
+                                    />
+                                    <label
+                                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                            for={choice}>{choice}</label
+                                    >
+                                </div>
+                            {/each}
+                        </div>
+                    {/if}
                 {:else if question.type === "TRUE_FALSE"}
                     <div>
                         <div class="flex justify-center">

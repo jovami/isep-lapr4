@@ -1,6 +1,7 @@
 package jovami.grammar.impl.antlr;
 
 import eapli.base.exam.domain.regular_exam.antlr.*;
+import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import jovami.grammar.impl.antlr.question.autogen.QuestionParser.*;
 import jovami.grammar.impl.antlr.question.autogen.QuestionBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -67,14 +68,21 @@ final class ANTLRQuestionParser extends QuestionBaseVisitor<String> {
     public String visitMultiple_choice(Multiple_choiceContext ctx) {
         List<String> options = new ArrayList<>();
 
+        var singleAnswer = visitChoice_type(ctx.choice_type()).equals("single-answer");
+
         for (var answerContext : ctx.answer()) {
             options.add(visitAnswer(answerContext));
         }
 
         var description = visitDescription(ctx.description());
 
-        this.question = new MultipleChoiceQuestion(this.id, description, options);
+        this.question = new MultipleChoiceQuestion(this.id, singleAnswer, description, options);
         return null;
+    }
+
+    @Override
+    public String visitChoice_type(Choice_typeContext ctx) {
+        return ctx.value.getText();
     }
 
     @Override

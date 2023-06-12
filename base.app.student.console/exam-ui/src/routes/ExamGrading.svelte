@@ -3,7 +3,7 @@
 
     type GivenAnswer = {
         answer: string;
-        questionId: number;
+        questionID: number;
     };
 
     type SectionAnswers = {
