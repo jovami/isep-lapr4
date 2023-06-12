@@ -12,11 +12,11 @@ public class CreatePostItOnBoardController {
     {
         this.svc = new PostItService();
     }
-
+/*
     public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
         return this.svc.listBoardUserLoggedParticipates();
     }
-/*
+
     public PostItDTO createPostIt(BoardDTO boardDTO, int cellId)
     {
         return svc.createPostIt(boardDTO.board(),cellId);

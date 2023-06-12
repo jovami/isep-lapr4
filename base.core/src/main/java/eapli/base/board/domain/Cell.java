@@ -2,9 +2,8 @@ package eapli.base.board.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 public class Cell implements Serializable {
@@ -21,14 +20,7 @@ public class Cell implements Serializable {
     @OneToOne
     private PostIt postIt;
 
-    /*
-     * @OneToOne(mappedBy = "cell")
-     * private PostIt postIt;
 
-     @OneToMany
-     private final List<PostIt> postIts = new ArrayList<>();
-
-     */
     protected Cell() {
     }
 
@@ -38,6 +30,16 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
+    public void assignPostIt() {
+        this.postIt = new PostIt(this.cellId);
+    }
+    public void deletePostIt() {
+        this.postIt = null;
+    }
+    public byte[] getPostItData() {
+        return this.postIt.getData();
+    }
+
     public BoardRow getRow() {
         return row;
     }
@@ -45,6 +47,17 @@ public class Cell implements Serializable {
     public BoardColumn getColumn() {
         return column;
     }
+    public void createPostIt(String text) {
+        if (this.postIt != null)
+            throw new IllegalStateException("Cell already has a PostIt");
+        new PostIt(this.cellId).alterPostItData(text);
+    }
+    public PostIt getPostIt() {
+        return this.postIt;
+    }
+
+
+    //TODO: add POSTIT owner
 /*
     public List<PostIt> getPostIts(){return this.postIts;}
 
@@ -87,11 +100,4 @@ public class Cell implements Serializable {
         return this.postIt!=null;
     }
 
-    public void addPostIt(PostIt postIt){
-        this.postIt=postIt;
-    }
-
-    public PostIt getPostIt() {
-        return this.postIt;
-    }
 }

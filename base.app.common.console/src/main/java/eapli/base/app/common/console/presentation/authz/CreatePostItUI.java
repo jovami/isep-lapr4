@@ -17,8 +17,8 @@ public class CreatePostItUI extends AbstractUI {
     @Override
     protected boolean doShow() {
 
-        var widget = new SelectWidget<>("Choose a board to create a postIt on:", this.controller.listBoardUserLoggedParticipates());
-        widget.show();
+        /*var widget = new SelectWidget<>("Choose a board to create a postIt on:", this.controller.listBoardUserLoggedParticipates());
+        widget.show();*/
 
 
         return false;

@@ -1,6 +1,7 @@
 package eapli.board.client;
 
 import eapli.board.client.presentation.ArchiveBoardUI;
+import eapli.board.client.presentation.CreatePostItUI;
 import eapli.board.client.presentation.ShareBoardUI;
 import eapli.board.client.presentation.ViewBoardRequestUI;
 import eapli.framework.actions.menu.Menu;
@@ -66,6 +67,7 @@ public class MainMenu extends AbstractUI {
         menu.addItem(SHARE_BOARD, "Share board ", new ShareBoardUI(serverIP, serverPort)::show);
         menu.addItem(VIEW_BOARD, "View board ", new ViewBoardRequestUI(serverIP, serverPort)::show);
         menu.addItem(ARCHIVE_BOARD, "Archive board ", new ArchiveBoardUI(serverIP, serverPort)::show);
+        menu.addItem(CREATE_POSTIT, "Create Post-It ", new CreatePostItUI(serverIP, serverPort)::show);
 
 
         menu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));

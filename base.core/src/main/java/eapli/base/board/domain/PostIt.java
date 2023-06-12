@@ -13,12 +13,17 @@ public class PostIt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postItId;
-
     @Column(nullable = false, unique = true)
     private int cellId;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "DATA")
+    private byte[] postItData;
 
     @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> changesInPostIt ;
+
+
 
     @Lob
     private String text;
@@ -36,15 +41,32 @@ public class PostIt {
         changesInPostIt.add(LocalDate.now());
     }
 
+    @Deprecated
     public void alterCell(int cellId) {
         this.cellId = cellId;
     }
 
+    @Deprecated
     public int getCellId() {
         return cellId;
     }
 
-    public List<LocalDate> changesInPostIt(){return this.changesInPostIt;}
+    public int getPostItId() {
+        return postItId;
+    }
+
+    public void alterPostItData(String newData){
+        this.postItData = newData.getBytes();
+    }
+
+    //TODO: implent a service
+    @Deprecated
+    public void swapPostIts(PostIt postIt1, PostIt postIt2){
+        byte[] temp = postIt1.postItData;
+        postIt1.postItData = postIt2.postItData;
+        postIt2.postItData = temp;
+    }
+    /*public List<LocalDate> changesInPostIt(){return this.changesInPostIt;}
 
     public boolean changePostItText(String text)
     {
@@ -56,31 +78,27 @@ public class PostIt {
     {
         this.image = image;
         return changesInPostIt.add(LocalDate.now());
-    }
+    }*/
 
-    public boolean undoLastChangeInPostIt()
+    /*public boolean undoLastChangeInPostIt()
     {
         if (!changesInPostIt.isEmpty()) {
             changesInPostIt.remove(changesInPostIt.size() - 1);
             return true;
         }
         return false;
+    }*/
+
+
+    public byte[] getData() {
+        return postItData;
     }
-
-
-
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "DATA")
-    private String postItData;
 
     //TODO: IMPLEMENT
-    public String addContent(String data){
+    /*public String addContent(String data){
         return this.postItData;
-    }
-    public String getData(){
-        return this.postItData;
-    }
+    }*/
+
     public boolean hasData(){
         return this.postItData!=null;
     }
