@@ -1,37 +1,36 @@
 package eapli.base.board.dto;
 
 import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardTitle;
+import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
+@EqualsAndHashCode(of = "title")
 public class BoardDTO {
 
-    private final Board board;
+    private BoardTitle title;
+    private int column;
+    private int row;
 
     public BoardDTO(Board board)
     {
-        this.board = board;
+        this.title=board.getBoardTitle();
+        this.row = board.getNumRows();
+        this.column = board.getNumColumns();
     }
-
-    public Board board(){return this.board;}
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        else if (obj == null || obj.getClass() != this.getClass())
-            return false;
-        var o = (Board) obj;
-        return this.board.getBoardTitle().equals(o.getBoardTitle()) ;
+    public BoardTitle getTitle() {
+        return title;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.board);
+    public int getColumn() {
+        return column;
+    }
+    public int getRow() {
+        return row;
     }
 
     @Override
-    public String toString() {
-        return " "  + board;
+    public String toString(){
+        return "Board Title: " + title+
+                "\nColumns: "+column+
+                "\nRows: "+row+"\n";
     }
 }

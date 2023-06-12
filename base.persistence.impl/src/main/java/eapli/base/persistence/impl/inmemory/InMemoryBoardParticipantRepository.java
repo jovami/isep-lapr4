@@ -2,6 +2,7 @@ package eapli.base.persistence.impl.inmemory;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
@@ -36,7 +37,15 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
     @Override
     public Iterable<Board> listBoardsByParticipant(SystemUser user) {
         return valuesStream()
-                .filter(boardParticipant -> boardParticipant.sameAs(user))
+                .filter(boardParticipant -> boardParticipant.participant().sameAs(user))
+                .map(BoardParticipant::board).collect(Collectors.toList());
+    }
+
+    @Override
+    public Iterable<Board> withPermission(SystemUser user, BoardParticipantPermissions perm) {
+        return valuesStream()
+                .filter(boardParticipant -> boardParticipant.participant().sameAs(user)
+                        &&boardParticipant.permission().equals(perm) )
                 .map(BoardParticipant::board).collect(Collectors.toList());
     }
 

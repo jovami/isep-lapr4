@@ -1,29 +1,7 @@
 package eapli.base.board.application;
 
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardParticipant;
-import eapli.base.board.dto.BoardDTO;
-import eapli.base.board.dto.BoardMapper;
-import eapli.base.board.dto.BoardParticipantDTO;
-import eapli.base.board.dto.BoardParticipantMapper;
-import eapli.base.board.repositories.BoardParticipantRepository;
-import eapli.base.board.repositories.BoardRepository;
-import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
-import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTOMapper;
-import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.framework.domain.repositories.ConcurrencyException;
-import eapli.framework.domain.repositories.TransactionalContext;
-import eapli.framework.infrastructure.authz.application.AuthorizationService;
-import eapli.framework.infrastructure.authz.application.AuthzRegistry;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 public class ShareBoardService {
-
+/*
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
 
     private final TransactionalContext txCtx = PersistenceContext.repositories()
@@ -81,7 +59,7 @@ public class ShareBoardService {
     public List<SystemUserNameEmailDTO> Users() {
         return new SystemUserNameEmailDTOMapper().toDTO(users, Comparator.comparing(SystemUser::identity));
     }
-
+*/
 
 
 }

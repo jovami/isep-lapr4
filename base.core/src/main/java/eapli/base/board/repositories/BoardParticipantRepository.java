@@ -2,6 +2,7 @@ package eapli.base.board.repositories;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.framework.domain.repositories.DomainRepository;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
@@ -13,6 +14,15 @@ public interface BoardParticipantRepository extends DomainRepository<Integer,Boa
 
     Iterable<Board> listBoardsByParticipant(SystemUser user);
 
+    Iterable<Board> withPermission(SystemUser user, BoardParticipantPermissions perm);
+
+    default Iterable<Board> boardsUserCanWrite(SystemUser user){
+        return withPermission(user,BoardParticipantPermissions.WRITE);
+    }
+
+    default Iterable<Board> boardsByWrite(SystemUser user){
+        return withPermission(user,BoardParticipantPermissions.READ);
+    }
 
     //Iterable<SystemUser> listBoardUsers(Board board);
 }

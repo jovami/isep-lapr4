@@ -1,15 +1,10 @@
 package eapli.base.board.application;
 
-import eapli.base.board.dto.BoardDTO;
-import eapli.base.board.dto.BoardParticipantDTO;
-import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.framework.application.UseCaseController;
-
-import java.util.List;
 
 @UseCaseController
 public class ShareBoardController {
-
+/*
     private final ShareBoardService svc;
 
     public ShareBoardController() {
@@ -32,5 +27,5 @@ public class ShareBoardController {
     public List<SystemUserNameEmailDTO> Users() {
         return this.svc.Users();
     }
-
+*/
 }

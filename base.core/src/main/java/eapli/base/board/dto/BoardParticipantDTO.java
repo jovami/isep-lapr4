@@ -2,36 +2,43 @@ package eapli.base.board.dto;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import lombok.Getter;
 
 import java.util.Objects;
 
 public class BoardParticipantDTO {
-    private final BoardParticipant boardParticipant;
 
-    public BoardParticipantDTO(BoardParticipant boardParticipant)
-    {
-        this.boardParticipant = boardParticipant;
+    @Getter
+    private final SystemUser user;
+
+    @Getter
+    private final Board board;
+
+    @Getter
+    private final boolean writePermissions;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardParticipantDTO that = (BoardParticipantDTO) o;
+        return writePermissions == that.writePermissions && Objects.equals(user, that.user);
     }
 
-    public BoardParticipant boardParticipant(){return this.boardParticipant;}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        else if (obj == null || obj.getClass() != this.getClass())
-            return false;
-        var o = (Board) obj;
-        return this.boardParticipant.sameAs(((BoardParticipantDTO) obj).boardParticipant) ;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.boardParticipant);
+    public BoardParticipantDTO(BoardParticipant boardParticipant) {
+        this.board = boardParticipant.board();
+        this.user = boardParticipant.participant();
+        this.writePermissions = boardParticipant.hasWritePermissions();
     }
 
     @Override
     public String toString() {
-        return " "  + boardParticipant;
+        return "Board: " + board.getBoardTitle().title() +
+                "\nUser: " + user.username()+
+                "\nPermissions"+ (writePermissions?"write":"read")+"\n";
     }
+
+
+
 }

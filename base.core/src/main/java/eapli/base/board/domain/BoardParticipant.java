@@ -22,22 +22,17 @@ public class BoardParticipant implements AggregateRoot<Integer> {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private BoardParticipantPermissions permissions;
+    private BoardParticipantPermissions permission;
 
     protected BoardParticipant()
     {
     }
 
-    public BoardParticipant(Board board, SystemUser participant)
-    {
-        this.board = board;
-        this.participant = participant;
-    }
     public BoardParticipant(Board board, SystemUser participant,BoardParticipantPermissions permissions)
     {
         this.board = board;
         this.participant = participant;
-        this.permissions = permissions;
+        this.permission = permissions;
     }
 
     public SystemUser participant()
@@ -71,11 +66,11 @@ public class BoardParticipant implements AggregateRoot<Integer> {
     }
 
     public boolean hasWritePermissions(){
-        return permissions()==BoardParticipantPermissions.WRITE;
+        return permission()==BoardParticipantPermissions.WRITE;
     }
 
-    private BoardParticipantPermissions permissions(){
-        return this.permissions;
+    public BoardParticipantPermissions permission(){
+        return this.permission;
     }
 
     @Override

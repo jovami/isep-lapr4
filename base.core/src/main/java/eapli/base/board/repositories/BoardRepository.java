@@ -10,7 +10,6 @@ public interface BoardRepository extends DomainRepository<BoardTitle, Board> {
     boolean hasCellPostIt(int cellId);
 
     boolean isBoardTitleUnique(String boardTitle);
-
     Iterable<Board> listBoardsUserOwns(SystemUser owner);
 
 }
