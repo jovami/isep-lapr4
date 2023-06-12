@@ -58,14 +58,13 @@ public class Board implements AggregateRoot<BoardTitle> {
         setupBoard(rows, columns);
     }
 
-    public void setDimension(int numRows,int numColumns) {
+    public void setDimension(int numRows, int numColumns) {
         if (numRows > MAX_ROWS || numColumns > MAX_COLUMNS || numRows < 1 || numColumns < 1) {
             throw new IllegalArgumentException("Board dimension is not valid");
         }
         this.numRows = numRows;
         this.numColumns = numColumns;
     }
-
 
 
     public static void setMax(int maxRows, int maxColumns) {
@@ -84,6 +83,11 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     public void createdBoard() {
         this.state = BoardState.CREATED;
+    }
+
+
+    public SystemUser getOwner() {
+        return owner;
     }
 
     public BoardState getState() {
@@ -106,7 +110,9 @@ public class Board implements AggregateRoot<BoardTitle> {
         return boardTitle;
     }
 
-    public SystemUser boardOwner(){return owner;}
+    public SystemUser boardOwner() {
+        return owner;
+    }
 
     public void setupBoard(int rows, int columns) {
         addRowIds(rows);
@@ -134,12 +140,12 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-    public PostIt createPostIt(int cellId)
+    /*public PostIt createPostIt(int cellId)
     {
         PostIt postIt = new PostIt(cellId);
         cells.get(cellId).addPostIt(postIt);
         return postIt;
-    }
+    }*/
 
     public boolean registerChangeInPostIt(int cellId, PostIt postIt)
     {
@@ -181,8 +187,8 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     @Override
     public String toString() {
-        return " Board: " +
+        return "Board: " +
                 "\nTitle: " + boardTitle.title() +
-                ", with " + cells.size() + " Cells";
+                ", with " + getNumRows() + " Rows and " + getNumColumns() + " Columns";
     }
 }

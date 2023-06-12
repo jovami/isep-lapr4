@@ -16,6 +16,7 @@
     <class>eapli.base.board.domain.Board</class>
     <class>eapli.base.board.domain.Cell</class>
     <class>eapli.base.board.domain.PostIt</class>
+    <class>eapli.base.board.domain.BoardHistory</class>
     <class>eapli.base.board.domain.BoardParticipant</class>
     <class>eapli.base.clientusermanagement.domain.users.Manager</class>
     <class>eapli.base.clientusermanagement.domain.users.Teacher</class>

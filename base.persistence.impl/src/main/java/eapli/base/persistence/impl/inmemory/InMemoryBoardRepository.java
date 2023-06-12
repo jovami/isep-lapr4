@@ -24,13 +24,14 @@ public class InMemoryBoardRepository
         return Optional.of(data().get(boardTitle));
     }
 
-    // TODO i dont know what im i doing
     @Override
+    @Deprecated
     public boolean hasCellPostIt(int cellId) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isBoardTitleUnique(String boardTitle) {
         return false;
     }
@@ -55,5 +56,6 @@ public class InMemoryBoardRepository
                 .filter(board -> board.boardOwner().sameAs(owner) && board.getState() == BoardState.ARCHIVED)
                 .collect(Collectors.toList());
     }
+
 
 }

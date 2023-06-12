@@ -56,4 +56,5 @@ class JpaBoardRepository extends BaseJpaRepositoryBase<Board, Long, BoardTitle> 
         query.setParameter("owner", owner);
         return query.getResultList();
     }
+
 }

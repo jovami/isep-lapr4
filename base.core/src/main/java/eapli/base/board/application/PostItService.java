@@ -8,9 +8,11 @@ import eapli.base.board.dto.BoardParticipantMapper;
 import eapli.base.board.dto.PostItDTO;
 import eapli.base.board.dto.PostItMapper;
 import eapli.base.board.repositories.BoardParticipantRepository;
+import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
 import java.io.File;
@@ -30,15 +32,24 @@ public class PostItService {
     }
 
     //TODO: corrigir para so receber a lista de board onde a board esta no estado shared
-    public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
+    /*public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
 
         return new BoardParticipantMapper().toDTO(this.boardParticipantRepository.listBoardUserLoggedParticipates(userRepository.ofIdentity(authz.session()
                 .orElseThrow()
                 .authenticatedUser()
                 .identity()).orElseThrow()));
     }
+*/
+    public Iterable<Board> listBoardsUserParticipates() {
+        return boardParticipantRepository.listBoardsByParticipant(userRepository.ofIdentity(authz.session()
+                .orElseThrow()
+                .authenticatedUser()
+                .identity()).orElseThrow());
+    }
 
-    public PostItDTO createPostIt(Board board, int cellId)
+
+
+    /*public PostItDTO createPostIt(Board board, int cellId)
     {
         return new PostItMapper().toDTO(board.createPostIt(cellId));
     }
@@ -53,7 +64,7 @@ public class PostItService {
     {
         postIt.changePostItImage(image);
         return board.registerChangeInPostIt(cellId,postIt);
-    }
+    }*/
 /*
     public boolean undoLastChangeInPostIt(Board board, PostIt postIt, int cellId)
     {
