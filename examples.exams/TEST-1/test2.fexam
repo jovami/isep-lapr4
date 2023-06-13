@@ -1,0 +1,35 @@
+FORMATIVE EXAM {
+    TITLE: "Example Formative Exam"
+    HEADER {
+        DESCRIPTION: "Hello LAPR4"
+    }
+
+    SECTION 1 {
+        DESCRIPTION: "Section 1. OPTIONAL!!"
+
+        QUESTION 1: MATCHING
+        QUESTION 2: TRUE_FALSE
+        QUESTION 3: SHORT_ANSWER
+    }
+
+    SECTION 2 {
+        DESCRIPTION: "Welcome to section 2! This message is optional."
+
+        QUESTION 1: TRUE_FALSE
+        QUESTION 2: MULTIPLE_CHOICE
+        QUESTION 3: TRUE_FALSE
+        QUESTION 4: TRUE_FALSE
+        QUESTION 5: SHORT_ANSWER
+    }
+
+    SECTION 3 {
+        DESCRIPTION: "Hi, we meet again!"
+
+        QUESTION 1: MATCHING
+        QUESTION 2: TRUE_FALSE
+        QUESTION 3: MULTIPLE_CHOICE
+        QUESTION 4: TRUE_FALSE
+        QUESTION 5: NUMERICAL
+        QUESTION 6: MISSING_WORDS
+    }
+}
