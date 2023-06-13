@@ -23,9 +23,8 @@ package eapli.base.app.student.console.presentation.myuser;
 import eapli.framework.io.util.Console;
 
 /**
- * TODO move to console.common to allow reuse from both backoffice and UtenteApp
- *
- * widget for reading user data Jorge Santos ajs@isp.ipp.pt
+ * widget for reading user data
+ * @author Jorge Santos ajs@isp.ipp.pt
  */
 class UserDataWidget {
 

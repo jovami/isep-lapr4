@@ -160,8 +160,6 @@ public class MainMenu extends AbstractUI {
     private Menu buildUsersMenu() {
         final Menu menu = new Menu("Users");
 
-        // TODO: CLEAN SOME OF THE OPTIONS
-
         menu.addItem(ADD_USER_OPTION, "Add User", new AddUserUI()::show);
         menu.addItem(LIST_USERS_OPTION, "List all Users", new ListUsersAction());
         menu.addItem(DISABLE_USER_OPTION, "Deactivate User", new DisableUserAction());

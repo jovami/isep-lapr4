@@ -20,8 +20,8 @@ class InMemoryMeetingRepository extends InMemoryDomainRepository<Meeting, Intege
 
     @Override
     public Iterable<Meeting> findAllMeetingsWithParticipantWithPendingStatus(SystemUser user) {
-        //select all meetings with participant with pending status
-        //TODO: add
+        // select all meetings with participant with pending status
+        // TODO: add
         return null;
     }
 
@@ -29,6 +29,7 @@ class InMemoryMeetingRepository extends InMemoryDomainRepository<Meeting, Intege
     public Iterable<Meeting> organizedBy(SystemUser user) {
         return match(admin -> user.sameAs(admin));
     }
+
     @Override
     public List<Meeting> meetingsOfAdminWithState(SystemUser systemUser, MeetingState state) {
         return null;

@@ -2,7 +2,6 @@ package eapli.base.formativeexam.application;
 
 import java.util.List;
 
-import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +61,7 @@ public final class TakeFormativeExamController {
         var exam = this.fexamRepo.ofIdentity(examDTO.getExamId())
                 .orElseThrow(IllegalStateException::new);
         var questions = this.questionRepo.questionsOfCourse(exam.course());
+        // TODO: try-catch excep
         var dto = GrammarContext.grammarTools().formativeExamGenerator()
                 .generate(exam, questions);
 

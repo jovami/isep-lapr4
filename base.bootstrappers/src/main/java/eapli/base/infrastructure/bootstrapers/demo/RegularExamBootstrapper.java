@@ -2,19 +2,13 @@ package eapli.base.infrastructure.bootstrapers.demo;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
-import eapli.base.exam.domain.regular_exam.RegularExam;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.RegularExamFactory;
-import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO.Section;
 import eapli.base.exam.repositories.RegularExamRepository;
@@ -65,10 +59,10 @@ public class RegularExamBootstrapper implements Action {
             var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);
             var closeDate1 = LocalDateTime.parse("02/01/2022 14:20", df);
 
-            var date1 = new RegularExamDate(openDate1, closeDate1);
             var c = course.iterator().next();
 
-            var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator()).build(openDate1, closeDate1, c, grammar).orElseThrow();
+            var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator())
+                    .build(openDate1, closeDate1, c, grammar).orElseThrow();
 
             var resolution = new ExamResolutionDTO(
                     List.of(new Section(
@@ -86,9 +80,11 @@ public class RegularExamBootstrapper implements Action {
         }
     }
 
-    private void saveExam(LocalDateTime start, LocalDateTime end, Course course, File specification) throws IOException {
+    private void saveExam(LocalDateTime start, LocalDateTime end, Course course, File specification)
+            throws IOException {
         RegularExamRepository repo = PersistenceContext.repositories().regularExams();
-        var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator()).build(start, end, course, specification);
+        var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator()).build(start, end,
+                course, specification);
         exam.ifPresent(repo::save);
     }
 }

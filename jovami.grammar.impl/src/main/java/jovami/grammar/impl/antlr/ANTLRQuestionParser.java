@@ -1,7 +1,6 @@
 package jovami.grammar.impl.antlr;
 
 import eapli.base.exam.domain.regular_exam.antlr.*;
-import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import jovami.grammar.impl.antlr.question.autogen.QuestionParser.*;
 import jovami.grammar.impl.antlr.question.autogen.QuestionBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;

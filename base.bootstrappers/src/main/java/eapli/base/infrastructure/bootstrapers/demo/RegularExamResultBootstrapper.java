@@ -37,7 +37,8 @@ public class RegularExamResultBootstrapper implements Action {
         return true;
     }
 
-    public void saveExamResult(Student student, RegularExam exam, float grade, float maxGrade, ExamGradeProperties gradeProp) {
+    public void saveExamResult(Student student, RegularExam exam, float grade, float maxGrade,
+            ExamGradeProperties gradeProp) {
         var repo = PersistenceContext.repositories().examResults();
         var examResult = new RegularExamResult(student, exam, ExamGrade.valueOf(grade, maxGrade), gradeProp);
         repo.save(examResult);

@@ -7,8 +7,6 @@ import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardState;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
-import eapli.base.course.domain.CourseState;
-import eapli.base.enrollment.domain.Enrollment;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;
 
@@ -36,26 +34,22 @@ public class InMemoryBoardRepository
         return false;
     }
 
-    public Iterable<Board> listBoardsUserOwns(SystemUser owner)
-    {
+    public Iterable<Board> listBoardsUserOwns(SystemUser owner) {
         return valuesStream()
                 .filter(board -> board.boardOwner().sameAs(owner))
                 .collect(Collectors.toList());
     }
 
-    public Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner)
-    {
+    public Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner) {
         return valuesStream()
                 .filter(board -> board.boardOwner().sameAs(owner) && board.getState() != BoardState.ARCHIVED)
                 .collect(Collectors.toList());
     }
 
-    public Iterable<Board> listBoardsUserOwnsArchived(SystemUser owner)
-    {
+    public Iterable<Board> listBoardsUserOwnsArchived(SystemUser owner) {
         return valuesStream()
                 .filter(board -> board.boardOwner().sameAs(owner) && board.getState() == BoardState.ARCHIVED)
                 .collect(Collectors.toList());
     }
-
 
 }

@@ -34,8 +34,6 @@ import eapli.framework.infrastructure.authz.domain.model.Role;
  */
 public class ManagerBootstrapper extends UsersBootstrapperBase implements Action {
 
-    // TODO:REVIEW
-    @SuppressWarnings("squid:S2068")
     private static final String PASSWORD = "Password1";
     private static final String EMAIL = "ruben@manager.com";
     private static final String EMAIL2 = "diogo@manager.com";

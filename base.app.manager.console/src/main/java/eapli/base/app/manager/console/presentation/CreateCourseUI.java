@@ -1,11 +1,8 @@
 package eapli.base.app.manager.console.presentation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import jovami.util.io.ConsoleUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +12,7 @@ import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.IntegrityViolationException;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+import jovami.util.io.ConsoleUtils;
 
 public final class CreateCourseUI extends AbstractUI {
     private static final Logger logger = LogManager.getLogger(CreateCourseUI.class);

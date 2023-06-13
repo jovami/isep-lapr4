@@ -8,6 +8,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
 @Embeddable
+@Deprecated
 public class RegularExamId implements ValueObject {
     @ManyToOne
     private Course course;

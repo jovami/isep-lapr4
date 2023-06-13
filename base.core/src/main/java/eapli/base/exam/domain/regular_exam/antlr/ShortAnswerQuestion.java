@@ -2,7 +2,6 @@ package eapli.base.exam.domain.regular_exam.antlr;
 
 import eapli.base.exam.domain.question.QuestionType;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 
 // @Accessors(fluent = true)
 @Getter

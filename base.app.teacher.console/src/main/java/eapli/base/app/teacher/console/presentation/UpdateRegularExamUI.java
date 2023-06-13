@@ -3,8 +3,6 @@ package eapli.base.app.teacher.console.presentation;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +46,6 @@ public class UpdateRegularExamUI extends AbstractUI {
         lst.add("Update regular exam date");
         lst.add("Update regular exam specification");
 
-        var fmt = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
-
         do {
             var option = new SelectWidget<>("Choose one of the following options:", lst);
             option.show();
@@ -61,7 +57,7 @@ public class UpdateRegularExamUI extends AbstractUI {
 
                 Optional<LocalDateTime> opt;
                 do {
-                    opt = ConsoleUtils.readLocalDateTime("New Open date(dd/MM/yyyy HH:mm)");
+                    opt = ConsoleUtils.readLocalDateTime("New Open date (dd/MM/yyyy HH:mm)");
                 } while (opt.isEmpty());
                 openDate = opt.get();
 
@@ -71,7 +67,7 @@ public class UpdateRegularExamUI extends AbstractUI {
                 }
 
                 do {
-                    opt = ConsoleUtils.readLocalDateTime("New Close date(dd/MM/yyyy HH:mm)");
+                    opt = ConsoleUtils.readLocalDateTime("New Close date (dd/MM/yyyy HH:mm)");
                 } while (opt.isEmpty());
                 closeDate = opt.get();
 

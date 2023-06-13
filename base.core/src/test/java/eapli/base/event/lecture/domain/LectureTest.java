@@ -8,8 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 
 import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -19,15 +20,6 @@ import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.jupiter.api.Assertions;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Objects;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class LectureTest {
     private Lecture lecture;

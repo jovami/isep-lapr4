@@ -23,9 +23,6 @@ package eapli.base.infrastructure.bootstrapers.demo;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -36,7 +33,6 @@ import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.infrastructure.bootstrapers.UsersBootstrapperBase;
 import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.base.myclientuser.application.SignupController;
 import eapli.framework.actions.Action;
 import eapli.framework.infrastructure.authz.domain.model.Role;
 import eapli.framework.infrastructure.authz.domain.model.Username;
@@ -46,9 +42,9 @@ import eapli.framework.infrastructure.authz.domain.model.Username;
  * @author Paulo Sousa
  */
 public class StudentBootstrapper extends UsersBootstrapperBase implements Action {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentBootstrapper.class);
+    // private static final Logger LOGGER = LoggerFactory.getLogger(StudentBootstrapper.class);
 
-    private final SignupController signupController = new SignupController();
+    // private final SignupController signupController = new SignupController();
     private final EnrollmentRepository enrollmentRepository = PersistenceContext.repositories().enrollments();
     private final CourseRepository courseRepository = PersistenceContext.repositories().courses();
     private final StudentRepository studentRepository = PersistenceContext.repositories().students();

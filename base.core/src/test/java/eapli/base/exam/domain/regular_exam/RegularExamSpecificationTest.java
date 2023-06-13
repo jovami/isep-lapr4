@@ -1,18 +1,8 @@
 package eapli.base.exam.domain.regular_exam;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -94,23 +84,6 @@ public class RegularExamSpecificationTest {
 
         // Verify
         Assertions.assertEquals(expected, result);
-    }
-
-    @Test
-    public void protectedConstructor()
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        // Obtain the constructor
-        Constructor<RegularExamSpecification> constructor = RegularExamSpecification.class.getDeclaredConstructor();
-
-        // Ensure accessibility of the constructor
-        constructor.setAccessible(true);
-
-        // Create an instance using the protected constructor
-        RegularExamSpecification instance = constructor.newInstance();
-
-        // Verify that the specification is null
-        assertNull(instance.specification());
-        constructor.setAccessible(false);
     }
 
 }

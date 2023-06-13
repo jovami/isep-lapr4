@@ -3,8 +3,6 @@ package eapli.base.app.teacher.console.presentation;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import eapli.base.exam.application.CreateRegularExamController;

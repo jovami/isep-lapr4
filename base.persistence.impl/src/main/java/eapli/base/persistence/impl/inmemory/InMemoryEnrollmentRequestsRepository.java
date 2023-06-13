@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.course.domain.Course;
-import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
 import eapli.framework.infrastructure.repositories.impl.inmemory.InMemoryDomainRepository;

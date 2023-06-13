@@ -341,8 +341,6 @@ public class QuestionGraderVisitor extends QuestionBaseVisitor<String> {
 
         var answers = this.resolution.split("\n");
 
-        // TODO: we have to make sure that the missing words gaps start at 1 and are
-        // consecutive
         for (int i = 0; i < answers.length; i++) {
             var solution = map.get(i + 1);
 

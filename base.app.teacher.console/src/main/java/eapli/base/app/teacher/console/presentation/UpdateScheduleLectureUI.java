@@ -1,27 +1,22 @@
 package eapli.base.app.teacher.console.presentation;
 
-import eapli.base.enrollment.domain.Enrollment;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Optional;
+
 import eapli.base.event.lecture.application.UpdateScheduleLectureController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.io.ConsoleUtils;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 public class UpdateScheduleLectureUI extends AbstractUI {
 
     private UpdateScheduleLectureController ctrl;
 
-    public UpdateScheduleLectureUI(){
-        ctrl = new UpdateScheduleLectureController();
-
+    public UpdateScheduleLectureUI() {
+        this.ctrl = new UpdateScheduleLectureController();
     }
 
     @Override
@@ -29,7 +24,8 @@ public class UpdateScheduleLectureUI extends AbstractUI {
         LocalDateTime dateTime;
         LocalDate removedDate, newDate;
         LocalTime time;
-        var widgetLecture = new SelectWidget<>("Choose one of the following options:", ctrl.listOfLecturesTaughtByTeacher());
+        var widgetLecture = new SelectWidget<>("Choose one of the following options:",
+                ctrl.listOfLecturesTaughtByTeacher());
         widgetLecture.show();
 
         if (widgetLecture.selectedOption() <= 0)
@@ -60,14 +56,12 @@ public class UpdateScheduleLectureUI extends AbstractUI {
             duration = Console.readInteger("Lecture duration: (Minutes)");
         } while (duration < 10);
 
-       var lecture = ctrl.updateDateOfLecture(chosenLecture, removedDate, newDate, time, duration);
+        var lecture = ctrl.updateDateOfLecture(chosenLecture, removedDate, newDate, time, duration);
 
-       if(lecture.isPresent())
-       {
-           System.out.println("Lecture updated with success");
-           System.out.println(lecture.get().toString());
-       }
-       else
+        if (lecture.isPresent()) {
+            System.out.println("Lecture updated with success");
+            System.out.println(lecture.get().toString());
+        } else
             System.out.println("There was a problem with the specified parameters");
 
         return false;

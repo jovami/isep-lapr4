@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import eapli.base.exam.dto.CorrectedExamDTO;
 import eapli.base.examresult.domain.ExamFeedbackProperties;
 import eapli.base.examresult.domain.ExamGradeProperties;
-import eapli.base.examresult.domain.RegularExamResult;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Answer;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Section;
 

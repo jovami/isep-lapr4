@@ -67,7 +67,6 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
     @Override
     public String visitExam(ExamContext ctx) {
-        // TODO: visit header?
         visitFeedback(ctx.header().feedback());
         visitGrading(ctx.header().grading());
 
@@ -434,8 +433,6 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .get(questionCounter)
                 .split("\n");
 
-        // TODO: we have to make sure that the missing words gaps start at 1 and are
-        // consecutive
         for (int i = 0; i < answers.length; i++) {
             var solution = map.get(i + 1);
 
