@@ -10,8 +10,8 @@ import eapli.base.exam.repositories.RegularExamRepository;
 class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, Integer>
         implements RegularExamRepository {
 
-    JpaRegularExamRepository(String persistenceUnitName) {
-        super(persistenceUnitName, "IDREGULAREXAM");
+    JpaRegularExamRepository(String identityFieldName) {
+        super(identityFieldName, "id");
     }
 
     @Override
@@ -25,13 +25,13 @@ class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, 
 
     @Override
     public Iterable<RegularExam> examsOfCoursesAfterTime(LocalDateTime time, Set<Course> courses) {
-        return match("e.course IN :courses AND e.regularExamDate.start > :time",
+        return match("e.course IN :courses AND e.date.start > :time",
                 "courses", courses, "time", time);
     }
 
     @Override
     public Iterable<RegularExam> ongoingExams(Set<Course> courses) {
-        return match("e.course IN :courses AND e.regularExamDate.start < :time AND e.regularExamDate.end > :time",
+        return match("e.course IN :courses AND e.date.start < :time AND e.date.end > :time",
                 "courses", courses, "time", LocalDateTime.now());
     }
 }
