@@ -1,4 +1,4 @@
-package eapli.base.app.student.console.rest;
+package eapli.base.app.student.console.application;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
