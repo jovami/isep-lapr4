@@ -1,7 +1,4 @@
-<script lang="ts">
-    import { push } from "svelte-spa-router";
-    import { resolutionStore } from "../store";
-
+<script lang="ts" type="module">
     type Answer = {
         points: number;
         maxPoints: number;
@@ -17,11 +14,6 @@
         grade: number;
         maxGrade: number;
     };
-
-    let resolution = null;
-    resolutionStore.subscribe((value) => {
-        if (value !== null) resolution = value;
-    });
 
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
@@ -44,7 +36,11 @@
             throw new Error(body);
         }
     };
+
+    export let resolution: {};
 </script>
+
+<!-- TODO: better styling -->
 
 {#await examResult()}
     <p>Loading Grade...</p>
@@ -75,16 +71,3 @@
 {:catch error}
     <p>Grade: {error.message}</p>
 {/await}
-<div class="inline-flex">
-    <button
-        on:click={() => push("/")}
-        class="flex rounded-lg mt-16 bg-indigo-500 py-2 px-8 font-sans font-bold
-                    uppercase text-white shadow-md shadow-indigo-500/20 transition-all
-                    hover:shadow-lg hover:shadow-indigo-500/40 focus:opacity-[0.85]
-                    focus:shadow-none active:opacity-[0.85] active:shadow-none
-                    disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-        data-ripple-light="true"
-    >
-        Back to Home
-    </button>
-</div>

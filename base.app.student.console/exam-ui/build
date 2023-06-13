@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd "$(dirname "$0")" || exit 1
+
 DEST='../src/main/resources/static'
 SRC='./dist'
 
