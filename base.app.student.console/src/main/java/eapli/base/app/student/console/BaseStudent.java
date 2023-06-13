@@ -23,6 +23,7 @@
  */
 package eapli.base.app.student.console;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -56,6 +57,7 @@ import eapli.framework.infrastructure.pubsub.EventDispatcher;
 })
 @ComponentScan(basePackages = {
     "eapli.base.infrastructure.spring",
+    "eapli.base.app.common",
     "eapli.base.app.student.console.presentation",
     "eapli.base.exam",
     "eapli.base.formativeexam",
@@ -74,14 +76,16 @@ public class BaseStudent extends BaseApplication {
         SpringApplication.run(BaseStudent.class, args);
     }
 
+    @Autowired
+    private LoginUI loginUI;
+
+    @Autowired
+    private MainMenu menu;
+
     @Override
     protected void doMain(final String[] args) {
-        // login and go to main menu
-        if (new LoginUI().show()) {
-            // go to main menu
-            final MainMenu menu = new MainMenu();
-            menu.mainLoop();
-        }
+        if (loginUI.show())
+            menu.mainLoop(); // go to main menu if logged in
     }
 
     @Override

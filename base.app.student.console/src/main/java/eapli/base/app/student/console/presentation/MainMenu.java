@@ -23,12 +23,18 @@
  */
 package eapli.base.app.student.console.presentation;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import eapli.base.Application;
 import eapli.base.app.common.console.AcceptRejectMeetingRequestUI;
 import eapli.base.app.common.console.CancelMeetingUI;
 import eapli.base.app.common.console.ScheduleMeetingUI;
 import eapli.base.app.common.console.presentation.ListMeetingParticipantsUI;
-import eapli.base.app.common.console.presentation.authz.*;
+import eapli.base.app.common.console.presentation.authz.CreateBoardUI;
+import eapli.base.app.common.console.presentation.authz.CreatePostItUI;
+import eapli.base.app.common.console.presentation.authz.ListBoardUI;
+import eapli.base.app.common.console.presentation.authz.MyUserMenu;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.actions.Actions;
 import eapli.framework.actions.menu.Menu;
@@ -41,6 +47,7 @@ import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
+@Component
 public class MainMenu extends AbstractUI {
 
     private static final String RETURN_LABEL = "Return ";
@@ -53,7 +60,11 @@ public class MainMenu extends AbstractUI {
 
     // EXAM
     private static final int LIST_FUTURE_EXAMS = 1;
-    private static final int LIST_GRADES = 2;
+    private static final int TAKE_EXAM = 2;
+    private static final int LIST_GRADES = 3;
+
+    // FORMATIVE EXAM
+    private static final int TAKE_FORMATIVE_EXAM = 1;
 
     // BOARD
     private static final int CREATE_BOARD_OPTION = 1;
@@ -61,7 +72,6 @@ public class MainMenu extends AbstractUI {
     private static final int CREATE_POSTIT_OPTION= 3;
 
     // MEETING
-    private static final int MEETING_OPTION = 5;
     private static final int SCHEDULE_MEETING = 1;
     private static final int ACCEPT_REJECT_MEETING_REQUEST = 2;
     private static final int LIST_MEETING_PARTICIPANTS = 3;
@@ -71,11 +81,21 @@ public class MainMenu extends AbstractUI {
     private static final int MY_USER_OPTION = 1;
     private static final int ENROLLMENTS_OPTION = 2;
     private static final int EXAM_OPTION = 3;
-    private static final int BOARD_OPTION = 4;
+    private static final int FORMATIVE_EXAM_OPTION = 4;
+    private static final int BOARD_OPTION = 5;
+    private static final int MEETING_OPTION = 6;
 
     private static final String SEPARATOR_LABEL = "--------------";
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
+
+    // NOTE: managed by spring
+
+    @Autowired
+    private TakeFormativeExamUI takeFormativeExamUI;
+
+    @Autowired
+    private TakeExamUI takeExamUI;
 
     @Override
     public boolean show() {
@@ -113,6 +133,7 @@ public class MainMenu extends AbstractUI {
         if (authz.isAuthenticatedUserAuthorizedTo(BaseRoles.POWER_USER, BaseRoles.STUDENT)) {
             mainMenu.addSubMenu(ENROLLMENTS_OPTION, buildCourseMenu());
             mainMenu.addSubMenu(EXAM_OPTION, buildExamMenu());
+            mainMenu.addSubMenu(FORMATIVE_EXAM_OPTION, buildFormativeExamMenu());
             mainMenu.addSubMenu(BOARD_OPTION, buildBoardMenu());
             mainMenu.addSubMenu(MEETING_OPTION, buildMeetingMenu());
         }
@@ -136,10 +157,20 @@ public class MainMenu extends AbstractUI {
     }
 
     private Menu buildExamMenu() {
-        final Menu menu = new Menu("Exam");
+        final Menu menu = new Menu("Exams");
 
         menu.addItem(LIST_FUTURE_EXAMS, "List future exams", new ListFutureExamsUI()::show);
+        menu.addItem(TAKE_EXAM, "Take exam", this.takeExamUI);
         menu.addItem(LIST_GRADES, "List grades", new ListGradesUI()::show);
+        menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
+
+        return menu;
+    }
+
+    private Menu buildFormativeExamMenu() {
+        final Menu menu = new Menu("Formative Exams");
+
+        menu.addItem(TAKE_FORMATIVE_EXAM, "Take formative exam", this.takeFormativeExamUI);
         menu.addItem(EXIT_OPTION, RETURN_LABEL, Actions.SUCCESS);
 
         return menu;

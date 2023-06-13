@@ -23,6 +23,8 @@
  */
 package eapli.base.app.common.console.presentation.authz;
 
+import org.springframework.stereotype.Component;
+
 import eapli.framework.infrastructure.authz.application.AuthenticationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.Role;
@@ -34,6 +36,7 @@ import jovami.util.io.ConsoleUtils;
  * UI for user login action. Created by nuno on 21/03/16.
  */
 @SuppressWarnings("squid:S106")
+@Component
 public class LoginUI extends AbstractUI {
 
     private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();

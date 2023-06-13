@@ -12,27 +12,26 @@ import eapli.framework.actions.Action;
 import jovami.util.net.NetTools;
 
 /**
- * TakeExamUI
+ * TakeFormativeExamUI
  */
 @Component
-public class TakeExamUI implements Action {
+public class TakeFormativeExamUI implements Action {
 
     @Autowired
     private ServerProperties props;
 
     @Override
     public boolean execute() {
-        // TODO: @diogonapoles update the URL if needed
-        final var url = String.format("http://localhost:%d/#/regular", this.props.getPort());
+        final var url = String.format("http://localhost:%d/#/formative", this.props.getPort());
 
         try {
             NetTools.browseURL(new URI(url));
-            System.out.printf("Exams are to be answered in a web page,\n"
+            System.out.printf("Formative exams are to be answered in a web page,\n"
                     + "which should've already opened in your default browser\n"
                     + "\nIf not, open %s in your prefered web browser\n", url);
         } catch (IOException | URISyntaxException e) {
             System.out.printf("Failed to open the URL\n"
-                    + "You can still take your exams by opening %s "
+                    + "You can still take your formative exams by opening %s "
                     + "in your prefered browser\n", url);
         }
 
