@@ -1,16 +1,9 @@
 package eapli.base.exam.domain.regular_exam;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import org.apache.commons.io.FileUtils;
 
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
@@ -19,29 +12,21 @@ import eapli.framework.validations.Preconditions;
 public class RegularExamSpecification implements ValueObject {
 
     @Column(columnDefinition = "CLOB")
-    private final String specification;
+    private final String spec;
 
     protected RegularExamSpecification() {
-        this.specification = null;
+        this.spec = null;
     }
 
-    public RegularExamSpecification(String specification) {
-        Preconditions.noneNull(specification, "Regular Exam specification cannot be null");
-        Preconditions.nonEmpty(specification, "Regular Exam specification cannot be empty");
-        this.specification = specification;
+    protected RegularExamSpecification(String spec) {
+        Preconditions.nonNull(spec, "Specification cannot be null");
+        Preconditions.nonEmpty(spec, "Specification cannot be empty");
+
+        this.spec = spec;
     }
 
-    public static RegularExamSpecification valueOf(final File fp) throws IOException {
-        return new RegularExamSpecification(FileUtils.readFileToString(fp, StandardCharsets.UTF_8));
-    }
-
-    public static RegularExamSpecification valueOf(Iterable<String> lines) {
-        return new RegularExamSpecification(
-                StreamSupport.stream(lines.spliterator(), false).collect(Collectors.joining("\n")));
-    }
-
-    public String specificationString() {
-        return this.specification;
+    public String specification() {
+        return this.spec;
     }
 
     @Override
@@ -52,17 +37,17 @@ public class RegularExamSpecification implements ValueObject {
             return false;
 
         var o = (RegularExamSpecification) obj;
-        return this.specification.equals(o.specification);
+        return this.spec.equals(o.spec);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.specification);
+        return Objects.hash(this.spec);
     }
 
     @Override
     public String toString() {
-        return String.format(this.specification);
+        return String.format(this.spec);
     }
 
 }

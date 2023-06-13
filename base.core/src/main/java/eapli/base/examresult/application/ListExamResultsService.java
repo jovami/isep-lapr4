@@ -32,7 +32,7 @@ public final class ListExamResultsService {
         results.removeIf(examResult -> examResult.gradeProperties() == ExamGradeProperties.NONE);
         results.removeIf(examResult ->
                 examResult.gradeProperties() == ExamGradeProperties.AFTER_CLOSING
-                && examResult.regularExam().regularExamDate().closeDate().isAfter(LocalDateTime.now())
+                && examResult.regularExam().date().closeDate().isAfter(LocalDateTime.now())
         );
 
         return results;
@@ -46,7 +46,7 @@ public final class ListExamResultsService {
         results.removeIf(examResult -> examResult.gradeProperties() == ExamGradeProperties.NONE);
         results.removeIf(examResult ->
                 examResult.gradeProperties() == ExamGradeProperties.AFTER_CLOSING
-                        && examResult.regularExam().regularExamDate().closeDate().isAfter(LocalDateTime.now())
+                        && examResult.regularExam().date().closeDate().isAfter(LocalDateTime.now())
         );
 
         return results;

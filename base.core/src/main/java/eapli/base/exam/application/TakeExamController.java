@@ -89,7 +89,7 @@ public final class TakeExamController {
 
         var exam = examOpt.get();
 
-        if (exam.regularExamDate().closeDate().isBefore(resolutionDTO.getSubmissionTime())) {
+        if (exam.date().closeDate().isBefore(resolutionDTO.getSubmissionTime())) {
             // TODO: confirm
             return ResponseEntity.notFound().build();
         }

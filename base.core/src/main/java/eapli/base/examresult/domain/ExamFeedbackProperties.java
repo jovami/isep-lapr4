@@ -7,13 +7,13 @@ public enum ExamFeedbackProperties {
             return "Feedback not available";
         }
     },
-    ONSUBMISSION {
+    ON_SUBMISSION {
         @Override
         public String toString() {
             return "Feedback available on submission";
         }
     },
-    AFTERCLOSING {
+    AFTER_CLOSING {
         @Override
         public String toString() {
             return "Feedback available after closing of the exam";

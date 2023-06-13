@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import eapli.base.exam.domain.regular_exam.RegularExamFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,6 @@ import eapli.base.course.domain.CourseID;
 import eapli.base.course.dto.CreateCourseDTO;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
-import eapli.base.exam.domain.regular_exam.RegularExam;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.formativeexam.domain.FormativeExamFactory;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -125,11 +123,7 @@ public class ExamBootstrapper implements Action {
         var now = LocalDateTime.now();
         var end = now.plusDays(3);
 
-        var date = RegularExamDate.valueOf(now, end);
-
-        if (!svc.validate(spec))
-            throw new IllegalArgumentException();
-        var exam = new RegularExam(RegularExamSpecification.valueOf(spec), date, c);
+        var exam = new RegularExamFactory(svc).build(now, end, c, spec).orElseThrow();
 
         this.repos.regularExams().save(exam);
     }

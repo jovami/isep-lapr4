@@ -1,16 +1,11 @@
 package eapli.base.exam.domain.regular_exam;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
+import eapli.framework.validations.Preconditions;
 
 @Entity
 public class RegularExam implements AggregateRoot<Integer> {
@@ -21,22 +16,24 @@ public class RegularExam implements AggregateRoot<Integer> {
 
     @Embedded
     @Column(unique = true, nullable = false)
-    private RegularExamSpecification regularExamSpecification;
-    private RegularExamDate regularExamDate;
+    private RegularExamSpecification specification;
+    @Column(nullable = false)
+    private RegularExamDate date;
     @ManyToOne
-    private Course course;
+    private final Course course;
 
     protected RegularExam() {
-        this.regularExamSpecification = null;
-        this.regularExamDate = null;
+        this.specification = null;
+        this.date = null;
         this.course = null;
     }
 
-    public RegularExam(RegularExamSpecification regularExamSpecification, RegularExamDate regularExamDate,
+    protected RegularExam(RegularExamSpecification specification, RegularExamDate date,
             Course course) {
+        Preconditions.noneNull(specification, date, course);
 
-        this.regularExamSpecification = regularExamSpecification;
-        this.regularExamDate = regularExamDate;
+        this.specification = specification;
+        this.date = date;
         this.course = course;
     }
 
@@ -44,20 +41,20 @@ public class RegularExam implements AggregateRoot<Integer> {
         return this.course;
     }
 
-    public RegularExamDate regularExamDate() {
-        return this.regularExamDate;
+    public RegularExamDate date() {
+        return this.date;
     }
 
     public RegularExamSpecification specification() {
-        return this.regularExamSpecification;
+        return this.specification;
     }
 
-    public void updateRegularExamDate(RegularExamDate regularExamDate) {
-        this.regularExamDate = regularExamDate;
+    public void updateDate(RegularExamDate regularExamDate) {
+        this.date = regularExamDate;
     }
 
-    public void updateRegularExamSpecification(RegularExamSpecification regularExamSpecification) {
-        this.regularExamSpecification = regularExamSpecification;
+    protected void updateSpecification(RegularExamSpecification regularExamSpecification) {
+        this.specification = regularExamSpecification;
     }
 
     @Override
@@ -101,6 +98,6 @@ public class RegularExam implements AggregateRoot<Integer> {
 
     @Override
     public String toString() {
-        return "RegularExam [" + "ID: " + id + " | " + regularExamDate + "]";
+        return "RegularExam [" + "ID: " + id + " | " + date + "]";
     }
 }

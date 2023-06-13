@@ -10,6 +10,6 @@ public final class OngoingExamDTOMapper implements Mapper<RegularExam, OngoingEx
 
     @Override
     public OngoingExamDTO toDTO(final RegularExam exam) {
-        return new OngoingExamDTO(exam.identity(), exam.course().identity(), exam.regularExamDate());
+        return new OngoingExamDTO(exam.identity(), exam.course().identity(), exam.date());
     }
 }

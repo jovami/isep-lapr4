@@ -19,48 +19,13 @@ import org.junit.jupiter.api.Assertions;
 public class RegularExamSpecificationTest {
 
     @Test
-    public void valueOf() {
-        // Prepare
-        String specification = "This is a test specification";
-        RegularExamSpecification expected = new RegularExamSpecification(specification);
-
-        List<String> lines = new ArrayList<>();
-        lines.add(specification);
-
-        // Execute
-        RegularExamSpecification result = RegularExamSpecification.valueOf(lines);
-
-        // Verify
-        Assertions.assertEquals(expected, result);
-    }
-
-    @Test
-    public void testValueOf() throws IOException {
-        // Prepare
-        String filePath = "path/to/specification.txt";
-        String specification = "This is a test specification";
-        File file = new File(filePath);
-        FileUtils.writeStringToFile(file, specification, StandardCharsets.UTF_8);
-        RegularExamSpecification expected = new RegularExamSpecification(specification);
-
-        // Execute
-        RegularExamSpecification result = RegularExamSpecification.valueOf(file);
-
-        // Verify
-        Assertions.assertEquals(expected, result);
-
-        // Cleanup
-        FileUtils.deleteQuietly(file);
-    }
-
-    @Test
     public void specificationString() {
         // Prepare
         String specification = "This is a test specification";
         RegularExamSpecification regularExamSpecification = new RegularExamSpecification(specification);
 
         // Execute
-        String result = regularExamSpecification.specificationString();
+        String result = regularExamSpecification.specification();
 
         // Verify
         Assertions.assertEquals(specification, result);
@@ -144,7 +109,7 @@ public class RegularExamSpecificationTest {
         RegularExamSpecification instance = constructor.newInstance();
 
         // Verify that the specification is null
-        assertNull(instance.specificationString());
+        assertNull(instance.specification());
         constructor.setAccessible(false);
     }
 

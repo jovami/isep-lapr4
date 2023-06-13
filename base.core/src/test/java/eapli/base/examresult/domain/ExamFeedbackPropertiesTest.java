@@ -13,13 +13,13 @@ public class ExamFeedbackPropertiesTest {
 
     @Test
     public void testToStringOnSubmission() {
-        ExamFeedbackProperties property = ExamFeedbackProperties.ONSUBMISSION;
+        ExamFeedbackProperties property = ExamFeedbackProperties.ON_SUBMISSION;
         assertEquals("Feedback available on submission", property.toString());
     }
 
     @Test
     public void testToStringAfterClosing() {
-        ExamFeedbackProperties property = ExamFeedbackProperties.AFTERCLOSING;
+        ExamFeedbackProperties property = ExamFeedbackProperties.AFTER_CLOSING;
         assertEquals("Feedback available after closing of the exam", property.toString());
     }
 }

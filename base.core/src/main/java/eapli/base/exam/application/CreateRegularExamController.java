@@ -12,12 +12,14 @@ import eapli.base.course.repositories.StaffRepository;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.domain.regular_exam.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.RegularExamFactory;
 import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.base.infrastructure.persistence.RepositoryFactory;
 import eapli.framework.application.UseCaseController;
+import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 
@@ -25,7 +27,6 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 public class CreateRegularExamController {
 
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
-    private final RegularExamValidatorService svc;
     private final RepositoryFactory repositoryFactory;
     private final RegularExamRepository repoRegularExam;
 
@@ -38,22 +39,19 @@ public class CreateRegularExamController {
         this.repoRegularExam = repositoryFactory.regularExams();
         this.repoStaff = repositoryFactory.staffs();
         this.repoCourse = repositoryFactory.courses();
-        this.svc = GrammarContext.grammarTools().regularExamValidator();
     }
 
     public boolean createRegularExam(File file, LocalDateTime openDate, LocalDateTime closeDate, Course chosen) throws IOException {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
-        var course = this.repoCourse.ofIdentity(chosen.identity());
+        var course = this.repoCourse.ofIdentity(chosen.identity())
+                .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
-        if (!this.svc.validate(file))
-            return false;
+        var validator = GrammarContext.grammarTools().regularExamValidator();
+        var exam = new RegularExamFactory(validator).build(
+                openDate, closeDate, course, file);
 
-        var rexam = new RegularExam(RegularExamSpecification.valueOf(file),
-                RegularExamDate.valueOf(openDate, closeDate), course.get());
-
-        this.repoRegularExam.save(rexam);
-
-        return true;
+        exam.ifPresent(this.repoRegularExam::save);
+        return exam.isPresent();
     }
 
     public Iterable<Course> listCoursesTeacherTeaches() {

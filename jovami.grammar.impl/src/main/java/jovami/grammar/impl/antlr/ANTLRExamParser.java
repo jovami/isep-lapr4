@@ -13,7 +13,7 @@ public class ANTLRExamParser implements ParserExamService {
     @Override
     public ExamToBeTakenDTO generateExam(RegularExam exam) {
         var lexer = new ExamSpecLexer(CharStreams.fromString(
-                exam.specification().specificationString()));
+                exam.specification().specification()));
         var parser = new ExamSpecParser(new CommonTokenStream(lexer));
 
         return new ExamSpecVisitor().dto(parser.exam());

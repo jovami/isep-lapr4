@@ -1,4 +1,4 @@
-package eapli.base.examresult.domain;
+package eapli.base.exam.domain.regular_exam;
 
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -6,9 +6,9 @@ import eapli.base.clientusermanagement.usermanagement.domain.StudentBuilder;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseFactory;
 import eapli.base.course.dto.CreateCourseDTO;
-import eapli.base.exam.domain.regular_exam.RegularExam;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
-import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
+import eapli.base.examresult.domain.ExamGrade;
+import eapli.base.examresult.domain.ExamGradeProperties;
+import eapli.base.examresult.domain.RegularExamResult;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;

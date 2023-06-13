@@ -16,6 +16,7 @@ import eapli.base.course.repositories.StaffRepository;
 import eapli.base.exam.application.parser.RegularExamValidatorService;
 import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.domain.regular_exam.RegularExamDate;
+import eapli.base.exam.domain.regular_exam.RegularExamFactory;
 import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
@@ -67,19 +68,14 @@ public class UpdateRegularExamController {
     }
 
     public void updateRegularExamDate(RegularExam regularExam, LocalDateTime openDate, LocalDateTime closeDate) {
-        regularExam.updateRegularExamDate(RegularExamDate.valueOf(openDate, closeDate));
+        regularExam.updateDate(RegularExamDate.valueOf(openDate, closeDate));
         repoRegularExam.save(regularExam);
     }
 
     public boolean updateRegularExamSpecification(RegularExam regularExam, File file) throws IOException {
-
-        if (!this.svc.validate(file))
-            return false;
-
-        regularExam.updateRegularExamSpecification(RegularExamSpecification.valueOf(file));
-        repoRegularExam.save(regularExam);
-
-        return true;
+        var exam = new RegularExamFactory(this.svc).updateExamSpecification(regularExam, file);
+        exam.ifPresent(repoRegularExam::save);
+        return exam.isPresent();
     }
 
 }

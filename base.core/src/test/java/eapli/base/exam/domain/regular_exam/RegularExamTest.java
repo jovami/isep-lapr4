@@ -138,7 +138,7 @@ public class RegularExamTest {
         RegularExam exam = new RegularExam(specification, regularExamDate, course);
 
         // Execute
-        RegularExamDate result = exam.regularExamDate();
+        RegularExamDate result = exam.date();
 
         // Verify
         assertEquals(regularExamDate, result);
@@ -164,7 +164,7 @@ public class RegularExamTest {
 
         // Verify
         assertNull(exam.specification());
-        assertNull(exam.regularExamDate());
+        assertNull(exam.date());
         assertNull(exam.course());
     }
 
@@ -177,10 +177,10 @@ public class RegularExamTest {
         RegularExamDate newDate = RegularExamDate.valueOf(regularExamDate.openDate(), regularExamDate.closeDate());
 
         // Act
-        exam.updateRegularExamDate(newDate);
+        exam.updateDate(newDate);
 
         // Assert
-        assertEquals(newDate, exam.regularExamDate());
+        assertEquals(newDate, exam.date());
     }
 
     @Test
@@ -189,7 +189,7 @@ public class RegularExamTest {
         RegularExamSpecification newSpecification = new RegularExamSpecification("New Specification");
         RegularExam exam = new RegularExam(newSpecification, regularExamDate, course);
         // Act
-        exam.updateRegularExamSpecification(newSpecification);
+        exam.updateSpecification(newSpecification);
 
         // Assert
         assertEquals(newSpecification, exam.specification());
