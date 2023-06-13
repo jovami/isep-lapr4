@@ -7,13 +7,13 @@ public enum ExamGradeProperties {
             return "Grade not available";
         }
     },
-    ONSUBMISSION {
+    ON_SUBMISSION {
         @Override
         public String toString() {
             return "Grade available on submission";
         }
     },
-    AFTERCLOSING {
+    AFTER_CLOSING {
         @Override
         public String toString() {
             return "Grade available after closing of the exam";

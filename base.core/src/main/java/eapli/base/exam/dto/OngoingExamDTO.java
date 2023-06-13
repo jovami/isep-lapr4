@@ -1,11 +1,17 @@
 package eapli.base.exam.dto;
 
-import eapli.base.course.domain.CourseID;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import eapli.base.course.domain.CourseID;
+import eapli.base.exam.domain.regular_exam.RegularExamDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@NoArgsConstructor
+@Setter
 public class OngoingExamDTO {
     private static final DateTimeFormatter fmt;
 
@@ -13,26 +19,17 @@ public class OngoingExamDTO {
         fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     }
 
-    private final CourseID course;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    @Deprecated
+    private Integer examId;
+    private CourseID course;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
-    public OngoingExamDTO(final CourseID name, final RegularExamDate date) {
+    public OngoingExamDTO(Integer examId, final CourseID name, final RegularExamDate date) {
+        this.examId = examId;
         this.course = name;
         this.startTime = date.openDate();
         this.endTime = date.closeDate();
-    }
-
-    public CourseID id() {
-        return this.course;
-    }
-
-    public LocalDateTime startTime() {
-        return this.startTime;
-    }
-
-    public LocalDateTime endTime() {
-        return this.endTime;
     }
 
     @Override

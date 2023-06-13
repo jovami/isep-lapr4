@@ -39,7 +39,7 @@
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
 
-        const res = await fetch("http://localhost:8090/api/examtaking/grade", {
+        const res = await fetch("http://localhost:8090/api/examtaking/formative/grade", {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(resolution),

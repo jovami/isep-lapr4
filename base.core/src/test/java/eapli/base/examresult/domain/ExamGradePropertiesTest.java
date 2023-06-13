@@ -13,13 +13,13 @@ public class ExamGradePropertiesTest {
 
     @Test
     public void testToStringOnSubmission() {
-        ExamGradeProperties property = ExamGradeProperties.ONSUBMISSION;
+        ExamGradeProperties property = ExamGradeProperties.ON_SUBMISSION;
         assertEquals("Grade available on submission", property.toString());
     }
 
     @Test
     public void testToStringAfterClosing() {
-        ExamGradeProperties property = ExamGradeProperties.AFTERCLOSING;
+        ExamGradeProperties property = ExamGradeProperties.AFTER_CLOSING;
         assertEquals("Grade available after closing of the exam", property.toString());
     }
 }

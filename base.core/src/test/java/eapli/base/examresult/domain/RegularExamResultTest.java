@@ -83,43 +83,32 @@ public class RegularExamResultTest {
     public void ensureCreationOfExamResultWithValidParametersWorks() {
         {
             var examResult = new RegularExamResult(student1, regularExam1
-                    , ExamGrade.valueOf(10)
-                    , ExamFeedback.valueOf("Good job!")
-                    , ExamGradeProperties.NONE
-                    , ExamFeedbackProperties.NONE);
+                    , ExamGrade.valueOf(10.f, 20.f)
+                    , ExamGradeProperties.NONE);
             assertEquals(examResult.student(), student1);
             assertEquals(examResult.regularExam(), regularExam1);
-            assertEquals(examResult.grade(), ExamGrade.valueOf(10));
-            assertEquals(examResult.feedback(), ExamFeedback.valueOf("Good job!"));
+            assertEquals(examResult.grade(), ExamGrade.valueOf(10.f, 20.f));
             assertEquals(examResult.gradeProperties(), ExamGradeProperties.NONE);
-            assertEquals(examResult.feedbackProperties(), ExamFeedbackProperties.NONE);
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureCreateExamResultWithNullParametersThrowsException() {
-        RegularExamResult regularExamResult = new RegularExamResult(null, (RegularExam) null, null, null
-                                        , null, null);
-
+        new RegularExamResult(null, (RegularExam) null, null, null);
     }
 
     @Test
     public void ensureSameAsWorksAsExpected() {
         var examResult1 = new RegularExamResult(student1, regularExam1
-                , ExamGrade.valueOf(10F)
-                , ExamFeedback.valueOf("Good job!")
-                , ExamGradeProperties.NONE
-                , ExamFeedbackProperties.NONE);
+                , ExamGrade.valueOf(10.F, 20.f)
+                , ExamGradeProperties.NONE);
         var examResult2 = new RegularExamResult(student1, regularExam1
-                , ExamGrade.valueOf(10F)
-                , ExamFeedback.valueOf("Good job!")
-                , ExamGradeProperties.NONE
-                , ExamFeedbackProperties.NONE);
+                , ExamGrade.valueOf(10F, 20.f)
+                , ExamGradeProperties.NONE);
+
         var examResult3 = new RegularExamResult(student2, regularExam2
-                , ExamGrade.valueOf(12F)
-                , ExamFeedback.valueOf("Good Work!")
-                , ExamGradeProperties.ONSUBMISSION
-                , ExamFeedbackProperties.AFTERCLOSING);
+                , ExamGrade.valueOf(12F, 15.5f)
+                , ExamGradeProperties.ON_SUBMISSION);
 
         assertTrue(examResult1.sameAs(examResult1));
         assertTrue(examResult1.sameAs(examResult2));
@@ -129,20 +118,16 @@ public class RegularExamResultTest {
     @Test
     public void ensureSameAsReturnsFalseIfComparedWithNull() {
         var examResult1 = new RegularExamResult(student1, regularExam1
-                , ExamGrade.valueOf(10F)
-                , ExamFeedback.valueOf("Good job!")
-                , ExamGradeProperties.NONE
-                , ExamFeedbackProperties.NONE);
+                , ExamGrade.valueOf(10.f, 20.f)
+                , ExamGradeProperties.NONE);
         assertNotEquals(examResult1, null);
     }
 
     @Test
     public void ensureSameAsReturnsFalseIfComparedWithAnotherClass() {
         var examResult1 = new RegularExamResult(student1, regularExam1
-                , ExamGrade.valueOf(10F)
-                , ExamFeedback.valueOf("Good job!")
-                , ExamGradeProperties.NONE
-                , ExamFeedbackProperties.NONE);
+                , ExamGrade.valueOf(10F, 20.f)
+                , ExamGradeProperties.NONE);
         assertNotEquals(examResult1, "I'm not a RegularExamResult :/, I'm a string");
     }
 }

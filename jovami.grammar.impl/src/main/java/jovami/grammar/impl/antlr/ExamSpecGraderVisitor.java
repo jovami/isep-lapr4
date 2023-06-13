@@ -10,8 +10,10 @@ import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
+import eapli.base.exam.dto.CorrectedExamDTO;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
-import eapli.base.examresult.dto.grade.ExamResultDTO;
+import eapli.base.examresult.domain.ExamFeedbackProperties;
+import eapli.base.examresult.domain.ExamGradeProperties;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Answer;
 import eapli.base.examresult.dto.grade.ExamResultDTO.Section;
 import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
@@ -24,10 +26,13 @@ import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser.*;
 final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
     private final ExamResolutionDTO resolution;
-    private ExamResultDTO result;
+    private CorrectedExamDTO result;
 
     private final List<Section> sections;
     private List<Answer> answers;
+
+    private ExamGradeProperties gradeType;
+    private ExamFeedbackProperties feedbackType;
 
     private float finalPoints;
     private float maxPoints = 0.f;
@@ -55,7 +60,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     }
 
     // HACK: do this the proper way
-    public ExamResultDTO dto(ParseTree tree) {
+    public CorrectedExamDTO dto(ParseTree tree) {
         visit(tree);
         return this.result;
     }
@@ -63,12 +68,31 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     @Override
     public String visitExam(ExamContext ctx) {
         // TODO: visit header?
+        visitFeedback(ctx.header().feedback());
+        visitGrading(ctx.header().grading());
 
         ctx.section().forEach(this::visit);
         // visitChildren(ctx);
 
-        this.result = new ExamResultDTO(this.sections, this.finalPoints, this.maxPoints);
+        this.result = new CorrectedExamDTO(this.sections, this.finalPoints, this.maxPoints, this.gradeType,
+                this.feedbackType);
 
+        return null;
+    }
+
+    @Override
+    public String visitGrading(GradingContext ctx) {
+        this.gradeType = ExamGradeProperties.valueOf(ctx.value.getText()
+                .replaceAll("-", "_")
+                .toUpperCase());
+        return null;
+    }
+
+    @Override
+    public String visitFeedback(FeedbackContext ctx) {
+        this.feedbackType = ExamFeedbackProperties.valueOf(ctx.value.getText()
+                .replaceAll("-", "_")
+                .toUpperCase());
         return null;
     }
 

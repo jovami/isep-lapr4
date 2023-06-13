@@ -1,5 +1,17 @@
 package jovami.grammar.impl.antlr;
 
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+
 import eapli.base.exam.domain.question.QuestionType;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
 import eapli.base.formativeexam.application.parser.GenerateFormativeExamService;
@@ -9,12 +21,6 @@ import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamLexer;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamParser;
 import jovami.grammar.impl.antlr.question.autogen.QuestionLexer;
 import jovami.grammar.impl.antlr.question.autogen.QuestionParser;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService {
 
@@ -36,10 +42,11 @@ public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService
                 .collect(Collectors.toList());
     }
 
-    private Map<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>>
-    randomGroupByType(Iterable<eapli.base.exam.domain.regular_exam.antlr.Question> questions) {
-        var map = new EnumMap<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>>(QuestionType.class);
-        for (final var question : questions){
+    private Map<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>> randomGroupByType(
+            Iterable<eapli.base.exam.domain.regular_exam.antlr.Question> questions) {
+        var map = new EnumMap<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>>(
+                QuestionType.class);
+        for (final var question : questions) {
             var type = question.getType();
             map.putIfAbsent(type, new LinkedList<>());
             map.get(type).push(question);

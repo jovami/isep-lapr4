@@ -67,16 +67,9 @@ public class RegularExamBootstrapper implements Action {
                 }
             }
 
-
-            var resolution = new ExamResolutionDTO(
-                    List.of(new Section(
-                            List.of("1-2\n2-1\n3-3\n4-4\n", "2", "1\n3")),
-                        new Section(
-                            List.of("Avenida da Boavista", "2", "true", "fly\nbrave")
-                            )));
-
             var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);
             var closeDate1 = LocalDateTime.parse("02/01/2022 14:20", df);
+
             var date1 = new RegularExamDate(openDate1, closeDate1);
             var c = course.iterator().next();
 
@@ -85,9 +78,15 @@ public class RegularExamBootstrapper implements Action {
                     date1,
                     c);
 
+            var resolution = new ExamResolutionDTO(
+                    List.of(new Section(
+                            List.of("1-2\n2-1\n3-3\n4-4\n", "2", "1\n3")),
+                            new Section(
+                                    List.of("Avenida da Boavista", "2", "true", "fly\nbrave"))),
+                    closeDate1.minusMinutes(30), exam.identity());
+
             var result = GrammarContext.grammarTools().examGrader().correctExam(exam, resolution);
             System.out.println(result);
-
 
             return true;
         } catch (IOException e) {

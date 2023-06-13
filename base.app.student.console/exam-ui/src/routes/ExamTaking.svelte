@@ -47,7 +47,7 @@
 
         console.log(selectedExam);
 
-        const res = await fetch("http://localhost:8090/api/examtaking/take", {
+        const res = await fetch("http://localhost:8090/api/examtaking/formative/take", {
             method: "POST",
             headers: {"Content-type": "application/json"},
             body: JSON.stringify(selectedExam),

@@ -1,5 +1,9 @@
 package eapli.base.infrastructure.bootstrapers.demo;
 
+import static eapli.base.examresult.domain.ExamGradeProperties.AFTER_CLOSING;
+import static eapli.base.examresult.domain.ExamGradeProperties.NONE;
+import static eapli.base.examresult.domain.ExamGradeProperties.ON_SUBMISSION;
+
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.domain.CourseID;
@@ -22,30 +26,20 @@ public class RegularExamResultBootstrapper implements Action {
         var student1 = studentRepo.findByUsername(Username.valueOf("mary")).orElseThrow();
         var course = courseRepository.ofIdentity(CourseID.valueOf("Fisica-1")).orElseThrow();
 
+        // TODO: we HAVE to find a way to identify an exam
         var regularExams = regularExamRepo.findByCourse(course).iterator();
 
-        //TODO: we HAVE to find a way to identify an exam
-        saveExamResult(student1, regularExams.next(), 10, "You need to study more...",
-                ExamGradeProperties.NONE, ExamFeedbackProperties.NONE);
-
-        saveExamResult(student1, regularExams.next(), 13, "You need to study a little more",
-                ExamGradeProperties.AFTERCLOSING, ExamFeedbackProperties.AFTERCLOSING);
-
-        saveExamResult(student1, regularExams.next(), 17, "Good Job",
-                ExamGradeProperties.ONSUBMISSION, ExamFeedbackProperties.ONSUBMISSION);
-
-        saveExamResult(student1, regularExams.next(), 19, "Perfect!",
-                ExamGradeProperties.AFTERCLOSING, ExamFeedbackProperties.AFTERCLOSING);
+        saveExamResult(student1, regularExams.next(), 10, 20, NONE);
+        saveExamResult(student1, regularExams.next(), 13, 20, AFTER_CLOSING);
+        saveExamResult(student1, regularExams.next(), 17, 20, ON_SUBMISSION);
+        saveExamResult(student1, regularExams.next(), 19, 20, AFTER_CLOSING);
 
         return true;
     }
 
-
-    public void saveExamResult(Student student, RegularExam exam, float grade, String feedback,
-                               ExamGradeProperties gradeProp, ExamFeedbackProperties feedbackProp) {
+    public void saveExamResult(Student student, RegularExam exam, float grade, float maxGrade, ExamGradeProperties gradeProp) {
         var repo = PersistenceContext.repositories().examResults();
-        var examResult = new RegularExamResult(student, exam, ExamGrade.valueOf(grade)
-                , ExamFeedback.valueOf(feedback), gradeProp, feedbackProp);
+        var examResult = new RegularExamResult(student, exam, ExamGrade.valueOf(grade, maxGrade), gradeProp);
         repo.save(examResult);
     }
 }

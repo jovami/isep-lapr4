@@ -30,7 +30,7 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
  */
 @UseCaseController
 @RestController
-@RequestMapping("api/examtaking")
+@RequestMapping("api/examtaking/formative")
 public final class TakeFormativeExamController {
     private final AuthorizationService authz;
 
@@ -46,7 +46,7 @@ public final class TakeFormativeExamController {
         this.questionRepo = repos.questions();
     }
 
-    @GetMapping("/formative-exams")
+    @GetMapping("/exam-list")
     public List<FormativeExamDTO> formativeExams() {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
@@ -62,7 +62,8 @@ public final class TakeFormativeExamController {
         var exam = this.fexamRepo.ofIdentity(examDTO.getExamId())
                 .orElseThrow(IllegalStateException::new);
         var questions = this.questionRepo.questionsOfCourse(exam.course());
-        var dto = GrammarContext.grammarTools().formativeExamGenerator().generate(exam, questions);
+        var dto = GrammarContext.grammarTools().formativeExamGenerator()
+                .generate(exam, questions);
 
         return ResponseEntity.ok(dto);
     }
@@ -72,7 +73,8 @@ public final class TakeFormativeExamController {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
         var questions = new FormativeExamResolutionDTOUnmapper().fromDTO(resolutionDTO);
-        var dto = GrammarContext.grammarTools().formativeExamGrader().correctExam(resolutionDTO, questions);
+        var dto = GrammarContext.grammarTools().formativeExamGrader()
+                .correctExam(resolutionDTO, questions);
 
         return ResponseEntity.ok(dto);
     }
