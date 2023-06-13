@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import eapli.base.course.domain.CourseID;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
+import eapli.base.exam.domain.RegularExamDate;
 
 /**
  * FutureExamDTO

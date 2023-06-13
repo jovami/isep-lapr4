@@ -8,7 +8,7 @@ import java.util.List;
 
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
-import eapli.base.exam.domain.regular_exam.RegularExamFactory;
+import eapli.base.exam.domain.RegularExamFactory;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO.Section;
 import eapli.base.exam.repositories.RegularExamRepository;

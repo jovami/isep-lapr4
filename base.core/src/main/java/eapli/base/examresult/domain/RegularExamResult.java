@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import eapli.base.clientusermanagement.domain.users.Student;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.validations.Preconditions;
 

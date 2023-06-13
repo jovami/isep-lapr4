@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
+import eapli.base.exam.domain.RegularExamDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

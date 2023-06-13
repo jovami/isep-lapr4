@@ -8,7 +8,7 @@ import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
 import eapli.base.course.domain.CourseID;
 import eapli.base.course.repositories.CourseRepository;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.examresult.domain.*;
 import eapli.base.infrastructure.persistence.PersistenceContext;

@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import eapli.base.exam.application.parser.GradeExamService;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.base.exam.dto.CorrectedExamDTO;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
 import jovami.grammar.impl.antlr.exam.autogen.ExamSpecLexer;

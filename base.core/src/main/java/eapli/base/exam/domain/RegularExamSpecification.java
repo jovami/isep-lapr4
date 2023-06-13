@@ -1,4 +1,4 @@
-package eapli.base.exam.domain.regular_exam;
+package eapli.base.exam.domain;
 
 import java.util.Objects;
 

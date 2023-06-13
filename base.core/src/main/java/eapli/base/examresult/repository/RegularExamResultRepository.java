@@ -2,7 +2,7 @@ package eapli.base.examresult.repository;
 
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.course.domain.Course;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.base.examresult.domain.RegularExamResult;
 import eapli.framework.domain.repositories.DomainRepository;
 

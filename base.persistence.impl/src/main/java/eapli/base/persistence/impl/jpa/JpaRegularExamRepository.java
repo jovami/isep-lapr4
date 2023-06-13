@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import eapli.base.course.domain.Course;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.base.exam.repositories.RegularExamRepository;
 
 class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, Integer>

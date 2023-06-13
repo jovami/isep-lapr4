@@ -27,7 +27,7 @@
     <class>eapli.base.event.meeting.domain.MeetingParticipant</class>
     <class>eapli.base.event.lecture.domain.Lecture</class>
     <class>eapli.base.event.lecture.domain.LectureParticipant</class>
-    <class>eapli.base.exam.domain.regular_exam.RegularExam</class>
+    <class>eapli.base.exam.domain.RegularExam</class>
     <class>eapli.base.formativeexam.domain.FormativeExam</class>
     <class>eapli.base.question.domain.Question</class>
     <class>eapli.base.examresult.domain.RegularExamResult</class>

@@ -9,7 +9,7 @@ import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
-import eapli.base.exam.domain.regular_exam.RegularExamFactory;
+import eapli.base.exam.domain.RegularExamFactory;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;

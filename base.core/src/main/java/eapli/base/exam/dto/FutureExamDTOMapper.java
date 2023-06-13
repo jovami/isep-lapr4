@@ -1,6 +1,6 @@
 package eapli.base.exam.dto;
 
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import jovami.util.dto.Mapper;
 
 /**

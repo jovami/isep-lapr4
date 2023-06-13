@@ -1,7 +1,7 @@
 package eapli.base.examresult.dto;
 
 import eapli.base.course.domain.CourseID;
-import eapli.base.exam.domain.regular_exam.RegularExamDate;
+import eapli.base.exam.domain.RegularExamDate;
 import eapli.base.examresult.domain.ExamGrade;
 
 import java.util.Objects;

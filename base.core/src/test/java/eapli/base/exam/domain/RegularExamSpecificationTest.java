@@ -1,4 +1,4 @@
-package eapli.base.exam.domain.regular_exam;
+package eapli.base.exam.domain;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

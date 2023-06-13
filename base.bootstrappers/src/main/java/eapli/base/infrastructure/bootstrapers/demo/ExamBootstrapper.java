@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import eapli.base.exam.domain.regular_exam.RegularExamFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import eapli.base.course.domain.CourseID;
 import eapli.base.course.dto.CreateCourseDTO;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
+import eapli.base.exam.domain.RegularExamFactory;
 import eapli.base.formativeexam.domain.FormativeExamFactory;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;

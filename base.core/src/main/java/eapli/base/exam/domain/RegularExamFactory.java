@@ -1,7 +1,6 @@
-package eapli.base.exam.domain.regular_exam;
+package eapli.base.exam.domain;
 
-import eapli.base.course.domain.Course;
-import eapli.base.exam.application.parser.RegularExamValidatorService;
+import static org.apache.commons.io.FileUtils.readFileToString;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.io.FileUtils.readFileToString;
+import eapli.base.course.domain.Course;
+import eapli.base.exam.application.parser.RegularExamValidatorService;
 
 public class RegularExamFactory {
     private final RegularExamValidatorService svc;

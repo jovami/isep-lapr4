@@ -10,7 +10,7 @@ import eapli.base.course.dto.CourseAndDescriptionDTO;
 import eapli.base.course.dto.CourseAndDescriptionDTOMapper;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
-import eapli.base.exam.domain.regular_exam.RegularExam;
+import eapli.base.exam.domain.RegularExam;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;

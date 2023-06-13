@@ -1,6 +1,7 @@
 package eapli.base.exam.domain.regular_exam;
 
 import eapli.base.course.domain.Course;
+import eapli.base.exam.domain.RegularExamDate;
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
 
