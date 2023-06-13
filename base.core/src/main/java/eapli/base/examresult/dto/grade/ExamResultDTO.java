@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 /**
  * ExamResultDTO
@@ -27,6 +26,7 @@ public class ExamResultDTO {
     @ToString
     public static final class Answer {
         private final float points;
+        private final float maxPoints;
         private final String feedback;
     }
 

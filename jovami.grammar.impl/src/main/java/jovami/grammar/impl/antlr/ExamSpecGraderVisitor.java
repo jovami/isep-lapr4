@@ -30,9 +30,10 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     private List<Answer> answers;
 
     private float finalPoints;
-    private float maxPoints = 0;
+    private float maxPoints = 0.f;
 
     private float points = 0.f;
+    private float maxQuestionPoints = 0.f;
     private String feedback = "";
     private boolean isCorrect;
     private static final String DEFAULT_FEEDBACK = "No feedback provided";
@@ -88,11 +89,12 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
     public String visitQuestion(QuestionContext ctx) {
         this.isCorrect = false;
         this.points = 0.f;
+        this.maxQuestionPoints = 0.f;
         this.feedback = DEFAULT_FEEDBACK;
 
         visitChildren(ctx);
 
-        this.answers.add(this.questionCounter++, new Answer(points, feedback));
+        this.answers.add(this.questionCounter++, new Answer(points, maxQuestionPoints, feedback));
         return null;
     }
 
@@ -134,6 +136,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .get(questionCounter);
 
         var points = Float.parseFloat(ctx.points.getText());
+        this.maxQuestionPoints = points;
         this.maxPoints += points;
 
         if (answer.equals(x)) {
@@ -182,7 +185,10 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .stream()
                 .mapToDouble(node -> Float.parseFloat(visitString_solution(node).split("\n")[1]))
                 .max()
-                .ifPresent(max -> this.maxPoints += max);
+                .ifPresent(max -> {
+                    this.maxPoints += max;
+                    this.maxQuestionPoints += max;
+                });
 
         var feedbackCtx = ctx.feedback_text();
         if (feedbackCtx != null)
@@ -217,6 +223,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
             map.put(solution[0], points);
         }
+        this.maxQuestionPoints = max;
         this.maxPoints += max;
 
         this.points = 0.f;
@@ -269,6 +276,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .split("\n");
         var expected = Float.parseFloat(numericalSolution[0]);
         var points = Float.parseFloat(numericalSolution[1]);
+        this.maxQuestionPoints = points;
         this.maxPoints += points;
 
         var answer = Float.parseFloat(this.resolution.getSections()
@@ -330,6 +338,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
             map.put(expected[0], points);
         }
+        this.maxQuestionPoints = maxPoints;
         this.maxPoints += maxPoints;
 
         var points = map.get(answer);
@@ -380,7 +389,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
             var solutions = new HashMap<String, Float>();
             var maxPoints = 0.f;
 
-            for (var solutionCtx : choice.string_solution()){
+            for (var solutionCtx : choice.string_solution()) {
                 var solution = visitString_solution(solutionCtx).split("\n");
                 var points = Float.parseFloat(solution[1]);
                 if (points > maxPoints)
@@ -388,6 +397,7 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
 
                 solutions.put(solution[0], points);
             }
+            this.maxQuestionPoints += maxPoints;
             this.maxPoints += maxPoints;
             max += maxPoints;
 
@@ -400,7 +410,8 @@ final class ExamSpecGraderVisitor extends ExamSpecBaseVisitor<String> {
                 .get(questionCounter)
                 .split("\n");
 
-        // TODO: we have to make sure that the missing words gaps start at 1 and are consecutive
+        // TODO: we have to make sure that the missing words gaps start at 1 and are
+        // consecutive
         for (int i = 0; i < answers.length; i++) {
             var solution = map.get(i + 1);
 

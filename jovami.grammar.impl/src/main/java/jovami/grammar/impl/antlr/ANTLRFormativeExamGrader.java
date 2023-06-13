@@ -28,7 +28,6 @@ public class ANTLRFormativeExamGrader implements GradeFormativeExamService {
 
         final var resultSections = new ArrayList<Section>(resolution.getSectionAnswers().size());
 
-        int i = 0;
         for (final var section : resolution.getSectionAnswers()) {
             final var resultAnswers = new ArrayList<Answer>(section.getAnswers().size());
 
@@ -38,11 +37,9 @@ public class ANTLRFormativeExamGrader implements GradeFormativeExamService {
                 final var result = gradeQuestion(question, answer.getAnswer());
                 final var points = result.points();
                 grade += points;
-                System.out.println(i + " " + result.maxPoints());
                 maxGrade += result.maxPoints();
 
-                resultAnswers.add(new Answer(points, result.feedback()));
-                i++;
+                resultAnswers.add(new Answer(points, result.maxPoints(), result.feedback()));
             }
 
             resultSections.add(new Section(resultAnswers));
