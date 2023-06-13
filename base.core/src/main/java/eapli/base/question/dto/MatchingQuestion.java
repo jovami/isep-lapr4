@@ -1,13 +1,13 @@
-package eapli.base.exam.domain.regular_exam.antlr;
+package eapli.base.question.dto;
 
 import java.util.List;
 
-import eapli.base.exam.domain.question.QuestionType;
+import eapli.base.question.domain.QuestionType;
 import lombok.Getter;
 
 // @Accessors(fluent = true)
 @Getter
-public class MatchingQuestion extends Question {
+public class MatchingQuestion extends AbstractQuestionDTO {
     private final String description;
     private final List<String> phrase1;
     private final List<String> phrase2;

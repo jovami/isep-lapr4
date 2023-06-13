@@ -1,6 +1,12 @@
 package jovami.grammar.impl.antlr;
 
-import eapli.base.exam.domain.regular_exam.antlr.*;
+import eapli.base.question.dto.AbstractQuestionDTO;
+import eapli.base.question.dto.MatchingQuestion;
+import eapli.base.question.dto.MissingWordsQuestion;
+import eapli.base.question.dto.MultipleChoiceQuestion;
+import eapli.base.question.dto.NumericalQuestion;
+import eapli.base.question.dto.ShortAnswerQuestion;
+import eapli.base.question.dto.TrueFalseQuestion;
 import jovami.grammar.impl.antlr.question.autogen.QuestionParser.*;
 import jovami.grammar.impl.antlr.question.autogen.QuestionBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -12,13 +18,13 @@ import java.util.List;
 
 final class ANTLRQuestionParser extends QuestionBaseVisitor<String> {
     private final Long id;
-    private Question question;
+    private AbstractQuestionDTO question;
 
     public ANTLRQuestionParser(Long id) {
         this.id = id;
     }
 
-    public Question question(ParseTree tree) {
+    public AbstractQuestionDTO question(ParseTree tree) {
         visit(tree);
         return this.question;
     }

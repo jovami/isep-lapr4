@@ -45,7 +45,13 @@
 {#await examResult()}
     <p>Loading Grade...</p>
 {:then result}
-    <p>Grade: {result.grade}/{result.maxGrade}</p>
+    <p>
+        Grade:
+        {#if result.grade === result.maxGrade}
+            <strong>{result.grade}</strong>
+        {/if}
+        / <strong>{result.maxGrade}</strong>
+    </p>
     <hr />
     <br />
     {#each result.sections as section, i}
@@ -56,7 +62,7 @@
             <h3>Question {j + 1} &mdash; enunciado</h3>
             <p>
                 Points:
-                {#if answer.points == answer.maxPoints}
+                {#if answer.points === answer.maxPoints}
                     <strong>{answer.points}</strong>
                 {:else}
                     {answer.points}

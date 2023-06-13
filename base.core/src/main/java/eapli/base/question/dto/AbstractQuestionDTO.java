@@ -1,16 +1,16 @@
-package eapli.base.exam.domain.regular_exam.antlr;
+package eapli.base.question.dto;
 
-import eapli.base.exam.domain.question.QuestionType;
+import eapli.base.question.domain.QuestionType;
 import lombok.AllArgsConstructor;
 // import lombok.Getter;
 
 // @Getter
 @AllArgsConstructor
-public abstract class Question {
+public abstract class AbstractQuestionDTO {
     private Long id;
     private QuestionType type;
 
-    public Question (QuestionType type) {
+    public AbstractQuestionDTO (QuestionType type) {
         this(-1L, type);
     }
 

@@ -1,9 +1,9 @@
 package jovami.grammar.impl.antlr;
 
-import eapli.base.exam.domain.question.QuestionType;
-import eapli.base.exam.domain.regular_exam.antlr.Question;
-import eapli.base.exam.domain.regular_exam.antlr.Section;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
+import eapli.base.exam.dto.ExamToBeTakenDTO.Section;
+import eapli.base.question.domain.QuestionType;
+import eapli.base.question.dto.AbstractQuestionDTO;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamBaseVisitor;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamParser.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ANTLRFormativeExamParser extends FormativeExamBaseVisitor<String> {
-    private Map<QuestionType, LinkedList<Question>> questionsByType;
+    private Map<QuestionType, LinkedList<AbstractQuestionDTO>> questionsByType;
     private List<Section> sections = new ArrayList<>();
-    private List<Question> questions;
+    private List<AbstractQuestionDTO> questions;
     private ExamToBeTakenDTO dto;
 
-    public ANTLRFormativeExamParser(Map<QuestionType, LinkedList<Question>> questionsByType) {
+    public ANTLRFormativeExamParser(Map<QuestionType, LinkedList<AbstractQuestionDTO>> questionsByType) {
         this.questionsByType = questionsByType;
     }
 

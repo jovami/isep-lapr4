@@ -1,13 +1,13 @@
-package eapli.base.exam.domain.regular_exam.antlr;
-
-import eapli.base.exam.domain.question.QuestionType;
-import lombok.Getter;
+package eapli.base.question.dto;
 
 import java.util.List;
 
+import eapli.base.question.domain.QuestionType;
+import lombok.Getter;
+
 // @Accessors(fluent = true)
 @Getter
-public class MultipleChoiceQuestion extends Question {
+public class MultipleChoiceQuestion extends AbstractQuestionDTO {
     private final boolean singleAnswer;
     private final String description;
     private final List<String> options;

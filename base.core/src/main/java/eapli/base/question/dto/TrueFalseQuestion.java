@@ -1,11 +1,11 @@
-package eapli.base.exam.domain.regular_exam.antlr;
+package eapli.base.question.dto;
 
-import eapli.base.exam.domain.question.QuestionType;
+import eapli.base.question.domain.QuestionType;
 import lombok.Getter;
 
 // @Accessors(fluent = true)
 @Getter
-public class TrueFalseQuestion extends Question {
+public class TrueFalseQuestion extends AbstractQuestionDTO {
     private final String description;
 
     public TrueFalseQuestion(String description) {

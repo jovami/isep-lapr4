@@ -1,7 +1,14 @@
 package jovami.grammar.impl.antlr;
 
-import eapli.base.exam.domain.regular_exam.antlr.*;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
+import eapli.base.exam.dto.ExamToBeTakenDTO.Section;
+import eapli.base.question.dto.AbstractQuestionDTO;
+import eapli.base.question.dto.MatchingQuestion;
+import eapli.base.question.dto.MissingWordsQuestion;
+import eapli.base.question.dto.MultipleChoiceQuestion;
+import eapli.base.question.dto.NumericalQuestion;
+import eapli.base.question.dto.ShortAnswerQuestion;
+import eapli.base.question.dto.TrueFalseQuestion;
 import jovami.grammar.impl.antlr.exam.autogen.ExamSpecBaseVisitor;
 import jovami.grammar.impl.antlr.exam.autogen.ExamSpecParser;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -11,7 +18,7 @@ import java.util.*;
 public class ExamSpecVisitor extends ExamSpecBaseVisitor<String> {
     private ExamToBeTakenDTO dto;
     private final List<Section> sections = new ArrayList<>();
-    private List<Question> questions;
+    private List<AbstractQuestionDTO> questions;
 
     /**
      * Method that parses the given tree and returns an ExamToBeTakenDTO

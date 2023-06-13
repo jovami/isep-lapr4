@@ -12,11 +12,12 @@ import java.util.stream.StreamSupport;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import eapli.base.exam.domain.question.QuestionType;
 import eapli.base.exam.dto.ExamToBeTakenDTO;
 import eapli.base.formativeexam.application.parser.GenerateFormativeExamService;
 import eapli.base.formativeexam.domain.FormativeExam;
 import eapli.base.question.domain.Question;
+import eapli.base.question.domain.QuestionType;
+import eapli.base.question.dto.AbstractQuestionDTO;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamLexer;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamParser;
 import jovami.grammar.impl.antlr.question.autogen.QuestionLexer;
@@ -32,7 +33,7 @@ public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService
         return new ANTLRFormativeExamParser(questionsByType).dto(parser.exam());
     }
 
-    private List<eapli.base.exam.domain.regular_exam.antlr.Question> parsedQuestions(Iterable<Question> questions) {
+    private List<AbstractQuestionDTO> parsedQuestions(Iterable<Question> questions) {
         return StreamSupport.stream(questions.spliterator(), false)
                 .map(question -> {
                     var lexer = new QuestionLexer(CharStreams.fromString(question.specification().specification()));
@@ -42,9 +43,9 @@ public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService
                 .collect(Collectors.toList());
     }
 
-    private Map<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>> randomGroupByType(
-            Iterable<eapli.base.exam.domain.regular_exam.antlr.Question> questions) {
-        var map = new EnumMap<QuestionType, LinkedList<eapli.base.exam.domain.regular_exam.antlr.Question>>(
+    private Map<QuestionType, LinkedList<AbstractQuestionDTO>> randomGroupByType(
+            Iterable<AbstractQuestionDTO> questions) {
+        var map = new EnumMap<QuestionType, LinkedList<eapli.base.question.dto.AbstractQuestionDTO>>(
                 QuestionType.class);
         for (final var question : questions) {
             var type = question.getType();
