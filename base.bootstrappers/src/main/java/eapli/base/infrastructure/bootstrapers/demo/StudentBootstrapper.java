@@ -66,6 +66,10 @@ public class StudentBootstrapper extends UsersBootstrapperBase implements Action
                 "mary@student.com", "isep237", "Mary Smith", "Mary",
                 "1999-01-01", "123123129");
 
+        registerStudent("sairy", "Password2", "Sairy", "Miller",
+                "sairy@student.com", "isep666", "Sairy Miller", "Sairy",
+                "2000-02-29", "666333999");
+
         enrollStudents();
 
 

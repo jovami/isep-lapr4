@@ -50,8 +50,8 @@ public class BaseDemoBootstrapper implements Action {
     public boolean execute() {
         // declare bootstrap actions
         final Action[] actions = { new ManagerBootstrapper(), new StudentBootstrapper(), new TeacherBootstrapper(),
-                new StaffBootstrapper(), new RegularExamBootstrapper(), new RegularExamResultBootstrapper(),
-                new MeetingBootstrapper(), new BoardBootstrapper() };
+                new StaffBootstrapper(), new RegularExamBootstrapper(), new ExamBootstrapper(),
+                new RegularExamResultBootstrapper(), new MeetingBootstrapper(), new BoardBootstrapper() };
 
         authenticateForBootstrapping();
 

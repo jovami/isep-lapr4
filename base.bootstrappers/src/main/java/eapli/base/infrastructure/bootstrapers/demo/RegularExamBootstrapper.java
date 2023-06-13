@@ -2,14 +2,11 @@ package eapli.base.infrastructure.bootstrapers.demo;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
@@ -17,11 +14,11 @@ import eapli.base.exam.domain.regular_exam.RegularExam;
 import eapli.base.exam.domain.regular_exam.RegularExamDate;
 import eapli.base.exam.domain.regular_exam.RegularExamSpecification;
 import eapli.base.exam.dto.resolution.ExamResolutionDTO;
+import eapli.base.exam.dto.resolution.ExamResolutionDTO.Section;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.actions.Action;
-import eapli.base.exam.dto.resolution.ExamResolutionDTO.Section;
 
 public class RegularExamBootstrapper implements Action {
 

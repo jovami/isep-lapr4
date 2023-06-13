@@ -35,7 +35,7 @@
             <groupId>eapli</groupId>
             <artifactId>jovami.grammar.impl</artifactId>
             <version>${project.parent.version}</version>
-            <scope>runtime</scope>
+            <!-- <scope>runtime</scope> -->
         </dependency>
     </dependencies>
 </project>
