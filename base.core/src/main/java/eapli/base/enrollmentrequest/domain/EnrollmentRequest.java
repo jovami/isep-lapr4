@@ -27,14 +27,11 @@ public class EnrollmentRequest implements AggregateRoot<Integer> {
     @Column(name = "IDENROLLMENTREQUEST")
     private int code;
 
-    // @Column(name="COURSE",nullable = false)
-    @JoinColumn(name = "COURSE")
+    @JoinColumn(name = "COURSE", nullable = false)
     @ManyToOne
     private Course course;
 
-    // TODO: username vs mecanographicNumber
-    // @Column(name="STUDENT",nullable = false)
-    @JoinColumn(name = "STUDENT")
+    @JoinColumn(name = "STUDENT", nullable = false)
     @ManyToOne
     private Student student;
 
