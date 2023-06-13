@@ -7,7 +7,9 @@
     let selected: ExamInfo | null = null;
 
     const examList = async (): Promise<ExamInfo[]> => {
-        const res = await fetch("http://localhost:8090/api/examtaking/formative/take");
+        const res = await fetch(
+            "http://localhost:8090/api/examtaking/formative/exam-list"
+        );
         const body = await res.json();
 
         if (res.ok) return body;

@@ -2,19 +2,6 @@
     import { push } from "svelte-spa-router";
     import { resolutionStore } from "../store";
 
-    // type GivenAnswer = {
-    //     answer: string;
-    //     questionID: number;
-    // };
-
-    // type SectionAnswers = {
-    //     answers: GivenAnswer[];
-    // };
-
-    // type Resolution = {
-    //     sectionAnswers: SectionAnswers[];
-    // }
-
     type Answer = {
         points: number;
         maxPoints: number;
@@ -39,11 +26,14 @@
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
 
-        const res = await fetch("http://localhost:8090/api/examtaking/formative/grade", {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(resolution),
-        });
+        const res = await fetch(
+            "http://localhost:8090/api/examtaking/formative/grade",
+            {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(resolution),
+            }
+        );
 
         const body = await res.json();
 

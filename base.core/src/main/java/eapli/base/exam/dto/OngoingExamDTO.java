@@ -21,13 +21,13 @@ public class OngoingExamDTO {
 
     @Deprecated
     private Integer examId;
-    private CourseID course;
+    private String course;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
     public OngoingExamDTO(Integer examId, final CourseID name, final RegularExamDate date) {
         this.examId = examId;
-        this.course = name;
+        this.course = name.id();
         this.startTime = date.openDate();
         this.endTime = date.closeDate();
     }

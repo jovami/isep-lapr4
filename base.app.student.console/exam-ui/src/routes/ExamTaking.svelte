@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {examStore, resolutionStore} from "../store";
-    import {push} from "svelte-spa-router";
+    import { examStore, resolutionStore } from "../store";
+    import { push } from "svelte-spa-router";
 
     type Question = {
         id: number;
@@ -47,11 +47,14 @@
 
         console.log(selectedExam);
 
-        const res = await fetch("http://localhost:8090/api/examtaking/formative/take", {
-            method: "POST",
-            headers: {"Content-type": "application/json"},
-            body: JSON.stringify(selectedExam),
-        });
+        const res = await fetch(
+            "http://localhost:8090/api/examtaking/formative/take",
+            {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(selectedExam),
+            }
+        );
 
         const body = await res.json();
 
@@ -61,7 +64,7 @@
         } else {
             throw new Error(body);
         }
-    }
+    };
 
     function handleSubmit() {
         const form = document.getElementById("exam") as HTMLFormElement;
@@ -77,7 +80,7 @@
 
         type Resolution = {
             sectionAnswers: SectionAnswers[];
-        }
+        };
 
         let resolution: Resolution = null;
 
@@ -95,22 +98,29 @@
             console.log(id);
 
             if (sectionAnswers[sectionId] === undefined) {
-                sectionAnswers[sectionId] = {answers: []};
+                sectionAnswers[sectionId] = { answers: [] };
             }
 
             if (sectionAnswers[sectionId].answers[questionIdx] === undefined) {
-                sectionAnswers[sectionId].answers[questionIdx] = {answer: "", questionID: null};
+                sectionAnswers[sectionId].answers[questionIdx] = {
+                    answer: "",
+                    questionID: null,
+                };
             }
 
-            if (sectionAnswers[sectionId].answers[questionIdx].answer.length > 0) {
-                sectionAnswers[sectionId].answers[questionIdx].answer += "\n" + answer;
+            if (
+                sectionAnswers[sectionId].answers[questionIdx].answer.length > 0
+            ) {
+                sectionAnswers[sectionId].answers[questionIdx].answer +=
+                    "\n" + answer;
             } else {
-                sectionAnswers[sectionId].answers[questionIdx].questionID = parseInt(id);
+                sectionAnswers[sectionId].answers[questionIdx].questionID =
+                    parseInt(id);
                 sectionAnswers[sectionId].answers[questionIdx].answer = answer;
             }
         }
 
-        resolution = {sectionAnswers: sectionAnswers};
+        resolution = { sectionAnswers: sectionAnswers };
         resolutionStore.set(resolution);
         push("/grade");
     }
@@ -122,15 +132,15 @@
     <h1>
         <strong>{exam.title}</strong>
     </h1>
-    <hr/>
-    <br/>
+    <hr />
+    <br />
     <form on:submit|preventDefault={handleSubmit} id="exam">
         {#each exam.sections as section, i}
             <h2>
                 Section {i + 1} &mdash; {section.description}
             </h2>
-            <hr/>
-            <br/>
+            <hr />
+            <br />
             {#each section.questions as question, j}
                 <h3>
                     Question {j + 1} &mdash; {question.description}
@@ -141,20 +151,21 @@
                         <div>
                             {#each question.options as choice, k}
                                 <div
-                                        class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
+                                    class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
                                 hover:cursor-pointer"
                                 >
                                     <input
-                                            class="align-middle hover:cursor-pointer"
-                                            type="radio"
-                                            id={choice + 1}
-                                            name={i + "_" + j + "_" + question.id}
-                                            value={k+1}
-                                            required
+                                        class="align-middle hover:cursor-pointer"
+                                        type="radio"
+                                        id={(choice + 1).toString()}
+                                        name={i + "_" + j + "_" + question.id}
+                                        value={k + 1}
+                                        required
                                     />
                                     <label
-                                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                            for={choice + 1}>{choice}</label
+                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                        for={(choice + 1).toString()}
+                                        >{choice}</label
                                     >
                                 </div>
                             {/each}
@@ -163,19 +174,25 @@
                         <div>
                             {#each question.options as choice, k}
                                 <div
-                                        class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
+                                    class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]
                                 hover:cursor-pointer"
                                 >
                                     <input
-                                            class="align-middle hover:cursor-pointer"
-                                            type="checkbox"
-                                            id={choice}
-                                            name={i + "_" + j + "_" + question.id + "_" + k}
-                                            value={k+1}
+                                        class="align-middle hover:cursor-pointer"
+                                        type="checkbox"
+                                        id={choice}
+                                        name={i +
+                                            "_" +
+                                            j +
+                                            "_" +
+                                            question.id +
+                                            "_" +
+                                            k}
+                                        value={k + 1}
                                     />
                                     <label
-                                            class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                            for={choice}>{choice}</label
+                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                        for={choice}>{choice}</label
                                     >
                                 </div>
                             {/each}
@@ -185,36 +202,36 @@
                     <div>
                         <div class="flex justify-center">
                             <div
-                                    class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
+                                class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
                             >
                                 <input
-                                        class="hover:cursor-pointer"
-                                        type="radio"
-                                        id={"true" + i + "-" + j}
-                                        name={i + "_" + j + "_" + question.id}
-                                        value="true"
-                                        required
+                                    class="hover:cursor-pointer"
+                                    type="radio"
+                                    id={"true" + i + "-" + j}
+                                    name={i + "_" + j + "_" + question.id}
+                                    value="true"
+                                    required
                                 />
                                 <label
-                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                        for={"true" + i + "-" + j}
+                                    class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                    for={"true" + i + "-" + j}
                                 >
                                     True
                                 </label>
                             </div>
                             <div
-                                    class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
+                                class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]"
                             >
                                 <input
-                                        type="radio"
-                                        id={"false" + i + "-" + j}
-                                        name={i + "_" + j + "_" + question.id}
-                                        value="false"
-                                        required
+                                    type="radio"
+                                    id={"false" + i + "-" + j}
+                                    name={i + "_" + j + "_" + question.id}
+                                    value="false"
+                                    required
                                 />
                                 <label
-                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                        for={"false" + i + "-" + j}
+                                    class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                    for={"false" + i + "-" + j}
                                 >
                                     False
                                 </label>
@@ -227,9 +244,15 @@
                             <p>
                                 [{k + 1}] &#8594;
                                 <select
-                                        name={i + "_" + j + "_" + question.id + "_" + k}
-                                        class="hover:cursor-pointer"
-                                        required
+                                    name={i +
+                                        "_" +
+                                        j +
+                                        "_" +
+                                        question.id +
+                                        "_" +
+                                        k}
+                                    class="hover:cursor-pointer"
+                                    required
                                 >
                                     {#each question.groups[from_group] as group}
                                         <option value={group}>{group}</option>
@@ -241,21 +264,21 @@
                 {:else if question.type === "SHORT_ANSWER"}
                     <div>
                         <input
-                                type="text"
-                                id="short_answer"
-                                name={i + "_" + j + "_" + question.id}
-                                value=""
-                                required
+                            type="text"
+                            id="short_answer"
+                            name={i + "_" + j + "_" + question.id}
+                            value=""
+                            required
                         />
                     </div>
                 {:else if question.type === "NUMERICAL"}
                     <div>
                         <input
-                                type="number"
-                                id="numerical_answer"
-                                name={i + "_" + j + "_" + question.id}
-                                value=""
-                                required
+                            type="number"
+                            id="numerical_answer"
+                            name={i + "_" + j + "_" + question.id}
+                            value=""
+                            required
                         />
                     </div>
                 {:else if question.type === "MATCHING"}
@@ -269,35 +292,45 @@
                                   France -> Paris
                                 -->
                             <div
-                                    class="flex mt-2 justify-center justify-items-center"
+                                class="flex mt-2 justify-center justify-items-center"
                             >
                                 {phrase1}
                                 &#8594;
 
                                 <select
-                                        name={i + "_" + j + "_" + question.id + "_" + phrase1}
-                                        class="hover:cursor-pointer"
-                                        required>
+                                    name={i +
+                                        "_" +
+                                        j +
+                                        "_" +
+                                        question.id +
+                                        "_" +
+                                        phrase1}
+                                    class="hover:cursor-pointer"
+                                    required
+                                >
                                     {#each question.phrase2 as phrase2, l}
-                                        <option value={(k+1) + "-" + (l+1)}>{phrase2}</option>
+                                        <option value={k + 1 + "-" + (l + 1)}
+                                            >{phrase2}</option
+                                        >
                                     {/each}
                                 </select>
                             </div>
                         {/each}
                     </div>
                 {/if}
-                <br/>
+                <br />
             {/each}
-            <br/>
+            <br />
         {/each}
         <div class="inline-flex">
-            <button type="submit"
-                    class="flex rounded-lg mt-16 bg-indigo-500 py-2 px-8 font-sans font-bold
+            <button
+                type="submit"
+                class="flex rounded-lg mt-16 bg-indigo-500 py-2 px-8 font-sans font-bold
                     uppercase text-white shadow-md shadow-indigo-500/20 transition-all
                     hover:shadow-lg hover:shadow-indigo-500/40 focus:opacity-[0.85]
                     focus:shadow-none active:opacity-[0.85] active:shadow-none
                     disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    data-ripple-light="true"
+                data-ripple-light="true"
             >
                 Submit
             </button>
@@ -308,4 +341,3 @@
         Error: {error.message}
     </p>
 {/await}
-
