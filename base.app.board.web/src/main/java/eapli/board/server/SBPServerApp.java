@@ -1,22 +1,31 @@
 package eapli.board.server;
 
 import eapli.base.app.common.console.BaseApplication;
+import eapli.base.board.domain.Board;
+import eapli.base.board.repositories.BoardRepository;
+import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
+import eapli.board.server.domain.BoardHistory;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.pubsub.EventDispatcher;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 
 public class SBPServerApp extends BaseApplication {
 
     static private ServerSocket sock;
+
+    public static HashMap<String,BoardHistory> boardHistory = new HashMap<>();
+    private static final BoardRepository boardRepository = PersistenceContext.repositories().boards();
     private static final String SEPARATOR_LABEL = "----------------------------------";
 
     /**
@@ -33,6 +42,7 @@ public class SBPServerApp extends BaseApplication {
         AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
                 new PlainTextEncoder());
 
+        boardRepository.findAll().forEach(board -> boardHistory.put(board.getBoardTitle().title(), new BoardHistory()));
         new SBPServerApp().run(args);
     }
 

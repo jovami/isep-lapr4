@@ -61,10 +61,13 @@ public class MenuRequest extends Thread {
                     ArchiveBoardHandler getBoardsOwnerNotArchived = new ArchiveBoardHandler(sock,request);
                     getBoardsOwnerNotArchived.run();
                     break;
-
                 case SBProtocol.CREATE_POST_IT:
                     CreatePostItHandler createPostIt = new CreatePostItHandler(sock, request);
                     createPostIt.run();
+                    break;
+                case SBProtocol.LIST_HISTORY:
+                    ViewBoardHistoryHandler viewBoardHistoryHandler = new ViewBoardHistoryHandler(sock, request);
+                    viewBoardHistoryHandler.run();
                     break;
             }
 

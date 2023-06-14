@@ -56,6 +56,8 @@ public class CreatePostItController {
         for (String s : boardColumns) {
             String[] arr = s.split("\t");
             boards.add(arr[0]);
+            boards.add(arr[1]);
+            boards.add(arr[2]);
         }
         return boards;
     }
@@ -71,6 +73,7 @@ public class CreatePostItController {
     }
 
 
+    //TODO: MAYBE ADD THIS TO A SERVICE
     public String createPostIt(String str) throws IOException, ReceivedERRCode {
         SBProtocol message = new SBProtocol();
         message.setCode(SBProtocol.SEND_POST_IT_INFO);
@@ -79,7 +82,9 @@ public class CreatePostItController {
         SBProtocol received = new SBProtocol(inS);
         if (received.getCode() == SBProtocol.ACK) {
             sock.close();
+
             return "Post-it created successfully.";
+            //TODO: REMOVE ELSE AND DO A FINALLY TO CLOSE THE SOCKET ON THE UI
         } else {
             sock.close();
             return null;

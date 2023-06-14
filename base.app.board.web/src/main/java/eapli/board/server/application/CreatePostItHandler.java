@@ -8,12 +8,19 @@ import eapli.board.SBProtocol;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
+import eapli.board.server.SBPServerApp;
+import eapli.board.server.domain.BoardHistory;
+import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
+import org.springframework.format.datetime.standard.DateTimeFormatterFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class CreatePostItHandler implements Runnable {
@@ -21,6 +28,11 @@ public class CreatePostItHandler implements Runnable {
     private DataInputStream inS;
     private DataOutputStream outS;
     private final Socket sock;
+    private final String alterType = "Create";
+    private String alterBoard;
+    private String alterPosition;
+    private String alterTime;
+    private String alterText;
 
     private final EventPublisher publisher =InProcessPubSub.publisher();
     private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
@@ -60,18 +72,28 @@ public class CreatePostItHandler implements Runnable {
             SBProtocol receiveText = new SBProtocol(inS);
             String text = receiveText.getContentAsString();
             String[] arr = text.split("\t");
+            alterBoard = arr[0];
+            alterPosition = arr[1];
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
+            alterTime = LocalDateTime.now().format(formatter);
+            alterText = arr[2];
 
-            String boardName = arr[0];
-            Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(boardName));
+            Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(alterBoard));
 
 
             String[] dimensions = arr[1].split(",");
             if (optBoard.isEmpty()){
-
+                throw new ReceivedERRCode("Board not found");
             }
             //TODO:verify if cell is empty - method on board(to get cell)
             optBoard.get().getCells().get(
-                    (Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1]))-1).createPostIt(arr[2]);
+                    (Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1]))-1).createPostIt(alterText);
+
+            StringBuilder sb = getStringBuilder();
+            SBPServerApp.boardHistory.putIfAbsent(optBoard.get().getBoardTitle().title(), new BoardHistory());
+            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get().getBoardTitle().title());
+            history.add(sb.toString());
+
 
             NewChangeEvent createPostIt = new NewChangeEvent(optBoard.get().getBoardTitle().title(),receiveText);
             publisher.publish(createPostIt);
@@ -86,6 +108,20 @@ public class CreatePostItHandler implements Runnable {
         }
 
 
+    }
+
+    private StringBuilder getStringBuilder() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(alterType);
+        sb.append("\t");
+        sb.append(alterBoard);
+        sb.append("\t");
+        sb.append(alterPosition);
+        sb.append("\t");
+        sb.append(alterTime);
+        sb.append("\t");
+        sb.append(alterText);
+        return sb;
     }
 
 

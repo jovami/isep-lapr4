@@ -29,27 +29,37 @@ public class CreatePostItUI extends AbstractUI {
         try {
 
             //TODO: Check if user has that board
-            var widget = new SelectWidget<>("Choose a board to create a postIt on:", controller.getBoardsList());
+            ArrayList<String> boardRowColumn = controller.getBoardsList();
+            ArrayList<String> arr = new ArrayList<>();
+            ArrayList<String> list = new ArrayList<>();
+            for (int i = 0; i < boardRowColumn.size(); i=i+3) {
+                arr.add(boardRowColumn.get(i));
+                list.add(boardRowColumn.get(i+1));
+                list.add(boardRowColumn.get(i+2));
+            }
+
+
+            var widget = new SelectWidget<>("Choose a board to create a postIt on:", arr);
             widget.show();
             String boardChosen = widget.selectedElement();
-            int index = widget.selectedOption();
+            int index = widget.selectedOption()-1;
             if (boardChosen == null) {
                 System.out.println("Invalid Board");
                 return false;
             }
-            ArrayList<String> list = controller.getRowsColumnsList();
+            //ArrayList<String> list = controller.getRowsColumnsList();
 
             //TODO: Check if all cells are occupied
             System.out.println("Choose a cell to allocate the Post-It");
-            String position = Console.readLine(String.format("The Format used should be row,columns (ex: 5,10) (Board has %s Rows and %s Columns):",
-                   list.get(index-1), list.get(index)));
-            if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index-1)), Integer.parseInt(list.get(index)))) {
+            String position = Console.readLine(String.format("The Format used should be row,columns (Board has %s Rows and %s Columns):",
+                   list.get(index*3+1), list.get(index*3+2)));
+            if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index*3+1)), Integer.parseInt(list.get(index*3+2)))) {
                 System.out.println("Invalid Cell Id");
                 return false;
             }
 
             String text = null;
-            if (Console.readBoolean("Do you want to add text to the Post-It? (Y/N)")) {
+            if (Console.readBoolean("Do you want to add text to the Post-It? ((Y/S)/N)")) {
                 text = Console.readLine("Text to be written on Post-It:");
             }
 
