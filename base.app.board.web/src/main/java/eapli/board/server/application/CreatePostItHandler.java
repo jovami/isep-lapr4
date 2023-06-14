@@ -46,7 +46,6 @@ public class CreatePostItHandler implements Runnable {
     private PostItService srv_postIt;
 
     public CreatePostItHandler(Socket socket, SBProtocol authRequest) {
-        //Preconditions.areEqual(authRequest.getCode(), SBProtocol.CREATE_POST_IT);
         this.sock = socket;
         srv_board = new ShareBoardService();
         srv_postIt = new PostItService();
@@ -66,25 +65,19 @@ public class CreatePostItHandler implements Runnable {
             StringBuilder builder = new StringBuilder();
             List<Board> boards = srv_board.listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(user);
 
-            //SBProtocol sendBoards = sendBoardOwned(builder, boards);
-            //if (sendBoards == null) return;
-
 
             for (Board b : boards) {
-                //builder.append('\n');
                 builder.append(b.getBoardTitle().title());
                 builder.append("\t");
                 builder.append(b.getNumRows());
                 builder.append("\t");
                 builder.append(b.getNumColumns());
-                //TODO: understand why '/0' is not working
                 builder.append(' ');
             }
 
             SBProtocol responseSent = new SBProtocol();
             responseSent.setContentFromString(builder.toString());
             responseSent.send(outS);
-
 
 
             //Board\tROW,COL\text
@@ -113,12 +106,10 @@ public class CreatePostItHandler implements Runnable {
             if (optBoard.isEmpty()){
                 throw new ReceivedERRCode("Board not found");
             }
-            //TODO:verify if cell is empty - method on board(to get cell)
-            optBoard.get().getCells().get(
-                    (Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1]))-1).createPostIt(alterText);
 
-            /*if(!optBoard.isEmpty())
-                srv_postIt.createPostIt(optBoard.get(),Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1]),arr[2], user);*/
+            srv_postIt.createPostIt(optBoard.get(),
+                            Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1])-1,
+                                        alterText,user);
 
 
             StringBuilder sb = getStringBuilder();
@@ -164,26 +155,6 @@ public class CreatePostItHandler implements Runnable {
         return true;
     }
 
-    private SBProtocol sendBoardOwned(StringBuilder builder, List<Board> boards) throws IOException {
-        //send boards that the user owns
-        SBProtocol sendBoards = new SBProtocol();
-        if (boards.isEmpty()) {
-            sendBoards.setCode(SBProtocol.ERR);
-            sendBoards.setContentFromString("User does not own boards that can possible be archived");
-            sendBoards.send(outS);
-            return null;
-        } else {
-            for (Board b : boards) {
-                builder.append(b.getBoardTitle().title()).append('\0');
-            }
-            //sendBoards.setCode(SBPMessage.SEND_BOARDS);
-            String send = builder.toString();
-            //sendBoards.setCode(255);
-            sendBoards.setContentFromString(builder.toString());
-        }
-        sendBoards.send(outS);
-        return sendBoards;
-    }
 
 
 }

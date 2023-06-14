@@ -98,6 +98,8 @@ public class Board implements AggregateRoot<BoardTitle> {
         return cells;
     }
 
+    public Cell getCell(int cellIndex){return cells.get(cellIndex);};
+
     public List<BoardColumn> getBoardColumnList() {
         return boardColumnList;
     }

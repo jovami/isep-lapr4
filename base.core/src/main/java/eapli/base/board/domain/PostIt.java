@@ -1,10 +1,8 @@
 package eapli.base.board.domain;
 
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.model.Username;
 
 import javax.persistence.*;
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +14,6 @@ public class PostIt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postItId;
-    @Column(nullable = false, unique = true)
-    private int cellId;
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "DATA")
@@ -26,44 +22,20 @@ public class PostIt {
     @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> changesInPostIt ;
 
-    //@OneToOne
-    //private SystemUser postitOwner;
-
-    @Lob
-    private String text;
-
-    @Lob
-    private File image;
-
+    @Transient
+    private SystemUser postitOwner;
 
     protected PostIt() {
     }
 
-    /*public PostIt(int cellId, SystemUser postitOwner) {
-        this.cellId = cellId;
+    public PostIt(SystemUser postitOwner) {
         this.postitOwner = postitOwner;
         this.changesInPostIt = new ArrayList<>();
         changesInPostIt.add(LocalDate.now());
-    }*/
+    }
 
-   /*public SystemUser getOwner() {
+   public SystemUser getOwner() {
         return postitOwner;
-    }*/
-
-    public PostIt(int cellId) {
-        this.cellId = cellId;
-        this.changesInPostIt = new ArrayList<>();
-        changesInPostIt.add(LocalDate.now());
-    }
-
-    @Deprecated
-    public void alterCell(int cellId) {
-        this.cellId = cellId;
-    }
-
-    @Deprecated
-    public int getCellId() {
-        return cellId;
     }
 
     public int getPostItId() {
@@ -74,13 +46,7 @@ public class PostIt {
         this.postItData = newData;
     }
 
-    //TODO: implent a service
-    @Deprecated
-    public void swapPostIts(PostIt postIt1, PostIt postIt2){
-        String temp = postIt1.postItData;
-        postIt1.postItData = postIt2.postItData;
-        postIt2.postItData = temp;
-    }
+
     /*public List<LocalDate> changesInPostIt(){return this.changesInPostIt;}
 
     public boolean changePostItText(String text)
@@ -115,7 +81,7 @@ public class PostIt {
 
     @Override
     public int hashCode() {
-        return Objects.hash(postItId, cellId, postItData);
+        return Objects.hash(postItId, postItData);
     }
 
     @Override
@@ -125,7 +91,7 @@ public class PostIt {
         if (o == null || getClass() != o.getClass())
             return false;
         PostIt postIt = (PostIt) o;
-        return postItId == postIt.postItId && cellId == postIt.cellId && postItData.equals(postIt.postItData);
+        return postItId == postIt.postItId && postItData.equals(postIt.postItData);
     }
 
 }

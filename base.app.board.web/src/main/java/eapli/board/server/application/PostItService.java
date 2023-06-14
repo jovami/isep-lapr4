@@ -34,7 +34,13 @@ public class PostItService {
 
     public void createPostIt(Board board, int cellPosition, String text, SystemUser postitOwner)
     {
-        //board.getCells().get(cellPosition).createPostIt(text,postitOwner);
+        board.getCell(cellPosition).createPostIt(text,postitOwner);
+    }
+
+    public void swapPostIts(PostIt postIt1, PostIt postIt2){
+        String temp = postIt1.getData();
+        postIt1.alterPostItData(postIt2.getData()) ;
+        postIt2.alterPostItData(temp);
     }
 
    /*

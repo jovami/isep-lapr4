@@ -32,19 +32,14 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
-    /*public void assignPostIt(SystemUser postitOwner) {
-        this.postIt = new PostIt(this.cellId, postitOwner);
-    }
 
     public void createPostIt(String text,SystemUser postitOwner) {
         if (hasPostIt())
             throw new IllegalStateException("Cell already has a PostIt");
-        new PostIt(this.cellId, postitOwner).alterPostItData(text);
-    }*/
-
-    public void assignPostIt() {
-        this.postIt = new PostIt(this.cellId);
+        this.postIt = new PostIt(postitOwner);
+        this.postIt.alterPostItData(text);
     }
+
     public void deletePostIt() {
         this.postIt = null;
     }
@@ -59,20 +54,10 @@ public class Cell implements Serializable {
     public BoardColumn getColumn() {
         return column;
     }
-    public void createPostIt(String text) {
-        if (this.postIt != null)
-            throw new IllegalStateException("Cell already has a PostIt");
-        this.postIt = new PostIt(this.cellId);
-        this.postIt.alterPostItData(text);
-    }
+
     public PostIt getPostIt() {
         return this.postIt;
     }
-
-
-    //TODO: add POSTIT owner
-
-
 
     @Override
     public boolean equals(Object o) {
