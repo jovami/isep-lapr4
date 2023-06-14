@@ -50,16 +50,13 @@ The **DTO pattern** will be used to display the courses in the UI that a teacher
 ## Classes
 - Domain:
     + **RegularExamResult**
-    + **ExamGrade**
     + **ExamGradeProperties**
-    + **CourseId**
     + **Course**
-    + **SystemUser**
+    + **MyUserService**
 - Controller:
     + **ListExamsGradesInCourseController**
     + **ListExamResultsService**
 - Repository:
-    + **TeacherRepository**
     + **StaffRepository**
     + **CourseRepository**
     + **RegularExamResultRepository**
@@ -69,6 +66,9 @@ The **DTO pattern** will be used to display the courses in the UI that a teacher
     + **CourseAndDescriptionDTO**
     + **CourseAndDescriptionDTOMapper**
 
+## Class diagram
+
+![cd](./CD.svg)
 
 ## Sequence diagram
 ![sd](./sd.svg)

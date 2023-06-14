@@ -1,0 +1,159 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+
+interface Mapper
+{
+ +toDTO(Iterable<T> objs, Comparator<? super T> cmp)
+}
+
+interface CourseRepository
+{
+    +ofIdentity(final I id)
+}
+interface StaffRepository
+{
+ +taughtBy(Teacher t)
+}
+
+interface RegularExamResultRepository
+{
+    +regularExamResultsByCourse(Course c)
+}
+
+class JpaRegularExamResultRepository
+{
+    + regularExamResultsByCourse(Course c)
+}
+
+
+class AbstractUI
+{
+}
+
+class ListExamsGradesInCourseUI
+{
+    # doShow()
+    + headline()
+}
+
+class ListExamsGradesInCourseController
+{
+    + listCourses()
+    + listExamsGradesAndStudents(CourseAndDescriptionDTO chosen)
+}
+
+class ListExamResultsService
+{
+    + regularExamResultsBasedOnGradingProperties(final Course c)
+}
+
+class MyUserService
+{
+    +currentTeacher()
+}
+
+class BaseRoles
+{
+    + {static}TEACHER
+}
+
+class Course
+{
+    + identity()
+}
+
+class CourseAndDescriptionDTO
+{
+
+}
+
+class CourseAndDescriptionDTOMapper
+{
+ + toDTO(Course course)
+}
+
+class ExamGradeAndStudentDTO
+{
+}
+
+class ExamGradeAndStudentDTOMapper
+{
+ +toDTO(RegularExamResult result)
+}
+
+class RegularExamResult
+{
+    +grade()
+    +date()
+    +student()
+}
+
+class JpaStaffRepository
+{
+ +taughtBy(Teacher t)
+}
+
+class JpaCourseRepository
+{
+}
+
+enum ExamGradeProperties
+{
+ +NONE
+ +ON_SUBMISSION
+ +AFTER_CLOSING
+
+}
+
+
+
+
+
+
+
+
+
+
+'extends --|>
+ListExamsGradesInCourseUI --|> AbstractUI
+
+
+
+'depends on(imports) -->
+ListExamsGradesInCourseUI --> "1" ListExamsGradesInCourseController
+
+
+ListExamsGradesInCourseController --> "1" MyUserService
+ListExamsGradesInCourseController --> "1" BaseRoles
+ListExamsGradesInCourseController --> "*" CourseAndDescriptionDTO
+ListExamsGradesInCourseController --> "1" CourseAndDescriptionDTOMapper
+ListExamsGradesInCourseController -up-> "1" CourseRepository
+ListExamsGradesInCourseController -up-> "1" StaffRepository
+ListExamsGradesInCourseController --> "*" ExamGradeAndStudentDTO
+ListExamsGradesInCourseController --> "1" ExamGradeAndStudentDTOMapper
+ListExamsGradesInCourseController -up-> "1" ListExamResultsService
+
+CourseAndDescriptionDTOMapper --> "*" Course
+ExamGradeAndStudentDTOMapper --> "*" RegularExamResult
+
+ListExamResultsService --> "1" RegularExamResultRepository
+
+RegularExamResult --> ExamGradeProperties
+
+'implements ..|>
+JpaRegularExamResultRepository ..|> RegularExamResultRepository
+JpaStaffRepository ..|> StaffRepository
+JpaCourseRepository ..|> CourseRepository
+
+CourseAndDescriptionDTOMapper ..|> Mapper
+ExamGradeAndStudentDTOMapper ..|> Mapper
+
+
+
+@enduml
