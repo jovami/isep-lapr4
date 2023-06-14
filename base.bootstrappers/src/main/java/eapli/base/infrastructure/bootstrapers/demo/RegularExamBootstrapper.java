@@ -4,13 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.exam.domain.RegularExamFactory;
-import eapli.base.exam.dto.resolution.ExamResolutionDTO;
-import eapli.base.exam.dto.resolution.ExamResolutionDTO.Section;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -55,25 +52,6 @@ public class RegularExamBootstrapper implements Action {
                         break;
                 }
             }
-
-            var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);
-            var closeDate1 = LocalDateTime.parse("02/01/2022 14:20", df);
-
-            var c = course.iterator().next();
-
-            var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator())
-                    .build(openDate1, closeDate1, c, grammar).orElseThrow();
-
-            var resolution = new ExamResolutionDTO(
-                    List.of(new Section(
-                            List.of("1-2\n2-1\n3-3\n4-4\n", "2", "1\n3")),
-                            new Section(
-                                    List.of("Avenida da Boavista", "2", "true", "fly\nbrave"))),
-                    closeDate1.minusMinutes(30), exam.identity());
-
-            var result = GrammarContext.grammarTools().examGrader().correctExam(exam, resolution);
-            System.out.println(result);
-
             return true;
         } catch (IOException e) {
             throw new RuntimeException(e);

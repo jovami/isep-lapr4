@@ -25,8 +25,8 @@ public class ExamResultDTO {
     @AllArgsConstructor
     @ToString
     public static final class Answer {
-        private final float points;
-        private final float maxPoints;
+        private final Float points;
+        private final Float maxPoints;
         private final String feedback;
     }
 

@@ -1,0 +1,140 @@
+<script lang="ts">
+    import ExamForm from "../components/ExamForm.svelte";
+    import SubmitButton from "../components/SubmitButton.svelte";
+    import FeGradeView from "../components/formative/FeGradeView.svelte";
+
+    import { examStore } from "../store";
+    import { push } from "svelte-spa-router";
+    import ReGradeView from "../components/regular/ReGradeView.svelte";
+
+    type Question = {
+        id: number;
+        description: string;
+
+        groups?: { [key: string]: string[] };
+        choices?: string[];
+
+        phrase1?: string[];
+        phrase2?: string[];
+
+        singleAnswer?: boolean;
+        options?: [];
+        type:
+            | "MATCHING"
+            | "MULTIPLE_CHOICE"
+            | "SHORT_ANSWER"
+            | "NUMERICAL"
+            | "MISSING_WORDS"
+            | "TRUE_FALSE";
+    };
+
+    type Section = {
+        id: number;
+        description: string;
+        questions: Question[];
+    };
+
+    type Exam = {
+        title: string;
+        description: string;
+        sections: Section[];
+    };
+
+    type SectionAnswers = {
+        answers: string[];
+    };
+
+    type Resolution = {
+        sections: SectionAnswers[];
+        submissionTime: Date;
+        examID: number;
+    };
+
+    let examId: number = null;
+    let selectedExam = null;
+    examStore.subscribe((value) => {
+        if (value !== null) selectedExam = value;
+    });
+
+    const chooseExam = async (): Promise<Exam> => {
+        if (selectedExam === null) {
+            throw new Error("No exam selected!");
+        }
+
+        console.log(selectedExam);
+
+        const res = await fetch(
+            "http://localhost:8090/api/examtaking/regular/take",
+            {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(selectedExam),
+            }
+        );
+
+        const body = await res.json();
+
+        if (res.ok) {
+            console.log(body);
+            examId = selectedExam.examId
+            return body;
+        } else {
+            throw new Error(body);
+        }
+    };
+
+    let resolution: Resolution = null;
+
+    const handleSubmit = () => {
+        const form = document.getElementById("exam") as HTMLFormElement;
+
+        const data = Object.fromEntries(new FormData(form).entries());
+        console.log(`form data: ${data}`);
+
+        const sections: SectionAnswers[] = [];
+        for (const [key, value] of Object.entries(data)) {
+            const sectionId = key.split("_")[0];
+            const questionIdx = key.split("_")[1];
+            const answer = value;
+
+            if (sections[sectionId] === undefined) {
+                sections[sectionId] = { answers: [] };
+            }
+
+            if (sections[sectionId].answers[questionIdx] === undefined) {
+                sections[sectionId].answers[questionIdx] = "";
+            }
+
+            if (
+                sections[sectionId].answers[questionIdx].length > 0
+            ) {
+                sections[sectionId].answers[questionIdx] += "\n" + answer;
+            } else {
+                sections[sectionId].answers[questionIdx] = answer;
+            }
+        }
+
+        resolution = {
+            sections: sections,
+            submissionTime: new Date(),
+            examID: examId,
+        };
+    };
+</script>
+
+{#if !resolution}
+    {#await chooseExam()}
+        <p>Loading...</p>
+    {:then exam}
+        <ExamForm {exam} submit={handleSubmit} />
+    {:catch error}
+        <p>
+            Error: {error.message}
+        </p>
+    {/await}
+{:else}
+    <ReGradeView {resolution} />
+    <SubmitButton onclick={() => push("/regular")}>
+        Back to Exam selection
+    </SubmitButton>
+{/if}

@@ -22,8 +22,8 @@ EXAM {
             ANSWER 3: "Paris"
             ANSWER 4: "Rome"
 
-            SOLUTION 1: 1-2 [1.0]
-            SOLUTION 2: 2-1 [1.0]
+            SOLUTION 1: 1-1 [1.0]
+            SOLUTION 2: 2-2 [1.0]
             SOLUTION 3: 3-3 [1.0]
             SOLUTION 4: 4-4 [1.0]
 

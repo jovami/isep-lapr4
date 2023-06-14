@@ -23,11 +23,10 @@ public class ExamResultDTOMapper {
         }
 
         var sections = new ArrayList<Section>(correction.sections().size());
-
         for (final var section : correction.sections()) {
             var answers = new ArrayList<Answer>(section.getAnswers().size());
 
-            for (final var answer : answers) {
+            for (final var answer : section.getAnswers()) {
                 Float answerGrade, answerMaxGrade;
                 answerGrade = answerMaxGrade = null;
                 String feedback = null;

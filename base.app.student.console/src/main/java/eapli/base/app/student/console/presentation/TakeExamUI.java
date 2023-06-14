@@ -22,7 +22,6 @@ public class TakeExamUI implements Action {
 
     @Override
     public boolean execute() {
-        // TODO: @diogonapoles update the URL if needed
         final var url = String.format("http://localhost:%d/#/regular", this.props.getPort());
 
         try {
