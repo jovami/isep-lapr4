@@ -6,23 +6,19 @@ import eapli.base.board.domain.Cell;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
+import eapli.board.server.MenuRequest;
+import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
+import eapli.board.server.domain.BoardHistory;
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
-import eapli.board.server.SBPServerApp;
-import eapli.board.server.domain.BoardHistory;
-import eapli.board.server.MenuRequest;
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
-import org.springframework.format.datetime.standard.DateTimeFormatterFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -39,7 +35,7 @@ public class CreatePostItHandler implements Runnable {
     private String alterTime;
     private String alterText;
 
-    private final EventPublisher publisher =InProcessPubSub.publisher();
+    private final EventPublisher publisher = InProcessPubSub.publisher();
     private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
     private ShareBoardService srv_board;
 
@@ -86,8 +82,10 @@ public class CreatePostItHandler implements Runnable {
             String[] arr = text.split("\t");
             alterBoard = arr[0];
             alterPosition = arr[1];
+
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
             alterTime = LocalDateTime.now().format(formatter);
+
             alterText = arr[2];
 
             Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(alterBoard));
@@ -111,11 +109,13 @@ public class CreatePostItHandler implements Runnable {
                             Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1])-1,
                                         alterText,user);
 
-
             StringBuilder sb = getStringBuilder();
             SBPServerApp.boardHistory.putIfAbsent(optBoard.get().getBoardTitle().title(), new BoardHistory());
             BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get().getBoardTitle().title());
             history.add(sb.toString());
+
+            NewChangeEvent event = new NewChangeEvent(optBoard.get().getBoardTitle().title(),receiveText);
+            publisher.publish(event);
 
 
             SBProtocol response = new SBProtocol();
