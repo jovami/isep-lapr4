@@ -110,8 +110,7 @@ public class CreatePostItHandler implements Runnable {
                                         alterText,user);
 
             StringBuilder sb = getStringBuilder();
-            SBPServerApp.boardHistory.putIfAbsent(optBoard.get().getBoardTitle().title(), new BoardHistory());
-            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get().getBoardTitle().title());
+            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get());
             history.add(sb.toString());
 
             NewChangeEvent event = new NewChangeEvent(optBoard.get().getBoardTitle().title(),receiveText);

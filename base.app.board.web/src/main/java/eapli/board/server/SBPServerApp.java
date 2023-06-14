@@ -24,7 +24,7 @@ public class SBPServerApp extends BaseApplication {
 
     static private ServerSocket sock;
 
-    public static HashMap<String,BoardHistory> boardHistory = new HashMap<>();
+    public static HashMap<Board,BoardHistory> boardHistory = new HashMap<>();
     private static final BoardRepository boardRepository = PersistenceContext.repositories().boards();
     private static final String SEPARATOR_LABEL = "----------------------------------";
 
@@ -42,7 +42,7 @@ public class SBPServerApp extends BaseApplication {
         AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
                 new PlainTextEncoder());
 
-        boardRepository.findAll().forEach(board -> boardHistory.put(board.getBoardTitle().title(), new BoardHistory()));
+        boardRepository.findAll().forEach(board -> boardHistory.put(board, new BoardHistory()));
         new SBPServerApp().run(args);
     }
 

@@ -60,7 +60,7 @@ public class ViewBoardHistoryHandler {
             }
 
 
-            BoardHistory history = SBPServerApp.boardHistory.get(board);
+            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get());
 
             StringBuilder historyBuilder = new StringBuilder();
             for (String str :history.getHistory()) {

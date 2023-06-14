@@ -62,15 +62,6 @@ public class CreatePostItController {
         return boards;
     }
 
-    public ArrayList<String> getRowsColumnsList() throws ReceivedERRCode, IOException {
-        ArrayList<String> rowsColumns = new ArrayList<>();
-        for (String s : boardColumns) {
-            String[] arr = s.split("\t");
-            rowsColumns.add(arr[1]);
-            rowsColumns.add(arr[2]);
-        }
-        return rowsColumns;
-    }
 
 
     //TODO: MAYBE ADD THIS TO A SERVICE

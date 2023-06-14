@@ -1,12 +1,14 @@
 package eapli.base.board.domain;
 
 import eapli.framework.domain.model.AggregateRoot;
+import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "BOARD")
@@ -180,6 +182,16 @@ public class Board implements AggregateRoot<BoardTitle> {
             return true;
         }
         return this.boardTitle.equals(o.boardTitle);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return DomainEntities.areEqual(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return DomainEntities.hashCode(this);
     }
 
     @Override

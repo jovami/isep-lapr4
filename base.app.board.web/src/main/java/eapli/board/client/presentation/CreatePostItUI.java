@@ -7,6 +7,7 @@ import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -57,10 +58,21 @@ public class CreatePostItUI extends AbstractUI {
                 return false;
             }
 
-            String text = null;
-            if (Console.readBoolean("Do you want to add text to the Post-It? ((Y/S)/N)")) {
-                text = Console.readLine("Text to be written on Post-It:");
-            }
+            String text;
+            do {
+                text = Console.readLine("Content to be added to Post-It\n(if the content is image please provide the path between \"\"):");
+
+                //If image
+                if (text.startsWith("\"") && text.endsWith("\"")) {
+                    File f = new File(text.replaceAll("\"", ""));
+
+                    if (!f.exists()) {
+                        System.out.println("[WARN] the following image path does not exist, please provide a valid one");
+                        text=null;
+                    }
+                }
+
+            } while (text==null);
 
             try {
                 String str = controller.

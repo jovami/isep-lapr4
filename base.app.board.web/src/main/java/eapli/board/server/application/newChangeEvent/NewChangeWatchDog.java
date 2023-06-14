@@ -45,7 +45,6 @@ public class NewChangeWatchDog implements EventHandler {
             subs.put(board, new ArrayList<>());
         }
         subs.get(board).add(c);
-        System.out.println(subs.get(board).get(0).getUserLoggedIn().username().toString());
 
     }
     public synchronized static void removeSub(Board board, Client c){
