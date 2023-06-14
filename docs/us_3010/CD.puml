@@ -1,0 +1,109 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+
+interface Runnable
+interface MessageProtocol
+
+interface BoardRepository
+{
+  +listBoardsUserOwnsNotArchived(SystemUser owner)
+ }
+
+class AbstractUI
+{
+}
+
+class ArchiveBoardUI
+{
+    # doShow()
+    + headline()
+}
+
+class ArchiveBoardController
+{
+
+ +listBoardsUserOwnsNotArchived()
+ +archivedBoards(String boardTitle)
+ +closeSocket()
+}
+
+class ArchiveBoardHandler
+{
++run()
+-sendBoardOwned()
+}
+
+class MenuRequest
+{
++ clientBySock(InetAddress addr)
+}
+
+class Thread
+{
+}
+
+interface Runnable
+interface MessageProtocol
+
+class SBProtocol
+{
+ + setCode(int code)
+ + setContentFromString(String cStr)
+ + send(DataOutputStream out)
+ + getContentAsString()
+
+}
+
+class JpaBoardRepository
+{
++listBoardsUserOwnsNotArchived(SystemUser owner)
+}
+
+class SystemUser
+{
+    +getUserLoggedIn()
+}
+
+class ShareBoardService
+{
+ +listBoardsUserOwnsNotArchived(SystemUser owner)
+}
+
+
+
+'extends
+ArchiveBoardUI --|> AbstractUI
+MenuRequest --|> Thread
+
+
+'depends on(imports)
+ArchiveBoardUI --> "1" ArchiveBoardController
+ArchiveBoardController --> "*" SBProtocol
+
+ArchiveBoardHandler --> "*" SBProtocol
+ArchiveBoardHandler -up-> "1" BoardRepository
+
+ArchiveBoardHandler --> "1" MenuRequest
+ArchiveBoardHandler --> "1" SystemUser
+ArchiveBoardHandler --> "1" ShareBoardService
+
+ShareBoardService  --> "1" BoardRepository
+ShareBoardService  --> "*" Board
+ShareBoardService  ---> "*" SystemUser
+
+ArchiveBoardHandler --> "*" Board
+'implements
+ArchiveBoardHandler ..|> Runnable
+Thread ..|> Runnable
+SBProtocol ..|> MessageProtocol
+JpaBoardRepository ..|> BoardRepository
+
+
+
+@enduml
