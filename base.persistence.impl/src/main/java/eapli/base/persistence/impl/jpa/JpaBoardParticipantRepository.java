@@ -42,7 +42,7 @@ public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardPa
         final var query = entityManager().createQuery(
                 "SELECT bp.board FROM BoardParticipant bp " +
                         "WHERE bp.participant = :user" +
-                        "AND bp.permission = :perm",
+                        " AND bp.permission = :perm",
                 Board.class);
         query.setParameter("user", user);
         query.setParameter("perm", perm);

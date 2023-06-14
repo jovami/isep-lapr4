@@ -2,7 +2,10 @@ package eapli.base.infrastructure.bootstrapers.demo;
 
 
 import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardParticipant;
+import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.domain.BoardTitle;
+import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.clientusermanagement.repositories.StudentRepository;
@@ -17,6 +20,7 @@ public class BoardBootstrapper implements Action {
 
     StudentRepository studentRepository = PersistenceContext.repositories().students();
     BoardRepository boardRepository = PersistenceContext.repositories().boards();
+    BoardParticipantRepository boardParticipantRepository = PersistenceContext.repositories().boardParticipants();
 
 
     @Override
@@ -30,6 +34,9 @@ public class BoardBootstrapper implements Action {
         if (owner == null)
             return false;
 
+        //----------------------------------------------------------------//
+        //--------------JOHNNY BOARDS THAT HE OWNS------------------------//
+        //----------------------------------------------------------------//
         //Boards list created
         saveBoard(BoardTitle.valueOf("board1"), 10, 10, owner);
         saveBoard(BoardTitle.valueOf("board2"), 15, 5, owner);
@@ -42,6 +49,26 @@ public class BoardBootstrapper implements Action {
         saveBoardInStateArchived(BoardTitle.valueOf("board5"), 10, 10, owner);
         saveBoardInStateArchived(BoardTitle.valueOf("board6"), 10, 5, owner);
 
+        //----------------------------------------------------------------//
+        //--------------MARY BOARDS THAT SHE OWNS-------------------------//
+        //----------------------------------------------------------------//
+        SystemUser ownerMary = userMary();
+        SystemUser participant = owner;
+
+        //Boards list johnny participates with Write permissions
+        saveBoard(BoardTitle.valueOf("board7"), 10, 10, ownerMary);
+        saveBoardWithParticipantWithWritePermissions(BoardTitle.valueOf("board7"),participant);
+
+        saveBoard(BoardTitle.valueOf("board8"), 12, 9, ownerMary);
+        saveBoardWithParticipantWithWritePermissions(BoardTitle.valueOf("board8"),participant);
+
+        //Boards list johnny participates with Read permissions
+        saveBoard(BoardTitle.valueOf("board9"), 10, 10, ownerMary);
+        saveBoardWithParticipantWithReadPermissions(BoardTitle.valueOf("board9"),participant);
+
+        saveBoard(BoardTitle.valueOf("board10"), 13, 8, ownerMary);
+        saveBoardWithParticipantWithReadPermissions(BoardTitle.valueOf("board10"),participant);
+
         return true;
     }
 
@@ -49,8 +76,27 @@ public class BoardBootstrapper implements Action {
         boardRepository.save(new Board(boardTitle, rows, columns, owner));
     }
 
+    private void saveBoardWithParticipantWithWritePermissions(BoardTitle boardTitle,SystemUser participant) {
+        Optional<Board> board = boardRepository.ofIdentity(boardTitle);
+
+        boardParticipantRepository.save(new BoardParticipant(board.get(),participant, BoardParticipantPermissions.WRITE));
+    }
+
+    private void saveBoardWithParticipantWithReadPermissions(BoardTitle boardTitle,SystemUser participant) {
+        Optional<Board> board = boardRepository.ofIdentity(boardTitle);
+
+        boardParticipantRepository.save(new BoardParticipant(board.get(),participant, BoardParticipantPermissions.READ));
+    }
+
     private SystemUser user() {
         Optional<Student> user = studentRepository.findByUsername(Username.valueOf("johnny"));
+
+        Optional<SystemUser> SysUser = user.map(Student::user);
+        return SysUser.orElse(null);
+    }
+
+    private SystemUser userMary() {
+        Optional<Student> user = studentRepository.findByUsername(Username.valueOf("mary"));
 
         Optional<SystemUser> SysUser = user.map(Student::user);
         return SysUser.orElse(null);

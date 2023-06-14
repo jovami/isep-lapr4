@@ -14,6 +14,7 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ShareBoardService {
@@ -74,6 +75,21 @@ public class ShareBoardService {
         MyUserService s = new MyUserService();
         users.remove(s.currentUser());
         return users;
+    }
+
+    public List<Board> listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(SystemUser user) {
+
+        Iterable<Board> boardParticipant = boardParticipantRepository.withPermission(user,BoardParticipantPermissions.WRITE);
+        List<Board> listBoardsUserOwnsNotArchived = listBoardsUserOwnsNotArchived(user);
+        listBoardsUserOwnsNotArchived.addAll((Collection<? extends Board>) boardParticipant);
+
+        /*for(Board board :listBoardsUserOwnsNotArchived)
+        {
+            System.out.println("Boardowns= "+board.getBoardTitle().title() +" BoardColumns= " +board.getBoardColumnList().size() +
+                                " Boardrowns= " +board.getBoardRowList().size());
+        }*/
+
+        return listBoardsUserOwnsNotArchived;
     }
 
 }

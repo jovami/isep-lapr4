@@ -1,4 +1,4 @@
-package eapli.base.board.application;
+package eapli.board.server.application;
 
 
 import eapli.base.board.domain.Board;
@@ -31,34 +31,13 @@ public class PostItService {
         userRepository = PersistenceContext.repositories().users();
     }
 
-    //TODO: corrigir para so receber a lista de board onde a board esta no estado shared
-    /*public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
 
-        return new BoardParticipantMapper().toDTO(this.boardParticipantRepository.listBoardUserLoggedParticipates(userRepository.ofIdentity(authz.session()
-                .orElseThrow()
-                .authenticatedUser()
-                .identity()).orElseThrow()));
-    }
-*/
-    public Iterable<Board> listBoardsUserParticipates() {
-        return boardParticipantRepository.listBoardsByParticipant(userRepository.ofIdentity(authz.session()
-                .orElseThrow()
-                .authenticatedUser()
-                .identity()).orElseThrow());
-    }
-
-
-
-    /*public PostItDTO createPostIt(Board board, int cellId)
+    public void createPostIt(Board board, int cellPosition, String text, SystemUser postitOwner)
     {
-        return new PostItMapper().toDTO(board.createPostIt(cellId));
+        //board.getCells().get(cellPosition).createPostIt(text,postitOwner);
     }
 
-    public boolean addTextToPostIT(Board board, int cellId, PostIt postIt, String info)
-    {
-        postIt.changePostItText(info);
-        return board.registerChangeInPostIt(cellId,postIt);
-    }
+   /*
 
     public boolean addImageToPostIT(Board board, int cellId, PostIt postIt, File image)
     {

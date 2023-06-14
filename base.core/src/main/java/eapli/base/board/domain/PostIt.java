@@ -1,5 +1,8 @@
 package eapli.base.board.domain;
 
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.authz.domain.model.Username;
+
 import javax.persistence.*;
 import java.io.File;
 import java.time.LocalDate;
@@ -23,7 +26,8 @@ public class PostIt {
     @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> changesInPostIt ;
 
-
+    //@OneToOne
+    //private SystemUser postitOwner;
 
     @Lob
     private String text;
@@ -34,6 +38,17 @@ public class PostIt {
 
     protected PostIt() {
     }
+
+    /*public PostIt(int cellId, SystemUser postitOwner) {
+        this.cellId = cellId;
+        this.postitOwner = postitOwner;
+        this.changesInPostIt = new ArrayList<>();
+        changesInPostIt.add(LocalDate.now());
+    }*/
+
+   /*public SystemUser getOwner() {
+        return postitOwner;
+    }*/
 
     public PostIt(int cellId) {
         this.cellId = cellId;
@@ -93,11 +108,6 @@ public class PostIt {
     public String getData() {
         return postItData;
     }
-
-    //TODO: IMPLEMENT
-    /*public String addContent(String data){
-        return this.postItData;
-    }*/
 
     public boolean hasData(){
         return this.postItData!=null;

@@ -1,5 +1,6 @@
 package eapli.board.client.presentation;
 
+import com.ibm.icu.impl.Pair;
 import eapli.board.client.application.CreatePostItController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
@@ -31,11 +32,10 @@ public class CreatePostItUI extends AbstractUI {
             //TODO: Check if user has that board
             ArrayList<String> boardRowColumn = controller.getBoardsList();
             ArrayList<String> arr = new ArrayList<>();
-            ArrayList<String> list = new ArrayList<>();
+            ArrayList<Pair<String,String>> list = new ArrayList<>();
             for (int i = 0; i < boardRowColumn.size(); i=i+3) {
                 arr.add(boardRowColumn.get(i));
-                list.add(boardRowColumn.get(i+1));
-                list.add(boardRowColumn.get(i+2));
+                list.add(Pair.of(boardRowColumn.get(i+1),boardRowColumn.get(i+2)));
             }
 
 
@@ -49,11 +49,10 @@ public class CreatePostItUI extends AbstractUI {
             }
             //ArrayList<String> list = controller.getRowsColumnsList();
 
-            //TODO: Check if all cells are occupied
             System.out.println("Choose a cell to allocate the Post-It");
             String position = Console.readLine(String.format("The Format used should be row,columns (Board has %s Rows and %s Columns):",
-                   list.get(index*3+1), list.get(index*3+2)));
-            if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index*3+1)), Integer.parseInt(list.get(index*3+2)))) {
+                   list.get(index).first, list.get(index).second));
+            if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index).first), Integer.parseInt(list.get(index).second))) {
                 System.out.println("Invalid Cell Id");
                 return false;
             }

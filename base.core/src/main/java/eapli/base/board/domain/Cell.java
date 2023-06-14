@@ -1,5 +1,7 @@
 package eapli.base.board.domain;
 
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,6 +32,16 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
+    /*public void assignPostIt(SystemUser postitOwner) {
+        this.postIt = new PostIt(this.cellId, postitOwner);
+    }
+
+    public void createPostIt(String text,SystemUser postitOwner) {
+        if (hasPostIt())
+            throw new IllegalStateException("Cell already has a PostIt");
+        new PostIt(this.cellId, postitOwner).alterPostItData(text);
+    }*/
+
     public void assignPostIt() {
         this.postIt = new PostIt(this.cellId);
     }
@@ -59,27 +71,8 @@ public class Cell implements Serializable {
 
 
     //TODO: add POSTIT owner
-/*
-    public List<PostIt> getPostIts(){return this.postIts;}
 
-    public boolean addPostIt(PostIt postIt)
-    {
-        return this.postIts.add(postIt);
-    }
 
-    public boolean undoLastChangeInPostIt(PostIt postIt)
-    {
-        if (!postIts.isEmpty()) {
-            int lastIndex = postIts.lastIndexOf(postIt);
-            if (lastIndex != -1) {
-                postIts.remove(lastIndex);
-                postIt.undoLastChangeInPostIt();
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }*/
 
     @Override
     public boolean equals(Object o) {
@@ -96,9 +89,11 @@ public class Cell implements Serializable {
         return Objects.hash(row, column);
     }
 
-    //TODO: implement
     public boolean hasPostIt() {
-        return this.postIt!=null;
+        if(this.postIt != null)
+            return true;
+        else
+            return false;
     }
 
 }

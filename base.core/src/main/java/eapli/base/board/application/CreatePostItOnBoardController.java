@@ -1,16 +1,12 @@
 package eapli.base.board.application;
 
-import eapli.base.board.dto.BoardParticipantDTO;
-
-import java.util.List;
-
 public class CreatePostItOnBoardController {
 
-    private final PostItService svc;
+   // private final PostItService svc;
 
     public CreatePostItOnBoardController()
     {
-        this.svc = new PostItService();
+        //this.svc = new PostItService();
     }
 /*
     public List<BoardParticipantDTO> listBoardUserLoggedParticipates() {
