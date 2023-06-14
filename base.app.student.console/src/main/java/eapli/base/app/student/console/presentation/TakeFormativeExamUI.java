@@ -28,11 +28,11 @@ public class TakeFormativeExamUI implements Action {
             NetTools.browseURL(new URI(url));
             System.out.printf("Formative exams are to be answered in a web page,\n"
                     + "which should've already opened in your default browser\n"
-                    + "\nIf not, open %s in your prefered web browser\n", url);
+                    + "\nIf not, open %s in your preferred web browser\n", url);
         } catch (IOException | URISyntaxException e) {
             System.out.printf("Failed to open the URL\n"
                     + "You can still take your formative exams by opening %s "
-                    + "in your prefered browser\n", url);
+                    + "in your preferred browser\n", url);
         }
 
         return false;
