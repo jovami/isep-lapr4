@@ -2,7 +2,7 @@ package eapli.board.server.application.newChangeEvent;
 
 import eapli.base.board.domain.Board;
 import eapli.board.SBProtocol;
-import eapli.board.client.ClientServer;
+import eapli.board.client.ClientServerAjax;
 import eapli.board.server.domain.Client;
 import eapli.framework.domain.events.DomainEvent;
 import eapli.framework.infrastructure.pubsub.EventHandler;
@@ -14,9 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class NewChangeWatchDog implements EventHandler {
-    public static HashMap<Board, List<Client>> subs = new HashMap<>();
-
-
+    public static HashMap<String, ArrayList<Client>> subs = new HashMap<>();
     @Override
     public void onEvent(DomainEvent domainEvent) {
 
@@ -27,11 +25,13 @@ public class NewChangeWatchDog implements EventHandler {
         NewChangeEvent event = (NewChangeEvent) domainEvent;
 
         SBProtocol send = event.message();
-        Board board = event.boardChanged();
+        String board = event.boardChanged();
 
+        if (subs.get(board)==null)
+            return;
         for (Client m : subs.get(board)) {
             try {
-                sock = new Socket(m.inetAddress(), ClientServer.LISTEN_SERVER);
+                sock = new Socket(m.inetAddress(), ClientServerAjax.LISTEN_SERVER);
                 SendMessageThread th = new SendMessageThread(sock,send);
                 th.start();
             } catch (IOException e) {
@@ -40,13 +40,13 @@ public class NewChangeWatchDog implements EventHandler {
         }
     }
 
-    public synchronized static void addSub(Board board, Client c){
-        List<Client> tmp = subs.get(board);
-        if(tmp==null){
-            subs.put(board,new ArrayList<>());
-            tmp = subs.get(board);
+    public synchronized static void addSub(String board, Client c){
+        if (subs.get(board)==null){
+            subs.put(board, new ArrayList<>());
         }
-        tmp.add(c);
+        subs.get(board).add(c);
+        System.out.println(subs.get(board).get(0).getUserLoggedIn().username().toString());
+
     }
     public synchronized static void removeSub(Board board, Client c){
         List<Client> tmp = subs.get(board);

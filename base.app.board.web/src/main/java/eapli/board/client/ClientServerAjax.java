@@ -12,18 +12,19 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class ClientServer extends Thread {
+public class ClientServerAjax extends Thread {
     private final int HEADER_SIZE = 3;
     public static final int HTTP_PORT = 7000;
     //PASS PORT BY PROTOCOL??
     public static final int LISTEN_SERVER = 7010;
-    private final String[] dataContent;
+    //For each board
+    private static String[] dataContent;
     private final int cols;
     private final String title;
     private final int rows;
 
-    public ClientServer(String[] board) {
-        this.dataContent = board;
+    public ClientServerAjax(String[] board) {
+        dataContent = board;
         this.title = dataContent[0];
         this.rows = Integer.parseInt(dataContent[1]);
         this.cols = Integer.parseInt(dataContent[2]);
@@ -31,6 +32,8 @@ public class ClientServer extends Thread {
 
     @Override
     public void run() {
+        ClientServerChanges cliServ = new ClientServerChanges(dataContent);
+        cliServ.start();
         try {
             //test
             dataContent[10] = "test10";
@@ -46,17 +49,33 @@ public class ClientServer extends Thread {
 
             Socket cliSock = serverSock.accept();
             setHttpConection(html, cliSock);
-
-            /*
-            while (true){
+            int i = 0;
+            while (true) {
                 //handle with AJAX each one of the requests
                 cliSock = serverSock.accept();
-            }*/
+
+                HTTPMessage m = new HTTPMessage(new DataInputStream(cliSock.getInputStream()));
+
+                DataOutputStream outS = new DataOutputStream(cliSock.getOutputStream());
+
+                if (m.getMethod().equals("GET")) {
+                    if (m.getURI().startsWith("/board")) {
+                        //handle statically
+                        m.setContentFromString(generateBoardHtml(), "text/html");
+                        m.setResponseStatus("200 OK");
+                    }
+                }
+                m.send(outS);
+                i++;
+            }
 
         } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    private void addPostIt(int i) {
+        dataContent[3+i] = ("post-it: "+i);
     }
 
     private static void setHttpConection(String html, Socket cliSock) throws IOException {
@@ -94,13 +113,19 @@ public class ClientServer extends Thread {
     private String generateBoardHtml() {
         int idx = HEADER_SIZE;
         StringBuilder html = new StringBuilder();
-        //FIXME: properly generate HTML
 
         html.append("<!DOCTYPE html>\n");
-
+        //CSS
         html.append(getStyles());
 
-        html.append("<table>");
+        //TODO
+        //html.append("<body onload=\"refreshBoard("+title+")/>");
+        html.append("<body onload=\"refreshBoard()\"/>");
+
+        //set table URI
+        //html.append("<table id = \"board\\"+title+"\">");
+        html.append("<table id = \"board\">");
+        //html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
         html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
         for (int i = 0; i < cols; i++) {
             html.append("<td class=\"headers\">" + (i + 1) + "</td>\n");
@@ -124,8 +149,44 @@ public class ClientServer extends Thread {
             html.append("</tr>\n");
         }
         html.append("</table>\n");
+        html.append("</body");
         html.append("</html>");
+
+        scriptsJs(html);
         return html.toString();
+    }
+
+    private static void scriptsJs(StringBuilder html) {
+        html.append("<script>");
+        //html.append("function refreshBoard(boardTitle) {\n" +
+        html.append("function refreshBoard() {\n" +
+                "    var request = new XMLHttpRequest();\n" +
+                //"        var vBoard=document.getElementById(\"board\\\"+boardTitle);\n" +
+                "        var vBoard=document.getElementById(\"board\");\n" +
+                "\n" +
+                "        request.onload = function() {\n" +
+                "            vBoard.innerHTML = this.responseText;\n" +
+                "            vBoard.style.color=\"black\";\n" +
+                "            setTimeout(refreshBoard, 2000);\n" +
+                "            };\n" +
+                "\n" +
+                "        request.ontimeout = function() {\n" +
+                "            vBoard.innerHTML = \"Server timeout, still trying ...\";\n" +
+                "            vBoard.style.color=\"red\";\n" +
+                "            setTimeout(refreshBoard, 100);\n" +
+                "        };\n" +
+                "\n" +
+                "        request.onerror = function() {\n" +
+                "            vBoard.innerHTML = \"No server reply, still trying ...\";\n" +
+                "            vBoard.style.color=\"red\";\n" +
+                "            setTimeout(refreshBoard, 5000);\n" +
+                "        };\n" +
+                "\n" +
+                "      request.open(\"GET\", \"/board\", true);\n" +
+                "    request.timeout = 5000;\n" +
+                "      request.send();\n" +
+                "    }");
+        html.append("</script>");
     }
 
     private String getStyles() {
@@ -223,6 +284,13 @@ public class ClientServer extends Thread {
                 "    padding: 10px;\n" +
                 "    background-color: #E6E6FA;\n" +
                 "}";
+    }
+
+    public static void setDataContent(String[] dataContent) {
+        ClientServerAjax.dataContent = dataContent;
+    }
+    public static void addCell(int col, int row, String info) {
+        dataContent[3+(col*row)-1] = info;
     }
 }
 

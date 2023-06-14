@@ -24,9 +24,7 @@ public class DisconnRequestController {
 
     public boolean disconn() {
         boolean disconnected;
-
         do {
-
             try {
                 sock = new Socket(serverIP, serverPort);
                 inS = new DataInputStream(sock.getInputStream());

@@ -13,10 +13,14 @@ import eapli.framework.validations.Preconditions;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Optional;
 
 
 public class AuthRequestHandler implements Runnable {
+    private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
     private DataOutputStream outS;
     private final Socket sock;
     private final SBProtocol authRequest;
@@ -56,9 +60,9 @@ public class AuthRequestHandler implements Runnable {
 
             if (!hasBoardPermissions(responseSent, systemUser, srv)) return;
 
-            logged = authenticateUser(logged, responseSent, systemUser);
+            String token = authenticateUser(logged, responseSent, systemUser);
 
-            if (!logged) {
+            if (token==null) {
                 responseSent.setCode(SBProtocol.ERR);
                 responseSent.send(outS);
                 System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
@@ -71,15 +75,25 @@ public class AuthRequestHandler implements Runnable {
 
     }
 
-    private boolean authenticateUser(boolean logged, SBProtocol responseSent, SystemUser systemUser) throws IOException {
+    private String authenticateUser(boolean logged, SBProtocol responseSent, SystemUser systemUser) throws IOException {
+
+
+        String token = generateNewToken();
         if (MenuRequest.addInetAddress(systemUser, sock.getInetAddress())) {
             System.out.printf("[AUTH] LOGGED IN: User: %s\tIP: %s\n",
                     systemUser.username(), sock.getInetAddress().toString());
-            responseSent.setCode(SBProtocol.ACK);
+            responseSent.setCode(SBProtocol.TOKEN);
+            responseSent.setContentFromString(token);
             responseSent.send(outS);
-            logged = true;
+            return token;
         }
-        return logged;
+        return null;
+    }
+
+    public static String generateNewToken() {
+        byte[] randomBytes = new byte[24];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 
     private boolean hasBoardPermissions(SBProtocol responseSent, SystemUser systemUser, ShareBoardService srv) throws IOException {

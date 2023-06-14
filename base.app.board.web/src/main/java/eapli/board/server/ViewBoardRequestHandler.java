@@ -8,8 +8,6 @@ import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
 import eapli.board.server.application.ShareBoardService;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
-import eapli.framework.infrastructure.pubsub.EventPublisher;
-import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
 import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
 
@@ -25,7 +23,6 @@ public class ViewBoardRequestHandler implements Runnable {
     private DataInputStream inS;
     private DataOutputStream outS;
     private SBProtocol request;
-    private EventPublisher dispatcher = InProcessPubSub.publisher();
 
     private BoardRepository repo = PersistenceContext.repositories().boards();
 
@@ -80,13 +77,10 @@ public class ViewBoardRequestHandler implements Runnable {
                 }
                 builder.append(" ").append('\0');
             }
-
-            System.out.println(builder.toString());
-
             html.setContentFromString(builder.toString());
             html.send(outS);
 
-            addSubsriber(opt.get(),sock.getInetAddress());
+            addSubsriber(opt.get().getBoardTitle().title(),sock.getInetAddress());
 
             sock.close();
         } catch (IOException | ReceivedERRCode e) {
@@ -94,7 +88,7 @@ public class ViewBoardRequestHandler implements Runnable {
         }
     }
 
-    private void addSubsriber(Board board, InetAddress inetAddress) {
+    private void addSubsriber(String board, InetAddress inetAddress) {
         NewChangeWatchDog.addSub(board, MenuRequest.clientBySock(inetAddress));
     }
 
@@ -131,7 +125,6 @@ public class ViewBoardRequestHandler implements Runnable {
         }
         String b = builder.toString();
         responseSent.setContentFromString(b);
-        System.out.println(b);
         return responseSent.send(outS);
     }
 }

@@ -1,7 +1,7 @@
 package eapli.board.client.application;
 
 import eapli.board.SBProtocol;
-import eapli.board.client.ClientServer;
+import eapli.board.client.ClientServerAjax;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
@@ -59,13 +59,15 @@ public class ViewBoardRequestController {
             int rows = Integer.parseInt(dataContent[1]);
             int cols = Integer.parseInt(dataContent[2]);
 
-
             if ((rows * cols) != dataContent.length - HEADER_SIZE) {
                 System.out.println("[WARNING] Data was corrupted when asking for board information");
             }
 
-            ClientServer cliServ = new ClientServer(dataContent);
-            cliServ.start();
+            //NEW thread that will
+            ClientServerAjax.setDataContent(dataContent);
+            ClientServerAjax cliServAjax = new ClientServerAjax(dataContent);
+            cliServAjax.start();
+
             sock.close();
 
         } catch (IOException ex) {

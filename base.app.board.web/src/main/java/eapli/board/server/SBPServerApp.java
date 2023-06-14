@@ -1,9 +1,9 @@
 package eapli.board.server;
 
 import eapli.base.app.common.console.BaseApplication;
-import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
@@ -81,6 +81,6 @@ public class SBPServerApp extends BaseApplication {
     @SuppressWarnings("unchecked")
     @Override
     protected void doSetupEventHandlers(final EventDispatcher dispatcher) {
-        dispatcher.subscribe(new NewChangeWatchDog(), NewUserRegisteredFromSignupEvent.class);
+        dispatcher.subscribe(new NewChangeWatchDog(), NewChangeEvent.class);
     }
 }

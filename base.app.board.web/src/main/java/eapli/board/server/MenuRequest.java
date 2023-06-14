@@ -1,11 +1,7 @@
 package eapli.board.server;
 
 import eapli.board.SBProtocol;
-import eapli.board.server.application.ArchiveBoardHandler;
-import eapli.board.server.application.AuthRequestHandler;
-import eapli.board.server.application.CreatePostItHandler;
-import eapli.board.server.application.DisconnRequestHandler;
-import eapli.board.server.application.ShareBoardHandler;
+import eapli.board.server.application.*;
 import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -41,6 +37,10 @@ public class MenuRequest extends Thread {
             //depending on the SBPMessageCode
 
             switch (request.getCode()) {
+                case SBProtocol.COMMTEST:
+                    CommTestRequestHandler commTest = new CommTestRequestHandler(sock, request);
+                    commTest.run();
+                    break;
                 case SBProtocol.AUTH:
                     AuthRequestHandler authRequest = new AuthRequestHandler(sock, request);
                     authRequest.run();

@@ -18,7 +18,7 @@ public class PostIt {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "DATA")
-    private byte[] postItData;
+    private String postItData;
 
     @ElementCollection(targetClass = LocalDate.class)
     private List<LocalDate> changesInPostIt ;
@@ -56,13 +56,13 @@ public class PostIt {
     }
 
     public void alterPostItData(String newData){
-        this.postItData = newData.getBytes();
+        this.postItData = newData;
     }
 
     //TODO: implent a service
     @Deprecated
     public void swapPostIts(PostIt postIt1, PostIt postIt2){
-        byte[] temp = postIt1.postItData;
+        String temp = postIt1.postItData;
         postIt1.postItData = postIt2.postItData;
         postIt2.postItData = temp;
     }
@@ -90,7 +90,7 @@ public class PostIt {
     }*/
 
 
-    public byte[] getData() {
+    public String getData() {
         return postItData;
     }
 

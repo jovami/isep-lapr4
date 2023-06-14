@@ -36,7 +36,7 @@ public class Cell implements Serializable {
     public void deletePostIt() {
         this.postIt = null;
     }
-    public byte[] getPostItData() {
+    public String getPostItData() {
         return this.postIt.getData();
     }
 
@@ -50,7 +50,8 @@ public class Cell implements Serializable {
     public void createPostIt(String text) {
         if (this.postIt != null)
             throw new IllegalStateException("Cell already has a PostIt");
-        new PostIt(this.cellId).alterPostItData(text);
+        this.postIt = new PostIt(this.cellId);
+        this.postIt.alterPostItData(text);
     }
     public PostIt getPostIt() {
         return this.postIt;

@@ -52,7 +52,7 @@ public class ShareBoardController {
 
         StringBuilder builder = new StringBuilder();
         for (Pair<String, BoardParticipantPermissions> pair : usersInvited) {
-            builder.append(pair.first).append(" ").append(pair.second.toString()).append('\0');
+            builder.append(pair.first).append("\\\\").append(pair.second.toString()).append('\0');
         }
         sendInvites.setContentFromString(builder.toString());
         sendInvites.send(outS);
@@ -75,7 +75,6 @@ public class ShareBoardController {
         //askBoardFromSocket
         SBProtocol chooseBoard = new SBProtocol();
         chooseBoard.setContentFromString(boardTitle);
-
         chooseBoard.send(outS);
 
         SBProtocol receiveUsers = new SBProtocol(inS);
@@ -84,4 +83,14 @@ public class ShareBoardController {
         return true;
     }
 
+    public void sockClose() {
+        do {
+            try {
+                sock.close();
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } while (true);
+    }
 }

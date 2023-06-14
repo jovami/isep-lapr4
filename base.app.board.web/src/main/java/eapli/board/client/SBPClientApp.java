@@ -4,6 +4,7 @@ import eapli.base.app.common.console.BaseApplication;
 import eapli.base.clientusermanagement.domain.events.NewUserRegisteredFromSignupEvent;
 import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
 import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.board.client.application.CommTestController;
 import eapli.board.client.application.DisconnRequestController;
 import eapli.board.client.presentation.AuthRequestUI;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
@@ -18,6 +19,7 @@ public class SBPClientApp extends BaseApplication {
     static private InetAddress serverIP;
     static private int serverPort;
     private static final String SEPARATOR_LABEL = "------------------------------";
+    private static String authToken;
 
     private SBPClientApp() {
     }
@@ -33,9 +35,18 @@ public class SBPClientApp extends BaseApplication {
         new SBPClientApp().run(args);
     }
 
+    public synchronized static void setToken(String content) {
+        authToken = content;
+    }
+    public synchronized static String authToken() {
+        return authToken;
+    }
+
     @Override
     protected void doMain(final String[] args) {
         parseArgs(args);
+
+        testConnection();
 
         //Before any action, the user is forced to login
         AuthRequestUI auth = new AuthRequestUI(serverIP, serverPort);
@@ -56,6 +67,19 @@ public class SBPClientApp extends BaseApplication {
         }
     }
 
+    private void testConnection() {
+        CommTestController ctrl = new CommTestController(serverIP, serverPort);
+
+        if (ctrl.commTest()) {
+            System.out.println(SEPARATOR_LABEL);
+            System.out.println(SEPARATOR_LABEL + "\nConnected to SBServer\n");
+            System.out.println(SEPARATOR_LABEL);
+        } else {
+            System.out.println(SEPARATOR_LABEL);
+            System.out.println(SEPARATOR_LABEL + "\nUnsuccessfully Disconnected from SBP server\n");
+            System.out.println(SEPARATOR_LABEL);
+        }
+    }
 
     private static void disconnect() {
         DisconnRequestController ctrl = new DisconnRequestController(serverIP, serverPort);
@@ -64,11 +88,9 @@ public class SBPClientApp extends BaseApplication {
             System.out.println(SEPARATOR_LABEL);
             System.out.println(SEPARATOR_LABEL + "\nDisconnected Successfully from SBP server\n");
             System.out.println(SEPARATOR_LABEL);
-            System.out.println(SEPARATOR_LABEL);
         } else {
             System.out.println(SEPARATOR_LABEL);
             System.out.println(SEPARATOR_LABEL + "\nUnsuccessfully Disconnected from SBP server\n");
-            System.out.println(SEPARATOR_LABEL);
             System.out.println(SEPARATOR_LABEL);
         }
         endMessage();

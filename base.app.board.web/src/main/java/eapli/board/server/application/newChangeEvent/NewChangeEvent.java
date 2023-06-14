@@ -1,18 +1,16 @@
 package eapli.board.server.application.newChangeEvent;
 
-import eapli.base.board.domain.Board;
 import eapli.board.SBProtocol;
 import eapli.framework.domain.events.DomainEventBase;
-
 public class NewChangeEvent extends DomainEventBase {
-    private Board board;
+    private String board;
     private SBProtocol message;
-    public NewChangeEvent(Board board, SBProtocol message){
+    public NewChangeEvent(String board, SBProtocol message){
         this.board = board;
         this.message = message;
     }
 
-    public Board boardChanged(){
+    public String boardChanged(){
         return this.board;
     }
     public SBProtocol message(){

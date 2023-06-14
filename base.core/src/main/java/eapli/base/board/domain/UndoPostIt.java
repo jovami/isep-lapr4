@@ -32,7 +32,7 @@ public class UndoPostIt extends BoardHistory{
     }
 
 
-    public byte[] getPostItData() {
+    public String getPostItData() {
         return postIt.getData();
     }
 

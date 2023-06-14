@@ -51,7 +51,6 @@ public class ShareBoardHandler implements Runnable {
         try {
 
             SystemUser owner = MenuRequest.clientBySock(sock.getInetAddress()).getUserLoggedIn();
-
             StringBuilder builder = new StringBuilder();
             List<Board> boards = srv.listBoardsUserOwns(owner);
 
@@ -83,10 +82,10 @@ public class ShareBoardHandler implements Runnable {
             Optional<SystemUser> optUser;
             String[] str;
             String username, permStr;
-            BoardParticipantPermissions perm=null;
+            BoardParticipantPermissions perm;
 
             for (String user : List.of(receiveInvited.getContentAsString().split("\0"))) {
-                str = user.split(" ");
+                str = user.split("\\\\");
                 username = str[0];
                 permStr = str[1];
 
@@ -129,7 +128,6 @@ public class ShareBoardHandler implements Runnable {
         for (SystemUser user : users) {
             builder.append(user.username().toString()).append('\0');
         }
-        //sendBoards.setCode();
         sendUsers.setContentFromString(builder.toString());
         sendUsers.send(outS);
         return true;
@@ -147,9 +145,6 @@ public class ShareBoardHandler implements Runnable {
             for (Board b : boards) {
                 builder.append(b.getBoardTitle().title()).append('\0');
             }
-            //sendBoards.setCode(SBPMessage.SEND_BOARDS);
-            String send = builder.toString();
-            //sendBoards.setCode(255);
             sendBoards.setContentFromString(builder.toString());
         }
         sendBoards.send(outS);

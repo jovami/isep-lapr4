@@ -6,8 +6,11 @@ import java.io.*;
 
 public class SBProtocol implements MessageProtocol{
     private static final Integer SBPRROTOCOL_VERSION = 1;
+    private static final int CR=13;
+
     private Integer code;
     private Integer dataLength;
+   // private String authToken;
     private byte[] content;
 
     //TODO: CODE FOR EACH request/response?? or for each of the actions??
@@ -28,6 +31,7 @@ public class SBProtocol implements MessageProtocol{
     public static final int GET_BOARDS_OWNED_ARCHIVED = 12;
     public static final int CREATE_POST_IT = 13;
     public static final int SEND_POST_IT_INFO = 14;
+    public static final int TOKEN = 15;
 
 
     public SBProtocol(DataInputStream in) throws IOException, ReceivedERRCode {
@@ -36,10 +40,16 @@ public class SBProtocol implements MessageProtocol{
         boolean isCompatible = (SBPRROTOCOL_VERSION == parseByte(in.readByte()));
 
         if (isCompatible) {
+            //TODO: swap in.readByte() to in.read()
             code = parseByte(in.readByte());
-            dataLength = readLength(in.readByte(), in.readByte());
+            dataLength = parseLength(in.readByte(), in.readByte());
             content = new byte[dataLength];
 
+            if (code>SBProtocol.AUTH && code != SBProtocol.TOKEN){
+                //authToken=readToken(in);
+            }else {
+                //authToken=null;
+            }
             in.readFully(content, 0, dataLength);
 
             if (code == SBProtocol.ERR && dataLength != 0) {
@@ -51,6 +61,19 @@ public class SBProtocol implements MessageProtocol{
             throw new IllegalArgumentException("Incompatible Message Version");
         }
     }
+
+    private String readToken(DataInputStream in) throws IOException {
+        String ret="";
+        int val;
+        do {
+            val=in.read();
+            if(val==-1)
+                throw new IOException();
+            if(val!=CR)
+                ret=ret+(char)val;
+        } while(val!=CR);
+
+        return ret;    }
 
     public SBProtocol() {
         code = -1;
@@ -93,11 +116,20 @@ public class SBProtocol implements MessageProtocol{
         return content;
     }
 
-    private Integer readLength(byte b1, byte b2) {
+    private Integer parseLength(byte b1, byte b2) {
         int dataLength1 = parseByte(b1);
         int dataLength2 = parseByte(b2);
         return dataLength1 + (dataLength2 * 256);
     }
+/*
+    public void setToken(String token) {
+        this.authToken = token;
+    }
+
+    public String token() {
+        System.out.println("Token:<"+authToken+">");
+        return this.authToken;
+    }*/
 
 
     public boolean send(DataOutputStream out) throws IOException {
@@ -124,16 +156,23 @@ public class SBProtocol implements MessageProtocol{
             byte b_2 = (byte) (dataLength / 256);
             out.write(b_1);
             out.write(b_2);
-            if ((content != null)) {
-                out.write(content, 0, dataLength);
-            }
         } else {
             out.write((byte) 0);
             out.write((byte) 0);
         }
 
+ //       if (authToken!=null)
+//            writeToken(out);
+        if ((content != null)) {
+            out.write(content, 0, dataLength);
+        }
         return true;
     }
+/*
+    private void writeToken(DataOutputStream out) throws IOException {
+        out.write(authToken.getBytes());
+        out.write(CR);
+    }*/
 
 
     public void setContentFromString(String cStr) {

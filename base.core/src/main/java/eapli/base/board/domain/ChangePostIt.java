@@ -30,7 +30,7 @@ public class ChangePostIt extends BoardHistory{
         return postIt;
     }
 
-    public byte[] getPostItData() {
+    public String getPostItData() {
         return postIt.getData();
     }
 

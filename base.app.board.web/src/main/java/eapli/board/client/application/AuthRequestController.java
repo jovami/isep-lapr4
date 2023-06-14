@@ -1,6 +1,7 @@
 package eapli.board.client.application;
 
 import eapli.board.SBProtocol;
+import eapli.board.client.SBPClientApp;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
@@ -50,6 +51,7 @@ public class AuthRequestController {
 
         try {
             SBProtocol response = new SBProtocol(inS);
+            SBPClientApp.setToken(response.getContentAsString());
         } catch (IOException e){
             throw new RuntimeException(e);
         }catch (ReceivedERRCode e) {
