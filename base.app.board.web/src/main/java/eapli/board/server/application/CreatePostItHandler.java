@@ -1,15 +1,13 @@
 package eapli.board.server.application;
 
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.Cell;
+import eapli.base.board.domain.*;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
 import eapli.board.server.MenuRequest;
 import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
-import eapli.board.server.domain.BoardHistory;
+import eapli.board.server.domain.CreatePostIt;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
@@ -21,6 +19,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,8 +87,13 @@ public class CreatePostItHandler implements Runnable {
 
             alterText = arr[2];
 
+
+            //TODO: REMOVE DATABASE CALL FROM HERE
             Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(alterBoard));
 
+            if (optBoard.isEmpty()){
+                throw new ReceivedERRCode("Board not found");
+            }
             if(checkIfAllCellsAreOccupied(optBoard.get()))
             {
                 SBProtocol boardFull = new SBProtocol();
@@ -99,22 +103,32 @@ public class CreatePostItHandler implements Runnable {
                 return;
             }
 
+            if (checkIfCellIsOccupied(optBoard.get(),alterPosition))
+            {
+                System.out.println("oi2");
+                SBProtocol cellOccupied = new SBProtocol();
+                cellOccupied.setCode(SBProtocol.ERR);
+                cellOccupied.setContentFromString("Cell occupied");
+                cellOccupied.send(outS);
+                return;
+            }
+
 
             String[] dimensions = arr[1].split(",");
-            if (optBoard.isEmpty()){
-                throw new ReceivedERRCode("Board not found");
-            }
+
 
             srv_postIt.createPostIt(optBoard.get(),
                             Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1])-1,
                                         alterText,user);
 
             StringBuilder sb = getStringBuilder();
-            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get());
-            history.add(sb.toString());
+            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard.get());
+            CreatePostIt createPostIt = new CreatePostIt(optBoard.get(),String.valueOf(sb));
+            history.push(createPostIt);
 
             NewChangeEvent event = new NewChangeEvent(optBoard.get().getBoardTitle().title(),receiveText);
             publisher.publish(event);
+
 
 
             SBProtocol response = new SBProtocol();
@@ -128,6 +142,14 @@ public class CreatePostItHandler implements Runnable {
         }
 
 
+    }
+
+    private boolean checkIfCellIsOccupied(Board board, String alterPosition) {
+        String[] dimensions = alterPosition.split(",");
+        int row = Integer.parseInt(dimensions[0]);
+        int col = Integer.parseInt(dimensions[1]);
+        Cell cell = board.getCell(row*col);
+        return cell.hasPostIt();
     }
 
     private StringBuilder getStringBuilder() {

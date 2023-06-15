@@ -19,23 +19,19 @@ public class PostIt {
     @Column(name = "DATA")
     private String postItData;
 
-    @ElementCollection(targetClass = LocalDate.class)
-    private List<LocalDate> changesInPostIt ;
 
     @Transient
-    private SystemUser postitOwner;
+    private SystemUser postItOwner;
 
     protected PostIt() {
     }
 
-    public PostIt(SystemUser postitOwner) {
-        this.postitOwner = postitOwner;
-        this.changesInPostIt = new ArrayList<>();
-        changesInPostIt.add(LocalDate.now());
+    public PostIt(SystemUser postItOwner) {
+        this.postItOwner = postItOwner;
     }
 
    public SystemUser getOwner() {
-        return postitOwner;
+        return postItOwner;
     }
 
     public int getPostItId() {

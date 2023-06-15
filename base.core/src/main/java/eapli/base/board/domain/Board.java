@@ -4,9 +4,11 @@ import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +40,10 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     @ElementCollection
     private final List<BoardRow> boardRowList = new ArrayList<>();
+    @Transient
+    @Getter
+    private final LinkedList<BoardHistory> boardHistory= new LinkedList<>();
+
 
     protected Board() {
     }

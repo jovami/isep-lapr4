@@ -33,6 +33,10 @@ public class ViewBoardHistoryUI extends AbstractUI {
                 return false;
             }
             String[] history = controller.requestHistory(selec.selectedElement());
+            if (history == null) {
+                System.out.println("Error receiving history");
+                return false;
+            }
 
             System.out.println(header());
             for (String s : history) {
@@ -47,8 +51,8 @@ public class ViewBoardHistoryUI extends AbstractUI {
     }
 
     public String header() {
-        return String.format("  %-6s | %-10s |  %-5s  |    %-13s | %s",
-                "Type", "Title", "Cell", "Alter Time", "Text");
+        return String.format("  %-6s | %-10s |  %-5s  |    %-13s | %-20s | %s",
+                "Type", "Title", "Cell", "Alter Time", "Previous Text", "New Text");
     }
     @Override
     public String headline() {

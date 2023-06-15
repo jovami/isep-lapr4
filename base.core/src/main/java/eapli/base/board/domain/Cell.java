@@ -33,10 +33,10 @@ public class Cell implements Serializable {
     }
 
 
-    public void createPostIt(String text,SystemUser postitOwner) {
+    public void createPostIt(String text,SystemUser postItOwner) {
         if (hasPostIt())
             throw new IllegalStateException("Cell already has a PostIt");
-        this.postIt = new PostIt(postitOwner);
+        this.postIt = new PostIt(postItOwner);
         this.postIt.alterPostItData(text);
     }
 
@@ -75,10 +75,7 @@ public class Cell implements Serializable {
     }
 
     public boolean hasPostIt() {
-        if(this.postIt != null)
-            return true;
-        else
-            return false;
+        return this.postIt != null;
     }
 
 }

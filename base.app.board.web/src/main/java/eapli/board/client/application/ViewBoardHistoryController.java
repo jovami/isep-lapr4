@@ -30,8 +30,7 @@ public class ViewBoardHistoryController {
         try {
             requestAllBoard.send(outS);
             SBProtocol receiveBoards = new SBProtocol(inS);
-            System.out.println("received "+receiveBoards.getContentAsString());
-            return receiveBoards.getContentAsString().split(" ");
+            return receiveBoards.getContentAsString().split("/r");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,15 +47,12 @@ public class ViewBoardHistoryController {
 
             SBProtocol receivedHistory = new SBProtocol(inS);
             if (receivedHistory.getCode() != SBProtocol.VIEW_BOARD_HISTORY) {
-                System.out.println("there was an error");
                 return null;
             }
 
-            return receivedHistory.getContentAsString().split(" ");
+            return receivedHistory.getContentAsString().split("\r");
 
         } catch (IOException ex) {
-            System.out.println("Error closing socket.");
-            System.out.println("Application aborted.");
             return null;
         }
     }

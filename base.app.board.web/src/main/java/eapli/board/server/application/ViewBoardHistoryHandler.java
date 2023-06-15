@@ -1,18 +1,19 @@
 package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardHistory;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
-import eapli.board.server.domain.BoardHistory;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.Optional;
 
 public class ViewBoardHistoryHandler {
@@ -22,7 +23,7 @@ public class ViewBoardHistoryHandler {
 
     private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
 
-    public ViewBoardHistoryHandler(Socket socket, SBProtocol authRequest) {
+    public ViewBoardHistoryHandler(Socket socket, SBProtocol request) {
         this.sock = socket;
     }
 
@@ -41,14 +42,12 @@ public class ViewBoardHistoryHandler {
 
             for (Board b : boardRepository.findAll()) {
                 builder.append(b.getBoardTitle().title());
-                builder.append(" ");
+                builder.append("/r");
             }
             ;
             SBProtocol responseSent = new SBProtocol();
             responseSent.setContentFromString(builder.toString());
             responseSent.send(outS);
-
-
 
 
             SBProtocol receiveBoard = new SBProtocol(inS);
@@ -60,12 +59,12 @@ public class ViewBoardHistoryHandler {
             }
 
 
-            BoardHistory history = SBPServerApp.boardHistory.get(optBoard.get());
+            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard.get());
 
             StringBuilder historyBuilder = new StringBuilder();
-            for (String str :history.getHistory()) {
-                historyBuilder.append(str);
-                historyBuilder.append(" ");
+            for (BoardHistory bh : history) {
+                historyBuilder.append(bh.toString());
+                historyBuilder.append("\r");
             }
 
             SBProtocol response = new SBProtocol();
