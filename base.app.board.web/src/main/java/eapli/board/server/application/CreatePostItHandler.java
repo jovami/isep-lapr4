@@ -1,10 +1,10 @@
 package eapli.board.server.application;
 
-import eapli.base.board.domain.*;
-import eapli.base.board.repositories.BoardRepository;
-import eapli.base.infrastructure.persistence.PersistenceContext;
+import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardHistory;
+import eapli.base.board.domain.BoardTitle;
+import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
-import eapli.board.server.MenuRequest;
 import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.server.domain.CreatePostIt;
@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 public class CreatePostItHandler implements Runnable {
 
@@ -33,11 +32,8 @@ public class CreatePostItHandler implements Runnable {
     private String alterPosition;
     private String alterTime;
     private String alterText;
-
     private final EventPublisher publisher = InProcessPubSub.publisher();
-    private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
     private ShareBoardService srv_board;
-
     private PostItService srv_postIt;
 
     public CreatePostItHandler(Socket socket, SBProtocol authRequest) {
@@ -55,7 +51,7 @@ public class CreatePostItHandler implements Runnable {
         }
         try {
 
-            SystemUser user = MenuRequest.clientBySock(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser user = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();
             List<Board> boards = srv_board.listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(user);
@@ -87,14 +83,12 @@ public class CreatePostItHandler implements Runnable {
 
             alterText = arr[2];
 
+            Board optBoard = SBPServerApp.boards.get(BoardTitle.valueOf(alterBoard));
 
-            //TODO: REMOVE DATABASE CALL FROM HERE
-            Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(alterBoard));
-
-            if (optBoard.isEmpty()){
+            if (optBoard==null){
                 throw new ReceivedERRCode("Board not found");
             }
-            if(checkIfAllCellsAreOccupied(optBoard.get()))
+            if(checkIfAllCellsAreOccupied(optBoard))
             {
                 SBProtocol boardFull = new SBProtocol();
                 boardFull.setCode(SBProtocol.ERR);
@@ -103,9 +97,8 @@ public class CreatePostItHandler implements Runnable {
                 return;
             }
 
-            if (checkIfCellIsOccupied(optBoard.get(),alterPosition))
+            if (checkIfCellIsOccupied(optBoard,alterPosition))
             {
-                System.out.println("oi2");
                 SBProtocol cellOccupied = new SBProtocol();
                 cellOccupied.setCode(SBProtocol.ERR);
                 cellOccupied.setContentFromString("Cell occupied");
@@ -113,20 +106,17 @@ public class CreatePostItHandler implements Runnable {
                 return;
             }
 
-
             String[] dimensions = arr[1].split(",");
-
-
-            srv_postIt.createPostIt(optBoard.get(),
-                            Integer.parseInt(dimensions[0]) * Integer.parseInt(dimensions[1])-1,
+            srv_postIt.createPostIt(optBoard,
+                            Integer.parseInt(dimensions[0]),Integer.parseInt(dimensions[1]),
                                         alterText,user);
 
             StringBuilder sb = getStringBuilder();
-            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard.get());
-            CreatePostIt createPostIt = new CreatePostIt(optBoard.get(),String.valueOf(sb));
+            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard);
+            CreatePostIt createPostIt = new CreatePostIt(optBoard,String.valueOf(sb));
             history.push(createPostIt);
 
-            NewChangeEvent event = new NewChangeEvent(optBoard.get().getBoardTitle().title(),receiveText);
+            NewChangeEvent event = new NewChangeEvent(optBoard.getBoardTitle().title(),receiveText);
             publisher.publish(event);
 
 
@@ -136,8 +126,7 @@ public class CreatePostItHandler implements Runnable {
             response.send(outS);
 
 
-        } catch (
-                IOException | ReceivedERRCode e) {
+        } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }
 
@@ -148,7 +137,7 @@ public class CreatePostItHandler implements Runnable {
         String[] dimensions = alterPosition.split(",");
         int row = Integer.parseInt(dimensions[0]);
         int col = Integer.parseInt(dimensions[1]);
-        Cell cell = board.getCell(row*col);
+        Cell cell = board.getCell(row,col);
         return cell.hasPostIt();
     }
 

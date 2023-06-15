@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ClientServerChanges extends Thread {
-    public static final int LISTEN_SERVER = 7010;
-    private static String[] dataContent;
+import static eapli.board.client.ClientServerAjax.LISTEN_SERVER;
 
-    public ClientServerChanges(String[] board) {
-        dataContent = board;
+public class ClientServerChanges extends Thread {
+    //private static String[] dataContent;
+
+    public ClientServerChanges() {
     }
 
     @Override

@@ -3,14 +3,13 @@ package eapli.board.server.application;
 import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.board.SBProtocol;
-import eapli.board.server.MenuRequest;
+import eapli.board.server.SBPServerApp;
+import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.application.AuthenticationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.application.UserSession;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.validations.Preconditions;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.SecureRandom;
@@ -18,29 +17,20 @@ import java.util.Base64;
 import java.util.Optional;
 
 
-public class AuthRequestHandler implements Runnable {
-    private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
-    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
-    private DataOutputStream outS;
-    private final Socket sock;
-    private final SBProtocol authRequest;
+public class AuthRequestHandler extends AbstractSBServerHandler {
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private final MyUserService myUserService = new MyUserService();
     private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
 
     public AuthRequestHandler(Socket socket, SBProtocol authRequest) {
-        Preconditions.areEqual(authRequest.getCode(), SBProtocol.AUTH);
-        this.authRequest = authRequest;
-        this.sock = socket;
+        super(socket,authRequest);
     }
 
-
     public void run() {
-        boolean logged = false;
         try {
-            outS = new DataOutputStream(sock.getOutputStream());
 
-            String message = authRequest.getContentAsString();
-            String[] auth = message.split("\0");
+            String[] auth = request.getContentAsString().split("\0");
 
             String name = auth[0];
             String pass = auth[1];
@@ -49,6 +39,7 @@ public class AuthRequestHandler implements Runnable {
 
             SBProtocol responseSent = new SBProtocol();
             if (userSession.isEmpty()) {
+                System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
                 responseSent.setCode(SBProtocol.ERR);
                 responseSent.setContentFromString("User not recognized");
                 responseSent.send(outS);
@@ -58,34 +49,40 @@ public class AuthRequestHandler implements Runnable {
             SystemUser systemUser = myUserService.currentUser();
             ShareBoardService srv = new ShareBoardService();
 
-            if (!hasBoardPermissions(responseSent, systemUser, srv)) return;
-
-            String token = authenticateUser(logged, responseSent, systemUser);
-
-            if (token==null) {
-                responseSent.setCode(SBProtocol.ERR);
-                responseSent.send(outS);
+            if (!hasBoardPermissions(systemUser, srv)){
                 System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
+                responseSent.setCode(SBProtocol.ERR);
+                responseSent.setContentFromString("User do not has permission to access boards");
+                responseSent.send(outS);
+                return;
             }
 
-        } catch (
-                IOException e) {
+            //TODO: store token
+            authenticateUser(responseSent, systemUser);
+
+
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    private String authenticateUser(boolean logged, SBProtocol responseSent, SystemUser systemUser) throws IOException {
-
-
+    private String authenticateUser(SBProtocol responseSent, SystemUser systemUser) throws IOException {
         String token = generateNewToken();
-        if (MenuRequest.addInetAddress(systemUser, sock.getInetAddress())) {
+
+        //TODO:TOKEN
+        Client c = new Client(sock.getInetAddress(),systemUser);
+        if (SBPServerApp.activeAuths.putIfAbsent(sock.getInetAddress(),c)==null) {
             System.out.printf("[AUTH] LOGGED IN: User: %s\tIP: %s\n",
                     systemUser.username(), sock.getInetAddress().toString());
             responseSent.setCode(SBProtocol.TOKEN);
             responseSent.setContentFromString(token);
             responseSent.send(outS);
             return token;
+        } else {
+            responseSent.setCode(SBProtocol.ERR);
+            responseSent.setContentFromString("User already logged in");
+            responseSent.send(outS);
         }
         return null;
     }
@@ -96,20 +93,13 @@ public class AuthRequestHandler implements Runnable {
         return base64Encoder.encodeToString(randomBytes);
     }
 
-    private boolean hasBoardPermissions(SBProtocol responseSent, SystemUser systemUser, ShareBoardService srv) throws IOException {
-        if ((srv.listBoardsUserOwns(systemUser).isEmpty())
-                && (srv.getBoardsByParticipant(systemUser).isEmpty())) {
-
-            responseSent.setCode(SBProtocol.ERR);
-            responseSent.setContentFromString("User do not has permission to access boards");
-            responseSent.send(outS);
-            return false;
-        }
-        return true;
+    private boolean hasBoardPermissions(SystemUser systemUser, ShareBoardService srv) throws IOException {
+        return (!srv.listBoardsUserOwns(systemUser).isEmpty())
+                || (!srv.getBoardsByParticipant(systemUser).isEmpty());
     }
 
     //TODO: authService won't be a problem when multiple users trying to logIn????
-    private Optional<UserSession> authenticate(final String username, final String rawPassword) {
+    private synchronized Optional<UserSession> authenticate(final String username, final String rawPassword) {
         return authenticationService.authenticate(username, rawPassword, BaseRoles.allRoles());
     }
 }

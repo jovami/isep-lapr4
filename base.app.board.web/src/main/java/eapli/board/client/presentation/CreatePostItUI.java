@@ -16,11 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreatePostItUI extends AbstractUI {
-
-
     private final int serverPort;
     private final InetAddress serverIP;
-
 
     public CreatePostItUI(InetAddress address, int serverPort) {
         this.serverIP = address;
@@ -56,6 +53,7 @@ public class CreatePostItUI extends AbstractUI {
             System.out.println("Choose a cell to allocate the Post-It");
             String position = Console.readLine(String.format("The Format used should be row,columns (Board has %s Rows and %s Columns):",
                     list.get(index).first, list.get(index).second));
+
             if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index).first), Integer.parseInt(list.get(index).second))) {
                 System.out.println("Invalid Cell Id");
                 return false;
@@ -76,29 +74,10 @@ public class CreatePostItUI extends AbstractUI {
 
                 case 2:
                     File f = escolherFicheiro();
-                    content = f.getAbsolutePath();
+                    content = f.getAbsolutePath().replaceAll("\\\\","/");
                     content = "\"" + content + "\"";
                     break;
             }
-/*
-            String text;
-            do {
-                text = Console.readLine("Content to be added to Post-It\n( \"\"):");
-
-
-                //If image
-                if (text.startsWith("\"") && text.endsWith("\"")) {
-                    File f = new File(text.replaceAll("\"",""));
-
-                    if (!f.exists()) {
-                        System.out.println("[WARN] the following image path does not exist, please provide a valid one");
-                        text=null;
-                    }
-                }
-
-
-
-            } while (text==null);*/
 
             try {
                 String str = controller.
@@ -121,7 +100,7 @@ public class CreatePostItUI extends AbstractUI {
     }
 
     private static File escolherFicheiro() {
-        JFileChooser escolherFicheiro = new JFileChooser("base.app.board.web\\src\\main\\java\\eapli\\board\\www\\images");
+        JFileChooser escolherFicheiro = new JFileChooser("base.app.board.web/src/main/java/eapli/board/www/images");
         FileNameExtensionFilter extensao = new FileNameExtensionFilter(null,"jpg","svg","jpeg","png","gif","webp");
         escolherFicheiro.setFileFilter(extensao);
         escolherFicheiro.showOpenDialog(null);

@@ -4,10 +4,9 @@ import com.ibm.icu.impl.Pair;
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
-import eapli.board.server.MenuRequest;
+import eapli.board.server.SBPServerApp;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
@@ -23,13 +22,12 @@ import java.util.List;
 import java.util.Optional;
 
 
+//TODO: extends AbstractHandler
 public class ShareBoardHandler implements Runnable {
     private DataInputStream inS;
     private DataOutputStream outS;
     private Socket sock;
     private SBProtocol boardsRequest;
-    private BoardRepository boardRepository = PersistenceContext.repositories().boards();
-
     private UserRepository userRepo = PersistenceContext.repositories().users();
     private ShareBoardService srv;
 
@@ -50,7 +48,7 @@ public class ShareBoardHandler implements Runnable {
         }
         try {
 
-            SystemUser owner = MenuRequest.clientBySock(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
             StringBuilder builder = new StringBuilder();
             List<Board> boards = srv.listBoardsUserOwns(owner);
 
@@ -61,10 +59,10 @@ public class ShareBoardHandler implements Runnable {
             //receive board that the user wants to share
             SBProtocol receiveBoard = new SBProtocol(inS);
             String boardName = receiveBoard.getContentAsString();
-            Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(boardName));
+            Board optBoard =  SBPServerApp.boards.get(BoardTitle.valueOf(boardName));
 
             //if the board does not exist send ERR
-            if (optBoard.isEmpty()) {
+            if (optBoard==null) {
                 sendBoards.setCode(SBProtocol.ERR);
                 sendBoards.setContentFromString("Board not found");
                 sendBoards.send(outS);
@@ -72,7 +70,7 @@ public class ShareBoardHandler implements Runnable {
             }
 
             //Send users that are not yet invited
-            if (!sendUsersNotInvited( optBoard)) return;
+            if (!sendUsersNotInvited(optBoard)) return;
 
             //receive user to invite
             SBProtocol receiveInvited = new SBProtocol(inS);
@@ -104,7 +102,7 @@ public class ShareBoardHandler implements Runnable {
                 usersToInvite.add(Pair.of(optUser.get(),perm));
             }
 
-            srv.shareBoard(optBoard.get(), usersToInvite);
+            srv.shareBoard(optBoard, usersToInvite);
             sendResponse.setCode(SBProtocol.ACK);
             sendResponse.send(outS);
 
@@ -113,10 +111,10 @@ public class ShareBoardHandler implements Runnable {
         }
     }
 
-    private boolean sendUsersNotInvited(Optional<Board> optBoard) throws IOException {
+    private boolean sendUsersNotInvited(Board optBoard) throws IOException {
         StringBuilder builder;
         SBProtocol sendUsers = new SBProtocol();
-        List<SystemUser> users = srv.usersNotInvited(optBoard.get());
+        List<SystemUser> users = srv.usersNotInvited(optBoard);
         if (users.isEmpty()) {
             sendUsers.setCode(SBProtocol.ERR);
             sendUsers.setContentFromString("No users to invite");

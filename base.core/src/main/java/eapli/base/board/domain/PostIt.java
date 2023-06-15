@@ -3,9 +3,6 @@ package eapli.base.board.domain;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -30,7 +27,12 @@ public class PostIt {
         this.postItOwner = postItOwner;
     }
 
-   public SystemUser getOwner() {
+    public PostIt(SystemUser postItOwner, String data) {
+        this.postItOwner = postItOwner;
+        this.postItData = data;
+    }
+
+    public SystemUser getOwner() {
         return postItOwner;
     }
 
@@ -38,7 +40,7 @@ public class PostIt {
         return postItId;
     }
 
-    public void alterPostItData(String newData){
+    public synchronized void alterPostItData(String newData) {
         this.postItData = newData;
     }
 
@@ -71,8 +73,8 @@ public class PostIt {
         return postItData;
     }
 
-    public boolean hasData(){
-        return this.postItData!=null;
+    public boolean hasData() {
+        return this.postItData != null;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package eapli.base.board.domain;
 
-import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -32,17 +30,28 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
+    public void addPostIt(PostIt postIt) {
+        synchronized (this) {
+            if (hasPostIt()) {
+                throw new IllegalStateException("Cell already has a PostIt");
+            }
+            this.postIt = postIt;
 
-    public void createPostIt(String text,SystemUser postItOwner) {
-        if (hasPostIt())
-            throw new IllegalStateException("Cell already has a PostIt");
-        this.postIt = new PostIt(postItOwner);
-        this.postIt.alterPostItData(text);
+        }
+    }
+
+    public void removePostIt() {
+        synchronized (this) {
+            this.postIt = null;
+        }
     }
 
     public void deletePostIt() {
-        this.postIt = null;
+        synchronized (this) {
+            this.postIt = null;
+        }
     }
+
     public String getPostItData() {
         return this.postIt.getData();
     }
@@ -77,5 +86,6 @@ public class Cell implements Serializable {
     public boolean hasPostIt() {
         return this.postIt != null;
     }
+
 
 }

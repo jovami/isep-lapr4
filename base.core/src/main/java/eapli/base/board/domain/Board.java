@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "BOARD")
@@ -42,7 +41,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     private final List<BoardRow> boardRowList = new ArrayList<>();
     @Transient
     @Getter
-    private final LinkedList<BoardHistory> boardHistory= new LinkedList<>();
+    private final LinkedList<BoardHistory> boardHistory = new LinkedList<>();
 
 
     protected Board() {
@@ -106,7 +105,9 @@ public class Board implements AggregateRoot<BoardTitle> {
         return cells;
     }
 
-    public Cell getCell(int cellIndex){return cells.get(cellIndex);};
+    public Cell getCell(int row, int col) {
+        return cells.get(((row - 1) * col) + (col - 1));
+    }
 
     public List<BoardColumn> getBoardColumnList() {
         return boardColumnList;
@@ -150,32 +151,24 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-    /*public PostIt createPostIt(int cellId)
-    {
-        PostIt postIt = new PostIt(cellId);
-        cells.get(cellId).addPostIt(postIt);
-        return postIt;
-    }*/
 
-    public boolean registerChangeInPostIt(int cellId, PostIt postIt)
-    {
-        //return cells.get(cellId).addPostIt(postIt);
-        return false;
+    public void movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
+        //if newCellId has not a post it assigned
+
+        Cell from = getCell(rowFrom,colFrom);
+        Cell to = getCell(rowTo,colTo);
+
+        synchronized(from){
+            synchronized(to){
+                PostIt tmp = from.getPostIt();
+                from.removePostIt();
+                to.addPostIt(tmp);
+            }
+        }
+
+
     }
 
-
-    /*
-     * public void movePostIt(int newCellId, PostIt postIt) {
-     * //if newCellId has not a post it assigned
-     *
-     * if (!hasCellPostIt(newCellId)) {
-     * postIt.alterCell(newCellId);
-     * } else
-     * System.out.println("Cell Already Occupied");
-     *
-     *
-     * }
-     */
 
     @Override
     public boolean sameAs(Object other) {
