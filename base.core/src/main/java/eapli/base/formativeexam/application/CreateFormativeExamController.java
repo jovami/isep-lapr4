@@ -47,14 +47,14 @@ public class CreateFormativeExamController {
         return new AvailableCourseDTOMapper().toDTO(this.staffRepo.nonClosedAndTaughtBy(teacher));
     }
 
-    public boolean createFormativeExam(AvailableCourseDTO courseDTO, File file) throws IOException {
+    public boolean createFormativeExam(String title, AvailableCourseDTO courseDTO, File file) throws IOException {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
 
         var course = this.courseRepo.ofIdentity(courseDTO.courseId())
                 .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
         var validator = GrammarContext.grammarTools().formativeExamValidator();
-        Optional<FormativeExam> fexam = new FormativeExamFactory(validator).build(course, file);
+        Optional<FormativeExam> fexam = new FormativeExamFactory(validator).build(title, course, file);
 
         fexam.ifPresent(this.repo::save);
         return fexam.isPresent();

@@ -2,6 +2,7 @@ package eapli.base.formativeexam.application;
 
 import java.util.List;
 
+import eapli.base.formativeexam.domain.FormativeExamTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public final class TakeFormativeExamController {
     public ResponseEntity<ExamToBeTakenDTO> generateFormativeExam(@RequestBody FormativeExamDTO examDTO) {
         this.authz.ensureLoggedInWithRoles(BaseRoles.STUDENT);
 
-        var exam = this.fexamRepo.ofIdentity(examDTO.getExamId())
+        var exam = this.fexamRepo.ofIdentity(FormativeExamTitle.valueOf(examDTO.getExamName()))
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Could not find requested formative exam"));

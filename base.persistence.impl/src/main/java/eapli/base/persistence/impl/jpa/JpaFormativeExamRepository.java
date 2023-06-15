@@ -4,16 +4,17 @@ import java.util.Set;
 
 import eapli.base.course.domain.Course;
 import eapli.base.formativeexam.domain.FormativeExam;
+import eapli.base.formativeexam.domain.FormativeExamTitle;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
 
 /**
  * JpaFormativeExamRepository
  */
-class JpaFormativeExamRepository extends BaseJpaRepositoryBase<FormativeExam, Long, Long>
+class JpaFormativeExamRepository extends BaseJpaRepositoryBase<FormativeExam, Long, FormativeExamTitle>
         implements FormativeExamRepository {
 
     JpaFormativeExamRepository(String identityFieldName) {
-        super(identityFieldName, "id");
+        super(identityFieldName, "title");
     }
 
     @Override

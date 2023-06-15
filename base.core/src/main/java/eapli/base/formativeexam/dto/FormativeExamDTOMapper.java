@@ -10,7 +10,7 @@ public final class FormativeExamDTOMapper implements Mapper<FormativeExam, Forma
 
     @Override
     public FormativeExamDTO toDTO(FormativeExam exam) {
-        return new FormativeExamDTO(exam.identity(), "Formative Exam", exam.course().identity().id());
+        return new FormativeExamDTO(exam.identity().title(), exam.course().identity().id());
     }
 
 }

@@ -6,7 +6,7 @@
     import { examStore } from "../store";
     import { push } from "svelte-spa-router";
 
-    type ExamInfo = { examId: number; examName: string; courseName: string };
+    type ExamInfo = { examName: string; courseName: string };
 
     const prefix: string = "/formative";
 

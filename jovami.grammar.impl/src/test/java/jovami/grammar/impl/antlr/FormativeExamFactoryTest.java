@@ -20,6 +20,7 @@ import eapli.base.formativeexam.domain.FormativeExamFactory;
  */
 public class FormativeExamFactoryTest {
     private Course FISICA = null;
+    private final String TITLE = "Teste";
 
     private FormativeExamFactory factory;
 
@@ -59,7 +60,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        var fexam = this.factory.build(FISICA, spec);
+        var fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isEmpty(), "Specification must have a title");
     }
 
@@ -76,7 +77,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        var fexam = this.factory.build(FISICA, spec);
+        var fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isEmpty(), "Specification must have at least one section");
 
         // @formatter:off
@@ -98,7 +99,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        fexam = this.factory.build(FISICA, spec);
+        fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isPresent(), "Specification had one section but still failed parsing");
 
         // @formatter:off
@@ -132,7 +133,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        fexam = this.factory.build(FISICA, spec);
+        fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isPresent(), "Specification had two section but still failed parsing");
     }
 
@@ -152,7 +153,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        var fexam = this.factory.build(FISICA, spec);
+        var fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isEmpty(), "Specification must have a title");
     }
 
@@ -235,7 +236,7 @@ public class FormativeExamFactoryTest {
         }
 
         specs.stream()
-                .map(spec -> this.factory.build(FISICA, spec))
+                .map(spec -> this.factory.build(TITLE, FISICA, spec))
                 .forEach(fexam -> assertTrue(fexam.isPresent(), "Specification must have a title"));
     }
 
@@ -268,7 +269,7 @@ public class FormativeExamFactoryTest {
                 "}");
         // @formatter:on
 
-        var fexam = this.factory.build(FISICA, spec);
+        var fexam = this.factory.build(TITLE, FISICA, spec);
         assertTrue(fexam.isEmpty(), "Sections must have valid question types");
     }
 }

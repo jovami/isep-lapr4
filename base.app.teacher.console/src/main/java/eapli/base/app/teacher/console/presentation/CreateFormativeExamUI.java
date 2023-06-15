@@ -40,8 +40,14 @@ public class CreateFormativeExamUI extends AbstractUI {
             return false;
         }
 
+        var title = Console.readLine("Formative Exam title: ");
+        if (title == null || title.isEmpty()) {
+            System.out.println("Title can't be empty");
+            return false;
+        }
+
         try {
-            if (this.ctrl.createFormativeExam(chosen, file))
+            if (this.ctrl.createFormativeExam(title, chosen, file))
                 System.out.println("Formative exam created with success");
             else
                 System.out.println("Error parsing the Specification file");

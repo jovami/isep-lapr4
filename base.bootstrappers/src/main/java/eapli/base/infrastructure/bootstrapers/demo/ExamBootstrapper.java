@@ -110,7 +110,7 @@ public class ExamBootstrapper implements Action {
 
         logger.info("Bootstrapping formative exam '{}' for course '{}'", spec.getName(), c.identity());
 
-        var fexam = new FormativeExamFactory(svc).build(c, spec).orElseThrow();
+        var fexam = new FormativeExamFactory(svc).build(spec.getName().replace(".fexam", ""), c, spec).orElseThrow();
 
         this.repos.formativeExams().save(fexam);
     }

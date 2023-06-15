@@ -35,13 +35,15 @@ public final class FormativeExamFactory {
      *
      * @throws IOException if an error occurs when reading the file contents
      */
-    public Optional<FormativeExam> build(Course c, File specFile) throws IOException {
+    public Optional<FormativeExam> build(String title, Course c, File specFile) throws IOException {
         if (!this.svc.validate(specFile))
             return Optional.empty();
 
+        var id = FormativeExamTitle.valueOf(title);
+
         var spec = new FormativeExamSpecification(readFileToString(specFile, StandardCharsets.UTF_8));
 
-        return Optional.of(new FormativeExam(c, spec));
+        return Optional.of(new FormativeExam(id, c, spec));
 
     }
 
@@ -58,14 +60,16 @@ public final class FormativeExamFactory {
      * @apiNote The strings contained in the list need not be terminated
      *          by a new line
      */
-    public Optional<FormativeExam> build(Course c, List<String> specLines) {
+    public Optional<FormativeExam> build(String title, Course c, List<String> specLines) {
         var fullSpec = specLines.stream()
                 .collect(Collectors.joining("\n"));
 
         if (!this.svc.validate(fullSpec))
             return Optional.empty();
 
-        return Optional.of(new FormativeExam(c, new FormativeExamSpecification(fullSpec)));
+        var id = FormativeExamTitle.valueOf(title);
+
+        return Optional.of(new FormativeExam(id, c, new FormativeExamSpecification(fullSpec)));
     }
 
 }

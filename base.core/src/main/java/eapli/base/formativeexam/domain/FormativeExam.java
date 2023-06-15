@@ -1,13 +1,6 @@
 package eapli.base.formativeexam.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
@@ -17,11 +10,10 @@ import eapli.framework.validations.Preconditions;
  * FormativeExam
  */
 @Entity
-public class FormativeExam implements AggregateRoot<Long> {
+public class FormativeExam implements AggregateRoot<FormativeExamTitle> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @EmbeddedId
+    private FormativeExamTitle title;
 
     @Embedded
     @Column(unique = true, nullable = false)
@@ -37,9 +29,10 @@ public class FormativeExam implements AggregateRoot<Long> {
         this.course = null;
     }
 
-    protected FormativeExam(Course course, FormativeExamSpecification spec) {
-        Preconditions.noneNull(course, spec);
+    protected FormativeExam(FormativeExamTitle title, Course course, FormativeExamSpecification spec) {
+        Preconditions.noneNull(title, course, spec);
 
+        this.title = title;
         this.course = course;
         this.spec = spec;
     }
@@ -52,6 +45,10 @@ public class FormativeExam implements AggregateRoot<Long> {
         return this.course;
     }
 
+    public FormativeExamTitle title() {
+        return this.title;
+    }
+
     @Override
     public boolean sameAs(Object other) {
         if (this == other)
@@ -60,12 +57,13 @@ public class FormativeExam implements AggregateRoot<Long> {
             return false;
 
         var o = (FormativeExam) other;
-        return this.spec.equals(o.spec)
+        return this.title.equals(o.title)
+                && this.spec.equals(o.spec)
                 && this.course.sameAs(o.course);
     }
 
     @Override
-    public Long identity() {
-        return this.id;
+    public FormativeExamTitle identity() {
+        return this.title;
     }
 }

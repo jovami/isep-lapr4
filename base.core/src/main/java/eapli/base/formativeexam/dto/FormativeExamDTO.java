@@ -14,9 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FormativeExamDTO {
 
-    @Deprecated
-    private Long examId;
-
     private String examName;
     private String courseName;
 

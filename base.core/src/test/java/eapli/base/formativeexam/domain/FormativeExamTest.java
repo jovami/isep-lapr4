@@ -19,6 +19,7 @@ import eapli.base.course.dto.CreateCourseDTO;
 public class FormativeExamTest {
 
     private Course MATEMATICA = null;
+    private final FormativeExamTitle TITLE = FormativeExamTitle.valueOf("Teste");
 
     @Before
     public void buildCourse() {
@@ -50,13 +51,13 @@ public class FormativeExamTest {
          */
         var spec = new FormativeExamSpecification("test");
 
-        assertThrows(IllegalArgumentException.class, () -> new FormativeExam(null, spec));
+        assertThrows(IllegalArgumentException.class, () -> new FormativeExam(TITLE, null, spec));
 
-        assertDoesNotThrow(() -> new FormativeExam(MATEMATICA, spec));
+        assertDoesNotThrow(() -> new FormativeExam(TITLE, MATEMATICA, spec));
     }
 
     @Test
     public void ensureMustHaveSpecifiaction() {
-        assertThrows(IllegalArgumentException.class, () -> new FormativeExam(MATEMATICA, null));
+        assertThrows(IllegalArgumentException.class, () -> new FormativeExam(TITLE, MATEMATICA, null));
     }
 }
