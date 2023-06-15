@@ -2,16 +2,16 @@
     export let onclick: () => void;
 </script>
 
-<div class="xl:w-1/3 md:w-1/2 p-4">
-    <button on:click={onclick}>
-        <div
-            class="border border-gray-700 border-opacity-75 p-6
-                                        rounded-lg"
-        >
+<div class="xl:w-1/2 md:w-1/2 p-4">
+    <button
+        on:click={onclick}
+        class="border-2 border-gray-700 border-opacity-75 rounded-lg
+               hover:border-ctp-mauve focus:border-ctp-mauve"
+    >
+        <div class="p-6">
             <div
-                class="w-10 h-10 inline-flex items-center
-                                            justify-center rounded-full bg-gray-800
-                                            text-indigo-400 mb-4"
+                class="w-10 h-10 inline-flex items-center justify-center
+                rounded-full bg-gray-800 text-ctp-mauve mb-4"
             >
                 <svg
                     fill="none"

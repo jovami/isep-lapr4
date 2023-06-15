@@ -18,6 +18,8 @@
         if (value !== null) selectedExam = value;
     });
 
+let _exam: Exam | null = null;
+
     const chooseExam = async (): Promise<Exam> => {
         if (selectedExam === null) {
             throw new Error("No exam selected!");
@@ -35,7 +37,7 @@
         console.log(body);
 
         if (res.ok) {
-            console.log(body);
+            _exam = body;
             title = selectedExam.title;
             return body;
         } else {
@@ -92,7 +94,7 @@
         <SubmitButton onclick={pop}>Back to Exam selection</SubmitButton>
     {/await}
 {:else}
-    <ReGradeView {resolution} />
+    <ReGradeView {resolution} exam={_exam}/>
     <SubmitButton onclick={() => push("/regular")}>
         Back to Exam selection
     </SubmitButton>

@@ -1,5 +1,7 @@
 <script lang="ts" type="module">
+    import type { Exam } from "../../types/exam";
     import type { ExamResult } from "../../types/exam-result";
+    import type { RegularResolution } from "../../types/regular-resolution";
 
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
@@ -20,7 +22,8 @@
         }
     };
 
-    export let resolution: {};
+    export let resolution: RegularResolution;
+    export let exam: Exam;
 </script>
 
 <!-- TODO: better styling -->
@@ -44,7 +47,7 @@
         <hr />
         <br />
         {#each section.answers as answer, j}
-            <h3>Question {j + 1} &mdash; enunciado</h3>
+            <h3>Question {j + 1} &mdash; {exam.sections[i].questions[j]}</h3>
             <p>
                 Points:
                 {#if answer.points == null}
@@ -72,4 +75,3 @@
 {:catch error}
     <p>Grade: {error.message ?? error.error ?? error.status}</p>
 {/await}
-

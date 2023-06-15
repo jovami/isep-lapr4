@@ -1,5 +1,7 @@
 <script lang="ts" type="module">
+    import type { Exam } from "../../types/exam";
     import type { ExamResult } from "../../types/exam-result";
+    import type { FormativeResolution } from "../../types/formative-resolution";
 
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
@@ -20,7 +22,8 @@
         }
     };
 
-    export let resolution: {};
+    export let resolution: FormativeResolution;
+    export let exam: Exam;
 </script>
 
 <!-- TODO: better styling -->
@@ -42,7 +45,10 @@
         <hr />
         <br />
         {#each section.answers as answer, j}
-            <h3>Question {j + 1} &mdash; enunciado</h3>
+            <h3>
+                Question {j + 1} &mdash; {exam.sections[i].questions[j]
+                    .description}
+            </h3>
             <p>
                 Points:
                 {#if answer.points === answer.maxPoints}

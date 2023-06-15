@@ -9,10 +9,12 @@
 
         <script>
             if (window.matchMedia('(prefers-color-scheme: dark)').matches)
-                document.documentElement.classList.add('dark')
+                document.documentElement.classList.add('mocha')
+            else
+                document.documentElement.classList.add('latte')
         </script>
     </head>
-    <body class="dark:bg-gray-900">
+    <body class="bg-ctp-mantle text-ctp-text">
         <div id="app"></div>
         <script type="module" src="/src/main.ts"></script>
     </body>

@@ -23,7 +23,6 @@
             <h3>
                 Question {j + 1} &mdash; {question.description}
             </h3>
-            <!-- FIXME: id's in <input> should probably be unique -->
             {#if question.type === "MULTIPLE_CHOICE"}
                 {#if question.singleAnswer}
                     <div>

@@ -17,6 +17,8 @@
         if (value !== null) selectedExam = value;
     });
 
+    let _exam: Exam | null = null;
+
     const chooseExam = async (): Promise<Exam> => {
         if (selectedExam === null) {
             throw new Error("No exam selected!");
@@ -24,7 +26,7 @@
 
         console.log(selectedExam);
 
-        const res = await fetch("api/examtaking/formative/take", {
+        const res = await fetch("http://localhost:8090/api/examtaking/formative/take", {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(selectedExam),
@@ -34,6 +36,7 @@
         console.log(body);
 
         if (res.ok) {
+            _exam = body;
             return body;
         } else {
             throw body as Error;
@@ -96,7 +99,7 @@
         <SubmitButton onclick={pop}>Back to Exam selection</SubmitButton>
     {/await}
 {:else}
-    <FeGradeView {resolution} />
+    <FeGradeView {resolution} exam={_exam}/>
     <SubmitButton onclick={() => push("/formative")}>
         Back to Exam selection
     </SubmitButton>

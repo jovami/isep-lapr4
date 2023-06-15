@@ -36,11 +36,11 @@
                 {#each list as exam}
                     <ExamButton onclick={() => (selected = exam)}>
                         <h2
-                            class="text-lg text-white font-medium title-font mb-2"
+                            class="text-lg text-ctp-text font-medium title-font mb-2 capitalize"
                         >
-                            '{exam.examName}'
+                            {exam.examName}
                         </h2>
-                        <p class="leading-relaxed text-base">
+                        <p class="leading-relaxed text-base uppercase">
                             {exam.courseName}
                         </p>
                     </ExamButton>
