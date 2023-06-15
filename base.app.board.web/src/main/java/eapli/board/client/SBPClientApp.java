@@ -60,7 +60,7 @@ public class SBPClientApp extends BaseApplication {
         try {
             MainMenu menu = new MainMenu(serverIP, serverPort);
             menu.mainLoop();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             disconnect();

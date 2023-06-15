@@ -23,10 +23,8 @@ public class MenuChanges extends Thread {
 
             //depending on the SBPMessageCode
 
-            System.out.print("Menu_Changes:");
             switch (request.getCode()) {
                 case SBProtocol.SEND_POST_IT_INFO:
-                    System.out.println("SEND_POST_IT_INFO");
                     CreatePostItAjax createPostItAjax = new CreatePostItAjax(sock, request);
                     createPostItAjax.run();
                     break;

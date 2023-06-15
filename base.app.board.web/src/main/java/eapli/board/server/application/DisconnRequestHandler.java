@@ -12,8 +12,6 @@ public class DisconnRequestHandler extends AbstractSBServerHandler {
     public DisconnRequestHandler(Socket sock, SBProtocol request) {
         super(sock,request);
         Preconditions.areEqual(request.getCode(), SBProtocol.DISCONN);
-        this.request = request;
-        this.sock = sock;
     }
 
     public void run() {

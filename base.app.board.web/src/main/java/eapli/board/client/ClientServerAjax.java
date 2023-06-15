@@ -3,6 +3,8 @@ package eapli.board.client;
 import eapli.board.HTTPMessage;
 import org.apache.commons.lang3.SystemUtils;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,23 +13,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 public class ClientServerAjax extends Thread {
-    private final int HEADER_SIZE = 3;
+    private static final int HEADER_SIZE = 3;
     public static final int HTTP_PORT = 7000;
     //PASS PORT BY PROTOCOL??
     public static final int LISTEN_SERVER = 7010;
     //For each board
+
+    private static HashMap<String, BoardInfoDto> boards;
     private static String[] dataContent;
-    private final int cols;
+    private static int numCols;
     private final String title;
-    private final int rows;
+    private final int numRows;
+    private final String BASE_FOLDER = "base.app.board.web\\src\\main\\java\\eapli\\board\\";
 
     public ClientServerAjax(String[] board) {
         dataContent = board;
         this.title = dataContent[0];
-        this.rows = Integer.parseInt(dataContent[1]);
-        this.cols = Integer.parseInt(dataContent[2]);
+        this.numRows = Integer.parseInt(dataContent[1]);
+        this.numCols = Integer.parseInt(dataContent[2]);
     }
 
     @Override
@@ -60,11 +66,14 @@ public class ClientServerAjax extends Thread {
                         //handle statically
                         m.setContentFromString(generateBoardHtml(), "text/html");
                         m.setResponseStatus("200 OK");
-                    }else {
+                    } else if (m.getURI().startsWith("/images")) {
+                        m.setContentFromFile("base.app.board.web\\src\\main\\java\\eapli\\board\\www\\images\\" + m.getURI().substring(7));
+                        m.setResponseStatus("200 OK");
+                    } else {
                         m.setContentFromFile("base.app.board.web\\src\\main\\java\\eapli\\board\\www\\index.html");
-                        System.out.println("es boi");
                         m.setResponseStatus("200 OK");
                     }
+
                 }
                 m.send(outS);
                 i++;
@@ -75,9 +84,6 @@ public class ClientServerAjax extends Thread {
         }
     }
 
-    private void addPostIt(int i) {
-        dataContent[3+i] = ("post-it: "+i);
-    }
 
     private static void setHttpConection(String html, Socket cliSock) throws IOException {
         DataInputStream insS = new DataInputStream(cliSock.getInputStream());
@@ -111,7 +117,7 @@ public class ClientServerAjax extends Thread {
         }
     }
 
-    private String generateBoardHtml() {
+    private synchronized String generateBoardHtml() {
         int idx = HEADER_SIZE;
         StringBuilder html = new StringBuilder();
 
@@ -128,24 +134,35 @@ public class ClientServerAjax extends Thread {
         html.append("<table id = \"board\">");*/
         //html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
         html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
-        for (int i = 0; i < cols; i++) {
+        for (int i = 0; i < numCols; i++) {
             html.append("<td class=\"headers\">" + (i + 1) + "</td>\n");
         }
         html.append("</tr>\n");
 
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < numRows; i++) {
             html.append(String.format("<tr>\n"));
             html.append("<td class=\"headers\">" + (i + 1) + "</td>");
-            for (int j = 0; j < cols; j++) {
+            for (int j = 0; j < numCols; j++) {
                 String content = dataContent[idx];
 
                 if (content.equals(" ")) {
                     html.append(String.format("<td id=\"/row%d/col%d\">\n", i, j));//style='background-color:yellow'
                     //THERE IS NO CONTENT
-                } else if (content.startsWith("\"") && content.endsWith("\"")){
-                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\"><img src=%s ></img></div>\n", i, j, dataContent[idx]));
+                } else if (content.startsWith("\"") && content.endsWith("\"")) {
+
+                    content = content.replaceAll("\"","");
+                    String image = "images";
+                    content = content.substring(content.lastIndexOf(image));
+
+                    StringBuilder b = new StringBuilder();
+                    b.append(image);
+                    b.append("/");
+                    b.append(content.substring(content.lastIndexOf(image)+image.length()+1));
+
+                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\"><img src='%s'class =\"cell-img\"></img></div>\n", i, j, b.toString()));
+
                     //CELL CONTENT
-                }else {
+                } else {
                     html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\">%s</div>\n", i, j, dataContent[idx]));
                 }
                 idx++;
@@ -159,8 +176,6 @@ public class ClientServerAjax extends Thread {
 
         return html.toString();
     }
-
-
 
 
     private String getStyles() {
@@ -260,11 +275,12 @@ public class ClientServerAjax extends Thread {
                 "}";
     }
 
-    public static void setDataContent(String[] dataContent) {
-        ClientServerAjax.dataContent = dataContent;
-    }
+    /*
+        public static void setDataContent(String[] dataContent) {
+            ClientServerAjax.dataContent = dataContent;
+        }*/
     public static void addCell(int col, int row, String info) {
-        dataContent[3+(col*row)-1] = info;
+        dataContent[HEADER_SIZE + ((row - 1) * numCols) + (col - 1)] = info;
     }
 }
 

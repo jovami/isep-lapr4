@@ -13,7 +13,6 @@ import java.net.Socket;
 public class ViewBoardRequestController {
     private final Socket sock;
     private final DataInputStream inS;
-
     private final DataOutputStream outS;
     private final int HEADER_SIZE = 3;
 
@@ -64,7 +63,7 @@ public class ViewBoardRequestController {
             }
 
             //NEW thread that will
-            ClientServerAjax.setDataContent(dataContent);
+
             ClientServerAjax cliServAjax = new ClientServerAjax(dataContent);
             cliServAjax.start();
 
