@@ -60,11 +60,15 @@ the system user owns that are in state **Archived** :
 
 ### 4.2. Class Diagram
 
-![a class diagram](CD.svg "A Class Diagram")
+![CD](CD.svg "CD")
 
-### 4.2.1 Sequence Diagram
+### 4.2.1 System Sequence Diagram(SSD)
 
-![a class diagram](class-diagram-01.svg "A Class Diagram")
+![SSD](SSD.svg "SSD")
+
+### 4.2.2 Sequence Diagram
+
+![sd](sd.svg "sd")
 
 ### 4.3. Applied Patterns
 
