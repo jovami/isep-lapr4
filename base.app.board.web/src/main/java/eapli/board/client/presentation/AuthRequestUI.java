@@ -3,8 +3,10 @@ package eapli.board.client.presentation;
 import eapli.board.client.application.AuthRequestController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
+import jovami.util.exceptions.ReceivedERRCode;
 import jovami.util.io.ConsoleUtils;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 
@@ -21,29 +23,35 @@ public class AuthRequestUI extends AbstractUI {
     @Override
     protected boolean doShow() {
         AuthRequestController ctrl;
-        try {
-            int attempts = 0;
-            do {
-                 ctrl = new AuthRequestController(serverIP, serverPort);
+        int attempts = 0;
+        do {
 
-                String username = Console.readLine("Username: ");
-                String password = ConsoleUtils.readPassword("Password: ");
+            try {
+                ctrl = new AuthRequestController(serverIP, serverPort);
+            } catch (IOException e) {
+                System.out.println("Server busy, try again later");
+                return false;
+            }
 
-                String status = ctrl.requestAuth(username, password);
+            String username = Console.readLine("Username: ");
+            String password = ConsoleUtils.readPassword("Password: ");
 
-                if (status.equals("ACK")) {
+            try {
+                attempts++;
+                if (ctrl.requestAuth(username, password)) {
                     System.out.println("Logged in Successfully");
+                    ctrl.closeSock();
                     return true;
-                } else {
-                    attempts++;
-                    System.out.println("Log in Failed: " + status);
                 }
-            } while (attempts < MAX_ATTEMPTS);
+            } catch (ReceivedERRCode e) {
+                System.out.println("Log in Failed: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Server busy, try again later");
+            } finally {
+                ctrl.closeSock();
+            }
+        } while (attempts < MAX_ATTEMPTS);
 
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            return false;
-        };
         return false;
     }
 

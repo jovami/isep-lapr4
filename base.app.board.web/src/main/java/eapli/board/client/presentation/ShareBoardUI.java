@@ -70,6 +70,7 @@ public class ShareBoardUI extends AbstractUI {
             System.out.println(e.getMessage());
             return false;
         }
+        controller.sockClose();
         return false;
     }
 
@@ -106,8 +107,6 @@ public class ShareBoardUI extends AbstractUI {
         } catch (ConcurrencyException e) {
             System.out.println(e.getMessage());
             return false;
-        }finally {
-            controller.sockClose();
         }
 
         return invites>0;

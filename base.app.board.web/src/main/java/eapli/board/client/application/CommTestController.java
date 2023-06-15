@@ -22,29 +22,29 @@ public class CommTestController {
         this.serverPort = serverPort;
     }
 
-    public boolean commTest() {
+    public boolean commTest() throws ReceivedERRCode {
 
         SBProtocol response;
         try {
             sock = new Socket(serverIP, serverPort);
             inS = new DataInputStream(sock.getInputStream());
             outS = new DataOutputStream(sock.getOutputStream());
-
-            SBProtocol request = new SBProtocol();
-            request.setCode(SBProtocol.COMMTEST);
-            request.send(outS);
-
-            response = new SBProtocol(inS);
-
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                sock.close();
-            } catch (IOException e) {
-                return false;
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Server not available, try again later");
         }
+
+        SBProtocol request = new SBProtocol();
+        request.setCode(SBProtocol.COMMTEST);
+        try {
+            request.send(outS);
+            response = new SBProtocol(inS);
+        } catch (IOException e) {
+            throw new RuntimeException("Server not available, try again later");
+        }
+
+
+        AuthRequestController.closeSocket(sock);
+
         return response.getCode() == SBProtocol.ACK;
     }
 }

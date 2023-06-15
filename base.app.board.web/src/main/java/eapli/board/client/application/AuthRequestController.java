@@ -15,49 +15,46 @@ public class AuthRequestController {
     private DataInputStream inS;
     private DataOutputStream outS;
 
-    public AuthRequestController(InetAddress serverIP, int serverPort){
-        try {
-            this.sock = new Socket(serverIP, serverPort);
-            this.inS = new DataInputStream(sock.getInputStream());
-            this.outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException| RuntimeException e) {
-            System.out.println("Failed to connect to provided SERVER-ADDRESS and SERVER-PORT.");
-            System.out.println("Application aborted.");
-            System.exit(1);
-        }
+    public AuthRequestController(InetAddress serverIP, int serverPort) throws IOException {
+        this.sock = new Socket(serverIP, serverPort);
+        this.inS = new DataInputStream(sock.getInputStream());
+        this.outS = new DataOutputStream(sock.getOutputStream());
+
     }
 
-    public String requestAuth(String username, String password) {
+    public boolean requestAuth(String username, String password) throws ReceivedERRCode, IOException {
         SBProtocol request = new SBProtocol();
 
         request.setCode(SBProtocol.AUTH);
-        request.setDataLength(username.length() + password.length() + 2);
-
         String buff = username + "\0" + password + "\0";
-
         request.setContentFromString(buff);
 
         //sends request to server
-        try {
-            request.send(outS);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        request.send(outS);
 
         return authStatus();
     }
 
-    private String authStatus() {
+    private boolean authStatus() throws ReceivedERRCode, IOException {
 
-        try {
-            SBProtocol response = new SBProtocol(inS);
-            SBPClientApp.setToken(response.getContentAsString());
-        } catch (IOException e){
-            throw new RuntimeException(e);
-        }catch (ReceivedERRCode e) {
-            return e.getMessage();
-        }
+        SBProtocol response = new SBProtocol(inS);
+        SBPClientApp.setToken(response.getContentAsString());
+        return response.getCode() != SBProtocol.ERR;
 
-        return "ACK";
+    }
+
+    public void closeSock(){
+        closeSocket(this.sock);
+    }
+    public static void closeSocket(Socket socket) {
+        boolean closed;
+        do {
+            try {
+                socket.close();
+                closed = true;
+            } catch (IOException e) {
+                closed = false;
+            }
+        } while (!closed);
     }
 }

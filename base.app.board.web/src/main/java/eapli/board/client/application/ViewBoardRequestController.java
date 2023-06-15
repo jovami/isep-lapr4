@@ -3,12 +3,18 @@ package eapli.board.client.application;
 import eapli.board.SBProtocol;
 import eapli.board.client.ClientServerAjax;
 import jovami.util.exceptions.ReceivedERRCode;
+import org.apache.commons.lang3.SystemUtils;
 
+import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import static eapli.board.client.ClientServerAjax.HTTP_PORT;
 
 public class ViewBoardRequestController {
     private final Socket sock;
@@ -42,7 +48,12 @@ public class ViewBoardRequestController {
     public void chooseBoard(String board) throws ReceivedERRCode {
         SBProtocol requestBoard = new SBProtocol();
         requestBoard.setCode(SBProtocol.CHOOSE_BOARD);
-        requestBoard.setContentFromString(board);
+        StringBuilder b = new StringBuilder();
+        b.append(board);
+        b.append("\0");
+        b.append(ClientServerAjax.LISTEN_SERVER);
+
+        requestBoard.setContentFromString(b.toString());
 
         try {
             requestBoard.send(outS);
@@ -64,14 +75,38 @@ public class ViewBoardRequestController {
 
             //NEW thread that will
 
-            ClientServerAjax cliServAjax = new ClientServerAjax(dataContent);
-            cliServAjax.start();
 
+            ClientServerAjax.newBoardInfo(dataContent);
+            openBrowser("bTitle=" +  dataContent[0]);
             sock.close();
 
         } catch (IOException ex) {
             System.out.println("Error closing socket.");
             System.out.println("Application aborted.");
+        } catch (URISyntaxException e) {
+            System.out.println("It was not possible to open the browser");
+        }
+    }
+
+    private void openBrowser(String urlQuery) throws IOException, URISyntaxException {
+        Desktop d = Desktop.getDesktop();
+
+        String url = String.format("http://localhost:" + HTTP_PORT + "/?" + urlQuery);
+
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            d.browse(new URI(url));
+        } else {
+            String os = SystemUtils.OS_NAME.toLowerCase();
+            if (os.contains("win")) {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } else if (os.contains("mac")) {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("open " + "http://localhost:" + url);
+            } else if (os.contains("nux")) {
+                Runtime rt = Runtime.getRuntime();
+                rt.exec("xdg-open " + "http://localhost:" + url);
+            }
         }
     }
 }
