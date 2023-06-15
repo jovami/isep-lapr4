@@ -3,8 +3,6 @@ package eapli.board.client;
 import eapli.board.HTTPMessage;
 import org.apache.commons.lang3.SystemUtils;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 
 public class ClientServerAjax extends Thread {
     private static final int HEADER_SIZE = 3;
@@ -21,8 +18,6 @@ public class ClientServerAjax extends Thread {
     //PASS PORT BY PROTOCOL??
     public static final int LISTEN_SERVER = 7010;
     //For each board
-
-    private static HashMap<String, BoardInfoDto> boards;
     private static String[] dataContent;
     private static int numCols;
     private final String title;
