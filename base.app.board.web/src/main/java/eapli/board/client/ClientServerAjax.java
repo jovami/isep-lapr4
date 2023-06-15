@@ -1,281 +1,171 @@
 package eapli.board.client;
 
 import eapli.board.HTTPMessage;
-import org.apache.commons.lang3.SystemUtils;
 
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.HashMap;
 
 public class ClientServerAjax extends Thread {
-    private static final int HEADER_SIZE = 3;
-    public static final int HTTP_PORT = 7000;
-    //PASS PORT BY PROTOCOL??
-    public static final int LISTEN_SERVER = 7010;
-    //For each board
-    private static String[] dataContent;
-    private static int numCols;
-    private final String title;
-    private final int numRows;
-    private final String BASE_FOLDER = "base.app.board.web\\src\\main\\java\\eapli\\board\\";
 
-    public ClientServerAjax(String[] board) {
-        dataContent = board;
-        this.title = dataContent[0];
-        this.numRows = Integer.parseInt(dataContent[1]);
-        this.numCols = Integer.parseInt(dataContent[2]);
+    //application properties?
+    public static final int HTTP_PORT = 9052;
+    //PASS PORT BY PROTOCOL??
+    public static final int LISTEN_SERVER = 9070;
+    //For each board
+    private static final HashMap<String, BoardInfoDto> boardsInfo = new HashMap<>();
+    //TODO: UNIX PATH??
+    private final String BASE_FOLDER = "base.app.board.web/src/main/java/eapli/board/www";
+
+    public ClientServerAjax() {
+
+    }
+
+    public static BoardInfoDto newBoardInfo(String[] board) {
+        BoardInfoDto dto = new BoardInfoDto(board);
+        //ADD new BoardInfo
+        boardsInfo.putIfAbsent(dto.getTitle(), dto);
+        return boardsInfo.get(dto.getTitle());
+    }
+
+    //TODO: verify if null
+    public static BoardInfoDto getBoardInfo(String s) {
+        return boardsInfo.get(s);
     }
 
     @Override
     public void run() {
-        ClientServerChanges cliServ = new ClientServerChanges(dataContent);
+        //Read information from the SBServer
+        ClientServerChanges cliServ = new ClientServerChanges();
         cliServ.start();
+
+        //test
+        //create serverSock
+        ServerSocket serverSock;
         try {
-            //test
+            serverSock = new ServerSocket(HTTP_PORT);
+        } catch (IOException e) {
+            System.out.println("Can't use port %d" + HTTP_PORT + " for the HTTP server, already in use");
+            return;
+        }
 
-            String html = generateBoardHtml();
-
-            //create serverSock
-            ServerSocket serverSock = new ServerSocket(HTTP_PORT);
-            openBrowser();
-
-
-            Socket cliSock;
-            //setHttpConection(html, cliSock);
-            int i = 0;
-            while (true) {
-                //handle with AJAX each one of the requests
+        Socket cliSock;
+        while (true) {
+            //handle with AJAX each one of the requests
+            try {
                 cliSock = serverSock.accept();
+            } catch (IOException e) {
+                System.out.println("Error accepting new Requests");
+                break;
+            }
 
-                HTTPMessage m = new HTTPMessage(new DataInputStream(cliSock.getInputStream()));
+            try {
 
-                DataOutputStream outS = new DataOutputStream(cliSock.getOutputStream());
 
-                if (m.getMethod().equals("GET")) {
-                    if (m.getURI().startsWith("/board")) {
-                        //handle statically
-                        m.setContentFromString(generateBoardHtml(), "text/html");
-                        m.setResponseStatus("200 OK");
-                    } else if (m.getURI().startsWith("/images")) {
-                        m.setContentFromFile("base.app.board.web\\src\\main\\java\\eapli\\board\\www\\images\\" + m.getURI().substring(7));
-                        m.setResponseStatus("200 OK");
-                    } else {
-                        m.setContentFromFile("base.app.board.web\\src\\main\\java\\eapli\\board\\www\\index.html");
-                        m.setResponseStatus("200 OK");
-                    }
+                answerHTTPRequest(cliSock);
+            } catch (IOException e) {
+                System.out.println("Error while reading socket");
 
+                try {
+                    cliSock.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-                m.send(outS);
-                i++;
             }
-
-        } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
         }
+
     }
 
+    private void answerHTTPRequest(Socket cliSock) throws IOException {
 
-    private static void setHttpConection(String html, Socket cliSock) throws IOException {
-        DataInputStream insS = new DataInputStream(cliSock.getInputStream());
+        HTTPMessage m = new HTTPMessage(new DataInputStream(cliSock.getInputStream()));
         DataOutputStream outS = new DataOutputStream(cliSock.getOutputStream());
-
-        HTTPMessage mess = new HTTPMessage();
-        mess.setContentFromString(html, "text/html");
-        mess.setResponseStatus("200 OK");
-        mess.send(outS);
-
-        cliSock.close();
-    }
-
-    private static void openBrowser() throws IOException, URISyntaxException {
-        Desktop d = Desktop.getDesktop();
-
-        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            d.browse(new URI("http://localhost:" + HTTP_PORT));
-        } else {
-            String os = SystemUtils.OS_NAME.toLowerCase();
-            if (os.contains("win")) {
-                Runtime rt = Runtime.getRuntime();
-                rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://localhost:7000");
-            } else if (os.contains("mac")) {
-                Runtime rt = Runtime.getRuntime();
-                rt.exec("open " + "http://localhost:7000");
-            } else if (os.contains("nux")) {
-                Runtime rt = Runtime.getRuntime();
-                rt.exec("xdg-open " + "http://localhost:7000");
+        String boardUri = "/board/";
+        String iamgesUri = "/images/";
+        if (m.getMethod().equals("GET")) {
+            //Get boards
+            if (m.getURI().startsWith(boardUri)) {
+                String board = m.getURI().substring(boardUri.length());
+                String html = generateBoardHtml(board);
+                if (html == null) {
+                    m.setResponseStatus("Board not Found");
+                } else {
+                    m.setContentFromString(html, "text/html");
+                    m.setResponseStatus("200 OK");
+                }
+            //get Images
+            } else if (m.getURI().startsWith("/images")) {
+                m.setContentFromFile(BASE_FOLDER+"/images/" + m.getURI().substring(7));
+                m.setResponseStatus("200 OK");
+            } else {
+                //Base Folder
+                m.setContentFromFile(BASE_FOLDER+"/index.html");
+                m.setResponseStatus("200 OK");
             }
         }
+        m.send(outS);
     }
 
-    private synchronized String generateBoardHtml() {
-        int idx = HEADER_SIZE;
+    private synchronized String generateBoardHtml(String board) {
+        int idx =0;
         StringBuilder html = new StringBuilder();
 
-        /*html.append("<!DOCTYPE html>\n");
-        //CSS
-        html.append(getStyles());
+        //GETboard info verify if no exist
 
-        //TODO
-        //html.append("<body onload=\"refreshBoard("+title+")/>");
-        html.append("<body onload=\"refreshBoard()\"/>");
+        BoardInfoDto dto = boardsInfo.get(board);
 
-        //set table URI
-        //html.append("<table id = \"board\\"+title+"\">");
-        html.append("<table id = \"board\">");*/
-        //html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
-        html.append("<tr>\n<td class=\"board-title\">" + title + "</td>\n");
-        for (int i = 0; i < numCols; i++) {
+        if (dto == null) {
+            return null;
+        }
+
+
+        html.append("<tr>\n<td class=\"board-title\">" + dto.getTitle() + "</td>\n");
+        for (int i = 0; i < dto.getNumCols(); i++) {
             html.append("<td class=\"headers\">" + (i + 1) + "</td>\n");
         }
         html.append("</tr>\n");
 
-        for (int i = 0; i < numRows; i++) {
+
+        for (int i = 0; i < dto.getNumRows(); i++) {
             html.append(String.format("<tr>\n"));
             html.append("<td class=\"headers\">" + (i + 1) + "</td>");
-            for (int j = 0; j < numCols; j++) {
-                String content = dataContent[idx];
+            for (int j = 0; j < dto.getNumCols(); j++) {
+                String content = dto.getDataContent()[idx];
 
                 if (content.equals(" ")) {
                     html.append(String.format("<td id=\"/row%d/col%d\">\n", i, j));//style='background-color:yellow'
                     //THERE IS NO CONTENT
-                } else if (content.startsWith("\"") && content.endsWith("\"")) {
+                } else if (content.startsWith("\"") && content.endsWith("\"")){
 
-                    content = content.replaceAll("\"","");
+
+                    //properly parse images
+                    content = content.replaceAll("\"", "");
                     String image = "images";
                     content = content.substring(content.lastIndexOf(image));
 
                     StringBuilder b = new StringBuilder();
                     b.append(image);
-                    b.append("/");
-                    b.append(content.substring(content.lastIndexOf(image)+image.length()+1));
+                    b.append(content.substring(content.lastIndexOf(image) + image.length()));
 
-                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\"><img src='%s'class =\"cell-img\"></img></div>\n", i, j, b.toString()));
+                    html.append(String.format("<td><div class=\"postIt\"><img src='%s'class =\"cell-img\"></img></div>\n", b));
 
                     //CELL CONTENT
                 } else {
-                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\">%s</div>\n", i, j, dataContent[idx]));
+                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\">%s</div>\n", dto.getDataContent()[idx]));
                 }
                 idx++;
                 html.append("</td>\n");
             }
             html.append("</tr>\n");
         }
-        /*html.append("</table>\n");
-        html.append("</body");
-        html.append("</html>");*/
+
 
         return html.toString();
     }
 
 
-    private String getStyles() {
-        return "<style>\n" +
-                getBodyStyle() +
-                getTdStyle() +
-                getTableStyle() +
-                getImgStyle() +
-                getTitleStyle() +
-                getHeaderStyle() +
-                getPostItStyle() +
-                "</style>\n";
-    }
-
-    private String getPostItStyle() {
-        return ".postIt {\n" +
-                "        margin: 5px 5px 5px 5px;\n" +
-                "        background: grey;\n" +
-                "        word-wrap: break-word;\n" +
-                "        border-radius: 5px\n" +
-                "\n" +
-                "}";
-    }
-
-    private String getHeaderStyle() {
-        return ".headers {\n" +
-                "    font-size: 20px;\n" +
-                "    text-align: center;\n" +
-                "    padding: 10px;\n" +
-                "    background-color: #E6E6E4;\n" +
-                "}";
-    }
-
-
-    public String getAjaxSwapCells() {
-        return "<script>\n" +
-                "function swapCells(cel1,cel2) {\n" +
-                "  var xhttp = new XMLHttpRequest();\n" +
-                "  xhttp.onreadystatechange = function() {\n" +
-                "    if (this.readyState == 4 && this.status == 200) {\n" +
-                "      document.getElementById(\"cel1\").innerHTML =\n" +
-                "      document.getElementById(\"cel2\").innerHTML =\n" +
-                "    }\n" +
-                "  };\n" +
-                "  xhttp.send();\n" +
-                "}\n" +
-                "</script>";
-    }
-
-    private static String getImgStyle() {
-        return ("body {" +
-                "\tmax-width: 100%;\n" +
-                "\tmax-height: 100px;\n" +
-                "}\n");
-    }
-
-    private static String getBodyStyle() {
-        return ("body {" +
-                "\tfont-family: \"Times New Roman\", sans-serif;\n" +
-                "\tbackground-color: #f2f2f2;\n" +
-                //"\tbackground-image: url("space.png");\n" +
-                "\tbackground-repeat: no-repeat;\n" +
-                "\tbackground-attachment: fixed;\n" +
-                "\tbackground-position: center top;\n" +
-                "\tbackground-size: cover;\n" +
-                "}\n");
-    }
-
-    private static String getTdStyle() {
-        return ("td{" +
-                "\tpadding: 10px;\n" +
-                "\ttext-align: center;\n" +
-                "\tborder: 1px solid #dddddd;\n" +
-                "\tword-wrap: break-word;\n" +
-                "}\n");
-    }
-
-    private static String getTableStyle() {
-        return ("table{" +
-                "\tborder: dark-blue;\n" +
-                "\tborder-collapse: collapse;\n" +
-                "\tmargin: 2% auto;\n" +
-                "\tbackground-color: #ffffff;\n" +
-                "\tbox-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n" +
-                "\ttable-layout: fixed;\n" +
-                "\twidth: 80%;\n" +
-                "}\n");
-    }
-
-    private static String getTitleStyle() {
-        return ".board-title {\n" +
-                "    font-size: 25px;\n" +
-                "    font-weight: bold;\n" +
-                "    text-align: center;\n" +
-                "    padding: 10px;\n" +
-                "    background-color: #E6E6FA;\n" +
-                "}";
-    }
-
-    /*
-        public static void setDataContent(String[] dataContent) {
-            ClientServerAjax.dataContent = dataContent;
-        }*/
-    public static void addCell(int col, int row, String info) {
-        dataContent[HEADER_SIZE + ((row - 1) * numCols) + (col - 1)] = info;
-    }
 }
 

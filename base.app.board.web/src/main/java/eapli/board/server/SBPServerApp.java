@@ -9,25 +9,35 @@ import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
+import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.pubsub.EventDispatcher;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Optional;
+import java.util.*;
 
 
 public class SBPServerApp extends BaseApplication {
 
-    static private ServerSocket sock;
+    //TODO: CHANGE TO TOKEN
+    public static final Map<Board, LinkedList<BoardHistory>> histories;
+    public static final Map<InetAddress, Client> activeAuths;
+    public static final Map<BoardTitle, Board> boards;
 
-    public static HashMap<Board, LinkedList<BoardHistory>> histories = new HashMap<>();
-    private static final BoardRepository boardRepository = PersistenceContext.repositories().boards();
-    private static final String SEPARATOR_LABEL = "----------------------------------";
+    static {
+        boards= Collections.synchronizedMap( new HashMap<>());
+        activeAuths =Collections.synchronizedMap( new HashMap<>());
+        histories =Collections.synchronizedMap( new HashMap<>());
+
+    }
+    static private ServerSocket sock;
+    public static final String SEPARATOR_LABEL = "----------------------------------";
+
+    private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
 
     /**
      * avoid instantiation of this class.
@@ -43,9 +53,10 @@ public class SBPServerApp extends BaseApplication {
         AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
                 new PlainTextEncoder());
 
-        boardRepository.findAll().forEach(board -> histories.put(board, board.getBoardHistory()));
+
         new SBPServerApp().run(args);
     }
+
 
     @Override
     protected void doMain(final String[] args) {
@@ -66,8 +77,12 @@ public class SBPServerApp extends BaseApplication {
             System.exit(1);
         }
 
-        //KEEPS LISTENING to new sockets on port args[0]
-        //TODO: check if this can be a new thread??
+        //setup in memory boards
+        for (Board board : boardRepository.findAll()) {
+            boards.putIfAbsent(board.getBoardTitle(),board);
+            histories.put(board, board.getBoardHistory());
+        }
+
         try {
             while (true) {
                 cliSock = sock.accept();
@@ -102,5 +117,4 @@ public class SBPServerApp extends BaseApplication {
         histories.get(board.get()).push(str);
 
     }
-
 }

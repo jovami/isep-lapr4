@@ -2,7 +2,6 @@ package eapli.board.server.application.newChangeEvent;
 
 import eapli.base.board.domain.Board;
 import eapli.board.SBProtocol;
-import eapli.board.client.ClientServerAjax;
 import eapli.board.server.domain.Client;
 import eapli.framework.domain.events.DomainEvent;
 import eapli.framework.infrastructure.pubsub.EventHandler;
@@ -31,7 +30,7 @@ public class NewChangeWatchDog implements EventHandler {
             return;
         for (Client m : subs.get(board)) {
             try {
-                sock = new Socket(m.inetAddress(), ClientServerAjax.LISTEN_SERVER);
+                sock = new Socket(m.inetAddress(), m.port());
                 SendMessageThread th = new SendMessageThread(sock,send);
                 th.start();
             } catch (IOException e) {
@@ -41,9 +40,7 @@ public class NewChangeWatchDog implements EventHandler {
     }
 
     public synchronized static void addSub(String board, Client c){
-        if (subs.get(board)==null){
-            subs.put(board, new ArrayList<>());
-        }
+        subs.computeIfAbsent(board, k -> new ArrayList<>());
         subs.get(board).add(c);
 
     }

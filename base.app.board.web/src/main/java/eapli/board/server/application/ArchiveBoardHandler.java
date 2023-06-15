@@ -6,7 +6,7 @@ import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
-import eapli.board.server.MenuRequest;
+import eapli.board.server.SBPServerApp;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -16,7 +16,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
-import java.util.Optional;
 
 public class ArchiveBoardHandler implements Runnable {
 
@@ -41,7 +40,7 @@ public class ArchiveBoardHandler implements Runnable {
         }
         try {
 
-            SystemUser owner = MenuRequest.clientBySock(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();
             List<Board> boards = srv.listBoardsUserOwnsNotArchived(owner);
@@ -53,20 +52,17 @@ public class ArchiveBoardHandler implements Runnable {
             //receive board that the user wants to archive
             SBProtocol receiveBoard = new SBProtocol(inS);
             String boardName = receiveBoard.getContentAsString();
-            Optional<Board> optBoard = boardRepository.ofIdentity(BoardTitle.valueOf(boardName));
+            Board board = SBPServerApp.boards.get(BoardTitle.valueOf(boardName));
 
             //if the board does not exist send ERR
-            if (optBoard.isEmpty()) {
+            if (board==null) {
                 sendBoards.setCode(SBProtocol.ERR);
                 sendBoards.setContentFromString("Board not found");
                 sendBoards.send(outS);
                 return;
             }
-
-            Board board = optBoard.get();
             board.archiveBoard();
             boardRepository.save(board);
-
 
             StringBuilder builderArchive = new StringBuilder();
             List<Board> boardsArchived = srv.listBoardsUserOwnsArchived(owner);

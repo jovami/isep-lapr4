@@ -3,20 +3,12 @@ package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.PostIt;
-import eapli.base.board.dto.BoardParticipantDTO;
-import eapli.base.board.dto.BoardParticipantMapper;
-import eapli.base.board.dto.PostItDTO;
-import eapli.base.board.dto.PostItMapper;
 import eapli.base.board.repositories.BoardParticipantRepository;
-import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-
-import java.io.File;
-import java.util.List;
 
 public class PostItService {
 
@@ -26,21 +18,21 @@ public class PostItService {
 
     private final UserRepository userRepository;
 
-    public PostItService(){
+    public PostItService() {
         boardParticipantRepository = PersistenceContext.repositories().boardParticipants();
         userRepository = PersistenceContext.repositories().users();
     }
 
 
-    public void createPostIt(Board board, int cellPosition, String text, SystemUser postItOwner)
-    {
-        board.getCell(cellPosition).createPostIt(text,postItOwner);
+    public void createPostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
+        board.getCell(row, col).addPostIt(new PostIt(postItOwner, text));
     }
-    //TODO: MOVE VERIFICATIONS TO HERE
 
-    public void swapPostIts(PostIt postIt1, PostIt postIt2){
+
+    //TODO: MOVE VERIFICATIONS TO HERE
+    public void swapPostIts(PostIt postIt1, PostIt postIt2) {
         String temp = postIt1.getData();
-        postIt1.alterPostItData(postIt2.getData()) ;
+        postIt1.alterPostItData(postIt2.getData());
         postIt2.alterPostItData(temp);
     }
 

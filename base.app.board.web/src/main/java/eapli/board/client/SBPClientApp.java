@@ -11,6 +11,7 @@ import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.pubsub.EventDispatcher;
+import jovami.util.exceptions.ReceivedERRCode;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -58,6 +59,8 @@ public class SBPClientApp extends BaseApplication {
 
         //DO WORK
         try {
+            ClientServerAjax cliServAjax = new ClientServerAjax();
+            cliServAjax.start();
             MainMenu menu = new MainMenu(serverIP, serverPort);
             menu.mainLoop();
         } catch (Exception e) {
@@ -70,14 +73,21 @@ public class SBPClientApp extends BaseApplication {
     private void testConnection() {
         CommTestController ctrl = new CommTestController(serverIP, serverPort);
 
-        if (ctrl.commTest()) {
+        try {
+            if (ctrl.commTest()) {
+                System.out.println(SEPARATOR_LABEL);
+                System.out.println(SEPARATOR_LABEL + "\nConnected to SBServer\n");
+                System.out.println(SEPARATOR_LABEL);
+            } else {
+                System.out.println(SEPARATOR_LABEL);
+                System.out.println(SEPARATOR_LABEL + "\nUnsuccessfully Disconnected from SBP server\n");
+                System.out.println(SEPARATOR_LABEL);
+            }
+        } catch (ReceivedERRCode | RuntimeException e) {
             System.out.println(SEPARATOR_LABEL);
-            System.out.println(SEPARATOR_LABEL + "\nConnected to SBServer\n");
+            System.out.println(SEPARATOR_LABEL + "\n"+e.getMessage()+"\n");
             System.out.println(SEPARATOR_LABEL);
-        } else {
-            System.out.println(SEPARATOR_LABEL);
-            System.out.println(SEPARATOR_LABEL + "\nUnsuccessfully Disconnected from SBP server\n");
-            System.out.println(SEPARATOR_LABEL);
+            System.exit(1);
         }
     }
 
