@@ -23,30 +23,32 @@ import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamParser;
 import jovami.grammar.impl.antlr.question.autogen.QuestionLexer;
 import jovami.grammar.impl.antlr.question.autogen.QuestionParser;
 
-public class ANTLRFormativeExamGenerator implements GenerateFormativeExamService {
+public final class ANTLRFormativeExamGenerator implements GenerateFormativeExamService {
 
     @Override
     public ExamToBeTakenDTO generate(FormativeExam exam, Iterable<Question> questions) {
         var lexer = new FormativeExamLexer(CharStreams.fromString(exam.specification().specification()));
         var parser = new FormativeExamParser(new CommonTokenStream(lexer));
-        var questionsByType = randomGroupByType(parsedQuestions(questions));
+        var questionsByType = randomGroupByType(parseQuestions(questions));
         return new ANTLRFormativeExamParser(questionsByType).dto(parser.exam());
     }
 
-    private List<AbstractQuestionDTO> parsedQuestions(Iterable<Question> questions) {
+    private List<AbstractQuestionDTO> parseQuestions(Iterable<Question> questions) {
         return StreamSupport.stream(questions.spliterator(), false)
-                .map(question -> {
-                    var lexer = new QuestionLexer(CharStreams.fromString(question.specification().specification()));
-                    var parser = new QuestionParser(new CommonTokenStream(lexer));
-                    return new ANTLRQuestionParser(question.identity()).question(parser.question());
-                })
+                .map(this::parseQuestion)
                 .collect(Collectors.toList());
+    }
+
+    private AbstractQuestionDTO parseQuestion(Question question) {
+        var lexer = new QuestionLexer(CharStreams.fromString(question.specification().specification()));
+        var parser = new QuestionParser(new CommonTokenStream(lexer));
+        return new ANTLRQuestionParser(question.identity()).question(parser.question());
     }
 
     private Map<QuestionType, LinkedList<AbstractQuestionDTO>> randomGroupByType(
             Iterable<AbstractQuestionDTO> questions) {
-        var map = new EnumMap<QuestionType, LinkedList<eapli.base.question.dto.AbstractQuestionDTO>>(
-                QuestionType.class);
+
+        var map = new EnumMap<QuestionType, LinkedList<AbstractQuestionDTO>>(QuestionType.class);
         for (final var question : questions) {
             var type = question.getType();
             map.putIfAbsent(type, new LinkedList<>());

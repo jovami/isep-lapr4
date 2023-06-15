@@ -18,14 +18,11 @@
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
 
-        const res = await fetch(
-            "http://localhost:8090/api/examtaking/regular/grade",
-            {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(resolution),
-            }
-        );
+        const res = await fetch("api/examtaking/regular/grade", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(resolution),
+        });
 
         const body = await res.json();
 
@@ -33,7 +30,7 @@
             console.log(body);
             return body;
         } else {
-            throw new Error(body);
+            throw body as Error;
         }
     };
 
@@ -54,12 +51,12 @@
             / <strong>{result.maxGrade}</strong>
         {/if}
     </p>
-    <hr/>
-    <br/>
+    <hr />
+    <br />
     {#each result.sections as section, i}
         <h2>Section {i + 1}</h2>
-        <hr/>
-        <br/>
+        <hr />
+        <br />
         {#each section.answers as answer, j}
             <h3>Question {j + 1} &mdash; enunciado</h3>
             <p>
@@ -76,17 +73,17 @@
                 {/if}
             </p>
             <p>
-
                 {#if answer.feedback == null}
                     <p>Feedback: Not available</p>
                 {:else}
                     Feedback: {answer.feedback}
                 {/if}
             </p>
-            <br/>
+            <br />
         {/each}
-        <br/>
+        <br />
     {/each}
 {:catch error}
-    <p>Grade: {error.message}</p>
+    <p>Grade: {error.message ?? error.error ?? error.status}</p>
 {/await}
+

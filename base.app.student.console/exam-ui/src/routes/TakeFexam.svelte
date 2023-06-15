@@ -4,7 +4,7 @@
     import FeGradeView from "../components/formative/FeGradeView.svelte";
 
     import { examStore } from "../store";
-    import { push } from "svelte-spa-router";
+    import { pop, push } from "svelte-spa-router";
 
     type Question = {
         id: number;
@@ -64,22 +64,19 @@
 
         console.log(selectedExam);
 
-        const res = await fetch(
-            "http://localhost:8090/api/examtaking/formative/take",
-            {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(selectedExam),
-            }
-        );
+        const res = await fetch("api/examtaking/formative/take", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(selectedExam),
+        });
 
         const body = await res.json();
+        console.log(body);
 
         if (res.ok) {
-            console.log(body);
             return body;
         } else {
-            throw new Error(body);
+            throw body as Error;
         }
     };
 
@@ -134,8 +131,9 @@
         <ExamForm {exam} submit={handleSubmit} />
     {:catch error}
         <p>
-            Error: {error.message}
+            Error: {error.message ?? error.error ?? error.status}
         </p>
+        <SubmitButton onclick={pop}>Back to Exam selection</SubmitButton>
     {/await}
 {:else}
     <FeGradeView {resolution} />

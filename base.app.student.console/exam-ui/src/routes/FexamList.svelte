@@ -13,25 +13,26 @@
     let selected: ExamInfo | null = null;
 
     const listExams = async (): Promise<ExamInfo[]> => {
-        const res = await fetch(
-            "http://localhost:8090/api/examtaking/formative/exam-list"
-        );
+        const res = await fetch("api/examtaking/formative/exam-list");
         const body = await res.json();
 
-        if (res.ok) return body;
-        else throw new Error(body);
+        if (res.ok) {
+            return body;
+        } else {
+            throw body as Error;
+        }
     };
 </script>
 
 <ListPanel>
-    <div class="flex flex-wrap -m-4">
-        {#await listExams()}
-            <p>waiting</p>
-        {:then list}
-            {#if list.length === 0}
-                <!-- TODO: better message -->
-                <p>No exams available</p>
-            {:else}
+    {#await listExams()}
+        <p>waiting</p>
+    {:then list}
+        {#if list.length === 0}
+            <!-- TODO: better message -->
+            <p>No exams available</p>
+        {:else}
+            <div class="flex flex-wrap -m-4">
                 {#each list as exam}
                     <ExamButton onclick={() => (selected = exam)}>
                         <h2
@@ -44,11 +45,11 @@
                         </p>
                     </ExamButton>
                 {/each}
-            {/if}
-        {:catch error}
-            <p>Error: {error.message}</p>
-        {/await}
-    </div>
+            </div>
+        {/if}
+    {:catch error}
+        <p>Error: {error.message ?? error.error}</p>
+    {/await}
 
     <SubmitButton
         disable={selected === null}

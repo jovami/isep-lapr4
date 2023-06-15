@@ -6,6 +6,8 @@ import eapli.base.question.domain.QuestionType;
 import eapli.base.question.dto.AbstractQuestionDTO;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamBaseVisitor;
 import jovami.grammar.impl.antlr.formativeexam.autogen.FormativeExamParser.*;
+import jovami.util.grammar.NotEnoughQuestionsException;
+
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -74,9 +76,8 @@ public class ANTLRFormativeExamParser extends FormativeExamBaseVisitor<String> {
         var type = QuestionType.valueOf(ctx.type().getText());
         var typeQuestions = this.questionsByType.get(type);
 
-        if (typeQuestions == null || typeQuestions.isEmpty()) {
-            throw new IllegalStateException("No questions of type " + type + " available");
-        }
+        if (typeQuestions == null || typeQuestions.isEmpty())
+            throw new NotEnoughQuestionsException(type);
 
         var question = System.currentTimeMillis() % 2 == 0
                 ? typeQuestions.poll()

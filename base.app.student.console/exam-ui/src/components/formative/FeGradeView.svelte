@@ -18,14 +18,11 @@
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);
 
-        const res = await fetch(
-            "http://localhost:8090/api/examtaking/formative/grade",
-            {
-                method: "POST",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify(resolution),
-            }
-        );
+        const res = await fetch("api/examtaking/formative/grade", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(resolution),
+        });
 
         const body = await res.json();
 
@@ -33,7 +30,7 @@
             console.log(body);
             return body;
         } else {
-            throw new Error(body);
+            throw body as Error;
         }
     };
 
@@ -75,5 +72,5 @@
         <br />
     {/each}
 {:catch error}
-    <p>Grade: {error.message}</p>
+    <p>Grade: {error.message ?? error.error ?? error.status}</p>
 {/await}

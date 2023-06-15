@@ -56,7 +56,7 @@ import eapli.framework.infrastructure.pubsub.EventDispatcher;
         SecurityAutoConfiguration.class,
 })
 @ComponentScan(basePackages = {
-    "eapli.base.infrastructure.spring",
+    "eapli.base.infrastructure",
     "eapli.base.app.common",
     "eapli.base.app.student.console.presentation",
     "eapli.base.exam",
