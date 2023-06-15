@@ -3,51 +3,14 @@
     import SubmitButton from "../components/SubmitButton.svelte";
     import ReGradeView from "../components/regular/ReGradeView.svelte";
 
+    import type { Exam } from "../types/exam";
+    import type {
+        RegularResolution as Resolution,
+        RegularSectionAnswers as SectionAnswers,
+    } from "../types/regular-resolution";
+
     import { examStore } from "../store";
     import { pop, push } from "svelte-spa-router";
-
-    type Question = {
-        id: number;
-        description: string;
-
-        groups?: { [key: string]: string[] };
-        choices?: string[];
-
-        phrase1?: string[];
-        phrase2?: string[];
-
-        singleAnswer?: boolean;
-        options?: [];
-        type:
-            | "MATCHING"
-            | "MULTIPLE_CHOICE"
-            | "SHORT_ANSWER"
-            | "NUMERICAL"
-            | "MISSING_WORDS"
-            | "TRUE_FALSE";
-    };
-
-    type Section = {
-        id: number;
-        description: string;
-        questions: Question[];
-    };
-
-    type Exam = {
-        title: string;
-        description: string;
-        sections: Section[];
-    };
-
-    type SectionAnswers = {
-        answers: string[];
-    };
-
-    type Resolution = {
-        sections: SectionAnswers[];
-        submissionTime: Date;
-        title: string;
-    };
 
     let title: string = null;
     let selectedExam = null;

@@ -1,19 +1,5 @@
 <script lang="ts" type="module">
-    type Answer = {
-        points: number;
-        maxPoints: number;
-        feedback: string;
-    };
-
-    type Section = {
-        answers: Answer[];
-    };
-
-    type ExamResult = {
-        sections: Section[];
-        grade: number;
-        maxGrade: number;
-    };
+    import type { ExamResult } from "../../types/exam-result";
 
     const examResult = async (): Promise<ExamResult> => {
         console.log(resolution);

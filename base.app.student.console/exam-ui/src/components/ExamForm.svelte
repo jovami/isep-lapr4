@@ -1,38 +1,7 @@
 <script lang="ts">
     import SubmitButton from "./SubmitButton.svelte";
 
-    type Question = {
-        id: number;
-        description: string;
-
-        groups?: { [key: string]: string[] };
-        choices?: string[];
-
-        phrase1?: string[];
-        phrase2?: string[];
-
-        singleAnswer?: boolean;
-        options?: [];
-        type:
-            | "MATCHING"
-            | "MULTIPLE_CHOICE"
-            | "SHORT_ANSWER"
-            | "NUMERICAL"
-            | "MISSING_WORDS"
-            | "TRUE_FALSE";
-    };
-
-    type Section = {
-        id: number;
-        description: string;
-        questions: Question[];
-    };
-
-    type Exam = {
-        title: string;
-        description: string;
-        sections: Section[];
-    };
+    import type { Exam } from "../types/exam";
 
     export let exam: Exam;
     export let submit: () => void;

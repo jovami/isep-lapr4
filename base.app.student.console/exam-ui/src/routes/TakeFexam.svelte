@@ -3,54 +3,14 @@
     import SubmitButton from "../components/SubmitButton.svelte";
     import FeGradeView from "../components/formative/FeGradeView.svelte";
 
+    import type { Exam } from "../types/exam";
+    import type {
+        FormativeResolution as Resolution,
+        FormativeSectionAnswers as SectionAnswers,
+    } from "../types/formative-resolution";
+
     import { examStore } from "../store";
     import { pop, push } from "svelte-spa-router";
-
-    type Question = {
-        id: number;
-        description: string;
-
-        groups?: { [key: string]: string[] };
-        choices?: string[];
-
-        phrase1?: string[];
-        phrase2?: string[];
-
-        singleAnswer?: boolean;
-        options?: [];
-        type:
-            | "MATCHING"
-            | "MULTIPLE_CHOICE"
-            | "SHORT_ANSWER"
-            | "NUMERICAL"
-            | "MISSING_WORDS"
-            | "TRUE_FALSE";
-    };
-
-    type Section = {
-        id: number;
-        description: string;
-        questions: Question[];
-    };
-
-    type Exam = {
-        title: string;
-        description: string;
-        sections: Section[];
-    };
-
-    type GivenAnswer = {
-        answer: string;
-        questionID: number;
-    };
-
-    type SectionAnswers = {
-        answers: GivenAnswer[];
-    };
-
-    type Resolution = {
-        sectionAnswers: SectionAnswers[];
-    };
 
     let selectedExam = null;
     examStore.subscribe((value) => {
