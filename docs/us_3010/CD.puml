@@ -13,6 +13,8 @@ interface MessageProtocol
 interface BoardRepository
 {
   +listBoardsUserOwnsNotArchived(SystemUser owner)
+  +listBoardsUserOwnsArchived(SystemUser owner)
+  +ofIdentity(final I id)
  }
 
 class AbstractUI
@@ -63,6 +65,7 @@ class SBProtocol
 class JpaBoardRepository
 {
 +listBoardsUserOwnsNotArchived(SystemUser owner)
++listBoardsUserOwnsArchived(SystemUser owner)
 }
 
 class SystemUser
@@ -73,6 +76,19 @@ class SystemUser
 class ShareBoardService
 {
  +listBoardsUserOwnsNotArchived(SystemUser owner)
+ +listBoardsUserOwnsArchived(SystemUser owner)
+}
+
+enum BoardState
+{
+    +CREATED
+    +SHARED
+    +ARCHIVED
+}
+
+class Board
+{
+    +archiveBoard()
 }
 
 
@@ -95,9 +111,12 @@ ArchiveBoardHandler --> "1" ShareBoardService
 
 ShareBoardService  --> "1" BoardRepository
 ShareBoardService  --> "*" Board
-ShareBoardService  ---> "*" SystemUser
+ShareBoardService  -----> "*" SystemUser
 
 ArchiveBoardHandler --> "*" Board
+
+Board --> BoardState
+
 'implements
 ArchiveBoardHandler ..|> Runnable
 Thread ..|> Runnable

@@ -17,7 +17,7 @@
 - Although this user story it's not entirely correlated with the user story being developed , 
     the backbone of the HTTP server for the client app was developed in this user story and we need that to develop the US3010. 
 
-*Regarding this requirement we understand that it relates to...*
+
 
 ## 3. Analysis
 
@@ -68,8 +68,10 @@ the system user owns that are in state **Archived** :
 
 ### 4.3. Applied Patterns
 
-- Repository - Provides a way to retrieve and persist aggregates.
-- Factory - Responsible for creating complex objects or aggregates while encapsulating the creation logic.
+- **Factory** - Responsible for creating complex objects or aggregates while encapsulating the creation logic.
+- **Repository** - Provides a way to retrieve and persist aggregates.
+    + **BoardRepository**
+
 
 ### 4.4. Tests
 
@@ -80,6 +82,14 @@ Instead, integration tests should be performed.
 ## 5. Implementation
 
 *In this section the team will present, important artifacts necessary to fully understand the implementation like the database operations*
+
+ **JpaBaseRepository**
+    
+    public Optional<T> ofIdentity(final I id) {
+        return this.matchOne("e." + this.identityFieldName() + " = :id", "id", id);
+    }
+
+ **JpaBoardRepository**
 
     public Iterable<Board> listBoardsUserOwnsNotArchived(SystemUser owner)
     {
