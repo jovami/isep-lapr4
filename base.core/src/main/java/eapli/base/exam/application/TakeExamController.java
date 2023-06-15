@@ -2,6 +2,7 @@ package eapli.base.exam.application;
 
 import java.util.List;
 
+import eapli.framework.domain.repositories.IntegrityViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +96,12 @@ public final class TakeExamController {
         var result = new RegularExamResult(new MyUserService().currentStudent(),
                 exam, ExamGrade.valueOf(correction.grade(), correction.maxGrade()),
                 correction.gradeProps());
-        this.resultRepo.save(result);
+
+        try {
+            this.resultRepo.save(result);
+        } catch (IntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Exam already graded");
+        }
 
         return ResponseEntity.ok(new ExamResultDTOMapper().toDTO(correction));
     }

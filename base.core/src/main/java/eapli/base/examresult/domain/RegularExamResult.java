@@ -1,15 +1,6 @@
 package eapli.base.examresult.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.base.exam.domain.RegularExam;
@@ -17,6 +8,7 @@ import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.validations.Preconditions;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "STUDENT", "EXAM" }) })
 public class RegularExamResult implements AggregateRoot<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,11 +22,11 @@ public class RegularExamResult implements AggregateRoot<Long> {
     private final ExamGradeProperties gradeProperties;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "STUDENT", nullable = false)
     private final Student student;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "EXAM", nullable = false)
     private final RegularExam regularExam;
 
     // for ORM
