@@ -35,7 +35,13 @@ public class CreateRegularExamUI extends AbstractUI {
 
         var file = new File(filePath);
         if (file == null || !file.exists() || !file.canRead()) {
-            System.out.println("File does not exist or does not have read permitions");
+            System.out.println("File does not exist or does not have read permissions");
+            return false;
+        }
+
+        var title = Console.readLine("Exam title: ");
+        if (title == null || title.isEmpty()) {
+            System.out.println("Exam title can't be empty");
             return false;
         }
 
@@ -61,7 +67,7 @@ public class CreateRegularExamUI extends AbstractUI {
                 return false;
             }
 
-            if (this.ctrl.createRegularExam(file, openDate, closeDate, chosen))
+            if (this.ctrl.createRegularExam(file, title, openDate, closeDate, chosen))
                 System.out.println("Regular exam created with success");
             else
                 System.out.println("Error parsing the Specification file");
@@ -72,7 +78,7 @@ public class CreateRegularExamUI extends AbstractUI {
         } catch (ConcurrencyException e) {
             System.out.println(
                     "Unfortunately there was an unexpected error in the application.\n" +
-                            "Please try again and if the problem persists, contact your system admnistrator.");
+                            "Please try again and if the problem persists, contact your system administrator.");
         }
         return false;
     }

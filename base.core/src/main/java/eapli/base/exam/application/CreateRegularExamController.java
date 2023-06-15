@@ -10,6 +10,7 @@ import eapli.base.course.domain.Course;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.exam.domain.RegularExamFactory;
+import eapli.base.exam.domain.RegularExamTitle;
 import eapli.base.exam.repositories.RegularExamRepository;
 import eapli.base.infrastructure.grammar.GrammarContext;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -37,13 +38,13 @@ public class CreateRegularExamController {
         this.repoCourse = repositoryFactory.courses();
     }
 
-    public boolean createRegularExam(File file, LocalDateTime openDate, LocalDateTime closeDate, Course chosen) throws IOException {
+    public boolean createRegularExam(File file, String title, LocalDateTime openDate, LocalDateTime closeDate, Course chosen) throws IOException {
         authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.POWER_USER, BaseRoles.TEACHER);
         var course = this.repoCourse.ofIdentity(chosen.identity())
                 .orElseThrow(() -> new ConcurrencyException("Course no longer exists"));
 
         var validator = GrammarContext.grammarTools().regularExamValidator();
-        var exam = new RegularExamFactory(validator).build(
+        var exam = new RegularExamFactory(validator).build(title,
                 openDate, closeDate, course, file);
 
         exam.ifPresent(this.repoRegularExam::save);

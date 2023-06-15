@@ -2,6 +2,7 @@ package eapli.base.exam.application;
 
 import java.util.List;
 
+import eapli.base.exam.domain.RegularExamTitle;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public final class TakeExamController {
     public ResponseEntity<ExamToBeTakenDTO> examToBeTaken(@RequestBody OngoingExamDTO examDto) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
-        var exam = this.examRepo.ofIdentity(examDto.getExamId());
+        var exam = this.examRepo.ofIdentity(RegularExamTitle.valueOf(examDto.getTitle()));
 
         if (exam.isEmpty()) {
             // TODO: confirm
@@ -80,7 +81,7 @@ public final class TakeExamController {
     public ResponseEntity<ExamResultDTO> examGrading(@RequestBody ExamResolutionDTO resolutionDTO) {
         this.authz.ensureAuthenticatedUserHasAnyOf(BaseRoles.STUDENT);
 
-        var examOpt = this.examRepo.ofIdentity(resolutionDTO.getExamID());
+        var examOpt = this.examRepo.ofIdentity(RegularExamTitle.valueOf(resolutionDTO.getTitle()));
 
         if (examOpt.isEmpty()) {
             // TODO: confirm

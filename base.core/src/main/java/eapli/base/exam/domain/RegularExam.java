@@ -1,12 +1,6 @@
 package eapli.base.exam.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import eapli.base.course.domain.Course;
 import eapli.framework.domain.model.AggregateRoot;
@@ -14,12 +8,9 @@ import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.validations.Preconditions;
 
 @Entity
-public class RegularExam implements AggregateRoot<Integer> {
-    // TODO: unique ExamTitle to identify the exam
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
+public class RegularExam implements AggregateRoot<RegularExamTitle> {
+    @EmbeddedId
+    private final RegularExamTitle title;
     @Embedded
     @Column(unique = true, nullable = false)
     private RegularExamSpecification specification;
@@ -29,15 +20,17 @@ public class RegularExam implements AggregateRoot<Integer> {
     private final Course course;
 
     protected RegularExam() {
+        this.title = null;
         this.specification = null;
         this.date = null;
         this.course = null;
     }
 
-    protected RegularExam(RegularExamSpecification specification, RegularExamDate date,
+    protected RegularExam(RegularExamTitle title, RegularExamSpecification specification, RegularExamDate date,
             Course course) {
-        Preconditions.noneNull(specification, date, course);
+        Preconditions.noneNull(title, specification, date, course);
 
+        this.title = title;
         this.specification = specification;
         this.date = date;
         this.course = course;
@@ -53,6 +46,10 @@ public class RegularExam implements AggregateRoot<Integer> {
 
     public RegularExamSpecification specification() {
         return this.specification;
+    }
+
+    public RegularExamTitle title() {
+        return this.title;
     }
 
     public void updateDate(RegularExamDate regularExamDate) {
@@ -88,22 +85,22 @@ public class RegularExam implements AggregateRoot<Integer> {
     }
 
     @Override
-    public int compareTo(Integer other) {
+    public int compareTo(RegularExamTitle other) {
         return AggregateRoot.super.compareTo(other);
     }
 
     @Override
-    public Integer identity() {
-        return this.id;
+    public RegularExamTitle identity() {
+        return this.title;
     }
 
     @Override
-    public boolean hasIdentity(Integer id) {
-        return AggregateRoot.super.hasIdentity(id);
+    public boolean hasIdentity(RegularExamTitle title) {
+        return AggregateRoot.super.hasIdentity(title);
     }
 
     @Override
     public String toString() {
-        return "RegularExam [" + "ID: " + id + " | " + date + "]";
+        return "RegularExam [" + "Title: " + title + " | " + date + "]";
     }
 }

@@ -29,26 +29,26 @@ public class RegularExamBootstrapper implements Action {
                     case "Fisica":
                         var openDate1 = LocalDateTime.parse("01/01/2022 13:20", df);
                         var closeDate1 = LocalDateTime.parse("02/01/2022 14:20", df);
-                        saveExam(openDate1, closeDate1, c, grammar);
+                        saveExam("Fisica-1", openDate1, closeDate1, c, grammar);
                         var openDate4 = LocalDateTime.parse("04/01/2021 13:20", df);
                         var closeDate4 = LocalDateTime.parse("05/01/2021 14:20", df);
-                        saveExam(openDate4, closeDate4, c, grammar);
+                        saveExam("Fisica-2", openDate4, closeDate4, c, grammar);
                         var openDate5 = LocalDateTime.parse("08/01/2020 13:20", df);
                         var closeDate5 = LocalDateTime.parse("09/01/2020 14:20", df);
-                        saveExam(openDate5, closeDate5, c, grammar);
+                        saveExam("Fisica-3", openDate5, closeDate5, c, grammar);
                         var openDate6 = LocalDateTime.parse("08/01/2020 13:20", df);
                         var closeDate6 = LocalDateTime.parse("09/01/2100 14:20", df);
-                        saveExam(openDate6, closeDate6, c, grammar);
+                        saveExam("Fisica-4", openDate6, closeDate6, c, grammar);
                         break;
                     case "Quimica":
                         var openDate2 = LocalDateTime.parse("15/01/2025 13:20", df);
                         var closeDate2 = LocalDateTime.parse("17/01/2025 14:20", df);
-                        saveExam(openDate2, closeDate2, c, grammar);
+                        saveExam("Quimica-1", openDate2, closeDate2, c, grammar);
                         break;
                     case "Matematica":
                         var openDate3 = LocalDateTime.parse("20/01/2025 13:20", df);
                         var closeDate3 = LocalDateTime.parse("22/01/2025 14:20", df);
-                        saveExam(openDate3, closeDate3, c, grammar);
+                        saveExam("Matematica-1", openDate3, closeDate3, c, grammar);
                         break;
                 }
             }
@@ -58,10 +58,10 @@ public class RegularExamBootstrapper implements Action {
         }
     }
 
-    private void saveExam(LocalDateTime start, LocalDateTime end, Course course, File specification)
+    private void saveExam(String title, LocalDateTime start, LocalDateTime end, Course course, File specification)
             throws IOException {
         RegularExamRepository repo = PersistenceContext.repositories().regularExams();
-        var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator()).build(start, end,
+        var exam = new RegularExamFactory(GrammarContext.grammarTools().regularExamValidator()).build(title, start, end,
                 course, specification);
         exam.ifPresent(repo::save);
     }

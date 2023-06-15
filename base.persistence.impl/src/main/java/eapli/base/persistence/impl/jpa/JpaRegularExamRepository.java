@@ -5,13 +5,14 @@ import java.util.Set;
 
 import eapli.base.course.domain.Course;
 import eapli.base.exam.domain.RegularExam;
+import eapli.base.exam.domain.RegularExamTitle;
 import eapli.base.exam.repositories.RegularExamRepository;
 
-class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, Integer>
+class JpaRegularExamRepository extends BaseJpaRepositoryBase<RegularExam, Long, RegularExamTitle>
         implements RegularExamRepository {
 
     JpaRegularExamRepository(String identityFieldName) {
-        super(identityFieldName, "id");
+        super(identityFieldName, "title");
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import eapli.base.course.domain.CourseID;
 import eapli.base.exam.domain.RegularExamDate;
+import eapli.base.exam.domain.RegularExamTitle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,14 +20,13 @@ public class OngoingExamDTO {
         fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     }
 
-    @Deprecated
-    private Integer examId;
+    private String title;
     private String course;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    public OngoingExamDTO(Integer examId, final CourseID name, final RegularExamDate date) {
-        this.examId = examId;
+    public OngoingExamDTO(final RegularExamTitle title, final CourseID name, final RegularExamDate date) {
+        this.title = title.title();
         this.course = name.id();
         this.startTime = date.openDate();
         this.endTime = date.closeDate();

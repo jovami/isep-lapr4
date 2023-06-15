@@ -47,10 +47,10 @@
     type Resolution = {
         sections: SectionAnswers[];
         submissionTime: Date;
-        examID: number;
+        title: string;
     };
 
-    let examId: number = null;
+    let title: string = null;
     let selectedExam = null;
     examStore.subscribe((value) => {
         if (value !== null) selectedExam = value;
@@ -76,7 +76,7 @@
 
         if (res.ok) {
             console.log(body);
-            examId = selectedExam.examId
+            title = selectedExam.title
             return body;
         } else {
             throw new Error(body);
@@ -117,7 +117,7 @@
         resolution = {
             sections: sections,
             submissionTime: new Date(),
-            examID: examId,
+            title: title,
         };
     };
 </script>

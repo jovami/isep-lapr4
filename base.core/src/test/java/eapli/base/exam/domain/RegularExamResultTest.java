@@ -70,13 +70,15 @@ public class RegularExamResultTest {
         var openDate = LocalDateTime.parse("10/10/2023 16:00", dfExam);
         var closeDate = LocalDateTime.parse("10/10/2023 18:00", dfExam);
 
-        regularExam1 = new RegularExam(new RegularExamSpecification("test specification")
+        regularExam1 = new RegularExam(RegularExamTitle.valueOf("test1")
+                ,new RegularExamSpecification("test specification")
                 , RegularExamDate.valueOf(openDate, closeDate)
                 , course1);
-        regularExam2 = new RegularExam(new RegularExamSpecification("test specification")
+
+        regularExam2 = new RegularExam(RegularExamTitle.valueOf("test2")
+                , new RegularExamSpecification("test specification")
                 , RegularExamDate.valueOf(openDate, closeDate)
                 , course2);
-
     }
 
     @Test

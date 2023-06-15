@@ -48,9 +48,8 @@ public class RegularExamTest {
     public void testEquals() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam2 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam3 = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam1 = new RegularExam(RegularExamTitle.valueOf("test"),specification, regularExamDate, course);
+        RegularExam exam2 = new RegularExam(RegularExamTitle.valueOf("test"),specification, regularExamDate, course);
 
         // Verify
         assertTrue(exam1.equals(exam1)); // Same instance
@@ -62,8 +61,8 @@ public class RegularExamTest {
     public void testHashCode() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam2 = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam1 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
+        RegularExam exam2 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Verify
         assertEquals(exam1.hashCode(), exam2.hashCode());
@@ -73,9 +72,8 @@ public class RegularExamTest {
     public void sameAs() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam2 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam3 = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam1 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
+        RegularExam exam2 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
         String differentClass = "This is a different class";
 
         // Verify
@@ -90,8 +88,8 @@ public class RegularExamTest {
     public void compareTo() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam1 = new RegularExam(specification, regularExamDate, course);
-        RegularExam exam2 = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam1 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
+        RegularExam exam2 = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Verify
         assertEquals(0, exam1.compareTo(exam2.identity()));
@@ -101,7 +99,7 @@ public class RegularExamTest {
     public void identity() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Verify
         assertEquals(exam.identity(), exam.identity());
@@ -111,18 +109,18 @@ public class RegularExamTest {
     public void hasIdentity() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Verify
         assertTrue(exam.hasIdentity(exam.identity()));
-        assertFalse(exam.hasIdentity(123)); // Different identity
+        assertFalse(exam.hasIdentity(RegularExamTitle.valueOf("different"))); // Different identity
     }
 
     @Test
     public void course() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Execute
         Course result = exam.course();
@@ -135,7 +133,7 @@ public class RegularExamTest {
     public void regularExamDate() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Execute
         RegularExamDate result = exam.date();
@@ -148,7 +146,7 @@ public class RegularExamTest {
     public void regularExamSpecification() {
         // Prepare
         RegularExamSpecification specification = new RegularExamSpecification("Test Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Execute
         RegularExamSpecification result = exam.specification();
@@ -171,7 +169,7 @@ public class RegularExamTest {
     @Test
     public void updateRegularExamDate_ShouldUpdateDate() {
         RegularExamSpecification specification = new RegularExamSpecification("Sample Specification");
-        RegularExam exam = new RegularExam(specification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), specification, regularExamDate, course);
 
         // Arrange
         RegularExamDate newDate = RegularExamDate.valueOf(regularExamDate.openDate(), regularExamDate.closeDate());
@@ -187,7 +185,7 @@ public class RegularExamTest {
     public void updateRegularExamSpecification_ShouldUpdateSpecification() {
         // Arrange
         RegularExamSpecification newSpecification = new RegularExamSpecification("New Specification");
-        RegularExam exam = new RegularExam(newSpecification, regularExamDate, course);
+        RegularExam exam = new RegularExam(RegularExamTitle.valueOf("test"), newSpecification, regularExamDate, course);
         // Act
         exam.updateSpecification(newSpecification);
 

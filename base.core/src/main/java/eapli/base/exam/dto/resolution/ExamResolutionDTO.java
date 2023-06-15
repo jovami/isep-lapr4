@@ -3,6 +3,7 @@ package eapli.base.exam.dto.resolution;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import eapli.base.exam.domain.RegularExamTitle;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +35,6 @@ public final class ExamResolutionDTO {
 
     private LocalDateTime submissionTime;
 
-    @Deprecated
-    private Integer examID;
+    private String title;
 
 }

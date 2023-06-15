@@ -6,7 +6,7 @@
     import { examStore } from "../store";
     import { push } from "svelte-spa-router";
 
-    type ExamInfo = { examId: number; course: string; startTime: Date; endTime: Date };
+    type ExamInfo = { title: string; course: string; startTime: Date; endTime: Date };
 
     const prefix: string = "/regular";
 
@@ -18,7 +18,10 @@
         );
         const body = await res.json();
 
-        if (res.ok) return body;
+        if (res.ok) {
+            console.log(body);
+            return body;
+        }
         else throw new Error(body);
     };
 </script>
@@ -37,7 +40,7 @@
                         <h2
                                 class="text-lg text-white font-medium title-font mb-2"
                         >
-                            {exam.examId}
+                            {exam.title}
                         </h2>
                         <p class="leading-relaxed text-base">
                             {exam.course}

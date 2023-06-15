@@ -123,7 +123,7 @@ public class ExamBootstrapper implements Action {
         var now = LocalDateTime.now();
         var end = now.plusDays(3);
 
-        var exam = new RegularExamFactory(svc).build(now, end, c, spec).orElseThrow();
+        var exam = new RegularExamFactory(svc).build(spec.getName().replace(".exam", ""), now, end, c, spec).orElseThrow();
 
         this.repos.regularExams().save(exam);
     }

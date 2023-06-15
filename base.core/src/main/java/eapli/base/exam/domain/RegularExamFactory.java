@@ -32,16 +32,17 @@ public class RegularExamFactory {
      *
      * @throws IOException if an error occurs when reading the file contents
      */
-    public Optional<RegularExam> build(LocalDateTime start, LocalDateTime end, Course c, File specFile) throws IOException {
+    public Optional<RegularExam> build(String title, LocalDateTime start, LocalDateTime end, Course c, File specFile) throws IOException {
         if (!this.svc.validate(specFile))
             return Optional.empty();
+
+        var id = RegularExamTitle.valueOf(title);
 
         var date = RegularExamDate.valueOf(start, end);
 
         var spec = new RegularExamSpecification(readFileToString(specFile, StandardCharsets.UTF_8));
 
-        return Optional.of(new RegularExam(spec, date, c));
-
+        return Optional.of(new RegularExam(id, spec, date, c));
     }
 
     /**
@@ -100,16 +101,18 @@ public class RegularExamFactory {
      * @apiNote The strings contained in the list need not be terminated
      *          by a new line
      */
-    public Optional<RegularExam> build(LocalDateTime start, LocalDateTime end, Course c, List<String> specLines) {
+    public Optional<RegularExam> build(String title, LocalDateTime start, LocalDateTime end, Course c, List<String> specLines) {
         var fullSpec = specLines.stream()
                 .collect(Collectors.joining("\n"));
 
         if (!this.svc.validate(fullSpec))
             return Optional.empty();
 
+        var id = RegularExamTitle.valueOf(title);
+
         var date = RegularExamDate.valueOf(start, end);
 
-        return Optional.of(new RegularExam(new RegularExamSpecification(fullSpec), date, c));
+        return Optional.of(new RegularExam(id, new RegularExamSpecification(fullSpec), date, c));
     }
 
 }
