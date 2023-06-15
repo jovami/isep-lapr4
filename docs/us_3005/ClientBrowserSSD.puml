@@ -1,0 +1,11 @@
+@startuml
+actor Client as client
+actor browser as browser
+
+client <- browser : open socket
+client --> browser : accept socket and sends HTML content
+client <- browser : get boards
+client --> browser : send board
+
+
+@enduml
