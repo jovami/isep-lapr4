@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class UpdatePostItHandler implements Runnable {
     private final Socket socket;

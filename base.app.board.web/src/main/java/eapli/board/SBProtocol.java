@@ -15,7 +15,6 @@ public class SBProtocol implements MessageProtocol {
     // private String authToken;
     private byte[] content;
 
-    // TODO: CODE FOR EACH request/response?? or for each of the actions??
     // SBProtocol codes
     public static final int COMMTEST = 0;
     public static final int DISCONN = 1;
@@ -45,7 +44,6 @@ public class SBProtocol implements MessageProtocol {
         // SBProtocol PARAMETERS
         boolean isCompatible = (SBPRROTOCOL_VERSION == parseByte(in.readByte()));
         if (isCompatible) {
-            // TODO: swap in.readByte() to in.read()
             code = parseByte(in.readByte());
             dataLength = parseLength(in.readByte(), in.readByte());
             content = new byte[dataLength];
@@ -140,7 +138,6 @@ public class SBProtocol implements MessageProtocol {
     public boolean send(DataOutputStream out) throws IOException {
         out.write(SBPRROTOCOL_VERSION.byteValue());
 
-        // TODO:ACCEPT NO CODE??
         /*
          * if (code == -1) {
          * out.write((byte) COMMTEST);

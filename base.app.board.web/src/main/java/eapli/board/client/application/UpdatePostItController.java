@@ -49,7 +49,7 @@ public class UpdatePostItController {
 
     public boolean updatePostIt(String str) throws IOException, ReceivedERRCode {
         var message = new SBProtocol();
-        message.setCode(SBProtocol.SEND_POST_IT_INFO);
+        message.setCode(SBProtocol.UPDATE_POST_IT);
         message.setContentFromString(str);
         message.send(outS);
 

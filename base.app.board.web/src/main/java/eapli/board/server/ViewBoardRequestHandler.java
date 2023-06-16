@@ -62,7 +62,6 @@ public class ViewBoardRequestHandler implements Runnable {
 
             for (Cell cell : board.getCells() ) {
                 if (cell.hasPostIt()){
-                    //TODO: WHAT IF THE CONTENT is image?
                     if (cell.getPostIt().hasData()){
                         builder.append(cell.getPostIt().getData()).append('\0');
                     }
