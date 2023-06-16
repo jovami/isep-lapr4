@@ -1,8 +1,4 @@
-package eapli.board.server.domain;
-
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardHistory;
-import eapli.base.board.domain.BoardTitle;
+package eapli.base.board.domain;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -26,7 +22,7 @@ public class ChangePostIt extends BoardHistory {
     protected ChangePostIt() {
     }
     public ChangePostIt(Board board, String str) {
-        super(board);
+        super(str);
         parseStr(str);
     }
 

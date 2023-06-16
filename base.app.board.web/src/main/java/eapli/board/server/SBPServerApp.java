@@ -2,13 +2,13 @@ package eapli.board.server;
 
 import eapli.base.app.common.console.BaseApplication;
 import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardHistory;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.clientusermanagement.usermanagement.domain.BasePasswordPolicy;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
+import eapli.base.board.domain.BoardHistory;
 import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;

@@ -1,8 +1,13 @@
 package eapli.base.board.domain;
 
+import eapli.base.board.dto.BoardHistoryDTO;
+import eapli.base.board.dto.BoardHistoryMapper;
+import lombok.Getter;
+
+
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "BOARD_HISTORY")
@@ -11,50 +16,54 @@ import java.time.LocalDateTime;
 public abstract class BoardHistory {
 
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    private Board board;
+
+    @Getter
+    private Type type;
+    @Getter
+    private BoardTitle boardTitle;
+    @Getter
+    private String row1;
+    @Getter
+    private String column1;
+    @Getter
     @Column(nullable = false, updatable = false)
-    LocalDateTime date;
+    private LocalDateTime time;
+    @Getter
+    private String prevContent;
+    @Getter
+    private String posContent;
+
 
 
     protected BoardHistory() {
     }
-    public BoardHistory(Board board) {
-        this.board = board;
-        this.date = LocalDateTime.now();
+    public BoardHistory(String str) {
+        BoardHistoryMapper mapper= new BoardHistoryMapper();
+        BoardHistoryDTO dto = mapper.toDTO(str);
+        this.type = Type.valueOf(dto.getType());
+        this.boardTitle = BoardTitle.valueOf(dto.getBoard());
+        this.row1 = dto.getPosition()[0];
+        this.column1 = dto.getPosition()[1];
+        this.time = LocalDateTime.parse(dto.getTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+        if (this.type.equals(Type.CREATE)){
+            this.prevContent = null;
+            this.posContent = dto.getPosText();
+        } else {
+            this.prevContent = dto.getPrevText();
+            this.posContent = dto.getPosText();
+        }
     }
 
 
     public abstract String getType();
 
 
-    public Board getBoard(){
-        return board;
-    }
-
-    public Long getId() {
-        return id;
-    }
 
 
-    public String toStringHeader() {
-        return "BoardHistory:\n" +
-                String.format("%-8s | %-5s | %-5s | %-16s\n",
-                        "Type", "Cell1", "Cell2", "Date") +
-                "----------------------------------------------";
-    }
-
-    /*@Override
-    public String toString() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String formattedDate = dateFormat.format(date);
-        return String.format("%-8s | [%d,%d] | [%d,%d] | %s\n",
-                getType(), getCell1().getRow().getRowId(), getCell1().getColumn().getColumnId(),
-                getCell2().getRow().getRowId(),getCell2().getColumn().getColumnId(),formattedDate);
-    }*/
 
 
 }

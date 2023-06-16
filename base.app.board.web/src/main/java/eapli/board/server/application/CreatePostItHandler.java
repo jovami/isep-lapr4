@@ -1,13 +1,13 @@
 package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardHistory;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
-import eapli.board.server.domain.CreatePostIt;
+import eapli.base.board.domain.BoardHistory;
+import eapli.base.board.domain.CreatePostIt;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
@@ -27,7 +27,7 @@ public class CreatePostItHandler implements Runnable {
     private DataInputStream inS;
     private DataOutputStream outS;
     private final Socket sock;
-    private final String alterType = "Create";
+    private final String alterType = "CREATE";
     private String alterBoard;
     private String alterPosition;
     private String alterTime;
@@ -119,8 +119,7 @@ public class CreatePostItHandler implements Runnable {
 
             StringBuilder sb = getStringBuilder();
             LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard);
-            CreatePostIt createPostIt = new CreatePostIt(optBoard,String.valueOf(sb));
-            history.push(createPostIt);
+            history.push(new CreatePostIt(optBoard,String.valueOf(sb)));
 
             NewChangeEvent event = new NewChangeEvent(optBoard.getBoardTitle().title(),receiveText);
             publisher.publish(event);

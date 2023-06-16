@@ -35,10 +35,20 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
             String name = auth[0];
             String pass = auth[1];
 
-            Optional<UserSession> userSession = authenticate(name, pass);
-            if (userSession.isPresent()) {
-                System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
+
+            for (Client client : SBPServerApp.activeAuths.values()) {
+                if (client.getUserLoggedIn().identity().equals(name)){
+                    System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
+                    SBProtocol responseSent = new SBProtocol();
+                    responseSent.setCode(SBProtocol.ERR);
+                    responseSent.setContentFromString("User already logged in");
+                    responseSent.send(outS);
+                    return;
+                }
             }
+
+            Optional<UserSession> userSession = authenticate(name, pass);
+
 
             SBProtocol responseSent = new SBProtocol();
             if (userSession.isEmpty()) {

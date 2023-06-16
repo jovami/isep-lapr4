@@ -1,10 +1,10 @@
 package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardHistory;
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
+import eapli.base.board.domain.BoardHistory;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;

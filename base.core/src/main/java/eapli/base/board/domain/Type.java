@@ -1,4 +1,4 @@
-package eapli.board.server.domain;
+package eapli.base.board.domain;
 
 public enum Type {
     CREATE,

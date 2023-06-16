@@ -1,4 +1,4 @@
-package eapli.board.server.dto;
+package eapli.base.board.dto;
 
 
 import jovami.util.dto.Mapper;

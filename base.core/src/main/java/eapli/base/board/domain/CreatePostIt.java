@@ -1,4 +1,4 @@
-package eapli.board.server.domain;
+package eapli.base.board.domain;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardHistory;
@@ -27,7 +27,7 @@ public class CreatePostIt extends BoardHistory {
     protected CreatePostIt() {
     }
     public CreatePostIt(Board board, String str) {
-        super(board);
+        super(str);
         parseStr(str);
     }
 

@@ -1,9 +1,5 @@
-package eapli.board.server.domain;
+package eapli.base.board.domain;
 
-
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardHistory;
-import eapli.base.board.domain.BoardTitle;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -26,7 +22,7 @@ public class UndoPostIt extends BoardHistory {
     protected UndoPostIt() {
     }
     public UndoPostIt(Board board, String str) {
-        super(board);
+        super(str);
         parseStr(str);
     }
 

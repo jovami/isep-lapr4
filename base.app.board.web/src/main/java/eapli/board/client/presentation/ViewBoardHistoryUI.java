@@ -1,7 +1,7 @@
 package eapli.board.client.presentation;
 
 import eapli.board.client.application.ViewBoardHistoryController;
-import eapli.board.server.dto.BoardHistoryMapper;
+import eapli.base.board.dto.BoardHistoryMapper;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -38,6 +38,10 @@ public class ViewBoardHistoryUI extends AbstractUI {
                 return false;
             }
 
+            if (history.length == 0 || history[0].equals("")){
+                System.out.println("No history to show");
+                return false;
+            }
             System.out.println(header());
             for (String s : history) {
                 System.out.println(mapper.toDTO(s));
