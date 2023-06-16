@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CreatePostItHandler implements Runnable {
@@ -118,7 +117,7 @@ public class CreatePostItHandler implements Runnable {
             }
 
             StringBuilder sb = getStringBuilder();
-            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard);
+            var history = SBPServerApp.histories.get(optBoard);
             history.push(new CreatePostIt(optBoard,String.valueOf(sb)));
 
             NewChangeEvent event = new NewChangeEvent(optBoard.getBoardTitle().title(),receiveText);

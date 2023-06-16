@@ -1,27 +1,29 @@
 package eapli.board;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.*;
-
-public class SBProtocol implements MessageProtocol{
+public class SBProtocol implements MessageProtocol {
     private static final Integer SBPRROTOCOL_VERSION = 1;
-    private static final int CR=13;
+    private static final int CR = 13;
 
     private Integer code;
     private Integer dataLength;
-   // private String authToken;
+    // private String authToken;
     private byte[] content;
 
-    //TODO: CODE FOR EACH request/response?? or for each of the actions??
-    //SBProtocol codes
+    // TODO: CODE FOR EACH request/response?? or for each of the actions??
+    // SBProtocol codes
     public static final int COMMTEST = 0;
     public static final int DISCONN = 1;
     public static final int ACK = 2;
     public static final int ERR = 3;
     public static final int AUTH = 4;
 
-    //BOARD SBPMessageCodes
+    // BOARD SBPMessageCodes
     public static final int VIEW_ALL_BOARDS = 6;
     public static final int LIST_BOARDS = 7;
     public static final int CHOOSE_BOARD = 8;
@@ -35,8 +37,7 @@ public class SBProtocol implements MessageProtocol{
     public static final int LIST_HISTORY = 15;
     public static final int VIEW_BOARD_HISTORY = 16;
     public static final int TOKEN = 17;
-
-
+    public static final int UNDO_LAST_POST_IT_CHANGE = 18;
 
     public SBProtocol(DataInputStream in) throws IOException, ReceivedERRCode {
 
@@ -44,15 +45,15 @@ public class SBProtocol implements MessageProtocol{
         boolean isCompatible = (SBPRROTOCOL_VERSION == parseByte(in.readByte()));
 
         if (isCompatible) {
-            //TODO: swap in.readByte() to in.read()
+            // TODO: swap in.readByte() to in.read()
             code = parseByte(in.readByte());
             dataLength = parseLength(in.readByte(), in.readByte());
             content = new byte[dataLength];
 
-            if (code>SBProtocol.AUTH && code != SBProtocol.TOKEN){
-                //authToken=readToken(in);
-            }else {
-                //authToken=null;
+            if (code > SBProtocol.AUTH && code != SBProtocol.TOKEN) {
+                // authToken=readToken(in);
+            } else {
+                // authToken=null;
             }
             in.readFully(content, 0, dataLength);
 
@@ -67,17 +68,18 @@ public class SBProtocol implements MessageProtocol{
     }
 
     private String readToken(DataInputStream in) throws IOException {
-        String ret="";
+        String ret = "";
         int val;
         do {
-            val=in.read();
-            if(val==-1)
+            val = in.read();
+            if (val == -1)
                 throw new IOException();
-            if(val!=CR)
-                ret=ret+(char)val;
-        } while(val!=CR);
+            if (val != CR)
+                ret = ret + (char) val;
+        } while (val != CR);
 
-        return ret;    }
+        return ret;
+    }
 
     public SBProtocol() {
         code = -1;
@@ -125,27 +127,29 @@ public class SBProtocol implements MessageProtocol{
         int dataLength2 = parseByte(b2);
         return dataLength1 + (dataLength2 * 256);
     }
-/*
-    public void setToken(String token) {
-        this.authToken = token;
-    }
-
-    public String token() {
-        System.out.println("Token:<"+authToken+">");
-        return this.authToken;
-    }*/
-
+    /*
+     * public void setToken(String token) {
+     * this.authToken = token;
+     * }
+     *
+     * public String token() {
+     * System.out.println("Token:<"+authToken+">");
+     * return this.authToken;
+     * }
+     */
 
     public boolean send(DataOutputStream out) throws IOException {
         out.write(SBPRROTOCOL_VERSION.byteValue());
 
-        //TODO:ACCEPT NO CODE??
-        /*if (code == -1) {
-            out.write((byte) COMMTEST);
-            out.write((byte) 0);
-            out.write((byte) 0);
-            return true;
-        } else */
+        // TODO:ACCEPT NO CODE??
+        /*
+         * if (code == -1) {
+         * out.write((byte) COMMTEST);
+         * out.write((byte) 0);
+         * out.write((byte) 0);
+         * return true;
+         * } else
+         */
         if ((code == COMMTEST) || (code == DISCONN) || (code == ACK)) {
             // REQUESTS WITH THIS CODES CAN'T CONTAIN DATA
             out.write(code.byteValue());
@@ -165,19 +169,19 @@ public class SBProtocol implements MessageProtocol{
             out.write((byte) 0);
         }
 
- //       if (authToken!=null)
-//            writeToken(out);
+        // if (authToken!=null)
+        // writeToken(out);
         if ((content != null)) {
             out.write(content, 0, dataLength);
         }
         return true;
     }
-/*
-    private void writeToken(DataOutputStream out) throws IOException {
-        out.write(authToken.getBytes());
-        out.write(CR);
-    }*/
-
+    /*
+     * private void writeToken(DataOutputStream out) throws IOException {
+     * out.write(authToken.getBytes());
+     * out.write(CR);
+     * }
+     */
 
     public void setContentFromString(String cStr) {
         dataLength = cStr.length();

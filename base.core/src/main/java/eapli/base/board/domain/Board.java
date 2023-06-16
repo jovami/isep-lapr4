@@ -1,15 +1,29 @@
 package eapli.base.board.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 import lombok.Getter;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 @Entity
 @Table(name = "BOARD")
@@ -17,9 +31,9 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Id
     private BoardTitle boardTitle;
     @Transient
-    public static int MAX_ROWS=20;
+    public static int MAX_ROWS = 20;
     @Transient
-    public static int MAX_COLUMNS=10;
+    public static int MAX_COLUMNS = 10;
     @Column(nullable = false)
     private int numRows;
     @Column(nullable = false)
@@ -32,7 +46,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     private BoardState state;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private final List<Cell> cells = new ArrayList<>();
+    private final List<Cell> cells = Collections.synchronizedList(new ArrayList<>());
 
     @ElementCollection
     private final List<BoardColumn> boardColumnList = new ArrayList<>();
@@ -41,8 +55,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     private final List<BoardRow> boardRowList = new ArrayList<>();
     @Transient
     @Getter
-    private final LinkedList<BoardHistory> boardHistory = new LinkedList<>();
-
+    private final Deque<BoardHistory> history = new ConcurrentLinkedDeque<>();
 
     protected Board() {
     }
@@ -73,12 +86,52 @@ public class Board implements AggregateRoot<BoardTitle> {
         this.numColumns = numColumns;
     }
 
-
     public static void setMax(int maxRows, int maxColumns) {
         MAX_ROWS = maxRows;
         MAX_COLUMNS = maxColumns;
     }
 
+    public boolean undoChangeOnPostIt(int row, int column) {
+        synchronized (this.cells) {
+            var idx = (row - 1) * this.numColumns + (column - 1);
+            if (idx < 0 || idx >= this.cells.size())
+                return false; // TODO: report invalid index
+        }
+
+        var cell = this.getCell(row, column);
+
+        var postit = cell.getPostIt();
+
+        synchronized (this.history) {
+            for (final var entry : this.history) {
+                // TODO: use enum
+                if (entry.getType().equals("CHANGE")) {
+                    postit.alterPostItData(entry.getPrevContent());
+
+                    var sb = new StringBuilder();
+
+                    sb.append(Type.UNDO);
+                    sb.append('\t');
+                    sb.append(this.boardTitle.toString());
+                    sb.append('\t');
+                    sb.append(row);
+                    sb.append(',');
+                    sb.append(column);
+                    sb.append('\t');
+                    sb.append(LocalDateTime.now());
+                    sb.append('\t');
+                    sb.append(entry.getPosContent());
+                    sb.append('\t');
+                    sb.append(entry.getPrevContent());
+
+                    this.history.push(new UndoPostIt(this, sb.toString()));
+                    return true;
+                }
+            }
+        }
+
+        return true;
+    }
 
     public void archiveBoard() {
         this.state = BoardState.ARCHIVED;
@@ -92,7 +145,6 @@ public class Board implements AggregateRoot<BoardTitle> {
         this.state = BoardState.CREATED;
     }
 
-
     public SystemUser getOwner() {
         return owner;
     }
@@ -105,8 +157,10 @@ public class Board implements AggregateRoot<BoardTitle> {
         return cells;
     }
 
-    public Cell getCell(int row, int col) {
-        return cells.get(((row - 1) * numColumns) + (col - 1));
+    public synchronized Cell getCell(int row, int col) {
+        synchronized (this.cells) {
+            return cells.get(((row - 1) * numColumns) + (col - 1));
+        }
     }
 
     public List<BoardColumn> getBoardColumnList() {
@@ -151,24 +205,21 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-
     public void movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
-        //if newCellId has not a post it assigned
+        // if newCellId has not a post it assigned
 
-        Cell from = getCell(rowFrom,colFrom);
-        Cell to = getCell(rowTo,colTo);
+        Cell from = getCell(rowFrom, colFrom);
+        Cell to = getCell(rowTo, colTo);
 
-        synchronized(from){
-            synchronized(to){
+        synchronized (from) {
+            synchronized (to) {
                 PostIt tmp = from.getPostIt();
                 from.removePostIt();
                 to.addPostIt(tmp);
             }
         }
 
-
     }
-
 
     @Override
     public boolean sameAs(Object other) {

@@ -1,17 +1,16 @@
 package eapli.board.server.application;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
 import eapli.base.board.domain.BoardHistory;
 import jovami.util.exceptions.ReceivedERRCode;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.LinkedList;
 
 public class ViewBoardHistoryHandler {
     private DataInputStream inS;
@@ -21,7 +20,6 @@ public class ViewBoardHistoryHandler {
     public ViewBoardHistoryHandler(Socket socket, SBProtocol request) {
         this.sock = socket;
     }
-
 
     public void run() {
         try {
@@ -44,17 +42,15 @@ public class ViewBoardHistoryHandler {
             responseSent.setContentFromString(builder.toString());
             responseSent.send(outS);
 
-
             SBProtocol receiveBoard = new SBProtocol(inS);
             String board = receiveBoard.getContentAsString();
 
-            Board optBoard =  SBPServerApp.boards.get(BoardTitle.valueOf(board));
-            if (optBoard==null) {
+            Board optBoard = SBPServerApp.boards.get(BoardTitle.valueOf(board));
+            if (optBoard == null) {
                 throw new ReceivedERRCode("Board not found");
             }
 
-
-            LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard);
+            var history = SBPServerApp.histories.get(optBoard);
 
             StringBuilder historyBuilder = new StringBuilder();
             for (BoardHistory bh : history) {
@@ -66,7 +62,6 @@ public class ViewBoardHistoryHandler {
             response.setCode(SBProtocol.VIEW_BOARD_HISTORY);
             response.setContentFromString(historyBuilder.toString());
             response.send(outS);
-
 
         } catch (
                 IOException | ReceivedERRCode e) {

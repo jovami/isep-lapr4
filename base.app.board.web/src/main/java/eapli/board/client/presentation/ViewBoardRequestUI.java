@@ -1,12 +1,12 @@
 package eapli.board.client.presentation;
 
+import java.net.InetAddress;
+import java.util.List;
+
 import eapli.board.client.application.ViewBoardRequestController;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
-
-import java.net.InetAddress;
-import java.util.List;
 
 public class ViewBoardRequestUI extends AbstractUI {
 

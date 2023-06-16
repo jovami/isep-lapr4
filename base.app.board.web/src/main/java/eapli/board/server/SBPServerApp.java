@@ -1,5 +1,15 @@
 package eapli.board.server;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import eapli.base.app.common.console.BaseApplication;
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
@@ -14,27 +24,20 @@ import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.pubsub.EventDispatcher;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.*;
-
-
 public class SBPServerApp extends BaseApplication {
 
-    //TODO: CHANGE TO TOKEN
-    public static final Map<Board, LinkedList<BoardHistory>> histories;
+    // TODO: CHANGE TO TOKEN
+    public static final Map<Board, Deque<BoardHistory>> histories;
     public static final Map<InetAddress, Client> activeAuths;
     public static final Map<BoardTitle, Board> boards;
 
     static {
-        boards= Collections.synchronizedMap( new HashMap<>());
-        activeAuths =Collections.synchronizedMap( new HashMap<>());
-        histories =Collections.synchronizedMap( new HashMap<>());
-
+        boards = Collections.synchronizedMap(new HashMap<>());
+        activeAuths = Collections.synchronizedMap(new HashMap<>());
+        histories = Collections.synchronizedMap(new HashMap<>());
     }
-    static private ServerSocket sock;
+
+    private static ServerSocket sock;
     public static final String SEPARATOR_LABEL = "----------------------------------";
 
     private final BoardRepository boardRepository = PersistenceContext.repositories().boards();
@@ -53,10 +56,8 @@ public class SBPServerApp extends BaseApplication {
         AuthzRegistry.configure(PersistenceContext.repositories().users(), new BasePasswordPolicy(),
                 new PlainTextEncoder());
 
-
         new SBPServerApp().run(args);
     }
-
 
     @Override
     protected void doMain(final String[] args) {
@@ -77,10 +78,10 @@ public class SBPServerApp extends BaseApplication {
             System.exit(1);
         }
 
-        //setup in memory boards
+        // setup in memory boards
         for (Board board : boardRepository.findAll()) {
-            boards.putIfAbsent(board.getBoardTitle(),board);
-            histories.put(board, board.getBoardHistory());
+            boards.putIfAbsent(board.getBoardTitle(), board);
+            histories.put(board, board.getHistory());
         }
 
         try {
@@ -110,7 +111,7 @@ public class SBPServerApp extends BaseApplication {
         dispatcher.subscribe(new NewChangeWatchDog(), NewChangeEvent.class);
     }
 
-    public void addHistoryLine(BoardTitle boardTitle, BoardHistory str){
+    public void addHistoryLine(BoardTitle boardTitle, BoardHistory str) {
         Optional<Board> board = boardRepository.ofIdentity(boardTitle);
         if (board.isEmpty())
             return;

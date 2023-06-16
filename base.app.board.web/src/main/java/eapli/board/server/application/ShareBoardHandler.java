@@ -82,10 +82,14 @@ public class ShareBoardHandler implements Runnable {
             String username, permStr;
             BoardParticipantPermissions perm;
 
+            // TODO: use threads
             for (String user : List.of(receiveInvited.getContentAsString().split("\0"))) {
                 str = user.split("\\\\");
                 username = str[0];
                 permStr = str[1];
+
+                // TODO: use
+                // perm = BoardParticipantPermissions.valueOf(permStr);
 
                 if (permStr.equals(BoardParticipantPermissions.WRITE.toString())) {
                     perm = BoardParticipantPermissions.WRITE;

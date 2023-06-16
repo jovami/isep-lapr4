@@ -72,6 +72,9 @@ public class ShareBoardService {
         for (BoardParticipant participant : boardParticipantRepository.listBoardParticipants(board)) {
             users.remove(participant.participant());
         }
+
+        // TODO: isto nao funfa pq ta do lado do server
+        // usar token/username/whateverelse
         MyUserService s = new MyUserService();
         users.remove(s.currentUser());
         return users;

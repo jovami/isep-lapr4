@@ -64,6 +64,10 @@ public class MenuRequest extends Thread {
                     ViewBoardHistoryHandler viewBoardHistoryHandler = new ViewBoardHistoryHandler(sock, request);
                     viewBoardHistoryHandler.run();
                     break;
+                case SBProtocol.UNDO_LAST_POST_IT_CHANGE:
+                    var handler  = new UndoPostItLastChangeHandler(sock, request);
+                    handler.run();
+                    break;
             }
 
         } catch (IOException ex) {

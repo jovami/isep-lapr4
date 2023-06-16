@@ -1,6 +1,13 @@
 package eapli.board.client;
 
-import eapli.board.client.presentation.*;
+import java.net.InetAddress;
+
+import eapli.board.client.presentation.ArchiveBoardUI;
+import eapli.board.client.presentation.CreatePostItUI;
+import eapli.board.client.presentation.ShareBoardUI;
+import eapli.board.client.presentation.UndoPostItLastChangeUI;
+import eapli.board.client.presentation.ViewBoardHistoryUI;
+import eapli.board.client.presentation.ViewBoardRequestUI;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.presentation.console.AbstractUI;
@@ -9,14 +16,13 @@ import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
-import java.net.InetAddress;
-
 public class MainMenu extends AbstractUI {
     private final int serverPort;
     private final InetAddress serverIP;
 
     private static final String RETURN_LABEL = "Return ";
-    //MENU OPTIONS
+
+    // MENU OPTIONS
     private static final int SHARE_BOARD = 1;
     private static final int VIEW_BOARD = 2;
     private static final int CREATE_POSTIT = 3;
@@ -26,7 +32,6 @@ public class MainMenu extends AbstractUI {
     private static final int ARCHIVE_BOARD = 7;
 
     private static final int EXIT_OPTION = 0;
-
 
     private static final String SEPARATOR_LABEL = "--------------";
 
@@ -61,12 +66,19 @@ public class MainMenu extends AbstractUI {
     private Menu buildMainMenu() {
         Menu menu = new Menu("Shared Board App - SBP ");
         menu.addItem(MenuItem.separator(SEPARATOR_LABEL));
-        menu.addItem(SHARE_BOARD, "Share board ", new ShareBoardUI(serverIP, serverPort)::show);
-        menu.addItem(VIEW_BOARD, "View board ", new ViewBoardRequestUI(serverIP, serverPort)::show);
-        menu.addItem(CREATE_POSTIT, "Create Post-It ", new CreatePostItUI(serverIP, serverPort)::show);
-        menu.addItem(VIEW_BOARD_HISTORY, "View Board History ", new ViewBoardHistoryUI(serverIP, serverPort)::show);
-        menu.addItem(ARCHIVE_BOARD, "Archive board ", new ArchiveBoardUI(serverIP, serverPort)::show);
 
+        menu.addItem(SHARE_BOARD, "Share board ",
+                new ShareBoardUI(serverIP, serverPort)::show);
+        menu.addItem(VIEW_BOARD, "View board ",
+                new ViewBoardRequestUI(serverIP, serverPort)::show);
+        menu.addItem(CREATE_POSTIT, "Create Post-It ",
+                new CreatePostItUI(serverIP, serverPort)::show);
+        menu.addItem(UNDO_POSTIT, "Undo last change on a Post-It",
+                new UndoPostItLastChangeUI(serverIP, serverPort)::show);
+        menu.addItem(VIEW_BOARD_HISTORY, "View Board History ",
+                new ViewBoardHistoryUI(serverIP, serverPort)::show);
+        menu.addItem(ARCHIVE_BOARD, "Archive board ",
+                new ArchiveBoardUI(serverIP, serverPort)::show);
 
         menu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
         return menu;

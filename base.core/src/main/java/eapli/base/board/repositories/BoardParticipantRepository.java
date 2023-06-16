@@ -12,6 +12,7 @@ public interface BoardParticipantRepository extends DomainRepository<Integer,Boa
 
     Iterable<Board> listBoardsByParticipant(SystemUser user);
 
+    // TODO: ensure archived boards do not show up
     Iterable<Board> withPermission(SystemUser user, BoardParticipantPermissions perm);
 
     default Iterable<Board> boardsUserCanWrite(SystemUser user){
