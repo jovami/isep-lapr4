@@ -17,7 +17,6 @@ public class ClientServerAjax extends Thread {
     public static final int LISTEN_SERVER = 9070;
     //For each board
     private static final HashMap<String, BoardInfoDto> boardsInfo = new HashMap<>();
-    //TODO: UNIX PATH??
     private final String BASE_FOLDER = "base.app.board.web/src/main/java/eapli/board/www";
 
     public ClientServerAjax() {

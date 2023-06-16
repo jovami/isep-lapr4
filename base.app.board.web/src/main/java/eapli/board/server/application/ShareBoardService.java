@@ -6,12 +6,13 @@ import eapli.base.board.domain.BoardParticipant;
 import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
-import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.domain.repositories.ConcurrencyException;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.factory.Sets;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +21,6 @@ import java.util.List;
 public class ShareBoardService {
     private final TransactionalContext txCtx = PersistenceContext.repositories()
             .newTransactionalContext();
-    private ArrayList<SystemUser> users;
     private final BoardRepository boardRepository;
     private final BoardParticipantRepository boardParticipantRepository;
     private final UserRepository userRepository;
@@ -32,28 +32,32 @@ public class ShareBoardService {
         userRepository = PersistenceContext.repositories().users();
     }
 
-    public List<Board> listBoardsUserOwns(SystemUser user) {
-        return (ArrayList<Board>) boardRepository.listBoardsUserOwns(user);
+    public Collection<Board> listBoardsUserOwns(SystemUser user) {
+        return Lists.mutable.ofAll(boardRepository.listBoardsUserOwns(user));
     }
 
-    public List<Board> listBoardsUserOwnsNotArchived(SystemUser user) {
-        return (ArrayList<Board>) boardRepository.listBoardsUserOwnsNotArchived(user);
+    public Collection<Board> listBoardsUserOwnsNotArchived(SystemUser user) {
+        return Lists.mutable.ofAll(boardRepository.listBoardsUserOwnsNotArchived(user));
     }
 
-    public List<Board> listBoardsUserOwnsArchived(SystemUser user) {
-        return (ArrayList<Board>) boardRepository.listBoardsUserOwnsArchived(user);
+    public Collection<Board> listBoardsUserOwnsArchived(SystemUser user) {
+        return Lists.mutable.ofAll(boardRepository.listBoardsUserOwnsArchived(user));
     }
 
-    public boolean shareBoard(Board board, List<Pair<SystemUser,BoardParticipantPermissions>> users) {
+    public Collection<Board> getBoardsByParticipant(SystemUser user) {
+        return Lists.mutable.ofAll(boardParticipantRepository.listBoardsByParticipant(user));
+    }
+
+    public boolean shareBoard(Board board, List<Pair<SystemUser, BoardParticipantPermissions>> users) {
         //txCtx.beginTransaction();
 
         try {
 
-            for (Pair<SystemUser,BoardParticipantPermissions> pair : users) {
+            for (Pair<SystemUser, BoardParticipantPermissions> pair : users) {
                 BoardParticipant boardParticipant = new BoardParticipant(board, pair.first, pair.second);
                 boardParticipantRepository.save(boardParticipant);
             }
-        }catch (ConcurrencyException e){
+        } catch (ConcurrencyException e) {
             //txCtx.rollback
             return false;
         }
@@ -63,36 +67,23 @@ public class ShareBoardService {
         return true;
     }
 
-    public List<Board> getBoardsByParticipant(SystemUser user) {
-        return (List<Board>) boardParticipantRepository.listBoardsByParticipant(user);
-    }
+    public Collection<SystemUser> usersNotInvited(Board board) {
+        var users = Sets.mutable.ofAll(userRepository.findAll());
 
-    public List<SystemUser> usersNotInvited(Board board) {
-        users = (ArrayList<SystemUser>) userRepository.findAll();
-        for (BoardParticipant participant : boardParticipantRepository.listBoardParticipants(board)) {
+        for (var participant : boardParticipantRepository.listBoardParticipants(board)) {
             users.remove(participant.participant());
         }
 
-        // TODO: isto nao funfa pq ta do lado do server
-        // usar token/username/whateverelse
-        MyUserService s = new MyUserService();
-        users.remove(s.currentUser());
+        users.remove(board.boardOwner());
         return users;
     }
 
-    public List<Board> listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(SystemUser user) {
+    public Collection<Board> boardsUserCanWrite(SystemUser user) {
+        var boardParticipant = boardParticipantRepository.withPermission(user, BoardParticipantPermissions.WRITE);
+        var listBoardsUserOwnsNotArchived = listBoardsUserOwnsNotArchived(user);
 
-        Iterable<Board> boardParticipant = boardParticipantRepository.withPermission(user,BoardParticipantPermissions.WRITE);
-        List<Board> listBoardsUserOwnsNotArchived = listBoardsUserOwnsNotArchived(user);
-        listBoardsUserOwnsNotArchived.addAll((Collection<? extends Board>) boardParticipant);
-
-        /*for(Board board :listBoardsUserOwnsNotArchived)
-        {
-            System.out.println("Boardowns= "+board.getBoardTitle().title() +" BoardColumns= " +board.getBoardColumnList().size() +
-                                " Boardrowns= " +board.getBoardRowList().size());
-        }*/
+        boardParticipant.forEach(listBoardsUserOwnsNotArchived::add);
 
         return listBoardsUserOwnsNotArchived;
     }
-
 }

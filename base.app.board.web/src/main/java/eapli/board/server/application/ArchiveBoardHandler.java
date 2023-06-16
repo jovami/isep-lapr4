@@ -15,6 +15,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collection;
 import java.util.List;
 
 public class ArchiveBoardHandler implements Runnable {
@@ -43,7 +44,7 @@ public class ArchiveBoardHandler implements Runnable {
             SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();
-            List<Board> boards = srv.listBoardsUserOwnsNotArchived(owner);
+            var boards = srv.listBoardsUserOwnsNotArchived(owner);
 
             //SendBoardOwned
             SBProtocol sendBoards = sendBoardOwned(builder, boards);
@@ -65,7 +66,7 @@ public class ArchiveBoardHandler implements Runnable {
             boardRepository.save(board);
 
             StringBuilder builderArchive = new StringBuilder();
-            List<Board> boardsArchived = srv.listBoardsUserOwnsArchived(owner);
+            var boardsArchived = srv.listBoardsUserOwnsArchived(owner);
 
             //SendBoardOwned
             SBProtocol sendBoardsArchive = sendBoardOwned(builderArchive, boardsArchived);
@@ -79,7 +80,7 @@ public class ArchiveBoardHandler implements Runnable {
         }
     }
 
-    private SBProtocol sendBoardOwned(StringBuilder builder, List<Board> boards) throws IOException {
+    private SBProtocol sendBoardOwned(StringBuilder builder, Collection<Board> boards) throws IOException {
         //send boards that the user owns
         SBProtocol sendBoards = new SBProtocol();
         if (boards.isEmpty()) {

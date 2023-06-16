@@ -6,7 +6,6 @@ import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
-import eapli.base.board.domain.BoardHistory;
 import eapli.base.board.domain.CreatePostIt;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
@@ -53,7 +52,7 @@ public class CreatePostItHandler implements Runnable {
             SystemUser user = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();
-            List<Board> boards = srv_board.listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(user);
+            var boards = srv_board.boardsUserCanWrite(user);
 
 
             for (Board b : boards) {

@@ -16,7 +16,6 @@ public class CommTestController {
     private DataOutputStream outS;
     private Socket sock;
 
-    //TODO: is this a service??
     public CommTestController(InetAddress serverIP, int serverPort) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;

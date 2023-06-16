@@ -27,10 +27,7 @@ public class CreatePostItUI extends AbstractUI {
     @Override
     protected boolean doShow() {
         CreatePostItController controller = new CreatePostItController(serverIP, serverPort);
-
         try {
-
-            //TODO: Check if user has that board
             ArrayList<String> boardRowColumn = controller.getBoardsList();
             ArrayList<String> arr = new ArrayList<>();
             ArrayList<Pair<String, String>> list = new ArrayList<>();

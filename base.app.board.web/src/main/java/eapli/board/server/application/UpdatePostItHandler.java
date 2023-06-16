@@ -39,7 +39,7 @@ public class UpdatePostItHandler implements Runnable {
             var outS = new DataOutputStream(socket.getOutputStream());
 
             var user = SBPServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
-            var boards = svcBoard.listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(user);
+            var boards = svcBoard.boardsUserCanWrite(user);
 
             var responseSent = new SBProtocol();
             responseSent.setContentFromString(buildBoardString(boards));
@@ -80,7 +80,7 @@ public class UpdatePostItHandler implements Runnable {
         return "Update" + "\t" + alterBoard + "\t" + alterPosition + "\t" + alterTime + "\t" + alterText;
     }
 
-    public String buildBoardString(List<Board> boards) {
+    public String buildBoardString(Iterable<Board> boards) {
         var builder = new StringBuilder();
         for (var b : boards) {
             builder.append(b.getBoardTitle().title());

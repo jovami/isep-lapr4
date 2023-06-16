@@ -24,7 +24,13 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
     private final AuthenticationService authenticationService = AuthzRegistry.authenticationService();
 
     public AuthRequestHandler(Socket socket, SBProtocol authRequest) {
-        super(socket,authRequest);
+        super(socket, authRequest);
+    }
+
+    public static String generateNewToken() {
+        byte[] randomBytes = new byte[24];
+        secureRandom.nextBytes(randomBytes);
+        return base64Encoder.encodeToString(randomBytes);
     }
 
     public void run() {
@@ -37,7 +43,7 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
 
 
             for (Client client : SBPServerApp.activeAuths.values()) {
-                if (client.getUserLoggedIn().identity().equals(name)){
+                if (client.getUserLoggedIn().identity().equals(name)) {
                     System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
                     SBProtocol responseSent = new SBProtocol();
                     responseSent.setCode(SBProtocol.ERR);
@@ -62,7 +68,7 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
             SystemUser systemUser = myUserService.currentUser();
             ShareBoardService srv = new ShareBoardService();
 
-            if (!hasBoardPermissions(systemUser, srv)){
+            if (!hasBoardPermissions(systemUser, srv)) {
                 System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
                 responseSent.setCode(SBProtocol.ERR);
                 responseSent.setContentFromString("User do not has permission to access boards");
@@ -84,8 +90,8 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
         String token = generateNewToken();
 
         //TODO:TOKEN
-        Client c = new Client(sock.getInetAddress(),systemUser);
-        if (SBPServerApp.activeAuths.putIfAbsent(sock.getInetAddress(),c)==null) {
+        Client c = new Client(sock.getInetAddress(), systemUser);
+        if (SBPServerApp.activeAuths.putIfAbsent(sock.getInetAddress(), c) == null) {
             System.out.printf("[AUTH] LOGGED IN: User: %s\tIP: %s\n",
                     systemUser.username(), sock.getInetAddress().toString());
             responseSent.setCode(SBProtocol.TOKEN);
@@ -98,12 +104,6 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
             responseSent.send(outS);
         }
         return null;
-    }
-
-    public static String generateNewToken() {
-        byte[] randomBytes = new byte[24];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
     }
 
     private boolean hasBoardPermissions(SystemUser systemUser, ShareBoardService srv) throws IOException {

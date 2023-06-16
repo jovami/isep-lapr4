@@ -18,6 +18,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +51,7 @@ public class ShareBoardHandler implements Runnable {
 
             SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
             StringBuilder builder = new StringBuilder();
-            List<Board> boards = srv.listBoardsUserOwns(owner);
+            var boards = srv.listBoardsUserOwns(owner);
 
             //SendBoardOwned
             SBProtocol sendBoards = sendBoardOwned(builder, boards);
@@ -118,7 +119,7 @@ public class ShareBoardHandler implements Runnable {
     private boolean sendUsersNotInvited(Board optBoard) throws IOException {
         StringBuilder builder;
         SBProtocol sendUsers = new SBProtocol();
-        List<SystemUser> users = srv.usersNotInvited(optBoard);
+        var users = srv.usersNotInvited(optBoard);
         if (users.isEmpty()) {
             sendUsers.setCode(SBProtocol.ERR);
             sendUsers.setContentFromString("No users to invite");
@@ -135,7 +136,7 @@ public class ShareBoardHandler implements Runnable {
         return true;
     }
 
-    private SBProtocol sendBoardOwned(StringBuilder builder, List<Board> boards) throws IOException {
+    private SBProtocol sendBoardOwned(StringBuilder builder, Collection<Board> boards) throws IOException {
         //send boards that the user owns
         SBProtocol sendBoards = new SBProtocol();
         if (boards.isEmpty()) {

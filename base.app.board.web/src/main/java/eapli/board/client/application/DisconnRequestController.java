@@ -16,7 +16,6 @@ public class DisconnRequestController {
     private DataOutputStream outS;
     private Socket sock;
 
-    //TODO: is this a service??
     public DisconnRequestController(InetAddress serverIP, int serverPort) {
         this.serverIP = serverIP;
         this.serverPort = serverPort;
