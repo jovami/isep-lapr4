@@ -2,12 +2,7 @@ package eapli.board.client;
 
 import java.net.InetAddress;
 
-import eapli.board.client.presentation.ArchiveBoardUI;
-import eapli.board.client.presentation.CreatePostItUI;
-import eapli.board.client.presentation.ShareBoardUI;
-import eapli.board.client.presentation.UndoPostItLastChangeUI;
-import eapli.board.client.presentation.ViewBoardHistoryUI;
-import eapli.board.client.presentation.ViewBoardRequestUI;
+import eapli.board.client.presentation.*;
 import eapli.framework.actions.menu.Menu;
 import eapli.framework.actions.menu.MenuItem;
 import eapli.framework.presentation.console.AbstractUI;
@@ -26,7 +21,7 @@ public class MainMenu extends AbstractUI {
     private static final int SHARE_BOARD = 1;
     private static final int VIEW_BOARD = 2;
     private static final int CREATE_POSTIT = 3;
-    private static final int CHANGE_POSTIT = 4;
+    private static final int UPDATE_POSTIT = 4;
     private static final int UNDO_POSTIT = 5;
     private static final int VIEW_BOARD_HISTORY = 6;
     private static final int ARCHIVE_BOARD = 7;
@@ -75,6 +70,8 @@ public class MainMenu extends AbstractUI {
                 new CreatePostItUI(serverIP, serverPort)::show);
         menu.addItem(UNDO_POSTIT, "Undo last change on a Post-It",
                 new UndoPostItLastChangeUI(serverIP, serverPort)::show);
+        menu.addItem(UPDATE_POSTIT, "Update Post-It ",
+                new UpdatePostItUI(serverIP, serverPort)::show);
         menu.addItem(VIEW_BOARD_HISTORY, "View Board History ",
                 new ViewBoardHistoryUI(serverIP, serverPort)::show);
         menu.addItem(ARCHIVE_BOARD, "Archive board ",

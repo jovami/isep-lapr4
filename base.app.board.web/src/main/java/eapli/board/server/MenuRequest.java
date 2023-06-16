@@ -60,6 +60,10 @@ public class MenuRequest extends Thread {
                     CreatePostItHandler createPostIt = new CreatePostItHandler(sock, request);
                     createPostIt.run();
                     break;
+                case SBProtocol.UPDATE_POST_IT:
+                    UpdatePostItHandler updatePostIt = new UpdatePostItHandler(sock, request);
+                    updatePostIt.run();
+                    break;
                 case SBProtocol.LIST_HISTORY:
                     ViewBoardHistoryHandler viewBoardHistoryHandler = new ViewBoardHistoryHandler(sock, request);
                     viewBoardHistoryHandler.run();

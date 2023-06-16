@@ -4,6 +4,9 @@ import eapli.framework.io.util.Console;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -61,5 +64,13 @@ public class ConsoleUtils {
         }
 
         return "";
+    }
+
+    public static File chooseFile() {
+        var chooseFile = new JFileChooser("base.app.board.web/src/main/java/eapli/board/www/images");
+        var extension = new FileNameExtensionFilter(null, "jpg", "svg", "jpeg", "png", "gif", "webp");
+        chooseFile.setFileFilter(extension);
+        chooseFile.showOpenDialog(null);
+        return new File(chooseFile.getSelectedFile().getAbsolutePath());
     }
 }

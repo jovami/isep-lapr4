@@ -27,13 +27,22 @@ public class PostItService {
 
     public boolean createPostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
         Cell c = board.getCell(row, col);
-        System.out.println("C:"+c.getColumn().getColumnId());
-        System.out.println("R:"+c.getRow().getRowId());
-        System.out.println("Has:"+c.hasPostIt());
+        System.out.println("C:" + col);
+        System.out.println("R:" + row);
+        System.out.println("Has:" + c.hasPostIt());
         if (c.hasPostIt())
-            System.out.println("Post:"+c.getPostIt().getData());
+            System.out.println("Post:" + c.getPostIt().getData());
 
         return c.addPostIt(new PostIt(postItOwner, text));
+    }
+
+    public boolean updatePostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
+        var c = board.getCell(row, col);
+        System.out.println("User " + postItOwner.username() + " is updating post it");
+        System.out.println("C:" + col);
+        System.out.println("R:" + row);
+
+        return c.changePostItData(new PostIt(postItOwner, text));
     }
 
 

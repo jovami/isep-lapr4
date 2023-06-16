@@ -40,6 +40,16 @@ public class Cell implements Serializable {
         }
     }
 
+    public boolean changePostItData(PostIt data) {
+        synchronized (this) {
+            if (!hasPostIt())
+                return false;
+
+            this.postIt = data;
+            return true;
+        }
+    }
+
     public void removePostIt() {
         synchronized (this) {
             this.postIt = null;
