@@ -17,9 +17,9 @@ public class Board implements AggregateRoot<BoardTitle> {
     @Id
     private BoardTitle boardTitle;
     @Transient
-    public static int MAX_ROWS;
+    public static int MAX_ROWS=20;
     @Transient
-    public static int MAX_COLUMNS;
+    public static int MAX_COLUMNS=10;
     @Column(nullable = false)
     private int numRows;
     @Column(nullable = false)

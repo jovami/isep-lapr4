@@ -36,8 +36,6 @@ public class CreateBoardController {
             return false;
         }
 
-
-
         repository.save(board);
         return true;
     }
