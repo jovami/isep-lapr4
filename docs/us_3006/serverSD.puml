@@ -1,0 +1,128 @@
+@startuml
+
+actor SBPServerApp as server
+
+participant MenuRequest as menu
+participant CreatePostItHandler as handler
+participant SBProtocol as sbp
+participant BoardService as b_svc
+participant PostItService as p_svc
+participant Client as c_user
+participant Board as b
+participant Cell as cell
+participant PostIt as postit
+participant CreatePostIt as c_postit
+participant NewChangeEvent as nce
+participant EventPublisher as ep
+
+activate server
+server -> menu : receives CREATE_POST_IT\ncode request
+activate menu
+    menu -> handler: create(sock,codeRequest)
+    note right : receives a socket and\nSBProtocol codeRequest
+    activate handler
+        handler -> b_svc : create()
+        activate b_svc
+        deactivate b_svc
+        handler -> p_svc : create()
+        activate p_svc
+        deactivate p_svc
+    deactivate handler
+
+
+
+    menu -> handler : run()
+    note right : create DataInputStream as "inS"\ncreate DataOutputStream as "outS"
+
+    activate handler
+        handler -> c_user : user = getUserLoggedIn()
+        note right: get from SBPServerApp activate status\nMap<InetAddress, Client> activeAuths\nThen from Client get SystemUser
+        activate c_user
+        deactivate c_user
+
+        handler -> b_svc : listBoardsUserParticipatesAndHasWritePermissions(user)
+        activate b_svc
+            b_svc -> handler : boards
+        deactivate b_svc
+
+        note right of handler: string builder appends all boards into string,only atrributes using:\ngetBoardTitle(), getNumRows() and getNumColumns()
+        handler -> sbp : create()
+        activate sbp
+            handler -> sbp : setContentFromString(builder)
+            handler -> sbp : send(outS)
+        deactivate sbp
+
+        handler -> sbp : receiveText = create(inS)
+        activate sbp
+            handler -> sbp : getContentAsString()
+            sbp --> handler : content
+            note right : gets a string with:\n-board title\n-position in board to create Post-It\n-content of Post-It
+        deactivate sbp
+
+        note right of handler: SBPServerApp as\n Map<BoardTitle, Board> boards\nget "optBoard" with title after parse "content"
+        handler -> handler : checkIfCellIsOccupied(optBoard,position)
+
+
+        handler -> b : cell = getCell(row,col)
+        activate b
+            b --> handler: cell
+        deactivate b
+        handler -> cell : hasPostIt()
+        activate cell
+            cell --> handler : true/false
+        deactivate cell
+
+        note right of handler : in case of true send SBProtocol.ERR\nwith message "Cell occupied"
+
+        handler -> p_svc : createPostIt(board,row,col,text, owner)
+        activate p_svc
+               p_svc -> b : getCell(row,col)
+               activate b
+               deactivate b
+               p_svc -> postit : create(owner,text)
+               activate postit
+               deactivate postit
+               p_svc -> cell : addPostIt(postit)
+               activate cell
+               deactivate cell
+               p_svc --> handler : true/false
+        deactivate p_svc
+        note right of handler : in case of false send SBProtocol.ERR
+        note right of handler: SBPServerApp as Map<Board, LinkedList<BoardHistory>> histories\nget histories of "optBoard"
+        handler -> handler : sb = getStringBuilder()
+        note right : sb contains:\n-board title\n-row\n-column\n-Local date time\n-content of postit
+
+        handler -> c_postit : create(optBoard,sb)
+        activate c_postit
+            note right : Class extends BoardHistory\n
+        deactivate c_postit
+
+        note right of handler : push this new instance inside histories\nhistory.push(CreatePostIt)
+
+        handler -> nce : event = create(optBoard,receiveText)
+        activate nce
+        deactivate nce
+        note right : receiveText is SBProtocol\nmentioned before
+
+        handler -> ep : publish(event)
+        activate ep
+        deactivate ep
+
+        handler -> sbp : create()
+        activate sbp
+            handler -> sbp : setCode(SBProtocol.ACK)
+            note right : indicates success of the operation
+            handler -> sbp : send(outS)
+
+    deactivate handler
+
+
+deactivate menu
+
+
+
+
+
+@enduml
+
+

@@ -52,6 +52,10 @@ activate ui
         ctrl -> ui: archivedBoards
     deactivate ctrl
 ui--> user :show list of boards user \nowns in state archived
+
+ui -> ctrl : closeSocket()
+    activate ctrl
+    deactivate ctrl
 deactivate ui
 deactivate user
 

@@ -1,0 +1,106 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+interface Runnable
+interface MessageProtocol
+interface BoardRepository
+
+class AbstractUI
+{
+}
+
+class CreatePostItUI
+{
+}
+
+class CreatePostItController
+{
+ +isCellIdValid(String arr, int numRows, int numColumns)
+ +canCreatePostIt()
+ +getBoardsList()
+ +createPostIt(String str)
+ +createBoardPositionTextString(String boardChosen, String position, String text)
+}
+
+class CreatePostItHandler
+{
+    +run()
+    -checkIfCellIsOccupied(Board board, String alterPosition)
+    -getStringBuilder()
+    -checkIfAllCellsAreOccupied(Board board)
+}
+
+class SBProtocol
+{
+ + setCode(int code)
+ + setContentFromString(String cStr)
+ + send(DataOutputStream out)
+ + getContentAsString()
+}
+
+class MenuRequest
+{
+    +run()
+    +clientBySock(InetAddress addr)
+}
+
+class SBPServerApp
+{
+}
+
+class NewChangeEvent
+{
+}
+
+class CreatePostIt
+{
+}
+
+class SystemUser
+{
+}
+
+class ReceivedERRCode
+{
+}
+
+class Thread
+{
+}
+
+class SharedBoardService
+{
+    +listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(owner)
+}
+
+
+
+'extends --|>
+CreatePostItUI --|> AbstractUI
+MenuRequest --|> Thread
+
+
+'depends on(imports)  -->
+CreatePostItUI --> "1" CreatePostItController
+CreatePostItController --> "*" SBProtocol
+
+CreatePostItHandler --> "1" BoardRepository
+CreatePostItHandler --> "*" SBProtocol
+CreatePostItHandler --> MenuRequest
+CreatePostItHandler --> SBPServerApp
+CreatePostItHandler --> NewChangeEvent
+CreatePostItHandler --> CreatePostIt
+CreatePostItHandler --> SystemUser
+CreatePostItHandler --> ReceivedERRCode
+
+'implements ..|>
+SBProtocol ..|> MessageProtocol
+CreatePostItHandler ..|> Runnable
+Thread ..|> Runnable
+
+@enduml

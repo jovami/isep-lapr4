@@ -1,0 +1,98 @@
+@startuml
+actor SBPClientApp as user
+participant CreatePostItUI as ui
+participant CreatePostItController as ctrl
+participant SBProtocol as sbp
+participant "boardColumns\nArrayList<String> boardColumns" as bc
+
+
+
+activate user
+user -> ui :create Post-It
+activate ui
+
+    ui -> ctrl :create(serverIP, serverPort)
+    note right: create Socket as "sock"\ncreate DataInputStream as "inS"\ncreate DataOutputStream as "outS"
+    activate ctrl
+        ctrl -> ctrl:canCreatePostIt()
+
+        ctrl -> sbp : create()
+        activate sbp
+            ctrl -> sbp : setCode(SBProtocol.CREATE_POST_IT)
+            ctrl -> sbp : send(outS)
+            note right of ctrl: check CreatePostItHandler
+            ctrl -> sbp : create(inS)
+            ctrl -> sbp :  getContentAsString()
+            sbp --> ctrl: boards
+            note right : boardColumns = boards
+        deactivate sbp
+    deactivate ctrl
+
+    ui -> ctrl: getBoardsList()
+    activate ctrl
+        note right :method will separate boardcollumns\ncolumn 0: boardTitle\ncolumn 1: numRows\ncolumn 2: numColumns
+        ctrl --> ui: listBoards
+
+    deactivate ctrl
+
+    ui --> user : show list of boards
+
+deactivate ui
+
+user -> ui : chooses a board to create a Post-It on
+activate ui
+
+ui --> user : shows the user the number of rows\nand columns and ask the user to\nchoose the cell to create a Post-It on\nrespecting the limits of rows and collumns
+user -> ui : chooses the cell to allocate the Post-It
+
+
+    note right of ui: "arr" because reads from console in format "row,columns"\n"numRows" board has\n"numColumns" board has\nverifies the values choosed ,if are positive or bigger then\nnumRows and numcolumns
+    ui -> ctrl : isCellIdValid(arr, numRows, numColumns)
+    activate ctrl
+        ctrl --> ui : true/false
+    deactivate ctrl
+
+
+    ui --> user : asks the content type\neither text or image
+
+    note right of ui: in case choice was image retrive\nimages from folder inside project
+    ui -> ui : file = chooseFile()
+
+    ui -> ctrl : createBoardPositionTextString(boardChosen, position, content)
+    activate ctrl
+        note right of ctrl : returns a string builder with:\n-board title\n-position in board to create Post-It\n-content of Post-It
+        ctrl --> ui : stringBuilder
+    deactivate ctrl
+
+
+    ui -> ctrl :createPostIt(stringBuilder)
+    activate ctrl
+        ctrl -> sbp : create()
+        activate sbp
+            ctrl -> sbp : setContentFromString(str)
+            ctrl -> sbp : send(outS)
+            note right of ctrl: check CreatePostItHandler
+            ctrl -> sbp : create(inS)
+            ctrl -> sbp : getCode() == SBProtocol.ACK
+            note right : indicates success of the operation
+            ctrl --> ui : true/false
+
+        deactivate sbp
+    deactivate ctrl
+
+    ui --> user : informs if Post-it was create successfully
+
+
+    ui -> ctrl : close()
+    activate ctrl
+        note right : close socket
+    deactivate ctrl
+deactivate ui
+
+
+
+
+
+@enduml
+
+
