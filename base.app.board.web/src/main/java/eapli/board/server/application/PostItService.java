@@ -2,6 +2,7 @@ package eapli.board.server.application;
 
 
 import eapli.base.board.domain.Board;
+import eapli.base.board.domain.Cell;
 import eapli.base.board.domain.PostIt;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
@@ -24,8 +25,15 @@ public class PostItService {
     }
 
 
-    public void createPostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
-        board.getCell(row, col).addPostIt(new PostIt(postItOwner, text));
+    public boolean createPostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
+        Cell c = board.getCell(row, col);
+        System.out.println("C:"+c.getColumn().getColumnId());
+        System.out.println("R:"+c.getRow().getRowId());
+        System.out.println("Has:"+c.hasPostIt());
+        if (c.hasPostIt())
+            System.out.println("Post:"+c.getPostIt().getData());
+
+        return c.addPostIt(new PostIt(postItOwner, text));
     }
 
 

@@ -154,7 +154,7 @@ public class ClientServerAjax extends Thread {
 
                     //CELL CONTENT
                 } else {
-                    html.append(String.format("<td id=\"/row%d/col%d\"><div class=\"postIt\">%s</div>\n", dto.getDataContent()[idx]));
+                    html.append(String.format("<td><div class=\"postIt\">%s</div>\n", dto.getDataContent()[idx]));
                 }
                 idx++;
                 html.append("</td>\n");

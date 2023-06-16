@@ -37,6 +37,10 @@ public class CreatePostItController {
 
     public boolean isCellIdValid(String arr, int numRows, int numColumns) {
         String[] dimension = arr.split(",");
+        if (dimension.length!=2){
+            return false;
+        }
+
         int row = Integer.parseInt(dimension[0]);
         int col = Integer.parseInt(dimension[1]);
         return row * col >= 0 && row <= numRows && col <= numColumns;
@@ -65,21 +69,13 @@ public class CreatePostItController {
 
 
     //TODO: MAYBE ADD THIS TO A SERVICE
-    public String createPostIt(String str) throws IOException, ReceivedERRCode {
+    public boolean createPostIt(String str) throws IOException, ReceivedERRCode {
         SBProtocol message = new SBProtocol();
         message.setCode(SBProtocol.SEND_POST_IT_INFO);
         message.setContentFromString(str);
         message.send(outS);
         SBProtocol received = new SBProtocol(inS);
-        if (received.getCode() == SBProtocol.ACK) {
-            sock.close();
-
-            return "Post-it created successfully.";
-            //TODO: REMOVE ELSE AND DO A FINALLY TO CLOSE THE SOCKET ON THE UI
-        } else {
-            sock.close();
-            return null;
-        }
+        return received.getCode() == SBProtocol.ACK;
 
     }
 
@@ -91,5 +87,9 @@ public class CreatePostItController {
         sb.append("\t");
         sb.append(text);
         return sb;
+    }
+
+    public void close() {
+        AuthRequestController.closeSocket(sock);
     }
 }

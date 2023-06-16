@@ -54,6 +54,7 @@ public class CreatePostItUI extends AbstractUI {
             String position = Console.readLine(String.format("The Format used should be row,columns (Board has %s Rows and %s Columns):",
                     list.get(index).first, list.get(index).second));
 
+
             if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index).first), Integer.parseInt(list.get(index).second))) {
                 System.out.println("Invalid Cell Id");
                 return false;
@@ -69,39 +70,37 @@ public class CreatePostItUI extends AbstractUI {
 
             switch (selec.selectedOption()) {
                 case 1:
-                    content = Console.readLine("Content to be added to Post-It\n( \"\"):");
+                    content = Console.readLine("Content to be added to Post-It:");
                     break;
 
                 case 2:
                     File f = escolherFicheiro();
-                    content = f.getAbsolutePath().replaceAll("\\\\","/");
+                    content = f.getAbsolutePath().replaceAll("\\\\", "/");
                     content = "\"" + content + "\"";
                     break;
             }
 
-            try {
-                String str = controller.
-                        createPostIt(controller.createBoardPositionTextString(boardChosen, position, content).toString());
-                if (str == null) {
-                    System.out.println("Invalid Operation");
-                    return false;
-                }
-                System.out.println(str);
-            } catch (IllegalStateException e) {
+            if (controller.
+                    createPostIt(controller.createBoardPositionTextString(boardChosen, position, content).toString())) {
+                System.out.println("Post-it create successfully");
+            } else {
                 System.out.println("Cell Already Occupied");
-                return false;
             }
 
 
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ReceivedERRCode e) {
+            System.out.println(e.getMessage());
+        }finally {
+            controller.close();
         }
         return false;
     }
 
     private static File escolherFicheiro() {
         JFileChooser escolherFicheiro = new JFileChooser("base.app.board.web/src/main/java/eapli/board/www/images");
-        FileNameExtensionFilter extensao = new FileNameExtensionFilter(null,"jpg","svg","jpeg","png","gif","webp");
+        FileNameExtensionFilter extensao = new FileNameExtensionFilter(null, "jpg", "svg", "jpeg", "png", "gif", "webp");
         escolherFicheiro.setFileFilter(extensao);
         escolherFicheiro.showOpenDialog(null);
         return new File(escolherFicheiro.getSelectedFile().getAbsolutePath());

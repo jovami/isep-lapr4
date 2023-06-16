@@ -33,7 +33,7 @@ public class BoardInfoDto {
         return numCols;
     }
 
-    public void addPostIt(int col, int row, String info) {
+    public void addPostIt(int row, int col, String info) {
         dataContent[((row - 1) * numCols) + (col - 1)] = info;
     }
 }

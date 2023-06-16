@@ -30,13 +30,13 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
-    public void addPostIt(PostIt postIt) {
+    public boolean addPostIt(PostIt postIt) {
         synchronized (this) {
             if (hasPostIt()) {
-                throw new IllegalStateException("Cell already has a PostIt");
+                return false;
             }
             this.postIt = postIt;
-
+            return true;
         }
     }
 

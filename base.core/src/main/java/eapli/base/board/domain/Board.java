@@ -106,7 +106,7 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
     public Cell getCell(int row, int col) {
-        return cells.get(((row - 1) * col) + (col - 1));
+        return cells.get(((row - 1) * numColumns) + (col - 1));
     }
 
     public List<BoardColumn> getBoardColumnList() {

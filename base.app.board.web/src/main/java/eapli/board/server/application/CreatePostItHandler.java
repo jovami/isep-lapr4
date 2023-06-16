@@ -107,9 +107,15 @@ public class CreatePostItHandler implements Runnable {
             }
 
             String[] dimensions = arr[1].split(",");
-            srv_postIt.createPostIt(optBoard,
+            if (!srv_postIt.createPostIt(optBoard,
                             Integer.parseInt(dimensions[0]),Integer.parseInt(dimensions[1]),
-                                        alterText,user);
+                                        alterText,user)){
+                SBProtocol response = new SBProtocol();
+                response.setCode(SBProtocol.ERR);
+                response.setContentFromString("Cell is full");
+                response.send(outS);
+                return;
+            }
 
             StringBuilder sb = getStringBuilder();
             LinkedList<BoardHistory> history = SBPServerApp.histories.get(optBoard);
