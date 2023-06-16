@@ -1,0 +1,48 @@
+@startuml
+    actor User as user
+    participant UpdatePostItUI as ui
+    participant UpdatePostItController as ctrl
+    participant SBProtocol as sbp
+
+    user -> ui : enter
+    activate ui
+        ui -> ctrl : create()
+        activate ctrl
+        deactivate ctrl
+
+        ui -> ctrl : listBoardString()
+        activate ctrl
+            ctrl -> sbp :
+            note right of ctrl : retrieves the list of\nboards from the server
+            ctrl -> ui : boards
+        deactivate ctrl
+
+        ui -> user : show list of boards\n available for the user
+    deactivate ui
+
+    user -> ui : select board
+    activate ui
+        ui -> user : shows user the dimensions\nof the board and asks for\nthe cell position
+    deactivate ui
+
+    user -> ui : select cell
+    activate ui
+        ui -> user : asks the user for the content type
+    deactivate ui
+
+    user -> ui : select content type
+    activate ui
+        ui -> user: asks the user for the content
+    deactivate ui
+
+    user -> ui : input content
+    activate ui
+        ui -> ctrl : updatePostIt()
+        activate ctrl
+            ctrl -> sbp : updatePostIt()
+            note right of ctrl : sends the updated post-it\nto the server
+            ctrl -> ui : success
+        deactivate ctrl
+        ui -> user : success
+    deactivate ui
+@enduml
