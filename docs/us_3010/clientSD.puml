@@ -1,0 +1,62 @@
+@startuml
+actor SBPClientApp as user
+participant ArchiveBoardUI as ui
+participant ArchiveBoardController as ctrl
+participant SBProtocol as sbp
+
+
+
+activate user
+user -> ui :archive boards
+activate ui
+
+    ui -> ctrl :create(serverIP, serverPort)
+    note right: create Socket as "sock"\ncreate DataInputStream as "inS"\ncreate DataOutputStream as "outS"
+    activate ctrl
+    deactivate ctrl
+
+    ui -> ctrl :listBoardsUserOwnsNotArchived()
+    activate ctrl
+        ctrl ->sbp: create()
+        activate sbp
+            ctrl -> sbp : setCode(SBProtocol.GET_BOARDS_OWNED_NOT_ARCHIVED);
+            ctrl -> sbp : send(outS);
+            note right of ctrl: check ArchiveBoardHandler
+
+            ctrl -> sbp : getBoards = create(inS)
+            ctrl -> sbp : getBoards.getContentAsString().split("\0")
+            sbp --> ctrl : content
+
+        deactivate sbp
+
+        ctrl -> ui: listOfBoards
+        deactivate ctrl
+        ui --> user : show list of boards
+
+deactivate ui
+
+user -> ui: chooses board to archive
+activate ui
+    ui -> ctrl :archivedBoards(boardTitle)
+    activate ctrl
+        ctrl -> sbp : create()
+        activate sbp
+        ctrl -> sbp : setContentFromString(boardTitle)
+        ctrl -> sbp : send(outS)
+        note right of ctrl: check ArchiveBoardHandler
+        ctrl -> sbp : getBoards = create(inS)
+        ctrl -> sbp : getBoards.getContentAsString().split("\0")
+        sbp --> ctrl : content
+        deactivate sbp
+
+        ctrl -> ui: archivedBoards
+    deactivate ctrl
+ui--> user :show list of boards user \nowns in state archived
+deactivate ui
+deactivate user
+
+
+
+@enduml
+
+

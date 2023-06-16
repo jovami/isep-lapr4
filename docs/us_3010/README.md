@@ -66,9 +66,13 @@ the system user owns that are in state **Archived** :
 
 ![SSD](SSD.svg "SSD")
 
-### 4.2.2 Sequence Diagram
+### 4.2.2 Sequence Diagram Client
 
-![sd](sd.svg "sd")
+![cliente_sd](clientSD.svg "clientsd")
+
+### 4.2.2 Sequence Diagram Server
+
+![server_sd](serverSD.svg "serversd")
 
 ### 4.3. Applied Patterns
 

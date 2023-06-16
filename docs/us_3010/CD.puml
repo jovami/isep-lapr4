@@ -14,7 +14,6 @@ interface BoardRepository
 {
   +listBoardsUserOwnsNotArchived(SystemUser owner)
   +listBoardsUserOwnsArchived(SystemUser owner)
-  +ofIdentity(final I id)
  }
 
 class AbstractUI
@@ -43,7 +42,7 @@ class ArchiveBoardHandler
 
 class MenuRequest
 {
-+ clientBySock(InetAddress addr)
++run()
 }
 
 class Thread
@@ -68,12 +67,12 @@ class JpaBoardRepository
 +listBoardsUserOwnsArchived(SystemUser owner)
 }
 
-class SystemUser
+class Client
 {
     +getUserLoggedIn()
 }
 
-class ShareBoardService
+class BoardService
 {
  +listBoardsUserOwnsNotArchived(SystemUser owner)
  +listBoardsUserOwnsArchived(SystemUser owner)
@@ -91,12 +90,29 @@ class Board
     +archiveBoard()
 }
 
+class SBPClientApp
+
+class SBPServerApp
+{
++{static}Map<InetAddress, Client> activeAuths
++{static}Map<BoardTitle, Board> boards
+
+}
+
+abstract class BaseApplication
+
+class MainMenu
+{
+-buildMainMenu()
+}
 
 
 'extends
 ArchiveBoardUI --|> AbstractUI
 MenuRequest --|> Thread
-
+SBPClientApp -up-|> BaseApplication
+SBPServerApp -up-|> BaseApplication
+MainMenu --|> AbstractUI
 
 'depends on(imports)
 ArchiveBoardUI --> "1" ArchiveBoardController
@@ -105,17 +121,24 @@ ArchiveBoardController --> "*" SBProtocol
 ArchiveBoardHandler --> "*" SBProtocol
 ArchiveBoardHandler -up-> "1" BoardRepository
 
-ArchiveBoardHandler --> "1" MenuRequest
-ArchiveBoardHandler --> "1" SystemUser
-ArchiveBoardHandler --> "1" ShareBoardService
 
-ShareBoardService  --> "1" BoardRepository
-ShareBoardService  --> "*" Board
-ShareBoardService  -----> "*" SystemUser
+ArchiveBoardHandler --> "1" Client
+ArchiveBoardHandler --> "1" BoardService
+
+BoardService  --> "1" BoardRepository
+BoardService  --> "*" Board
 
 ArchiveBoardHandler --> "*" Board
 
 Board --> BoardState
+
+MenuRequest --> "1" SBProtocol
+MainMenu --> "1" ArchiveBoardUI
+SBPClientApp --> "1" MainMenu
+SBPServerApp --> "1" MenuRequest
+MenuRequest --> "1" ArchiveBoardHandler
+
+
 
 'implements
 ArchiveBoardHandler ..|> Runnable
