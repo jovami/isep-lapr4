@@ -1,0 +1,130 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+
+interface Runnable
+interface MessageProtocol
+
+interface BoardRepository
+{
+  +listBoardsUserCanView(SystemUser owner)
+ }
+
+abstract AbstractUI
+{
+}
+
+class ViewBoardUI
+{
+    # doShow()
+    + headline()
+}
+
+class ViewBoardController
+{
+
+ +listBoardsUserOwnsNotArchived()
+ +archivedBoards(String boardTitle)
+ +closeSocket()
+}
+
+abstract AbstractSBServerHandler{
+}
+
+class ViewBoardHandler
+{
++run()
+-sendBoardOwned()
+}
+class SBPServerApp
+{
++ HashMap<BoardTitle,Board> boards
++ HashMap<String,Client> activeAuths
+}
+
+class MenuRequest
+{
++run()
+}
+
+interface Runnable
+interface MessageProtocol
+
+class SBProtocol
+{
+ + setCode(int code)
+ + setContentFromString(String cStr)
+ + send(DataOutputStream out)
+ + getContentAsString()
+
+}
+
+class JpaBoardRepository
+{
++listBoardsUserOwnsNotArchived(SystemUser owner)
++listBoardsUserOwnsArchived(SystemUser owner)
+}
+
+class Client
+{
+    +getUserLoggedIn()
+}
+
+class BoardService
+{
+ +listBoardsUserCanView(SystemUser owner)
+}
+
+class SBPClientApp
+
+
+abstract class BaseApplication
+
+class MainMenu
+{
+-buildMainMenu()
+}
+
+
+'extends
+ViewBoardUI --|> AbstractUI
+MenuRequest --|> Thread
+SBPClientApp -up-|> BaseApplication
+SBPServerApp -up-|> BaseApplication
+SBPServerApp o-- Client
+MainMenu --|> AbstractUI
+
+'depends on(imports)
+ViewBoardUI --> "1" ViewBoardController
+ViewBoardController --> "*" SBProtocol
+
+ViewBoardHandler --|> AbstractSBServerHandler
+AbstractSBServerHandler ..|> Runnable
+ViewBoardHandler --> "*" SBProtocol
+
+ViewBoardHandler --> "1" BoardService
+
+BoardService  --> "1" BoardRepository
+
+MenuRequest --> "1" SBProtocol
+MainMenu --> "1" ViewBoardUI
+SBPClientApp --> "1" MainMenu
+SBPServerApp --> "1" MenuRequest
+MenuRequest -- ViewBoardHandler
+ViewBoardHandler -- SBPServerApp
+
+
+
+'implements
+Thread ..|> Runnable
+SBProtocol ..|> MessageProtocol
+JpaBoardRepository ..|> BoardRepository
+
+
+
+@enduml
