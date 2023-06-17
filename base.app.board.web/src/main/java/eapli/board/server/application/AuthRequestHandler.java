@@ -43,7 +43,7 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
 
 
             for (Client client : SBPServerApp.activeAuths.values()) {
-                if (client.getUserLoggedIn().identity().equals(name)) {
+                if (client.getUserLoggedIn().username().toString().equals(name)){
                     System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
                     SBProtocol responseSent = new SBProtocol();
                     responseSent.setCode(SBProtocol.ERR);

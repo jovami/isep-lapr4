@@ -26,14 +26,13 @@ public class CreatePostIt extends BoardHistory {
 
     protected CreatePostIt() {
     }
-    public CreatePostIt(Board board, String str) {
+    public CreatePostIt(String str) {
         super(str);
         parseStr(str);
     }
 
     public void parseStr(String string){
         String[] split = string.split("\t");
-        //this.type = Type.valueOf(split[0]);
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
         this.column = Integer.parseInt(split[2].split(",")[1]);

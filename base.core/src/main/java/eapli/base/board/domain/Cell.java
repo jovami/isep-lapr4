@@ -1,8 +1,14 @@
 package eapli.base.board.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Deque;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 
 @Entity
@@ -19,6 +25,9 @@ public class Cell implements Serializable {
     private BoardColumn column;
     @OneToOne
     private PostIt postIt;
+    @Transient
+    @Getter
+    private final Deque<BoardHistory> history = new ConcurrentLinkedDeque<>();
 
 
     protected Cell() {
@@ -30,33 +39,34 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
-    public boolean addPostIt(PostIt postIt) {
+    public boolean addPostIt(Board board, PostIt postIt) {
         synchronized (this) {
             if (hasPostIt()) {
                 return false;
             }
             this.postIt = postIt;
-            return true;
+
+            return formatString(board, null, postIt.getData(), Type.CREATE);
         }
     }
 
-    public boolean changePostItData(PostIt data) {
+
+    public boolean changePostItData(Board board, String newData) {
         synchronized (this) {
             if (!hasPostIt())
                 return false;
 
-            this.postIt = data;
-            return true;
+            if (!formatString(board, this.history.getFirst(), newData, Type.CHANGE))
+                return false;
         }
+
+        this.postIt.alterPostItData(newData);
+
+        return true;
     }
+
 
     public void removePostIt() {
-        synchronized (this) {
-            this.postIt = null;
-        }
-    }
-
-    public void deletePostIt() {
         synchronized (this) {
             this.postIt = null;
         }
@@ -95,6 +105,59 @@ public class Cell implements Serializable {
 
     public boolean hasPostIt() {
         return this.postIt != null;
+    }
+
+
+    public boolean addUndoToHistory(Board board, PostIt postit) {
+        synchronized (this.history) {
+            for (final var entry : this.history) {
+                if (Type.valueOf(entry.getType()) == Type.UNDO) {
+                    postit.alterPostItData(entry.getPrevContent());
+
+                    return formatString(board, entry, null, Type.UNDO);
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private boolean formatString(Board board, BoardHistory entry, String newData, Type type) {
+        var sb = new StringBuilder();
+
+        sb.append(type);
+        sb.append('\t');
+        sb.append(board);
+        sb.append('\t');
+        sb.append(row.getRowId());
+        sb.append(',');
+        sb.append(column.getColumnId());
+        sb.append('\t');
+        sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")));
+
+        sb.append('\t');
+
+        switch (type) {
+            case UNDO:
+                sb.append(entry.getPosContent());
+                sb.append('\t');
+                sb.append(entry.getPrevContent());
+                this.history.push(new UndoPostIt(sb.toString()));
+                break;
+            case CREATE:
+                sb.append(newData);
+                this.history.push(new CreatePostIt(sb.toString()));
+                break;
+            case CHANGE:
+                sb.append(entry.getPosContent());
+                sb.append('\t');
+                sb.append(newData);
+                this.history.push(new ChangePostIt(sb.toString()));
+                break;
+        }
+
+
+        return true;
     }
 
 

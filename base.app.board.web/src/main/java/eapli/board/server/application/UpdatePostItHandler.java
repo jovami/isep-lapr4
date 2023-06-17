@@ -62,7 +62,7 @@ public class UpdatePostItHandler implements Runnable {
                 return;
             }
 
-            var createPostIt = new CreatePostIt(board, getUpdateString(arr[0], arr[1], arr[2], time));
+            var createPostIt = new CreatePostIt(getUpdateString(arr[0], arr[1], arr[2], time));
             SBPServerApp.histories.get(board).push(createPostIt);
 
             publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));

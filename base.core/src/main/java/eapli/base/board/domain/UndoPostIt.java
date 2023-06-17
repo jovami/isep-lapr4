@@ -21,7 +21,7 @@ public class UndoPostIt extends BoardHistory {
 
     protected UndoPostIt() {
     }
-    public UndoPostIt(Board board, String str) {
+    public UndoPostIt(String str) {
         super(str);
         parseStr(str);
     }
@@ -47,7 +47,7 @@ public class UndoPostIt extends BoardHistory {
 
     @Override
     public String toString() {
-        return getType()+"\t"+board+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
+        return getType()+"\t"+board.title()+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
     }
 
 

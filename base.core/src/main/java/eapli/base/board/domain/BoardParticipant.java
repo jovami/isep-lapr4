@@ -24,9 +24,7 @@ public class BoardParticipant implements AggregateRoot<Integer> {
     @Enumerated(EnumType.STRING)
     private BoardParticipantPermissions permission;
 
-    protected BoardParticipant()
-    {
-    }
+    protected BoardParticipant() {}
 
     public BoardParticipant(Board board, SystemUser participant,BoardParticipantPermissions permissions)
     {

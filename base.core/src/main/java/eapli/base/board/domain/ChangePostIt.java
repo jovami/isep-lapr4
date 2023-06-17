@@ -21,7 +21,7 @@ public class ChangePostIt extends BoardHistory {
 
     protected ChangePostIt() {
     }
-    public ChangePostIt(Board board, String str) {
+    public ChangePostIt(String str) {
         super(str);
         parseStr(str);
     }
@@ -47,7 +47,7 @@ public class ChangePostIt extends BoardHistory {
 
     @Override
     public String toString() {
-        return getType()+"\t"+board+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
+        return getType()+"\t"+board.title()+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
     }
 
 

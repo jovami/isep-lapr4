@@ -1,10 +1,7 @@
 package eapli.base.board.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javax.persistence.CascadeType;
@@ -53,9 +50,7 @@ public class Board implements AggregateRoot<BoardTitle> {
 
     @ElementCollection
     private final List<BoardRow> boardRowList = new ArrayList<>();
-    @Transient
-    @Getter
-    private final Deque<BoardHistory> history = new ConcurrentLinkedDeque<>();
+
 
     protected Board() {
     }
@@ -90,6 +85,28 @@ public class Board implements AggregateRoot<BoardTitle> {
         MAX_ROWS = maxRows;
         MAX_COLUMNS = maxColumns;
     }
+    public boolean addPostIt(int row, int column, PostIt postIt) {
+        synchronized (this.cells) {
+            var idx = (row - 1) * this.numColumns + (column - 1);
+            if (idx < 0 || idx >= this.cells.size())
+                return false; // TODO: report invalid index
+        }
+
+        var cell = this.getCell(row, column);
+        return cell.addPostIt(this, postIt);
+    }
+
+    public boolean changePostItData(int row, int column, String newData) {
+        synchronized (this.cells) {
+            var idx = (row - 1) * this.numColumns + (column - 1);
+            if (idx < 0 || idx >= this.cells.size())
+                return false; // TODO: report invalid index
+        }
+
+        var cell = this.getCell(row, column);
+        return cell.changePostItData(this, newData);
+    }
+
 
     public boolean undoChangeOnPostIt(int row, int column) {
         synchronized (this.cells) {
@@ -99,38 +116,9 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
 
         var cell = this.getCell(row, column);
-
         var postit = cell.getPostIt();
 
-        synchronized (this.history) {
-            for (final var entry : this.history) {
-                // TODO: use enum
-                if (entry.getType().equals("CHANGE")) {
-                    postit.alterPostItData(entry.getPrevContent());
-
-                    var sb = new StringBuilder();
-
-                    sb.append(Type.UNDO);
-                    sb.append('\t');
-                    sb.append(this.boardTitle.toString());
-                    sb.append('\t');
-                    sb.append(row);
-                    sb.append(',');
-                    sb.append(column);
-                    sb.append('\t');
-                    sb.append(LocalDateTime.now());
-                    sb.append('\t');
-                    sb.append(entry.getPosContent());
-                    sb.append('\t');
-                    sb.append(entry.getPrevContent());
-
-                    this.history.push(new UndoPostIt(this, sb.toString()));
-                    return true;
-                }
-            }
-        }
-
-        return true;
+        return cell.addUndoToHistory(this, postit);
     }
 
     public void archiveBoard() {
@@ -215,7 +203,7 @@ public class Board implements AggregateRoot<BoardTitle> {
             synchronized (to) {
                 PostIt tmp = from.getPostIt();
                 from.removePostIt();
-                to.addPostIt(tmp);
+                to.addPostIt(this, tmp);
             }
         }
 
@@ -255,4 +243,18 @@ public class Board implements AggregateRoot<BoardTitle> {
                 "\nTitle: " + boardTitle.title() +
                 ", with " + getNumRows() + " Rows and " + getNumColumns() + " Columns";
     }
+
+    public Deque<BoardHistory> getHistory() {
+        List<BoardHistory> sortedList = new ArrayList<>();
+
+        for (Cell cell : cells) {
+            Deque<BoardHistory> cellHistory = cell.getHistory();
+            sortedList.addAll(cellHistory);
+        }
+
+        sortedList.sort(Comparator.comparing(BoardHistory::getTime));
+
+        return new ArrayDeque<>(sortedList);
+    }
+
 }

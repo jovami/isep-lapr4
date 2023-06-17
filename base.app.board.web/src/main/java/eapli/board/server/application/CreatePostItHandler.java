@@ -117,7 +117,7 @@ public class CreatePostItHandler implements Runnable {
 
             StringBuilder sb = getStringBuilder();
             var history = SBPServerApp.histories.get(optBoard);
-            history.push(new CreatePostIt(optBoard,String.valueOf(sb)));
+            history.push(new CreatePostIt(String.valueOf(sb)));
 
             NewChangeEvent event = new NewChangeEvent(optBoard.getBoardTitle().title(),receiveText);
             publisher.publish(event);

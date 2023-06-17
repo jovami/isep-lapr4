@@ -43,11 +43,6 @@ public class BoardHistoryDTO {
         this.board = split[1];
         this.position = split[2].split(",");
         this.time = split[3];
-        System.out.println(str);
-        System.out.println(Arrays.toString(split));
-        System.out.println(split.length);
-
-        System.out.println(type);
         if (type.equals("CREATE")) {
             this.prevText = null;
             this.posText = split[4];
