@@ -1,0 +1,104 @@
+@startuml
+
+
+    class Board {
+        - boardTitle: BoardTitle
+        - numRows: int
+        - numColumns: int
+        - owner: SystemUser
+        --
+        + addPostIt(row: int, column: int, postIt: PostIt): boolean
+        + changePostItData(row: int, column: int, newData: String): boolean
+        + undoChangeOnPostIt(row: int, column: int): boolean
+        + archiveBoard()
+        + sharedBoard()
+        + createdBoard()
+        + getCells(): List<Cell>
+        + getCell(row: int, col: int): Cell
+        + getHistory(): Deque<BoardHistory>
+    }
+    class Cell {
+        - row: BoardRow
+        - column: BoardColumn
+        - history: Deque<BoardHistory>
+        --
+        + addPostIt(board: Board, postIt: PostIt): boolean
+        + changePostItData(board: Board, newData: String): boolean
+        + removePostIt()
+        + getPostItData(): String
+        + hasPostIt(): boolean
+        + addUndoToHistory(board: Board, postit: PostIt): boolean
+    }
+    class BoardTitle {
+        + title(): String
+    }
+    class BoardColumn {
+        - columnId: int
+        --
+        + getColumnId(): int
+    }
+    class BoardRow {
+        - rowId: int
+        --
+        + getRowId(): int
+    }
+
+    abstract class BoardHistory {
+        - type: String
+        - board: Board
+        - position: String
+        - time: LocalDateTime
+        --
+        + getType(): String
+        + getBoard(): Board
+        + getPosition(): String
+        + getTime(): LocalDateTime
+    }
+    class CreatePostIt {
+        --
+        + CreatePostIt(position: String)
+    }
+    class ChangePostIt {
+        --
+        + ChangePostIt(position: String)
+    }
+    class UndoPostIt {
+        --
+        + UndoPostIt(position: String, prevContent: String)
+    }
+
+
+
+    class SystemUser {
+        - username: String
+        - password: String
+        --
+        + getUsername(): String
+        + getPassword(): String
+    }
+
+
+
+    class PostIt {
+        - content: String
+        --
+        + PostIt(content: String)
+        + getContent(): String
+    }
+
+
+Board *--> Cell
+Board --> SystemUser
+Cell --> BoardRow
+Cell --> BoardColumn
+Cell --> PostIt
+Cell --> BoardHistory
+
+BoardTitle --> Board
+BoardColumn --* Board
+BoardRow --* Board
+BoardHistory <|-- CreatePostIt
+BoardHistory <|-- ChangePostIt
+BoardHistory <|-- UndoPostIt
+
+@enduml

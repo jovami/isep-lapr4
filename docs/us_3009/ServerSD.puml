@@ -1,0 +1,60 @@
+@startuml
+actor SBServer as server
+
+participant ViewBoardRequestHandler as ctrl
+participant SBProtocol as protocol
+participant BoardService as boardService
+
+    server -> ctrl : create(socket, request)
+    server -> ctrl : run()
+    activate ctrl
+    note right : create instance of socket with serverIp and serverPort,\na input stream(inS) and output Stream(outS)
+
+        ctrl -> protocol : getToken()
+        activate protocol
+        ctrl <-- protocol : token
+        deactivate protocol
+        ctrl -> server : getClient(token)
+        activate server
+        note right of server : clients associated to token \nare stored at SBPServerApp
+        server --> ctrl : client
+        deactivate server
+        ctrl -> Client : getUser()
+        activate Client
+        ctrl <-- Client : user
+        deactivate Client
+        ctrl -> boardService : boardUserCanView(user)
+        activate boardService
+
+        ctrl <-- boardService : boards
+        deactivate boardService
+        note right of ctrl: create protocol with boards
+        ctrl -> protocol : send(outS)
+
+        ctrl -> protocol : create(inS)
+        note right: receive board chosen
+        ctrl -> protocol : getContentFromString()
+        activate protocol
+        ctrl <-- protocol : boardChosen
+        deactivate protocol
+        deactivate protocol
+        ctrl -> server : getBoard(boardChosen)
+        activate server
+        note right of server : boards stored at SBPServerApp
+        server --> ctrl : board
+        ctrl -> server : requestHistory(board)
+        server --> ctrl : history
+        deactivate server
+
+
+        ctrl -> protocol : setCode(VIEW_BOARD_HISTORY)
+        ctrl -> protocol : setContentFromString(buildHistory(history))
+
+        ctrl ->  protocol : send(outS))
+
+    deactivate ctrl
+
+
+@enduml
+
+

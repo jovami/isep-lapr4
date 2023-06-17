@@ -1,0 +1,13 @@
+@startuml
+actor Client as client
+actor Server as server
+
+client -> server : openSocket
+client <-- server : accept socket
+client -> server: viewBoards(user)
+client <-- server: board with permissions to view
+client -> server: requestHistory(board)
+client <-- server: display history
+
+
+@enduml
