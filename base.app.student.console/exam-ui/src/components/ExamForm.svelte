@@ -10,14 +10,15 @@
 <h1>
     <strong>{exam.title}</strong>
 </h1>
-<hr />
+<hr class="w-100 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-3 dark:bg-gray-500">
 <br />
+
 <form on:submit|preventDefault={submit} id="exam">
     {#each exam.sections as section, i}
         <h2>
             Section {i + 1} &mdash; {section.description}
         </h2>
-        <hr />
+        <hr class="w-100 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-3 dark:bg-gray-500">
         <br />
         {#each section.questions as question, j}
             <h3>

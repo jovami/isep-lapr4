@@ -40,11 +40,11 @@
             / <strong>{result.maxGrade}</strong>
         {/if}
     </p>
-    <hr />
+    <hr class="w-100 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-3 dark:bg-gray-500">
     <br />
     {#each result.sections as section, i}
         <h2>Section {i + 1}</h2>
-        <hr />
+        <hr class="w-100 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-3 dark:bg-gray-500">
         <br />
         {#each section.answers as answer, j}
             <h3>Question {j + 1} &mdash; {exam.sections[i].questions[j]}</h3>
