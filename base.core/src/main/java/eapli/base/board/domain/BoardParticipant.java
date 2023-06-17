@@ -24,25 +24,23 @@ public class BoardParticipant implements AggregateRoot<Integer> {
     @Enumerated(EnumType.STRING)
     private BoardParticipantPermissions permission;
 
-    protected BoardParticipant() {}
+    protected BoardParticipant() {
+    }
 
-    public BoardParticipant(Board board, SystemUser participant,BoardParticipantPermissions permissions)
-    {
+    public BoardParticipant(Board board, SystemUser participant, BoardParticipantPermissions permissions) {
         this.board = board;
         this.participant = participant;
         this.permission = permissions;
     }
 
-    public SystemUser participant()
-    {
+    public SystemUser participant() {
         return this.participant;
     }
-    public Board board(){return this.board;}
 
-    @Override
-    public boolean equals(final Object o) {
-        return DomainEntities.areEqual(this, o);
+    public Board board() {
+        return this.board;
     }
+
 
     @Override
     public int hashCode() {
@@ -60,14 +58,14 @@ public class BoardParticipant implements AggregateRoot<Integer> {
             return true;
         }
 
-        return identity().equals(that.identity());
+            return board.sameAs(that.board) && participant.sameAs(that.participant);
     }
 
-    public boolean hasWritePermissions(){
-        return permission()==BoardParticipantPermissions.WRITE;
+    public boolean hasWritePermissions() {
+        return permission() == BoardParticipantPermissions.WRITE;
     }
 
-    public BoardParticipantPermissions permission(){
+    public BoardParticipantPermissions permission() {
         return this.permission;
     }
 

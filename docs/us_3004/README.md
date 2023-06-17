@@ -84,7 +84,28 @@ check [the following document](../SBServer/Design.md)**
 
 ### 4.2 Unit Tests
 
-Integration tests should be performed in order to better improve this functionality
+    @Test
+    public void participantWithReadPermissions() {
+        SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
+        SystemUser participant = userBuilder.with("Participant", "Password1", "Dummy", "Dummy", "participan@gmail.com")
+                .withRoles(BaseRoles.MANAGER).build();
+        BoardParticipant p = new BoardParticipant(board, participant, BoardParticipantPermissions.READ);
+        assertFalse(p.hasWritePermissions());
+        assertEquals(BoardParticipantPermissions.READ, p.permission());
+    }
+
+    @Test
+    public void participantWithWritePermissions() {
+        SystemUserBuilder userBuilder = new SystemUserBuilder(new NilPasswordPolicy(), new PlainTextEncoder());
+        SystemUser participant = userBuilder.with("Participant", "Password1", "Dummy", "Dummy", "participan@gmail.com")
+                .withRoles(BaseRoles.MANAGER).build();
+        BoardParticipant p = new BoardParticipant(board, participant, BoardParticipantPermissions.WRITE);
+        assertTrue(p.hasWritePermissions());
+        assertEquals(BoardParticipantPermissions.WRITE, p.permission());
+    }
+
+
+**Integration tests should be performed in order to better improve this functionality**
 
 ### 4.3. Applied Patterns
 
