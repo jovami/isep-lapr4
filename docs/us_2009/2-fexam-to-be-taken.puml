@@ -12,7 +12,7 @@ participant GrammarContext as ctx
 participant GrammarToolFactory as grepo
 
 participant GenerateFormativeExamService as svc
-participant FormativeExamToBeTakenDTO as dto
+participant ExamToBeTakenDTO as dto
 
 student --> ui : chooses exam
 activate ui

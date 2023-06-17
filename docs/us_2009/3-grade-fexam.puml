@@ -13,7 +13,7 @@ participant GrammarToolFactory as grepo
 
 participant GradeFormativeExamService as svc
 
-participant FormativeExamResultDTO as dto
+participant ExamResultDTO as dto
 
 student --> ui : submits resolution
 activate ui
@@ -23,7 +23,7 @@ activate ui
         ctrl --> unmap : fromDTO(resolutionDTO)
         activate unmap
             loop for each question_answer in resolutionDTO
-                unmap --> q_repo : ofIdentity(question_answer.id
+                unmap --> q_repo : ofIdentity(question_answer.id)
                 activate q_repo
                     q_repo --> unmap : question
                 deactivate q_repo
