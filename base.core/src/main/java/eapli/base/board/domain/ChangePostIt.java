@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Entity
 @DiscriminatorValue("CHANGE")
 public class ChangePostIt extends BoardHistory {
-
     //private Type type;
     private BoardTitle board;
     private int row;
@@ -16,11 +15,9 @@ public class ChangePostIt extends BoardHistory {
     private String prevContent;
     private String posContent;
 
-
-
-
     protected ChangePostIt() {
     }
+
     public ChangePostIt(String str) {
         super(str);
         parseStr(str);
@@ -34,21 +31,15 @@ public class ChangePostIt extends BoardHistory {
         this.time = LocalDateTime.parse(split[3]);
         this.prevContent = split[4];
         this.posContent = split[5];
-
     }
-
 
     @Override
     public String getType() {
         return "CHANGE";
     }
 
-
-
     @Override
     public String toString() {
         return getType()+"\t"+board.title()+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
     }
-
-
 }

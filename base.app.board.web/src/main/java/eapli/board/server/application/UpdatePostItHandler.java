@@ -2,6 +2,7 @@ package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
+import eapli.base.board.domain.ChangePostIt;
 import eapli.base.board.domain.CreatePostIt;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
@@ -62,8 +63,7 @@ public class UpdatePostItHandler implements Runnable {
                 return;
             }
 
-            var createPostIt = new CreatePostIt(getUpdateString(arr[0], arr[1], arr[2], time));
-            SBPServerApp.histories.get(board).push(createPostIt);
+            SBPServerApp.histories.get(board).push(new ChangePostIt(getUpdateString(arr[0], arr[1], arr[2], time)));
 
             publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
 
