@@ -1,4 +1,4 @@
-package eapli.base.board;
+package eapli.base.board.domain;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;

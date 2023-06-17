@@ -36,9 +36,9 @@ public class PostIt {
         return postItOwner;
     }
 
-    public int getPostItId() {
+    /*public int getPostItId() {
         return postItId;
-    }
+    }*/
 
     public synchronized void alterPostItData(String newData) {
         this.postItData = newData;

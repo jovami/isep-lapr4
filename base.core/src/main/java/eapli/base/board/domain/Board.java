@@ -133,10 +133,6 @@ public class Board implements AggregateRoot<BoardTitle> {
         this.state = BoardState.CREATED;
     }
 
-    public SystemUser getOwner() {
-        return owner;
-    }
-
     public BoardState getState() {
         return state;
     }

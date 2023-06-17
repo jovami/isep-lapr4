@@ -1,4 +1,4 @@
-package eapli.base.board;
+package eapli.base.board.domain;
 
 import eapli.base.board.domain.*;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
@@ -9,7 +9,11 @@ import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Deque;
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.Assert.*;
 
 public class BoardTest {
     private final String title = "test";
@@ -92,32 +96,8 @@ public class BoardTest {
             assertEquals(boardColumn, board.getBoardColumnList().get(i));
         }
     }
-/*
-    @Test
-    public void ensurePostItCreation() {
-        PostIt postIt = new PostIt(cellId);
-        assertEquals(postIt, board.createPostIt(cellId));
-    }
 
-    @Test
-    public void ensurePostItCanAlterCell() {
-        PostIt postIt = new PostIt(cellId);
-        postIt.alterCell(cellId + 1);
-        assertEquals(cellId + 1, postIt.getCellId());
-    }
 
-    @Test
-    public void ensurePostItCanBeMoved() {
-        PostIt postIt = new PostIt(cellId);
-        assertEquals(cellId, postIt.getCellId());
-
-        assertNotEquals(cellId + 1, postIt.getCellId());
-        postIt.alterCell(cellId + 1);
-
-        // board.movePostIt(cellId+1,postIt);
-        assertEquals(cellId + 1, postIt.getCellId());
-
-    }
 
     @Test
     public void ensureGetBoardColumnId() {
@@ -217,13 +197,6 @@ public class BoardTest {
         assertEquals(cell1.hashCode(), cell2.hashCode());
     }
 
-    @Test
-    public void ensurePostItHashCode() {
-        PostIt postIt1 = new PostIt(2);
-        PostIt postIt2 = new PostIt(2);
-
-        assertEquals(postIt1.hashCode(), postIt2.hashCode());
-    }
 
     @Test
     public void ensureArchiveBoardState() {
@@ -261,11 +234,82 @@ public class BoardTest {
     }
 
     @Test
-    public void ensureToString() {
-        String expected = " Board: " +
-                "\nTitle: " + title +
-                ", with " + rows * columns + " Cells";
-        assertEquals(expected, board.toString());
+    public void testGetCell() {
+        int row = 2;
+        int column = 1;
+        Cell expectedCell = new Cell(new BoardRow(row), new BoardColumn(column));
+        board.getCells().set(((row - 1) * columns) + (column - 1), expectedCell);
 
-    }*/
+        Cell actualCell = board.getCell(row, column);
+
+        assertEquals(expectedCell, actualCell);
+    }
+
+    @Test
+    public void testGetOwner() {
+        SystemUser boardOwner = board.boardOwner();
+
+        assertEquals(user, boardOwner);
+    }
+
+    @Test
+    public void testEquals() {
+        Board otherBoard = new Board(BoardTitle.valueOf(title), rows, columns, user);
+
+        assertEquals(board, otherBoard);
+    }
+
+    @Test
+    public void testEquals_NotEqual() {
+        Board otherBoard = new Board(BoardTitle.valueOf("OtherBoard"), rows, columns, user);
+
+        assertNotEquals(board, otherBoard);
+    }
+
+    @Test
+    public void testHashCode() {
+        BoardTitle title = BoardTitle.valueOf("TestTitle");
+        Board board1 = new Board(title, 5, 5, user);
+        Board board2 = new Board(title, 5, 5, user);
+
+        assertEquals(board1.hashCode(), board2.hashCode());
+
+        Board board3 = new Board(BoardTitle.valueOf("DifferentTitle"), 5, 5, user);
+
+        assertNotEquals(board1.hashCode(), board3.hashCode());
+    }
+
+    @Test
+    public void testGetHistory() {
+        board = new Board(BoardTitle.valueOf(title), 2, 2, user);
+        Cell cell1 = board.getCells().get(1);
+        Cell cell2 = board.getCells().get(2);
+        Cell cell3 = board.getCells().get(3);
+
+        cell1.addPostIt(board, new PostIt(user, "Note 1"));
+        cell2.addPostIt(board, new PostIt(user,"Note 2"));
+        cell3.addPostIt(board, new PostIt(user,"Note 3"));
+
+        Deque<BoardHistory> history = board.getHistory();
+
+        assertNotNull(history);
+        assertEquals(3, history.size());
+
+        BoardHistory history1 = history.pollFirst();
+        assert history1 != null;
+        assertEquals("Note 1", history1.getPosContent());
+
+        BoardHistory history3 = history.pollFirst();
+        assert history3 != null;
+        assertEquals("Note 2", history3.getPosContent());
+
+        BoardHistory history4 = history.pollFirst();
+        assert history4 != null;
+        assertEquals("Note 3", history4.getPosContent());
+
+
+    }
+
+
+
 }

@@ -4,6 +4,7 @@ package eapli.base.board.domain;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @DiscriminatorValue("UNDO")
@@ -31,7 +32,7 @@ public class UndoPostIt extends BoardHistory {
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
         this.column = Integer.parseInt(split[2].split(",")[1]);
-        this.time = LocalDateTime.parse(split[3]);
+        this.time = LocalDateTime.parse(split[3], DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
         this.prevContent = split[4];
         this.posContent = split[5];
 
