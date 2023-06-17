@@ -36,7 +36,7 @@ public class ArchiveBoardUI extends AbstractUI {
             }
 
             //list boards and ask to choose
-            SelectWidget<String> widget = new SelectWidget<>("Choose a board to archive:", boards);
+            SelectWidget<String> widget = new SelectWidget<>("Choose a Board\n==============", boards);
             widget.show();
 
             if (widget.selectedOption() <= 0)
