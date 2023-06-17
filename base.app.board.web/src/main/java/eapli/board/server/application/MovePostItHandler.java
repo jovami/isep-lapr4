@@ -2,8 +2,8 @@ package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.ChangePostIt;
 import eapli.base.board.domain.CreatePostIt;
+import eapli.base.board.domain.RemovePostIt;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBPServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
@@ -18,13 +18,13 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class UpdatePostItHandler implements Runnable {
+public class MovePostItHandler {
     private final Socket socket;
     private final ShareBoardService svcBoard;
     private final PostItService svcPostIt;
     private final EventPublisher publisher;
 
-    public UpdatePostItHandler(Socket socket, SBProtocol authRequest) {
+    public MovePostItHandler(Socket socket, SBProtocol authRequest) {
         this.socket = socket;
         this.svcBoard = new ShareBoardService();
         this.svcPostIt = new PostItService();
@@ -33,10 +33,10 @@ public class UpdatePostItHandler implements Runnable {
 
     public void run() {
         try {
-            var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
-
             var inS = new DataInputStream(socket.getInputStream());
             var outS = new DataOutputStream(socket.getOutputStream());
+
+            var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
 
             var user = SBPServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
             var boards = svcBoard.boardsUserCanWrite(user);
@@ -52,33 +52,58 @@ public class UpdatePostItHandler implements Runnable {
             if (board == null)
                 throw new ReceivedERRCode("Board not found");
 
-            var dimensions = arr[1].split(",");
-            int row = Integer.parseInt(dimensions[0]);
-            int column = Integer.parseInt(dimensions[1]);
-            var prevText = board.getCell(row, column).getPostIt().getData();
-            if (!svcPostIt.updatePostIt(board, row, column, arr[2], user)) {
+            int rowFrom = Integer.parseInt(arr[1]);
+            int columnFrom = Integer.parseInt(arr[2]);
+            int rowTo = Integer.parseInt(arr[3]);
+            int columnTo = Integer.parseInt(arr[4]);
+            var content = board.getCell(rowFrom, columnFrom).getPostIt().getData();
+
+            if (!svcPostIt.movePostIt(board, rowFrom, columnFrom, rowTo, columnTo, user)) {
                 var protocol = new SBProtocol();
                 protocol.setCode(SBProtocol.ERR);
-                protocol.setContentFromString("Cell is empty");
+                protocol.setContentFromString("Error moving Post-It");
                 protocol.send(outS);
                 return;
             }
 
-            SBPServerApp.histories.get(board).push(
-                    new ChangePostIt(getUpdateString(arr[0], arr[1], prevText, arr[2], time)));
+            var history = SBPServerApp.histories.get(board);
+            history.push(new RemovePostIt(
+                    removeString(board.getBoardTitle().title(), rowFrom, columnFrom, content, time)));
+            history.push(new CreatePostIt(
+                    createString(board.getBoardTitle().title(), rowTo, columnTo, content, time)));
 
             publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
 
-            var response = new SBProtocol();
-            response.setCode(SBProtocol.ACK);
-            response.send(outS);
+            var reply = new SBProtocol();
+            reply.setCode(SBProtocol.ACK);
+            reply.send(outS);
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String getUpdateString(String alterBoard, String alterPosition, String prevText, String alterText, String alterTime) {
-        return "UPDATE" + "\t" + alterBoard + "\t" + alterPosition + "\t" + alterTime + "\t" + prevText + "\t" + alterText;
+    private String createString(String alterBoard, int row, int column, String alterText, String alterTime) {
+        return "CREATE"
+                + "\t"
+                + alterBoard
+                + "\t"
+                + row + "," + column
+                + "\t"
+                + alterTime
+                + "\t"
+                + alterText;
+    }
+
+    private String removeString(String alterBoard, int row, int column, String alterText, String alterTime) {
+        return "REMOVE"
+                + "\t"
+                + alterBoard
+                + "\t"
+                + row + "," + column
+                + "\t"
+                + alterTime
+                + "\t"
+                + alterText;
     }
 
     public String buildBoardString(Iterable<Board> boards) {

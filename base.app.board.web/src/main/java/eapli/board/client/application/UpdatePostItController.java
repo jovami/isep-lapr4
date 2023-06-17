@@ -2,6 +2,7 @@ package eapli.board.client.application;
 
 
 import eapli.board.SBProtocol;
+import eapli.framework.application.UseCaseController;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.DataInputStream;
@@ -12,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+@UseCaseController
 public class UpdatePostItController {
     private final Socket sock;
     private final DataInputStream inS;

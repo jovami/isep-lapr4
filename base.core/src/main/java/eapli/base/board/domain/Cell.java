@@ -56,7 +56,7 @@ public class Cell implements Serializable {
             if (!hasPostIt())
                 return false;
 
-            if (!formatString(board, this.history.getFirst(), newData, Type.CHANGE))
+            if (!formatString(board, this.history.getFirst(), newData, Type.UPDATE))
                 return false;
         }
 
@@ -66,10 +66,30 @@ public class Cell implements Serializable {
     }
 
 
-    public void removePostIt() {
+    public boolean removePostIt(Board board) {
         synchronized (this) {
+            if (!hasPostIt())
+                return false;
+            var tmp = this.postIt;
             this.postIt = null;
+
+            return formatString(board, null, tmp.getData(), Type.REMOVE);
         }
+    }
+
+    public boolean movePostIt(Board board, Cell cellTo) {
+        synchronized (this) {
+            if (!hasPostIt())
+                return false;
+
+            if (cellTo.hasPostIt())
+                return false;
+
+            if (!formatString(board, this.history.getFirst(), null, Type.UPDATE))
+                return false;
+        }
+
+        return cellTo.addPostIt(board, this.postIt) && this.removePostIt(board);
     }
 
     public String getPostItData() {
@@ -148,7 +168,11 @@ public class Cell implements Serializable {
                 sb.append(newData);
                 this.history.push(new CreatePostIt(sb.toString()));
                 break;
-            case CHANGE:
+            case REMOVE:
+                sb.append(newData);
+                this.history.push(new RemovePostIt(sb.toString()));
+                break;
+            case UPDATE:
                 sb.append(entry.getPosContent());
                 sb.append('\t');
                 sb.append(newData);

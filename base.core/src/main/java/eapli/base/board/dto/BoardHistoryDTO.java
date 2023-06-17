@@ -43,14 +43,21 @@ public class BoardHistoryDTO {
         this.board = split[1];
         this.position = split[2].split(",");
         this.time = split[3];
-        if (type.equals("CREATE")) {
-            this.prevText = null;
-            this.posText = split[4];
-        } else {
-            this.prevText = split[4];
-            this.posText = split[5];
-        }
 
+        switch (type){
+            case "CREATE":
+                this.prevText = null;
+                this.posText = split[4];
+                break;
+            case "REMOVE":
+                this.prevText = split[4];
+                this.posText = null;
+                break;
+            default:
+                this.prevText = split[4];
+                this.posText = split[5];
+                break;
+        }
     }
 
 

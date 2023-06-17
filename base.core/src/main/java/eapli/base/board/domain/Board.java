@@ -193,20 +193,16 @@ public class Board implements AggregateRoot<BoardTitle> {
         }
     }
 
-    public void movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
-        // if newCellId has not a post it assigned
+    public boolean movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
+        var fromCell = getCell(rowFrom, colFrom);
+        var toCell = getCell(rowTo, colTo);
 
-        Cell from = getCell(rowFrom, colFrom);
-        Cell to = getCell(rowTo, colTo);
-
-        synchronized (from) {
-            synchronized (to) {
-                PostIt tmp = from.getPostIt();
-                from.removePostIt();
-                to.addPostIt(this, tmp);
+        //TODO: this is probably not working
+        synchronized (fromCell) {
+            synchronized (toCell) {
+                return fromCell.movePostIt(this, toCell);
             }
         }
-
     }
 
     @Override

@@ -22,6 +22,7 @@ public class MainMenu extends AbstractUI {
     private static final int VIEW_BOARD = 2;
     private static final int CREATE_POSTIT = 3;
     private static final int UPDATE_POSTIT = 4;
+    private static final int MOVE_POSTIT = 8;
     private static final int UNDO_POSTIT = 5;
     private static final int VIEW_BOARD_HISTORY = 6;
     private static final int ARCHIVE_BOARD = 7;
@@ -72,6 +73,8 @@ public class MainMenu extends AbstractUI {
                 new UndoPostItLastChangeUI(serverIP, serverPort)::show);
         menu.addItem(UPDATE_POSTIT, "Update Post-It ",
                 new UpdatePostItUI(serverIP, serverPort)::show);
+        menu.addItem(MOVE_POSTIT, "Move Post-It ",
+                new MovePostItUI(serverIP, serverPort)::show);
         menu.addItem(VIEW_BOARD_HISTORY, "View Board History ",
                 new ViewBoardHistoryUI(serverIP, serverPort)::show);
         menu.addItem(ARCHIVE_BOARD, "Archive board ",

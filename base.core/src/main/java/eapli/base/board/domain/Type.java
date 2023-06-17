@@ -2,6 +2,7 @@ package eapli.base.board.domain;
 
 public enum Type {
     CREATE,
-    CHANGE,
+    UPDATE,
+    REMOVE,
     UNDO
 }
