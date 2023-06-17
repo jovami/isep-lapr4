@@ -2,7 +2,7 @@
 
 actor SBPServerApp as server
 
-participant MenuRequest as menu
+
 participant ArchiveBoardHandler as handler
 participant SBProtocol as sbp
 participant BoardService as svc
@@ -12,22 +12,19 @@ database BoardRepository as b_repository
 
 
 activate server
-server -> menu : receives GET_BOARDS_OWNED_NOT_ARCHIVED\ncode request
-activate menu
-
-    menu -> handler: create(sock,codeRequest)
+server ->  handler: create(sock,codeRequest)
     note right : receives a socket and\nSBProtocol codeRequest
     activate handler
         handler -> svc : create()
         activate svc
         deactivate svc
     deactivate handler
-    menu -> handler : run()
+    server -> handler : run()
     note right : create DataInputStream as "inS"\ncreate DataOutputStream as "outS"
 
     activate handler
         handler -> c_user : owner = getUserLoggedIn()
-        note right: get from SBPServerApp activate status\nMap<InetAddress, Client> activeAuths\nThen from Client get SystemUser
+
         activate c_user
         deactivate c_user
 
@@ -38,23 +35,21 @@ activate menu
 
 
 
-        note right of handler :create string builder
-        handler -> handler : sendBoardOwned(builder, boards)
-        handler -> sbp : sendBoards = create()
-        activate sbp
-        note right of handler: loop for to append boards\ninto builder
 
-        handler -> sbp : setContentFromString(builder)
+        handler -> handler : sendBoardOwned(builder, boards)
+        handler -> sbp : create()
+        activate sbp
+        note right of handler: append boards into string
+
         handler -> sbp : send(outS)
         deactivate sbp
 
-        handler -> sbp : receiveBoard = create(inS)
+        handler -> sbp : create(inS)
         activate sbp
-        handler -> sbp : getContentAsString()
         sbp --> handler : boardName
         deactivate sbp
 
-        note right of handler: SBPServerApp as\n Map<BoardTitle, Board> boards\nget "board" with title "boardName"
+        note right of handler: SBPServerApp as boards, get board with "boardName"
 
         handler -> b : archiveBoard()
         activate b
@@ -69,19 +64,18 @@ activate menu
             svc -> handler : boards
         deactivate svc
 
-        note right of handler :create string builderArchived
-        handler -> handler : sendBoardOwned(builderArchived, boardsArchived)
-        handler -> sbp : sendBoards = create()
-       activate sbp
-        note right of handler: loop for to append boards\ninto builderArchived
 
-        handler -> sbp : setContentFromString(builder)
+        handler -> handler : sendBoardOwned(builderArchived, boardsArchived)
+        handler -> sbp : create()
+       activate sbp
+        note right of handler: appends boards into string
+
         handler -> sbp : send(outS)
 
 
 
-    deactivate handler
-deactivate menu
+deactivate handler
+
 
 
 

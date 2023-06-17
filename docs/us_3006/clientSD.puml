@@ -3,7 +3,6 @@ actor SBPClientApp as user
 participant CreatePostItUI as ui
 participant CreatePostItController as ctrl
 participant SBProtocol as sbp
-participant "boardColumns\nArrayList<String> boardColumns" as bc
 
 
 
@@ -18,19 +17,16 @@ activate ui
 
         ctrl -> sbp : create()
         activate sbp
-            ctrl -> sbp : setCode(SBProtocol.CREATE_POST_IT)
             ctrl -> sbp : send(outS)
             note right of ctrl: check CreatePostItHandler
             ctrl -> sbp : create(inS)
-            ctrl -> sbp :  getContentAsString()
             sbp --> ctrl: boards
-            note right : boardColumns = boards
         deactivate sbp
     deactivate ctrl
 
     ui -> ctrl: getBoardsList()
     activate ctrl
-        note right :method will separate boardcollumns\ncolumn 0: boardTitle\ncolumn 1: numRows\ncolumn 2: numColumns
+        note right : parse each board
         ctrl --> ui: listBoards
 
     deactivate ctrl
@@ -46,7 +42,7 @@ ui --> user : shows the user the number of rows\nand columns and ask the user to
 user -> ui : chooses the cell to allocate the Post-It
 
 
-    note right of ui: "arr" because reads from console in format "row,columns"\n"numRows" board has\n"numColumns" board has\nverifies the values choosed ,if are positive or bigger then\nnumRows and numcolumns
+    note right of ui: "arr" because reads from console in format "row,columns", checks values
     ui -> ctrl : isCellIdValid(arr, numRows, numColumns)
     activate ctrl
         ctrl --> ui : true/false
@@ -55,26 +51,25 @@ user -> ui : chooses the cell to allocate the Post-It
 
     ui --> user : asks the content type\neither text or image
 
-    note right of ui: in case choice was image retrive\nimages from folder inside project
+    note right of ui: in case choice was image
     ui -> ui : file = chooseFile()
 
     ui -> ctrl : createBoardPositionTextString(boardChosen, position, content)
     activate ctrl
-        note right of ctrl : returns a string builder with:\n-board title\n-position in board to create Post-It\n-content of Post-It
-        ctrl --> ui : stringBuilder
+        note right of ctrl : appends all information into string
+        ctrl --> ui : string
     deactivate ctrl
 
 
-    ui -> ctrl :createPostIt(stringBuilder)
+    ui -> ctrl :createPostIt(string)
     activate ctrl
         ctrl -> sbp : create()
         activate sbp
-            ctrl -> sbp : setContentFromString(str)
             ctrl -> sbp : send(outS)
             note right of ctrl: check CreatePostItHandler
+            note right :send string with all content
             ctrl -> sbp : create(inS)
-            ctrl -> sbp : getCode() == SBProtocol.ACK
-            note right : indicates success of the operation
+            note right of ctrl : receives info of success of the operation
             ctrl --> ui : true/false
 
         deactivate sbp

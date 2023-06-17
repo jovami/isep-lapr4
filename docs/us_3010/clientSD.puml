@@ -19,13 +19,13 @@ activate ui
     activate ctrl
         ctrl ->sbp: create()
         activate sbp
-            ctrl -> sbp : setCode(SBProtocol.GET_BOARDS_OWNED_NOT_ARCHIVED);
-            ctrl -> sbp : send(outS);
+
+            ctrl -> sbp : send(outS)
             note right of ctrl: check ArchiveBoardHandler
 
-            ctrl -> sbp : getBoards = create(inS)
-            ctrl -> sbp : getBoards.getContentAsString().split("\0")
+            ctrl -> sbp : create(inS)
             sbp --> ctrl : content
+            note right : receives boards
 
         deactivate sbp
 
@@ -41,12 +41,12 @@ activate ui
     activate ctrl
         ctrl -> sbp : create()
         activate sbp
-        ctrl -> sbp : setContentFromString(boardTitle)
         ctrl -> sbp : send(outS)
+        note right : sends board title
         note right of ctrl: check ArchiveBoardHandler
-        ctrl -> sbp : getBoards = create(inS)
-        ctrl -> sbp : getBoards.getContentAsString().split("\0")
+        ctrl -> sbp : create(inS)
         sbp --> ctrl : content
+        note right : receives boards archived
         deactivate sbp
 
         ctrl -> ui: archivedBoards

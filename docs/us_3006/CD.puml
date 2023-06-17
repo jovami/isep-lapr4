@@ -6,16 +6,16 @@ skinparam padding 2
 skinparam ranksep 100
 skinparam classFontSize 18
 
-interface Runnable
-interface MessageProtocol
-interface BoardRepository
 
-class AbstractUI
+interface MessageProtocol
+interface BoardParticipantRepository
 {
+    +withPermission(SystemUser user, BoardParticipantPermissions perm)
 }
 
 class CreatePostItUI
 {
+    -chooseFile()
 }
 
 class CreatePostItController
@@ -46,61 +46,102 @@ class SBProtocol
 class MenuRequest
 {
     +run()
-    +clientBySock(InetAddress addr)
 }
 
 class SBPServerApp
 {
+    +{static}Map<InetAddress, Client> activeAuths
+    +{static}Map<BoardTitle, Board> boards
 }
 
-class NewChangeEvent
+class SBPClientAPP
 {
 }
+
 
 class CreatePostIt
 {
+  +parseStr(String content)
 }
 
-class SystemUser
+class Client
+{
+    +getUserLoggedIn()
+}
+
+
+class BoardService
+{
+    +boardsUserCanWrite(SystemUser owner)
+}
+
+class MainMenu
+{
+    - buildMainMenu()
+}
+
+class PostItService
+{
+    +createPostIt(Board board, int row, int col, String text, SystemUser postItOwner)
+}
+
+class Board
+{
+   +getCell(int row, int column)
+}
+
+class Cell
+{
+    +addPostIt(PostIt postIt)
+}
+
+class PostIt {
+}
+
+abstract class BoardHistory
 {
 }
 
-class ReceivedERRCode
-{
-}
 
-class Thread
-{
-}
 
-class SharedBoardService
-{
-    +listBoardsUserParticipatesAndHasWritePermissionsPlusBoardOwnsNotArchived(owner)
-}
 
 
 
 'extends --|>
-CreatePostItUI --|> AbstractUI
-MenuRequest --|> Thread
+
+CreatePostIt --|> BoardHistory
+
 
 
 'depends on(imports)  -->
 CreatePostItUI --> "1" CreatePostItController
 CreatePostItController --> "*" SBProtocol
 
-CreatePostItHandler --> "1" BoardRepository
+
 CreatePostItHandler --> "*" SBProtocol
-CreatePostItHandler --> MenuRequest
-CreatePostItHandler --> SBPServerApp
-CreatePostItHandler --> NewChangeEvent
-CreatePostItHandler --> CreatePostIt
-CreatePostItHandler --> SystemUser
-CreatePostItHandler --> ReceivedERRCode
+
+
+CreatePostItHandler --> "1" CreatePostIt
+CreatePostItHandler --> "1" Client
+CreatePostItHandler --> "1" BoardService
+CreatePostItHandler --> "1" PostItService
+
+SBPClientAPP --> "1" MainMenu
+MainMenu --> "1" CreatePostItUI
+SBPServerApp --> "1" MenuRequest
+MenuRequest --> "1" CreatePostItHandler
+MenuRequest -up-> "1" SBProtocol
+
+PostItService --> "1" Board
+Board --> "*" Cell
+Cell --> "1" PostIt
+
+BoardService --> "1" BoardParticipantRepository
+
+SBPServerApp ----> "*" Board
+SBPServerApp -> "*" BoardHistory
 
 'implements ..|>
 SBProtocol ..|> MessageProtocol
-CreatePostItHandler ..|> Runnable
-Thread ..|> Runnable
 
 @enduml
