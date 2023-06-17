@@ -55,7 +55,18 @@ public class UpdatePostItHandler implements Runnable {
             var dimensions = arr[1].split(",");
             int row = Integer.parseInt(dimensions[0]);
             int column = Integer.parseInt(dimensions[1]);
-            var prevText = board.getCell(row, column).getPostIt().getData();
+
+            //TODO: this should be synchronized
+            var cell = board.getCell(row, column);
+            if (!cell.hasPostIt()) {
+                var protocol = new SBProtocol();
+                protocol.setCode(SBProtocol.ERR);
+                protocol.setContentFromString("Cell is empty");
+                protocol.send(outS);
+                return;
+            }
+            var prevText = cell.getPostIt().getData();
+
             if (!svcPostIt.updatePostIt(board, row, column, arr[2], user)) {
                 var protocol = new SBProtocol();
                 protocol.setCode(SBProtocol.ERR);

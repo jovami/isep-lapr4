@@ -36,4 +36,9 @@ public class BoardInfoDto {
     public void addPostIt(int row, int col, String info) {
         dataContent[((row - 1) * numCols) + (col - 1)] = info;
     }
+
+    public void movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
+        dataContent[((rowTo - 1) * numCols) + (colTo - 1)] = dataContent[((rowFrom - 1) * numCols) + (colFrom - 1)];
+        dataContent[((rowFrom - 1) * numCols) + (colFrom - 1)] = "";
+    }
 }

@@ -28,6 +28,14 @@ public class MenuChanges extends Thread {
                     CreatePostItAjax createPostItAjax = new CreatePostItAjax(sock, request);
                     createPostItAjax.run();
                     break;
+                case SBProtocol.UPDATE_POST_IT:
+                    UpdatePostItAjax updatePostItAjax = new UpdatePostItAjax(sock, request);
+                    updatePostItAjax.run();
+                    break;
+                case SBProtocol.MOVE_POST_IT:
+                    MovePostItAjax movePostItAjax = new MovePostItAjax(sock, request);
+                    movePostItAjax.run();
+                    break;
             }
 
         } catch (IOException ex) {
