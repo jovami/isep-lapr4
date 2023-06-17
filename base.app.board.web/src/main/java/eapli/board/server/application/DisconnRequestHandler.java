@@ -1,7 +1,7 @@
 package eapli.board.server.application;
 
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.domain.Client;
 import eapli.framework.validations.Preconditions;
 
@@ -21,7 +21,7 @@ public class DisconnRequestHandler extends AbstractSBServerHandler {
         }
 
         SBProtocol responseSent = new SBProtocol();
-        Client user = SBPServerApp.activeAuths.remove(sock.getInetAddress());
+        Client user = SBServerApp.activeAuths.remove(sock.getInetAddress());
         System.out.printf("[DISCONN] User: %s\tIp: %s \n",
                 user.getUserLoggedIn().username(), sock.getInetAddress().toString());
 

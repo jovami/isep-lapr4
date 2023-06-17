@@ -1,6 +1,9 @@
 package eapli.board.client.application;
 
-import static eapli.board.client.ClientServerAjax.HTTP_PORT;
+import eapli.board.SBProtocol;
+import eapli.board.client.ClientServerAjax;
+import jovami.util.exceptions.ReceivedERRCode;
+import jovami.util.net.NetTools;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,10 +13,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import eapli.board.SBProtocol;
-import eapli.board.client.ClientServerAjax;
-import jovami.util.exceptions.ReceivedERRCode;
-import jovami.util.net.NetTools;
+import static eapli.board.client.ClientServerAjax.HTTP_PORT;
 
 public class ViewBoardRequestController {
     private final Socket sock;
@@ -47,6 +47,7 @@ public class ViewBoardRequestController {
     public void chooseBoard(String board) throws ReceivedERRCode {
         SBProtocol requestBoard = new SBProtocol();
         requestBoard.setCode(SBProtocol.CHOOSE_BOARD);
+
         StringBuilder b = new StringBuilder();
         b.append(board);
         b.append("\0");
@@ -58,26 +59,26 @@ public class ViewBoardRequestController {
             requestBoard.send(outS);
 
             SBProtocol receiveHtml = new SBProtocol(inS);
-            if (receiveHtml.getCode() != SBProtocol.GET_BOARD) {
-                System.out.println("there was an error");
-                return;
+            if (receiveHtml.getCode() == SBProtocol.GET_BOARD) {
+
+                //board\0col\0row\0<cells info>
+                String d = receiveHtml.getContentAsString();
+
+                String[] dataContent = d.split("\0");
+                int rows = Integer.parseInt(dataContent[1]);
+                int cols = Integer.parseInt(dataContent[2]);
+
+                if ((rows * cols) != dataContent.length - HEADER_SIZE) {
+                    System.out.println("[WARNING] Data was corrupted when asking for board information");
+                }
+
+                ClientServerAjax.newBoardInfo(dataContent);
+                //setup request for boards on browser
+                openBrowser("bTitle=" + dataContent[0]);
+                sock.close();
+            } else {
+                System.out.println("Server Busy, try again later");
             }
-
-            String[] dataContent = receiveHtml.getContentAsString().split("\0");
-
-            int rows = Integer.parseInt(dataContent[1]);
-            int cols = Integer.parseInt(dataContent[2]);
-
-            if ((rows * cols) != dataContent.length - HEADER_SIZE) {
-                System.out.println("[WARNING] Data was corrupted when asking for board information");
-            }
-
-            // NEW thread that will
-
-            ClientServerAjax.newBoardInfo(dataContent);
-            openBrowser("bTitle=" + dataContent[0]);
-            sock.close();
-
         } catch (IOException ex) {
             System.out.println("Error closing socket.");
             System.out.println("Application aborted.");

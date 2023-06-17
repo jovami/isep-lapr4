@@ -20,28 +20,23 @@
  */
 package eapli.base.infrastructure.persistence;
 
-import eapli.base.board.domain.BoardParticipant;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.base.board.repositories.BoardRepository;
-import eapli.base.clientusermanagement.repositories.ClientUserRepository;
-import eapli.base.clientusermanagement.repositories.ManagerRepository;
-import eapli.base.clientusermanagement.repositories.SignupRequestRepository;
-import eapli.base.clientusermanagement.repositories.StudentRepository;
-import eapli.base.clientusermanagement.repositories.TeacherRepository;
+import eapli.base.clientusermanagement.repositories.*;
 import eapli.base.course.repositories.CourseRepository;
 import eapli.base.course.repositories.StaffRepository;
 import eapli.base.enrollment.repositories.EnrollmentRepository;
 import eapli.base.enrollmentrequest.repositories.EnrollmentRequestRepository;
-import eapli.base.event.meeting.repositories.MeetingParticipantRepository;
-import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.base.event.lecture.repositories.LectureParticipantRepository;
 import eapli.base.event.lecture.repositories.LectureRepository;
+import eapli.base.event.meeting.repositories.MeetingParticipantRepository;
+import eapli.base.event.meeting.repositories.MeetingRepository;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.event.timetable.repositories.TimeTableRepository;
-import eapli.base.examresult.repository.RegularExamResultRepository;
-import eapli.base.question.repositories.QuestionRepository;
 import eapli.base.exam.repositories.RegularExamRepository;
+import eapli.base.examresult.repository.RegularExamResultRepository;
 import eapli.base.formativeexam.repositories.FormativeExamRepository;
+import eapli.base.question.repositories.QuestionRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
@@ -171,4 +166,6 @@ public interface RepositoryFactory {
     LectureParticipantRepository lectureParticipants();
 
     RegularExamResultRepository examResults();
+
+    BoardParticipantRepository boardParticipants(TransactionalContext txCtx);
 }

@@ -2,6 +2,7 @@ package eapli.board.client;
 
 import eapli.board.SBProtocol;
 import eapli.board.client.application.AuthRequestController;
+import eapli.board.client.dto.BoardInfoDto;
 
 import java.net.Socket;
 

@@ -2,10 +2,8 @@ package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.CreatePostIt;
-import eapli.base.board.domain.RemovePostIt;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
@@ -38,7 +36,7 @@ public class MovePostItHandler {
 
             var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
 
-            var user = SBPServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
+            var user = SBServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
             var boards = svcBoard.boardsUserCanWrite(user);
 
             var responseSent = new SBProtocol();
@@ -48,7 +46,7 @@ public class MovePostItHandler {
             var receivedText = new SBProtocol(inS);
             var arr = receivedText.getContentAsString().split("\t");
 
-            var board = SBPServerApp.boards.get(BoardTitle.valueOf(arr[0]));
+            var board = SBServerApp.boards.get(BoardTitle.valueOf(arr[0]));
             if (board == null)
                 throw new ReceivedERRCode("Board not found");
 
@@ -56,7 +54,6 @@ public class MovePostItHandler {
             int columnFrom = Integer.parseInt(arr[2]);
             int rowTo = Integer.parseInt(arr[3]);
             int columnTo = Integer.parseInt(arr[4]);
-            var content = board.getCell(rowFrom, columnFrom).getPostIt().getData();
 
             if (!svcPostIt.movePostIt(board, rowFrom, columnFrom, rowTo, columnTo, user)) {
                 var protocol = new SBProtocol();
@@ -65,12 +62,6 @@ public class MovePostItHandler {
                 protocol.send(outS);
                 return;
             }
-
-            var history = SBPServerApp.histories.get(board);
-            history.push(new RemovePostIt(
-                    removeString(board.getBoardTitle().title(), rowFrom, columnFrom, content, time)));
-            history.push(new CreatePostIt(
-                    createString(board.getBoardTitle().title(), rowTo, columnTo, content, time)));
 
             publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
 

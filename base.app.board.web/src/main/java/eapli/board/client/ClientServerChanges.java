@@ -17,7 +17,6 @@ public class ClientServerChanges extends Thread {
         try {
 
             ServerSocket serverSock = new ServerSocket(LISTEN_SERVER);
-
             Socket cliSock;
             while (true) {
                 cliSock = serverSock.accept();

@@ -1,16 +1,16 @@
 package eapli.board.server.application;
 
+import eapli.base.board.domain.Board;
+import eapli.base.board.domain.BoardHistory;
+import eapli.base.board.domain.BoardTitle;
+import eapli.board.SBProtocol;
+import eapli.board.server.SBServerApp;
+import jovami.util.exceptions.ReceivedERRCode;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardTitle;
-import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
-import eapli.base.board.domain.BoardHistory;
-import jovami.util.exceptions.ReceivedERRCode;
 
 public class ViewBoardHistoryHandler {
     private DataInputStream inS;
@@ -33,7 +33,7 @@ public class ViewBoardHistoryHandler {
 
             StringBuilder builder = new StringBuilder();
 
-            for (Board b : SBPServerApp.boards.values()) {
+            for (Board b : SBServerApp.boards.values()) {
                 builder.append(b.getBoardTitle().title());
                 builder.append("/r");
             }
@@ -45,15 +45,15 @@ public class ViewBoardHistoryHandler {
             SBProtocol receiveBoard = new SBProtocol(inS);
             String board = receiveBoard.getContentAsString();
 
-            Board optBoard = SBPServerApp.boards.get(BoardTitle.valueOf(board));
+            Board optBoard = SBServerApp.boards.get(BoardTitle.valueOf(board));
             if (optBoard == null) {
                 throw new ReceivedERRCode("Board not found");
             }
 
-            var history = SBPServerApp.histories.get(optBoard);
+            //var history = SBPServerApp.histories.get(optBoard);
 
             StringBuilder historyBuilder = new StringBuilder();
-            for (BoardHistory bh : history) {
+            for (BoardHistory bh :optBoard.getHistory()) {
                 historyBuilder.append(bh.toString());
                 historyBuilder.append("\r");
             }

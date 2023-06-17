@@ -48,7 +48,6 @@ import eapli.framework.infrastructure.authz.repositories.impl.jpa.JpaAutoTxUserR
 import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
 
 /**
- *
  * @author nuno on 21/03/16.
  */
 public class JpaRepositoryFactory implements RepositoryFactory {
@@ -101,6 +100,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     public BoardRepository boards(TransactionalContext autoTx) {
         return null;
     }
+
     @Override
     public MeetingRepository meetings(TransactionalContext autoTx) {
         return new JpaMeetingRepository(autoTx);
@@ -110,13 +110,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     public BoardRepository boards() {
         return new JpaBoardRepository(Application.settings().getPersistenceUnitName());
     }
-
-    @Override
-    public BoardParticipantRepository boardParticipants()
-    {
-        return new JpaBoardParticipantRepository(Application.settings().getPersistenceUnitName());
-    }
-
+    
     @Override
     public StudentRepository students() {
         return new JpaStudentRepository(Application.settings().getPersistenceUnitName());
@@ -185,6 +179,19 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     @Override
     public RegularExamResultRepository examResults() {
         return new JpaRegularExamResultRepository(Application.settings().getPersistenceUnitName());
+    }
+
+    @Override
+    public BoardParticipantRepository boardParticipants(TransactionalContext txCtx) {
+        return new JpaBoardParticipantRepository(txCtx);
+    }
+
+    @Override
+    public BoardParticipantRepository boardParticipants() {
+
+        return new JpaBoardParticipantRepository(Application.settings().getPersistenceUnitName(),
+                Application.settings().getExtendedPersistenceProperties());
+
     }
 
     @Override

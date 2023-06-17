@@ -3,7 +3,7 @@ package eapli.board.server.application;
 import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.domain.Client;
 import eapli.framework.infrastructure.authz.application.AuthenticationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
@@ -42,7 +42,7 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
             String pass = auth[1];
 
 
-            for (Client client : SBPServerApp.activeAuths.values()) {
+            for (Client client : SBServerApp.activeAuths.values()) {
                 if (client.getUserLoggedIn().username().toString().equals(name)){
                     System.out.printf("[AUTH] LOG IN FAILED: User %s\tIP: %s\n", name, sock.getInetAddress());
                     SBProtocol responseSent = new SBProtocol();
@@ -91,7 +91,7 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
 
         //TODO:TOKEN
         Client c = new Client(sock.getInetAddress(), systemUser);
-        if (SBPServerApp.activeAuths.putIfAbsent(sock.getInetAddress(), c) == null) {
+        if (SBServerApp.activeAuths.putIfAbsent(sock.getInetAddress(), c) == null) {
             System.out.printf("[AUTH] LOGGED IN: User: %s\tIP: %s\n",
                     systemUser.username(), sock.getInetAddress().toString());
             responseSent.setCode(SBProtocol.TOKEN);

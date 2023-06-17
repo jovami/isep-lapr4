@@ -73,7 +73,7 @@ public class MovePostItUI extends AbstractUI {
         try {
             this.ctrl.movePostIt(dto);
         } catch (IOException | ReceivedERRCode e) {
-            // TODO
+            System.out.println(e.getMessage());
         }
 
         return false;

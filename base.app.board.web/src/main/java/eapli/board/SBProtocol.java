@@ -1,10 +1,10 @@
 package eapli.board;
 
+import jovami.util.exceptions.ReceivedERRCode;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import jovami.util.exceptions.ReceivedERRCode;
 
 public class SBProtocol implements MessageProtocol {
     private static final Integer SBPRROTOCOL_VERSION = 1;
@@ -27,7 +27,7 @@ public class SBProtocol implements MessageProtocol {
     public static final int LIST_BOARDS = 7;
     public static final int CHOOSE_BOARD = 8;
     public static final int GET_BOARD = 9;
-    public static final int GET_BOARDS_OWNED = 10;
+    public static final int SHARE_BOARD = 10;
     public static final int GET_BOARDS_OWNED_NOT_ARCHIVED = 11;
     public static final int GET_BOARDS_OWNED_ARCHIVED = 12;
     public static final int CREATE_POST_IT = 13;
@@ -39,6 +39,7 @@ public class SBProtocol implements MessageProtocol {
     public static final int VIEW_BOARD_HISTORY = 16;
     public static final int TOKEN = 17;
     public static final int UNDO_LAST_POST_IT_CHANGE = 18;
+    public static final int VIEW_NOTFS = 21;
 
     public SBProtocol(DataInputStream in) throws IOException, ReceivedERRCode {
 
@@ -183,5 +184,13 @@ public class SBProtocol implements MessageProtocol {
     public void setContentFromString(String cStr) {
         dataLength = cStr.length();
         content = cStr.getBytes();
+    }
+
+    public static void sendErr(String messageErr, DataOutputStream outS) throws IOException {
+        SBProtocol p = new SBProtocol();
+        p.setCode(ERR);
+        if (messageErr!=null)
+            p.setContentFromString(messageErr);
+        p.send(outS);
     }
 }

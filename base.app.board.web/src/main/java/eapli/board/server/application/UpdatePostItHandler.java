@@ -2,10 +2,8 @@ package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.ChangePostIt;
-import eapli.base.board.domain.CreatePostIt;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
@@ -38,7 +36,7 @@ public class UpdatePostItHandler implements Runnable {
             var inS = new DataInputStream(socket.getInputStream());
             var outS = new DataOutputStream(socket.getOutputStream());
 
-            var user = SBPServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
+            var user = SBServerApp.activeAuths.get(socket.getInetAddress()).getUserLoggedIn();
             var boards = svcBoard.boardsUserCanWrite(user);
 
             var responseSent = new SBProtocol();
@@ -48,7 +46,7 @@ public class UpdatePostItHandler implements Runnable {
             var receivedText = new SBProtocol(inS);
             var arr = receivedText.getContentAsString().split("\t");
 
-            var board = SBPServerApp.boards.get(BoardTitle.valueOf(arr[0]));
+            var board = SBServerApp.boards.get(BoardTitle.valueOf(arr[0]));
             if (board == null)
                 throw new ReceivedERRCode("Board not found");
 
@@ -75,8 +73,8 @@ public class UpdatePostItHandler implements Runnable {
                 return;
             }
 
-            SBPServerApp.histories.get(board).push(
-                    new ChangePostIt(getUpdateString(arr[0], arr[1], prevText, arr[2], time)));
+            //SBPServerApp.histories.get(board).push(
+            //new ChangePostIt(getUpdateString(arr[0], arr[1], prevText, arr[2], time)));
 
             publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
 

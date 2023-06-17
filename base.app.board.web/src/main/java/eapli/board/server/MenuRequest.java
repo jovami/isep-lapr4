@@ -23,7 +23,7 @@ public class MenuRequest extends Thread {
             SBProtocol request = new SBProtocol(inS);
 
             // If this IP is not registered yet in the system , only allow codes lower than 4
-            if (SBPServerApp.activeAuths.get(sock.getInetAddress()) == null && request.getCode() > 4) {
+            if (SBServerApp.activeAuths.get(sock.getInetAddress()) == null && request.getCode() > 4) {
                 System.out.printf("[WARNING] %s tried to access code %d without authentication\n", sock.getInetAddress().toString(), request.getCode());
                 //Should close socket??
                 return;
@@ -44,7 +44,7 @@ public class MenuRequest extends Thread {
                     DisconnRequestHandler disconn = new DisconnRequestHandler(sock, request);
                     disconn.run();
                     break;
-                case SBProtocol.GET_BOARDS_OWNED:
+                case SBProtocol.SHARE_BOARD:
                     ShareBoardHandler getBoardsOwner = new ShareBoardHandler(sock, request);
                     getBoardsOwner.run();
                     break;
@@ -74,10 +74,13 @@ public class MenuRequest extends Thread {
                 case SBProtocol.UNDO_LAST_POST_IT_CHANGE:
                     new UndoPostItLastChangeHandler(sock, request).run();
                     break;
+                case SBProtocol.VIEW_NOTFS:
+                    NotificationsRequestHandler notfHandler = new NotificationsRequestHandler(sock, request);
+                    notfHandler.run();
+                    break;
             }
 
-        } catch (IOException ex) {
-            System.out.printf("[WARNING] Thread error when reading request for %s",sock.getInetAddress());
+        } catch (IOException ignored) {
         } catch (ReceivedERRCode er) {
             System.out.println("[ERR RECEIVED] " + er.getMessage());
         }

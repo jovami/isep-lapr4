@@ -1,12 +1,9 @@
 package eapli.board.server.application;
 
-import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.Cell;
+import eapli.base.board.domain.*;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
-import eapli.base.board.domain.CreatePostIt;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class CreatePostItHandler implements Runnable {
 
@@ -49,12 +45,12 @@ public class CreatePostItHandler implements Runnable {
         }
         try {
 
-            SystemUser user = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser user = SBServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
-            StringBuilder builder = new StringBuilder();
             var boards = srv_board.boardsUserCanWrite(user);
 
 
+            StringBuilder builder = new StringBuilder();
             for (Board b : boards) {
                 builder.append(b.getBoardTitle().title());
                 builder.append("\t");
@@ -81,48 +77,35 @@ public class CreatePostItHandler implements Runnable {
 
             alterText = arr[2];
 
-            Board optBoard = SBPServerApp.boards.get(BoardTitle.valueOf(alterBoard));
+            Board optBoard = SBServerApp.boards.get(BoardTitle.valueOf(alterBoard));
 
-            if (optBoard==null){
-                throw new ReceivedERRCode("Board not found");
+            if(optBoard==null){
+                SBProtocol.sendErr("Board not found", outS);
+                return;
             }
-            if(checkIfAllCellsAreOccupied(optBoard))
-            {
-                SBProtocol boardFull = new SBProtocol();
-                boardFull.setCode(SBProtocol.ERR);
-                boardFull.setContentFromString("Board full");
-                boardFull.send(outS);
+            if(checkIfAllCellsAreOccupied(optBoard)){
+                SBProtocol.sendErr("Board full",outS);
                 return;
             }
 
-            if (checkIfCellIsOccupied(optBoard,alterPosition))
-            {
-                SBProtocol cellOccupied = new SBProtocol();
-                cellOccupied.setCode(SBProtocol.ERR);
-                cellOccupied.setContentFromString("Cell occupied");
-                cellOccupied.send(outS);
+            if (checkIfCellIsOccupied(optBoard,alterPosition)){
+                SBProtocol.sendErr("Cell occupied",outS);
                 return;
             }
 
             String[] dimensions = arr[1].split(",");
-            if (!srv_postIt.createPostIt(optBoard,
-                            Integer.parseInt(dimensions[0]),Integer.parseInt(dimensions[1]),
-                                        alterText,user)){
-                SBProtocol response = new SBProtocol();
-                response.setCode(SBProtocol.ERR);
-                response.setContentFromString("Cell is full");
-                response.send(outS);
+
+            if (!optBoard.addPostIt(Integer.parseInt(dimensions[0]),Integer.parseInt(dimensions[1]),new PostIt(user,alterText))){
+                SBProtocol.sendErr("Cell is full",outS);
                 return;
             }
 
-            StringBuilder sb = getStringBuilder();
-            var history = SBPServerApp.histories.get(optBoard);
-            history.push(new CreatePostIt(String.valueOf(sb)));
+            //StringBuilder sb = getStringBuilder();
+            //var history = SBPServerApp.histories.get(optBoard);
+            //history.push(new CreatePostIt(String.valueOf(sb)));
 
             NewChangeEvent event = new NewChangeEvent(optBoard.getBoardTitle().title(),receiveText);
             publisher.publish(event);
-
-
 
             SBProtocol response = new SBProtocol();
             response.setCode(SBProtocol.ACK);

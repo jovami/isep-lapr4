@@ -12,7 +12,7 @@ public class BoardParticipant implements AggregateRoot<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private int participantId;
 
     @ManyToOne
     private SystemUser participant;
@@ -76,7 +76,7 @@ public class BoardParticipant implements AggregateRoot<Integer> {
 
     @Override
     public Integer identity() {
-        return this.id;
+        return this.participantId;
     }
 
     @Override

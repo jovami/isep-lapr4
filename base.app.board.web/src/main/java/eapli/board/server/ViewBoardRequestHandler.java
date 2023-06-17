@@ -4,85 +4,77 @@ import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
+import eapli.board.server.application.AbstractSBServerHandler;
 import eapli.board.server.application.ShareBoardService;
 import eapli.board.server.application.newChangeEvent.NewChangeWatchDog;
-import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class ViewBoardRequestHandler implements Runnable {
-    private final Socket sock;
-    private DataInputStream inS;
-    private DataOutputStream outS;
-    private SBProtocol request;
-
-
+//TODO ABSTRACT HANDLER
+public class ViewBoardRequestHandler extends AbstractSBServerHandler {
     public ViewBoardRequestHandler(Socket sock, SBProtocol request) {
-        Preconditions.areEqual(request.getCode(), SBProtocol.VIEW_ALL_BOARDS);
-        this.request = request;
-        this.sock = sock;
+        super(sock, request);
     }
 
     @Override
-    public void run(){
+    public void run() {
         try {
-            inS = new DataInputStream(sock.getInputStream());
-            outS = new DataOutputStream(sock.getOutputStream());
 
-            if (!sentBoards()){
-                throw new RuntimeException("It was not possible to send boards");
+            if (!sentBoards()) {
+                System.out.println("[WARNING] It was not possible to send boards");
+                SBProtocol.sendErr(null, outS);
+                return;
             }
 
             String[] boardStr = getBoardChoosen();
 
-            if (boardStr == null){
-                throw new RuntimeException("Error choosing Board");
+            if (boardStr == null) {
+                System.out.println("[WARNING] Error choosing Board");
+                SBProtocol.sendErr("Error while choosing board", outS);
+                return;
             }
 
             SBProtocol html = new SBProtocol();
             html.setCode(SBProtocol.GET_BOARD);
-            Board board = SBPServerApp.boards.get(BoardTitle.valueOf(boardStr[0]));
-            if (board==null) {
+
+            Board board = SBServerApp.boards.get(BoardTitle.valueOf(boardStr[0]));
+            if (board == null) {
                 System.out.println("Board does not exist");
+                SBProtocol.sendErr("Board does not exist", outS);
                 return;
-            }
+            } else {
+                StringBuilder builder = new StringBuilder();
+                //First Argument is the title
+                builder.append(board.getBoardTitle().title()).append('\0');
+                //Second Argument is the numRows
+                builder.append(board.getNumRows()).append('\0');
+                //Second Argument is the numCols
+                builder.append(board.getNumColumns()).append('\0');
 
-            StringBuilder builder = new StringBuilder();
-            //First Argument is the title
-            builder.append(board.getBoardTitle().title()).append('\0');
-            //Second Argument is the numRows
-            builder.append(board.getNumRows()).append('\0');
-            //Second Argument is the numCols
-            builder.append(board.getNumColumns()).append('\0');
-
-            for (Cell cell : board.getCells() ) {
-                if (cell.hasPostIt()){
-                    if (cell.getPostIt().hasData()){
+                for (Cell cell : board.getCells()) {
+                    if (cell.hasPostIt() && cell.getPostIt().hasData()) {
                         builder.append(cell.getPostIt().getData()).append('\0');
+                    } else {
+                        builder.append(" ").append('\0');
                     }
                 }
-                builder.append(" ").append('\0');
+                html.setContentFromString(builder.toString());
+                html.send(outS);
+                SBServerApp.activeAuths.get(sock.getInetAddress()).setPort(Integer.parseInt(boardStr[1]));
+
+                addSubsriber(board.getBoardTitle().title(), sock.getInetAddress());
             }
-            html.setContentFromString(builder.toString());
-            html.send(outS);
-            SBPServerApp.activeAuths.get(sock.getInetAddress()).setPort(Integer.parseInt(boardStr[1]));
 
+        } catch (IOException | ReceivedERRCode ignored) {
 
-            addSubsriber(board.getBoardTitle().title(),sock.getInetAddress());
-
-            sock.close();
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
         }
     }
 
     private void addSubsriber(String board, InetAddress inetAddress) {
-        NewChangeWatchDog.addSub(board, SBPServerApp.activeAuths.get(inetAddress));
+        NewChangeWatchDog.addSub(board, SBServerApp.activeAuths.get(inetAddress));
     }
 
     private String[] getBoardChoosen() throws IOException, ReceivedERRCode {
@@ -92,8 +84,6 @@ public class ViewBoardRequestHandler implements Runnable {
 
         //Verify if the received packet has the right SBPMessageCode
         if (chooseBoard.getCode() != SBProtocol.CHOOSE_BOARD) {
-            System.out.println("Code message should be " + SBProtocol.CHOOSE_BOARD + " to choose board to view");
-            // TODO: SEND ERR
             return null;
         }
 
@@ -106,14 +96,14 @@ public class ViewBoardRequestHandler implements Runnable {
 
         ShareBoardService srv = new ShareBoardService();
 
-        Iterable<Board> boards = srv.getBoardsByParticipant(SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn());
+        Iterable<Board> boards = srv.getBoardsByParticipant(SBServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn());
         StringBuilder builder = new StringBuilder();
 
         //TODO: single service
         for (Board board : boards) {
             builder.append(board.getBoardTitle().title()).append("\0");
         }
-        for (Board board : srv.listBoardsUserOwns(SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn())) {
+        for (Board board : srv.listBoardsUserOwnsNotArchived(SBServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn())) {
             builder.append(board.getBoardTitle().title()).append("\0");
         }
         String b = builder.toString();

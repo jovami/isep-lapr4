@@ -1,6 +1,5 @@
 package eapli.board.client;
 
-import java.net.InetAddress;
 
 import eapli.board.client.presentation.*;
 import eapli.framework.actions.menu.Menu;
@@ -11,11 +10,14 @@ import eapli.framework.presentation.console.menu.MenuItemRenderer;
 import eapli.framework.presentation.console.menu.MenuRenderer;
 import eapli.framework.presentation.console.menu.VerticalMenuRenderer;
 
+import java.net.InetAddress;
+
 public class MainMenu extends AbstractUI {
     private final int serverPort;
     private final InetAddress serverIP;
 
     private static final String RETURN_LABEL = "Return ";
+    private static boolean hasNotf;
 
     // MENU OPTIONS
     private static final int SHARE_BOARD = 1;
@@ -26,6 +28,7 @@ public class MainMenu extends AbstractUI {
     private static final int UNDO_POSTIT = 6;
     private static final int VIEW_BOARD_HISTORY = 7;
     private static final int ARCHIVE_BOARD = 8;
+    private static final int SHARED_NOTIFICATIONS = 9;
 
     private static final int EXIT_OPTION = 0;
 
@@ -79,8 +82,11 @@ public class MainMenu extends AbstractUI {
                 new ViewBoardHistoryUI(serverIP, serverPort)::show);
         menu.addItem(ARCHIVE_BOARD, "Archive board ",
                 new ArchiveBoardUI(serverIP, serverPort)::show);
+        menu.addItem(SHARED_NOTIFICATIONS, "Notifications ",
+                new NotificationsUI(serverIP, serverPort)::show);
 
         menu.addItem(EXIT_OPTION, "Exit", new ExitWithMessageAction("Bye, Bye"));
         return menu;
     }
+
 }

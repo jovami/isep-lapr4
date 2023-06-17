@@ -14,7 +14,6 @@ import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class ShareBoardService {
 
     public ShareBoardService() {
         boardRepository = PersistenceContext.repositories().boards();
-        boardParticipantRepository = PersistenceContext.repositories().boardParticipants();
+        boardParticipantRepository = PersistenceContext.repositories().boardParticipants(txCtx);
         userRepository = PersistenceContext.repositories().users();
     }
 
@@ -49,21 +48,16 @@ public class ShareBoardService {
     }
 
     public boolean shareBoard(Board board, List<Pair<SystemUser, BoardParticipantPermissions>> users) {
-        //txCtx.beginTransaction();
-
+        txCtx.beginTransaction();
         try {
-
             for (Pair<SystemUser, BoardParticipantPermissions> pair : users) {
                 BoardParticipant boardParticipant = new BoardParticipant(board, pair.first, pair.second);
                 boardParticipantRepository.save(boardParticipant);
             }
         } catch (ConcurrencyException e) {
-            //txCtx.rollback
             return false;
         }
-
-        //txCtx.commit();
-
+        txCtx.commit();
         return true;
     }
 

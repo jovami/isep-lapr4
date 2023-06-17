@@ -15,8 +15,6 @@ import java.time.format.DateTimeFormatter;
 @DiscriminatorColumn(name = "TYPE")
 public abstract class BoardHistory {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

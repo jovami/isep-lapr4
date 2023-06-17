@@ -4,14 +4,22 @@ import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardParticipant;
 import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.repositories.BoardParticipantRepository;
+import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
 
 import java.util.List;
+import java.util.Map;
 
-public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardParticipant, Long, Integer> implements BoardParticipantRepository {
+public class JpaBoardParticipantRepository extends JpaAutoTxRepository<BoardParticipant, Integer, Integer> implements BoardParticipantRepository {
 
-    JpaBoardParticipantRepository(String persistenceUnitName) {
-        super(persistenceUnitName, "BoardParticipant");
+    JpaBoardParticipantRepository (final TransactionalContext autoTx) {
+        super(autoTx, "participantId");
+    }
+    public JpaBoardParticipantRepository(final String puname,
+                                   @SuppressWarnings({ "rawtypes", "java:S3740" }) final Map properties) {
+        super(puname, properties, "participantId");
+
     }
 
     @Override
@@ -47,6 +55,11 @@ public class JpaBoardParticipantRepository extends BaseJpaRepositoryBase<BoardPa
         query.setParameter("user", user);
         query.setParameter("perm", perm);
         return query.getResultList();
+    }
+
+    @Override
+    public Iterable<BoardParticipant> byUser(SystemUser user) {
+        return match("e.participant = :user","user",user);
     }
 }
 

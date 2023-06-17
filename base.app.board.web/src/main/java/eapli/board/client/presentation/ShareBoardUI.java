@@ -25,52 +25,51 @@ public class ShareBoardUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        ShareBoardController controller = new ShareBoardController(serverIP, serverPort);
-
-        //Get All board Names
+        ShareBoardController controller;
         try {
-
-            List<String> boards = controller.listBoardsUserOwns();
-
-            if (boards == null) {
-                System.out.println("\n[INFO] You must first create a board in order to use this feature\n");
-                return false;
-            }
-
-            //list boards and ask to choose
-            SelectWidget<String> widget = new SelectWidget<>("Choose a Board\n==============", boards);
-            widget.show();
-
-            if (widget.selectedOption() <= 0)
-                return false;
-
-            //choose.Board
-            if (!controller.chooseBoard(widget.selectedElement())) {
-                System.out.println("\n[INFO] There was an error choosing the board");
-                return false;
-            }
-
-            if (controller.users().isEmpty()) {
-                System.out.println("\n[INFO] There are no users to be invited");
-                return false;
-            }
-
-
-            if (!inviteUsers(controller)) return false;
-
-            if (controller.shareBoard()) {
-                System.out.println("[INFO] Board shared with success");
-            } else {
-                System.out.println("[INFO] There was a problem sharing a board");
-            }
-
+            controller = new ShareBoardController(serverIP, serverPort);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ReceivedERRCode e) {
-            System.out.println(e.getMessage());
+            System.out.println("\nServer is busy, try again later\n");
             return false;
         }
-        controller.sockClose();
+
+        try {
+            //Get All board Names
+            List<String> boards = controller.listBoardsUserOwns();
+
+            if (boards != null) {
+                //list boards and ask to choose
+                SelectWidget<String> widget = new SelectWidget<>("Choose a Board\n==============", boards);
+                widget.show();
+
+                if (widget.selectedOption() > 0) {
+                    //choose.Board
+                    controller.chooseBoard(widget.selectedElement());
+
+                    //No users to invite
+                    if (controller.users().isEmpty()) {
+                        System.out.println("\n[INFO] There are no users to be invited");
+                    } else {
+
+                        //if at least 1 user is invited
+                        if (inviteUsers(controller)) {
+                            if (controller.shareBoard()) {
+                                System.out.println("[INFO] Board shared with success");
+                            } else {
+                                System.out.println("[INFO] There was a problem sharing a board");
+                            }
+
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error while reading data from socket");
+        } catch (ReceivedERRCode e) {
+            System.out.println(e.getMessage());
+        } finally {
+            controller.sockClose();
+        }
         return false;
     }
 
@@ -81,7 +80,7 @@ public class ShareBoardUI extends AbstractUI {
         perms.add(BoardParticipantPermissions.READ);
         SelectWidget<BoardParticipantPermissions> permWid = new SelectWidget<>("With permissions of:", perms);
 
-        int invites=0;
+        int invites = 0;
         boolean invite = true;
         try {
             do {
@@ -105,11 +104,10 @@ public class ShareBoardUI extends AbstractUI {
             } while (invite);
 
         } catch (ConcurrencyException e) {
-            System.out.println(e.getMessage());
             return false;
         }
 
-        return invites>0;
+        return invites > 0;
     }
 
     @Override

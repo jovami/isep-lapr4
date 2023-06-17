@@ -20,7 +20,7 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
     public Iterable<BoardParticipant> listBoardParticipants(Board board) {
 
         return valuesStream()
-                .filter(boardParticipant -> boardParticipant.sameAs(board))
+                .filter(boardParticipant -> board.sameAs(board))
                 .collect(Collectors.toList());
 
     }
@@ -47,6 +47,13 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
                 .filter(boardParticipant -> boardParticipant.participant().sameAs(user)
                         &&boardParticipant.permission().equals(perm) )
                 .map(BoardParticipant::board).collect(Collectors.toList());
+    }
+
+    @Override
+    public Iterable<BoardParticipant> byUser(SystemUser user) {
+        return valuesStream()
+                .filter(boardParticipant -> boardParticipant.sameAs(user))
+                .collect(Collectors.toList());
     }
 
 

@@ -22,28 +22,22 @@ public class ShareBoardController {
     private final DataOutputStream outS;
     private final Socket sock;
 
-    public ShareBoardController(InetAddress serverIp, int serverPort) {
-        try {
+    public ShareBoardController(InetAddress serverIp, int serverPort) throws IOException {
             sock = new Socket(serverIp, serverPort);
             inS = new DataInputStream(sock.getInputStream());
             outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     public List<String> listBoardsUserOwns() throws IOException, ReceivedERRCode {
         //search for boards that the  user owns
         SBProtocol sendUser = new SBProtocol();
-        sendUser.setCode(SBProtocol.GET_BOARDS_OWNED);
+        sendUser.setCode(SBProtocol.SHARE_BOARD);
         sendUser.send(outS);
 
         //receive Boards owned
         SBProtocol getBoards = new SBProtocol(inS);
 
         return List.of(getBoards.getContentAsString().split("\0"));
-        //connect with server to get
     }
 
     public boolean shareBoard() throws IOException, ReceivedERRCode {
@@ -52,7 +46,10 @@ public class ShareBoardController {
 
         StringBuilder builder = new StringBuilder();
         for (Pair<String, BoardParticipantPermissions> pair : usersInvited) {
-            builder.append(pair.first).append("\\\\").append(pair.second.toString()).append('\0');
+            builder.append(pair.first);
+            builder.append("#&&#");
+            builder.append(pair.second);
+            builder.append('\0');
         }
         sendInvites.setContentFromString(builder.toString());
         sendInvites.send(outS);
@@ -71,7 +68,7 @@ public class ShareBoardController {
         users.remove(username);
     }
 
-    public boolean chooseBoard(String boardTitle) throws IOException, ReceivedERRCode {
+    public void chooseBoard(String boardTitle) throws IOException, ReceivedERRCode {
         //askBoardFromSocket
         SBProtocol chooseBoard = new SBProtocol();
         chooseBoard.setContentFromString(boardTitle);
@@ -80,7 +77,6 @@ public class ShareBoardController {
         SBProtocol receiveUsers = new SBProtocol(inS);
 
         this.users = new ArrayList<>(List.of((receiveUsers.getContentAsString().split("\0"))));
-        return true;
     }
 
     public void sockClose() {

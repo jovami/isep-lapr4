@@ -6,7 +6,7 @@ import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.repositories.BoardRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -16,7 +16,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.List;
 
 public class ArchiveBoardHandler implements Runnable {
 
@@ -41,7 +40,7 @@ public class ArchiveBoardHandler implements Runnable {
         }
         try {
 
-            SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser owner = SBServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();
             var boards = srv.listBoardsUserOwnsNotArchived(owner);
@@ -53,7 +52,7 @@ public class ArchiveBoardHandler implements Runnable {
             //receive board that the user wants to archive
             SBProtocol receiveBoard = new SBProtocol(inS);
             String boardName = receiveBoard.getContentAsString();
-            Board board = SBPServerApp.boards.get(BoardTitle.valueOf(boardName));
+            Board board = SBServerApp.boards.get(BoardTitle.valueOf(boardName));
 
             //if the board does not exist send ERR
             if (board==null) {

@@ -1,13 +1,8 @@
 package eapli.board.server.application;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.board.server.application.newChangeEvent.NewChangeEvent;
 import eapli.board.shared.dto.BoardRowColDTOEncoder;
 import eapli.board.shared.dto.BoardWriteAccessDTOEncoder;
@@ -15,6 +10,12 @@ import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
 import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Optional;
 
 /**
  * UndoPostItLastChangeHandler
@@ -35,7 +36,7 @@ public class UndoPostItLastChangeHandler implements Runnable {
     }
 
     private void sendBoardsUserCanWrite() throws IOException {
-        var user = SBPServerApp.activeAuths.get(this.sock.getInetAddress())
+        var user = SBServerApp.activeAuths.get(this.sock.getInetAddress())
                 .getUserLoggedIn();
 
         var boards = new ShareBoardService().boardsUserCanWrite(user);
@@ -69,7 +70,7 @@ public class UndoPostItLastChangeHandler implements Runnable {
             var row = boardInfo.row() + 1;
             var col = boardInfo.column() + 1;
 
-            var board = SBPServerApp.boards.get(BoardTitle.valueOf(title));
+            var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
 
             if (board == null) {
                 var err = new SBProtocol();
@@ -80,17 +81,23 @@ public class UndoPostItLastChangeHandler implements Runnable {
 
             System.out.println("hi before board.undoChangeOnPostIt()");
 
-            if (!board.undoChangeOnPostIt(row, col)) {
+            Optional<String> opt = board.undoChangeOnPostIt(row, col);
+            if (opt.isEmpty()) {
                 var reply = new SBProtocol();
                 reply.setCode(SBProtocol.ERR);
                 reply.send(outS);
+                return;
             }
 
             System.out.println("hi after board.undoChangeOnPostIt()");
 
-            var message = String.format("%s\t%d,%d", title, row, col);
-            request.setContentFromString(message); // aldrabado
-            var event = new NewChangeEvent(title, request);
+            var message = String.format("%s\t%d,%d\t%s", title, row, col,opt.get());
+
+            SBProtocol protocol = new SBProtocol();
+            protocol.setCode(SBProtocol.UPDATE_POST_IT);
+            protocol.setContentFromString(message);
+
+            var event = new NewChangeEvent(title, protocol);
             this.publisher.publish(event);
 
             var reply = new SBProtocol();

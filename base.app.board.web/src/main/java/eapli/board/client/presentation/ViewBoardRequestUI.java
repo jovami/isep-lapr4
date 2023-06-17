@@ -1,19 +1,17 @@
 package eapli.board.client.presentation;
 
-import java.net.InetAddress;
-import java.util.List;
-
 import eapli.board.client.application.ViewBoardRequestController;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
 
+import java.net.InetAddress;
+import java.util.List;
+
 public class ViewBoardRequestUI extends AbstractUI {
 
     private final int serverPort;
     private final InetAddress serverIp;
-    private ViewBoardRequestController ctrl;
-
 
     public ViewBoardRequestUI(InetAddress serverIP, int serverPort) {
         this.serverIp = serverIP;
@@ -23,7 +21,7 @@ public class ViewBoardRequestUI extends AbstractUI {
     @Override
     public boolean doShow() {
         try {
-            ctrl = new ViewBoardRequestController(serverIp, serverPort);
+            ViewBoardRequestController ctrl = new ViewBoardRequestController(serverIp, serverPort);
             String[] names = ctrl.requestBoards();
 
             SelectWidget<String> selec = new SelectWidget<>("Choose Board to view\n", List.of(names));

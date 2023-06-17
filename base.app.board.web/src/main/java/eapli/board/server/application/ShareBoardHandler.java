@@ -6,15 +6,12 @@ import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
-import eapli.board.server.SBPServerApp;
+import eapli.board.server.SBServerApp;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
-import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -22,45 +19,31 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-
-//TODO: extends AbstractHandler
-public class ShareBoardHandler implements Runnable {
-    private DataInputStream inS;
-    private DataOutputStream outS;
-    private Socket sock;
-    private SBProtocol boardsRequest;
-    private UserRepository userRepo = PersistenceContext.repositories().users();
-    private ShareBoardService srv;
+public class ShareBoardHandler extends AbstractSBServerHandler {
+    private final UserRepository userRepo = PersistenceContext.repositories().users();
+    private final ShareBoardService srv = new ShareBoardService();;
 
     public ShareBoardHandler(Socket socket, SBProtocol boardsRequest) {
-        Preconditions.areEqual(boardsRequest.getCode(), SBProtocol.GET_BOARDS_OWNED);
-        this.sock = socket;
-        this.boardsRequest = boardsRequest;
-        srv = new ShareBoardService();
+        super(socket,boardsRequest);
     }
-
 
     public void run() {
         try {
-            inS = new DataInputStream(sock.getInputStream());
-            outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
 
-            SystemUser owner = SBPServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
+            SystemUser owner = SBServerApp.activeAuths.get(sock.getInetAddress()).getUserLoggedIn();
+
             StringBuilder builder = new StringBuilder();
-            var boards = srv.listBoardsUserOwns(owner);
+
+            var boards = srv.listBoardsUserOwnsNotArchived(owner);
 
             //SendBoardOwned
-            SBProtocol sendBoards = sendBoardOwned(builder, boards);
+            SBProtocol sendBoards = sendBoardsOwned(builder, boards);
             if (sendBoards == null) return;
 
             //receive board that the user wants to share
             SBProtocol receiveBoard = new SBProtocol(inS);
             String boardName = receiveBoard.getContentAsString();
-            Board optBoard =  SBPServerApp.boards.get(BoardTitle.valueOf(boardName));
+            Board optBoard =  SBServerApp.boards.get(BoardTitle.valueOf(boardName));
 
             //if the board does not exist send ERR
             if (optBoard==null) {
@@ -75,45 +58,47 @@ public class ShareBoardHandler implements Runnable {
 
             //receive user to invite
             SBProtocol receiveInvited = new SBProtocol(inS);
-            SBProtocol sendResponse = new SBProtocol();
 
-            List<Pair<SystemUser, BoardParticipantPermissions>> usersToInvite = new ArrayList<>();
-            Optional<SystemUser> optUser;
-            String[] str;
-            String username, permStr;
-            BoardParticipantPermissions perm;
-
-            // TODO: use threads
-            for (String user : List.of(receiveInvited.getContentAsString().split("\0"))) {
-                str = user.split("\\\\");
-                username = str[0];
-                permStr = str[1];
-
-                // TODO: use
-                // perm = BoardParticipantPermissions.valueOf(permStr);
-
-                if (permStr.equals(BoardParticipantPermissions.WRITE.toString())) {
-                    perm = BoardParticipantPermissions.WRITE;
-                }else{
-                    perm = BoardParticipantPermissions.READ;
-                }
-                optUser = userRepo.ofIdentity(Username.valueOf(username));
-                if (optUser.isEmpty()) {
-                    sendResponse.setCode(SBProtocol.ERR);
-                    sendResponse.setContentFromString("User not recognized");
-                    sendResponse.send(outS);
-                    continue;
-                }
-                usersToInvite.add(Pair.of(optUser.get(),perm));
-            }
+            List<Pair<SystemUser, BoardParticipantPermissions>> usersToInvite = inviteUsers(receiveInvited.getContentAsString().split("\0"));
 
             srv.shareBoard(optBoard, usersToInvite);
-            sendResponse.setCode(SBProtocol.ACK);
-            sendResponse.send(outS);
 
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
+            SBProtocol ack = new SBProtocol();
+            ack.setCode(SBProtocol.ACK);
+            ack.send(outS);
+
+        } catch (IOException | ReceivedERRCode ignored) {
         }
+    }
+
+    private List<Pair<SystemUser, BoardParticipantPermissions>> inviteUsers(String[] invites) throws IOException {
+        List<Pair<SystemUser, BoardParticipantPermissions>> usersToInvite = new ArrayList<>();
+
+        Optional<SystemUser> optUser;
+        BoardParticipantPermissions perm;
+        String username;
+        String permStr;
+        SBProtocol sendResponse = new SBProtocol();
+        for (String user : invites) {
+            username = user.split("#&&#")[0];
+            permStr = user.split("#&&#")[1];
+
+            if (permStr.equals(BoardParticipantPermissions.WRITE.toString())) {
+                perm = BoardParticipantPermissions.WRITE;
+            }else{
+                perm = BoardParticipantPermissions.READ;
+            }
+
+            optUser = userRepo.ofIdentity(Username.valueOf(username));
+            if (optUser.isEmpty()) {
+                sendResponse.setCode(SBProtocol.ERR);
+                sendResponse.setContentFromString("User not recognized");
+                sendResponse.send(outS);
+                continue;
+            }
+            usersToInvite.add(Pair.of(optUser.get(),perm));
+        }
+        return usersToInvite;
     }
 
     private boolean sendUsersNotInvited(Board optBoard) throws IOException {
@@ -136,7 +121,7 @@ public class ShareBoardHandler implements Runnable {
         return true;
     }
 
-    private SBProtocol sendBoardOwned(StringBuilder builder, Collection<Board> boards) throws IOException {
+    private SBProtocol sendBoardsOwned(StringBuilder builder, Collection<Board> boards) throws IOException {
         //send boards that the user owns
         SBProtocol sendBoards = new SBProtocol();
         if (boards.isEmpty()) {

@@ -43,8 +43,8 @@ public class UndoPostIt extends BoardHistory {
 
     @Override
     public String toString() {
-        return getType() + "\t" + board.title() + "\t" + row + "\t" + column + "\t" + time + "\t" + prevContent + "\t"
-                + posContent;
+        return getType() + "\t" + board.title() + "\t" + row + "," + column + "\t" +
+                time.format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")) + "\t" + prevContent + "\t" + posContent;
     }
 
 }

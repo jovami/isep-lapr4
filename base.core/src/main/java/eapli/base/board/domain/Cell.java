@@ -1,21 +1,14 @@
 package eapli.base.board.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
-
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-
-import lombok.Getter;
 
 @Entity
 public class Cell implements Serializable {
@@ -32,7 +25,6 @@ public class Cell implements Serializable {
     @OneToOne
     private PostIt postIt;
     @Transient
-    @Getter
     private final Deque<BoardHistory> history = new ConcurrentLinkedDeque<>();
 
     protected Cell() {
@@ -50,18 +42,17 @@ public class Cell implements Serializable {
         }
         this.postIt = postIt;
 
-        return formatString(board, null, postIt.getData(), Type.CREATE);
+        formatString(board, null, postIt.getData(), Type.CREATE);
+        return true;
     }
 
     public synchronized boolean changePostItData(Board board, String newData) {
         if (!hasPostIt())
             return false;
 
-        if (!formatString(board, this.history.getFirst(), newData, Type.UPDATE))
-            return false;
+        String oldData = this.postIt.alterPostItData(newData);
 
-        this.postIt.alterPostItData(newData);
-
+        formatString(board, this.history.getFirst(), newData, Type.UPDATE);
         return true;
     }
 
@@ -71,7 +62,8 @@ public class Cell implements Serializable {
         var tmp = this.postIt;
         this.postIt = null;
 
-        return formatString(board, null, tmp.getData(), Type.REMOVE);
+        formatString(board, null, tmp.getData(), Type.REMOVE);
+        return true;
     }
 
     public synchronized boolean movePostIt(Board board, Cell cellTo) {
@@ -82,22 +74,22 @@ public class Cell implements Serializable {
             return false;
 
         // FIXME: addPostIt() before formatString()
-        if (!formatString(board, this.history.getFirst(), null, Type.UPDATE))
-            return false;
+        formatString(board, this.history.getFirst(), null, Type.UPDATE);
 
         return cellTo.addPostIt(board, this.postIt) && this.removePostIt(board);
     }
 
-    public synchronized boolean undoPostItChange(Board board) {
+    public synchronized Optional<String> undoPostItChange(Board board) {
         for (final var entry : this.history) {
-            // TODO: use enum the correct way
             if (Type.valueOf(entry.getType()) == Type.UPDATE) {
+
                 this.postIt.alterPostItData(entry.getPrevContent());
 
-                return formatString(board, entry, null, Type.UNDO);
+                formatString(board, entry, null, Type.UNDO);
+                return Optional.of(entry.getPrevContent());
             }
         }
-        return false;
+        return Optional.empty();
     }
 
 
@@ -137,12 +129,12 @@ public class Cell implements Serializable {
         return this.postIt != null;
     }
 
-    private boolean formatString(Board board, BoardHistory entry, String newData, Type type) {
+    private void formatString(Board board, BoardHistory entry, String data, Type type) {
         var sb = new StringBuilder();
 
         sb.append(type);
         sb.append('\t');
-        sb.append(board);
+        sb.append(board.getBoardTitle().title());
         sb.append('\t');
         sb.append(row.getRowId());
         sb.append(',');
@@ -160,22 +152,23 @@ public class Cell implements Serializable {
                 this.history.push(new UndoPostIt(sb.toString()));
                 break;
             case CREATE:
-                sb.append(newData);
+                sb.append(data);
                 this.history.push(new CreatePostIt(sb.toString()));
                 break;
             case REMOVE:
-                sb.append(newData);
+                sb.append(data);
                 this.history.push(new RemovePostIt(sb.toString()));
                 break;
             case UPDATE:
                 sb.append(entry.getPosContent());
                 sb.append('\t');
-                sb.append(newData);
+                sb.append(data);
                 this.history.push(new ChangePostIt(sb.toString()));
                 break;
         }
-
-        return true;
     }
 
+    public synchronized Deque<BoardHistory> getHistory() {
+        return new LinkedList<>(history);
+    }
 }

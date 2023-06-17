@@ -1,13 +1,16 @@
 package eapli.board.client;
 
 import eapli.board.HTTPMessage;
+import eapli.board.client.dto.BoardInfoDto;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ClientServerAjax extends Thread {
 
@@ -16,7 +19,7 @@ public class ClientServerAjax extends Thread {
     //PASS PORT BY PROTOCOL??
     public static final int LISTEN_SERVER = 9070;
     //For each board
-    private static final HashMap<String, BoardInfoDto> boardsInfo = new HashMap<>();
+    private static final Map<String, BoardInfoDto> boardsInfo = Collections.synchronizedMap(new HashMap<>());
     private final String BASE_FOLDER = "base.app.board.web/src/main/java/eapli/board/www";
 
     public ClientServerAjax() {
@@ -27,21 +30,15 @@ public class ClientServerAjax extends Thread {
         BoardInfoDto dto = new BoardInfoDto(board);
         //ADD new BoardInfo
         boardsInfo.putIfAbsent(dto.getTitle(), dto);
-        return boardsInfo.get(dto.getTitle());
+        return dto;
     }
 
-    //TODO: verify if null
     public static BoardInfoDto getBoardInfo(String s) {
         return boardsInfo.get(s);
     }
 
     @Override
     public void run() {
-        //Read information from the SBServer
-        ClientServerChanges cliServ = new ClientServerChanges();
-        cliServ.start();
-
-        //test
         //create serverSock
         ServerSocket serverSock;
         try {
@@ -51,23 +48,23 @@ public class ClientServerAjax extends Thread {
             return;
         }
 
+        //Read information from the SBServer
+        ClientServerChanges cliServ = new ClientServerChanges();
+        cliServ.start();
+
         Socket cliSock;
         while (true) {
             //handle with AJAX each one of the requests
             try {
                 cliSock = serverSock.accept();
             } catch (IOException e) {
-                System.out.println("Error accepting new Requests");
+                System.out.println("Error accepting new request");
                 break;
             }
 
             try {
-
-
                 answerHTTPRequest(cliSock);
             } catch (IOException e) {
-                System.out.println("Error while reading socket");
-
                 try {
                     cliSock.close();
                 } catch (IOException ex) {
@@ -83,7 +80,6 @@ public class ClientServerAjax extends Thread {
         HTTPMessage m = new HTTPMessage(new DataInputStream(cliSock.getInputStream()));
         DataOutputStream outS = new DataOutputStream(cliSock.getOutputStream());
         String boardUri = "/board/";
-        String iamgesUri = "/images/";
         if (m.getMethod().equals("GET")) {
             //Get boards
             if (m.getURI().startsWith(boardUri)) {
@@ -95,13 +91,13 @@ public class ClientServerAjax extends Thread {
                     m.setContentFromString(html, "text/html");
                     m.setResponseStatus("200 OK");
                 }
-            //get Images
+                //get Images
             } else if (m.getURI().startsWith("/images")) {
-                m.setContentFromFile(BASE_FOLDER+"/images/" + m.getURI().substring(7));
+                m.setContentFromFile(BASE_FOLDER + "/images/" + m.getURI().substring(7));
                 m.setResponseStatus("200 OK");
             } else {
                 //Base Folder
-                m.setContentFromFile(BASE_FOLDER+"/index.html");
+                m.setContentFromFile(BASE_FOLDER + "/index.html");
                 m.setResponseStatus("200 OK");
             }
         }
@@ -109,7 +105,7 @@ public class ClientServerAjax extends Thread {
     }
 
     private synchronized String generateBoardHtml(String board) {
-        int idx =0;
+        int idx = 0;
         StringBuilder html = new StringBuilder();
 
         //GETboard info verify if no exist
@@ -119,7 +115,6 @@ public class ClientServerAjax extends Thread {
         if (dto == null) {
             return null;
         }
-
 
         html.append("<tr>\n<td class=\"board-title\">" + dto.getTitle() + "</td>\n");
         for (int i = 0; i < dto.getNumCols(); i++) {
@@ -137,7 +132,7 @@ public class ClientServerAjax extends Thread {
                 if (content.equals(" ")) {
                     html.append(String.format("<td id=\"/row%d/col%d\">\n", i, j));//style='background-color:yellow'
                     //THERE IS NO CONTENT
-                } else if (content.startsWith("\"") && content.endsWith("\"")){
+                } else if (content.startsWith("\"") && content.endsWith("\"")) {
 
 
                     //properly parse images

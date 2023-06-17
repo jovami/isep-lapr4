@@ -1,26 +1,12 @@
 package eapli.base.board.domain;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
-import lombok.Getter;
+
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "BOARD")
@@ -85,6 +71,7 @@ public class Board implements AggregateRoot<BoardTitle> {
         MAX_ROWS = maxRows;
         MAX_COLUMNS = maxColumns;
     }
+
     public boolean addPostIt(int row, int column, PostIt postIt) {
         synchronized (this.cells) {
             var idx = (row - 1) * this.numColumns + (column - 1);
@@ -108,11 +95,11 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
 
-    public boolean undoChangeOnPostIt(int row, int column) {
+    public Optional<String> undoChangeOnPostIt(int row, int column) {
         synchronized (this.cells) {
             var idx = (row - 1) * this.numColumns + (column - 1);
             if (idx < 0 || idx >= this.cells.size())
-                return false; // TODO: report invalid index
+                return Optional.empty(); // TODO: report invalid index
         }
 
         return this.getCell(row, column).undoPostItChange(this);
@@ -190,13 +177,10 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
     public boolean movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
-        var fromCell = getCell(rowFrom, colFrom);
-        var toCell = getCell(rowTo, colTo);
 
-        //TODO: this is probably not working
-        synchronized (fromCell) {
-            synchronized (toCell) {
-                return fromCell.movePostIt(this, toCell);
+        synchronized (getCell(rowFrom, colFrom)) {
+            synchronized (getCell(rowTo, colTo)) {
+                return getCell(rowFrom, colFrom).movePostIt(this, getCell(rowTo, colTo));
             }
         }
     }
@@ -237,16 +221,15 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
     public Deque<BoardHistory> getHistory() {
-        List<BoardHistory> sortedList = new ArrayList<>();
-
-        for (Cell cell : cells) {
-            Deque<BoardHistory> cellHistory = cell.getHistory();
-            sortedList.addAll(cellHistory);
+        var sortedList = new LinkedList<BoardHistory>();
+        synchronized (this.cells) {
+            for (Cell cell : cells) {
+                Deque<BoardHistory> cellHistory = cell.getHistory();
+                sortedList.addAll(cellHistory);
+            }
         }
-
         sortedList.sort(Comparator.comparing(BoardHistory::getTime));
-
-        return new ArrayDeque<>(sortedList);
+        return (sortedList);
     }
 
 }

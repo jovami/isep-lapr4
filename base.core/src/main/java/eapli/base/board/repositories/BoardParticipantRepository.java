@@ -14,12 +14,13 @@ public interface BoardParticipantRepository extends DomainRepository<Integer,Boa
 
     // TODO: ensure archived boards do not show up
     Iterable<Board> withPermission(SystemUser user, BoardParticipantPermissions perm);
+    Iterable<BoardParticipant> byUser(SystemUser user);
 
     default Iterable<Board> boardsUserCanWrite(SystemUser user){
         return withPermission(user,BoardParticipantPermissions.WRITE);
     }
 
-    default Iterable<Board> boardsByWrite(SystemUser user){
+    default Iterable<Board> boardsUserCanRead(SystemUser user){
         return withPermission(user,BoardParticipantPermissions.READ);
     }
 

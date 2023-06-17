@@ -8,8 +8,8 @@ import java.util.stream.StreamSupport;
 /**
  * Encoder
  *
- * @param T source from side 1
- * @param U target from side 2
+ * @param <T> source from side 1
+ * @param <U> target from side 2
  */
 public interface SBEncoder<T, U> {
 
@@ -35,7 +35,7 @@ public interface SBEncoder<T, U> {
 
     /**
      * Encode many objects to a single string.
-     * Default implementation calls {@link #encode()} on each element
+     * Default implementation calls {@link #encode(T)} on each element
      * and joins them by {@link #multiSeparator()}
      *
      * @param objs objects to encode

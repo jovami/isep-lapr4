@@ -1,37 +1,12 @@
 package eapli.board.server.application;
 
 import eapli.base.board.domain.Board;
-import eapli.base.board.domain.BoardTitle;
-import eapli.base.board.domain.Cell;
-import eapli.base.board.domain.PostIt;
-import eapli.base.board.repositories.BoardParticipantRepository;
-import eapli.base.infrastructure.persistence.PersistenceContext;
-import eapli.board.server.SBPServerApp;
-import eapli.board.shared.dto.BoardRowColDTO;
-import eapli.framework.infrastructure.authz.application.AuthorizationService;
-import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
-import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
 
 public class PostItService {
 
-    private final AuthorizationService authz = AuthzRegistry.authorizationService();
-
-    private final BoardParticipantRepository boardParticipantRepository;
-
-    private final UserRepository userRepository;
-
     public PostItService() {
-        boardParticipantRepository = PersistenceContext.repositories().boardParticipants();
-        userRepository = PersistenceContext.repositories().users();
-    }
 
-    public boolean createPostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
-        Cell c = board.getCell(row, col);
-        if (c.hasPostIt())
-            System.out.println("Post:" + c.getPostIt().getData());
-
-        return board.addPostIt(row, col, new PostIt(postItOwner, text));
     }
 
     public boolean updatePostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
@@ -54,38 +29,5 @@ public class PostItService {
 
         return board.movePostIt(rowFrom, colFrom, rowTo, colTo);
     }
-
-    /*
-     *
-     * public boolean addImageToPostIT(Board board, int cellId, PostIt postIt, File
-     * image)
-     * {
-     * postIt.changePostItImage(image);
-     * return board.registerChangeInPostIt(cellId,postIt);
-     * }
-     */
-    /*
-     * public List<LocalDate> viewHistoryOfUpdatesOnBoard(Board board)
-     * {
-     * List<LocalDate> changesInBoard = new ArrayList<>();
-     * List<Cell> cells = board.getCells();
-     *
-     * for(Cell cl : cells)
-     * {
-     * List<PostIt> postIts = cl.getPostIts();
-     *
-     * for(PostIt pos : postIts)
-     * {
-     * List<LocalDate> changes=pos.changesInPostIt();
-     * for(LocalDate ld: changes)
-     * {
-     * changesInBoard.add(ld);
-     * }
-     * }
-     * }
-     *
-     * return changesInBoard;
-     * }
-     */
 
 }
