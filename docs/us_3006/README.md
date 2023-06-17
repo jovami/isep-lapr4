@@ -43,11 +43,41 @@ Podem optar pela solução que for mais simples. Suponho que suportar o "upload"
 
 **2º** Participants of a board have "Write" or "Read" permissions , only participants of the board with "Write" permissions can create a post-it.
 
-**3º** The owner of the post-it can delete it.
-AQUI----------------------------------------------------------
-
 ## 4. Design
 
+To better answer this problem a service named **BoardService** will be used, the methods needed from that service is:
+
+- `boardsUserCanWrite(user)`
+
+This method will perform the needed database search operations in order to find the boards that the user participates and has **WRITE** permissions.
+
+After this operation the user will choose a Board to create a post-it on, some information will be asked the user to insert:
+
+- Cell to create the post-it on(number of row and number of column).
+- Text or image.
+
+After all information is inserted by the user the following operation will be done:
+
+- A service named **PostItService** will be used, to create a post-it and add it to a cell for this we used method `createPostIt(Board board, int row, int col, String text, SystemUser postItOwner)`.
+
+In SBPServerApp we will have a map of **Board** and **BoardHistory** , this was used to reduce the access to database in runtime and
+because we don't need to persist the history of board. Now for each **Board** we will have a list of its histories.
+
+Now we need to had to histories a post-it , for this we will use a class **CreatePostIt** that extends **BoardHistory**, this 
+class **CreatePostIt** is slightly different that **Post-It** , because here we only have a string containing all data including the
+time post-it was created .
+
+We used **BoardHistory** as the name says because we want to have a history of post-its, the next user stories will need to now 
+when post-it was created and the previous content of a post-it.
+
+In the end a new event it's added to **NewChangeEvent**, the event stores the relevant data required for publishing the event. 
+It is crucial to include at least the following information:
+
+- Board: to determine which users should be notified. 
+- SBProtocol message: to be sent to the SBApp. The event handler utilizes the information from the event to iterate 
+through all the users subscribed to the board and sends the SBProtocol message, containing the details of the specific change, through Berkeley sockets.
+
+**For a better understand on the **Observer Pattern** used in events check [the following document](../us_3005/README.md)**
 
 
 ### 4.1. Realization
@@ -70,20 +100,48 @@ AQUI----------------------------------------------------------
 
 ### 4.3. Applied Patterns
 
-
+- **Factory** - Responsible for creating complex objects or aggregates while encapsulating the creation logic.
+- **Repository** - Provides a way to retrieve and persist aggregates.
+    + **BoardParticipantRepository**
+- **Observer Pattern** -To ensure the smooth functioning of this client-side feature, it is necessary to implement a mechanism that can notify
+  the subscribers (users viewing the board) whenever a new change is made. This can be achieved using the observer
+  pattern, which involves an **NewChangeEvent** and an **NewChangeWatchDog**.
 
 
 ### 4.4. Tests
 
-In order to accurately test this functionality, we need to interact with the Aggregate Root repositories, meaning unit tests aren't the best approach here.
+In order to accurately test this functionality, we need to interact with the Aggregate Root repositories and 
+with the server and client apps, meaning unit tests aren't the best approach here
 
 Instead, integration tests should be performed.
 
 ## 5. Implementation
 
-*In this section the team will present, important artifacts necessary to fully understand the implementation like the database operations*
+*In this section the team will present, important artifacts necessary to fully understand the implementation of this user story*
 
- 
+ **JpaBoardParticipantRepository**
+
+    @Override
+    public Iterable<Board> withPermission(SystemUser user, BoardParticipantPermissions perm) {
+        final var query = entityManager().createQuery(
+                "SELECT bp.board FROM BoardParticipant bp " +
+                        "WHERE bp.participant = :user" +
+                        " AND bp.permission = :perm",
+                Board.class);
+        query.setParameter("user", user);
+        query.setParameter("perm", perm);
+        return query.getResultList();
+    }
+
+ **CreatePostItHandler**
+
+    private boolean checkIfCellIsOccupied(Board board, String alterPosition) {
+        String[] dimensions = alterPosition.split(",");
+        int row = Integer.parseInt(dimensions[0]);
+        int col = Integer.parseInt(dimensions[1]);
+        Cell cell = board.getCell(row,col);
+        return cell.hasPostIt();
+    }
 
 
 ## 6. Integration/Demonstration

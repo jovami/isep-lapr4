@@ -74,7 +74,7 @@ server ->  handler: create(sock,codeRequest)
                p_svc --> handler : true/false
         deactivate p_svc
         note right of handler: SBPServerApp as boardHistories ,get histories of "optBoard"
-        handler -> c_postit : create(optBoard,sb)
+        handler -> c_postit : create(sb)
         activate c_postit
             note right : sb contains:\n-row\n-column\n-Local date time\n-content of postit
 

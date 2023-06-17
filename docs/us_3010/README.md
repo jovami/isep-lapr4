@@ -83,7 +83,8 @@ the system user owns that are in state **Archived** :
 
 ### 4.4. Tests
 
-In order to accurately test this functionality, we need to interact with the Aggregate Root repositories, meaning unit tests aren't the best approach here.
+In order to accurately test this functionality, we need to interact with the Aggregate Root repositories and
+with the server and client apps, meaning unit tests aren't the best approach here.
 
 Instead, integration tests should be performed.
 

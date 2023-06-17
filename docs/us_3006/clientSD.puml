@@ -50,6 +50,9 @@ user -> ui : chooses the cell to allocate the Post-It
 
 
     ui --> user : asks the content type\neither text or image
+deactivate ui
+    user -> ui : chooses text or image
+    activate ui
 
     note right of ui: in case choice was image
     ui -> ui : file = chooseFile()
