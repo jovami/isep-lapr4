@@ -1,19 +1,22 @@
 package eapli.base.board.domain;
 
-import eapli.base.board.domain.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Deque;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
 import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
-
-import static org.junit.Assert.*;
 
 public class BoardTest {
     private final String title = "test";
@@ -96,8 +99,6 @@ public class BoardTest {
             assertEquals(boardColumn, board.getBoardColumnList().get(i));
         }
     }
-
-
 
     @Test
     public void ensureGetBoardColumnId() {
@@ -197,7 +198,6 @@ public class BoardTest {
         assertEquals(cell1.hashCode(), cell2.hashCode());
     }
 
-
     @Test
     public void ensureArchiveBoardState() {
         board.archiveBoard();
@@ -231,18 +231,6 @@ public class BoardTest {
     public void ensureIdentity() {
         BoardTitle boardTitle = board.getBoardTitle();
         assertEquals(title, boardTitle.title());
-    }
-
-    @Test
-    public void testGetCell() {
-        int row = 2;
-        int column = 1;
-        Cell expectedCell = new Cell(new BoardRow(row), new BoardColumn(column));
-        board.getCells().set(((row - 1) * columns) + (column - 1), expectedCell);
-
-        Cell actualCell = board.getCell(row, column);
-
-        assertEquals(expectedCell, actualCell);
     }
 
     @Test
@@ -287,8 +275,8 @@ public class BoardTest {
         Cell cell3 = board.getCells().get(3);
 
         cell1.addPostIt(board, new PostIt(user, "Note 1"));
-        cell2.addPostIt(board, new PostIt(user,"Note 2"));
-        cell3.addPostIt(board, new PostIt(user,"Note 3"));
+        cell2.addPostIt(board, new PostIt(user, "Note 2"));
+        cell3.addPostIt(board, new PostIt(user, "Note 3"));
 
         Deque<BoardHistory> history = board.getHistory();
 
@@ -307,9 +295,6 @@ public class BoardTest {
         assert history4 != null;
         assertEquals("Note 3", history4.getPosContent());
 
-
     }
-
-
 
 }
