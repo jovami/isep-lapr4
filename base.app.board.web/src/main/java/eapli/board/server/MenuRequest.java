@@ -72,8 +72,7 @@ public class MenuRequest extends Thread {
                     viewBoardHistoryHandler.run();
                     break;
                 case SBProtocol.UNDO_LAST_POST_IT_CHANGE:
-                    var handler  = new UndoPostItLastChangeHandler(sock, request);
-                    handler.run();
+                    new UndoPostItLastChangeHandler(sock, request).run();
                     break;
             }
 

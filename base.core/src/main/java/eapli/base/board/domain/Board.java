@@ -115,10 +115,7 @@ public class Board implements AggregateRoot<BoardTitle> {
                 return false; // TODO: report invalid index
         }
 
-        var cell = this.getCell(row, column);
-        var postit = cell.getPostIt();
-
-        return cell.addUndoToHistory(this, postit);
+        return this.getCell(row, column).undoPostItChange(this);
     }
 
     public void archiveBoard() {
@@ -138,10 +135,13 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
     public List<Cell> getCells() {
-        return cells;
+        synchronized (this.cells) {
+            return new ArrayList<>(this.cells);
+        }
     }
 
-    public synchronized Cell getCell(int row, int col) {
+    // TODO: needs bound checking
+    public Cell getCell(int row, int col) {
         synchronized (this.cells) {
             return cells.get(((row - 1) * numColumns) + (col - 1));
         }

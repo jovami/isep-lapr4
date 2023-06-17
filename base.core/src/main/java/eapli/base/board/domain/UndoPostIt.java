@@ -1,6 +1,5 @@
 package eapli.base.board.domain;
 
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
@@ -10,8 +9,7 @@ import java.time.format.DateTimeFormatter;
 @DiscriminatorValue("UNDO")
 public class UndoPostIt extends BoardHistory {
 
-
-    //private Type type;
+    // private Type type;
     private BoardTitle board;
     private int row;
     private int column;
@@ -19,15 +17,15 @@ public class UndoPostIt extends BoardHistory {
     private String prevContent;
     private String posContent;
 
-
     protected UndoPostIt() {
     }
+
     public UndoPostIt(String str) {
         super(str);
         parseStr(str);
     }
 
-    public void parseStr(String string){
+    public void parseStr(String string) {
         String[] split = string.split("\t");
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
@@ -38,18 +36,15 @@ public class UndoPostIt extends BoardHistory {
 
     }
 
-
     @Override
     public String getType() {
         return "UNDO";
     }
 
-
-
     @Override
     public String toString() {
-        return getType()+"\t"+board.title()+"\t"+row+"\t"+column+"\t"+time+"\t"+prevContent+"\t"+posContent;
+        return getType() + "\t" + board.title() + "\t" + row + "\t" + column + "\t" + time + "\t" + prevContent + "\t"
+                + posContent;
     }
-
 
 }

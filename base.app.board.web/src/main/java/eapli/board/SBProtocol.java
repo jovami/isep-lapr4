@@ -34,7 +34,7 @@ public class SBProtocol implements MessageProtocol {
     public static final int UPDATE_POST_IT = 19;
     public static final int MOVE_POST_IT = 20;
     public static final int SEND_POST_IT_INFO = 14;
-    public static final int GET_BOARDS_USER_PARTICIPATES_AND_HAS_WRITE_PERMISSIONS = 18;
+    public static final int GET_BOARDS_USER_PARTICIPATES_AND_HAS_WRITE_PERMISSIONS = 21;
     public static final int LIST_HISTORY = 15;
     public static final int VIEW_BOARD_HISTORY = 16;
     public static final int TOKEN = 17;

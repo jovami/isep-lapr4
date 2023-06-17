@@ -2,11 +2,9 @@ package eapli.board.client.presentation;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
-import com.ibm.icu.impl.Pair;
 import eapli.board.client.application.UndoPostItLastChangeController;
-import eapli.board.client.dto.BoardRowColDTO;
+import eapli.board.shared.dto.BoardRowColDTO;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
@@ -15,7 +13,7 @@ import jovami.util.exceptions.ReceivedERRCode;
 /**
  * UndoPostItLastChangeUI
  */
-public class UndoPostItLastChangeUI extends AbstractUI {
+public final class UndoPostItLastChangeUI extends AbstractUI {
 
     private final InetAddress serverIP;
     private final int serverPort;
@@ -31,37 +29,36 @@ public class UndoPostItLastChangeUI extends AbstractUI {
     @Override
     protected boolean doShow() {
         this.ctrl = new UndoPostItLastChangeController(serverIP, serverPort);
-        var list = new ArrayList<String>();
-        var dimensions = new ArrayList<Pair<String, String>>();
-        var boardRowColumn = ctrl.requestBoards();
-        for (int i = 0; i < boardRowColumn.size(); i = i + 3) {
-            list.add(boardRowColumn.get(i));
-            dimensions.add(Pair.of(boardRowColumn.get(i + 1), boardRowColumn.get(i + 2)));
-        }
 
-        var widget = new SelectWidget<>("Choose a Board\n==============", list);
+        var widget = new SelectWidget<>("Choose a Board\n==============",
+                ctrl.requestBoards());
         widget.show();
-        int idx = widget.selectedOption() - 1;
-        if ((idx + 1) <= 0)
+
+        if (widget.selectedOption() <= 0)
             return false;
 
-        var boardName = widget.selectedElement();
+        var selected = widget.selectedElement();
+
         var row = Console.readInteger("-> Board row:");
-        if (row > Integer.parseInt(dimensions.get(idx).first) || row < 1) {
+        if (row > selected.rows() || row < 1) {
             System.out.println("Invalid Row");
             return false;
         }
 
         var col = Console.readInteger("-> Board column:");
-        if (col > Integer.parseInt(dimensions.get(idx).second) || col < 1) {
+        if (col > selected.columns() || col < 1) {
             System.out.println("Invalid Column");
             return false;
         }
 
-        var dto = new BoardRowColDTO(boardName, row, col);
+        // Convert to 0-based indexing
+        var dto = new BoardRowColDTO(selected.title(), row - 1, col - 1);
 
         try {
-            this.ctrl.undoChange(dto);
+            if (this.ctrl.undoChange(dto))
+                System.out.println("Undone successful");
+            else
+                System.out.println("Error performing undo operation");
         } catch (IOException | ReceivedERRCode e) {
             // TODO
         }

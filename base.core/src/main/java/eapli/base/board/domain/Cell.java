@@ -1,8 +1,5 @@
 package eapli.base.board.domain;
 
-import lombok.Getter;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +7,15 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import lombok.Getter;
 
 @Entity
 public class Cell implements Serializable {
@@ -29,7 +35,6 @@ public class Cell implements Serializable {
     @Getter
     private final Deque<BoardHistory> history = new ConcurrentLinkedDeque<>();
 
-
     protected Cell() {
     }
 
@@ -39,60 +44,64 @@ public class Cell implements Serializable {
         this.postIt = null;
     }
 
-    public boolean addPostIt(Board board, PostIt postIt) {
-        synchronized (this) {
-            if (hasPostIt()) {
-                return false;
-            }
-            this.postIt = postIt;
-
-            return formatString(board, null, postIt.getData(), Type.CREATE);
+    public synchronized boolean addPostIt(Board board, PostIt postIt) {
+        if (hasPostIt()) {
+            return false;
         }
+        this.postIt = postIt;
+
+        return formatString(board, null, postIt.getData(), Type.CREATE);
     }
 
+    public synchronized boolean changePostItData(Board board, String newData) {
+        if (!hasPostIt())
+            return false;
 
-    public boolean changePostItData(Board board, String newData) {
-        synchronized (this) {
-            if (!hasPostIt())
-                return false;
-
-            if (!formatString(board, this.history.getFirst(), newData, Type.UPDATE))
-                return false;
-        }
+        if (!formatString(board, this.history.getFirst(), newData, Type.UPDATE))
+            return false;
 
         this.postIt.alterPostItData(newData);
 
         return true;
     }
 
+    public synchronized boolean removePostIt(Board board) {
+        if (!hasPostIt())
+            return false;
+        var tmp = this.postIt;
+        this.postIt = null;
 
-    public boolean removePostIt(Board board) {
-        synchronized (this) {
-            if (!hasPostIt())
-                return false;
-            var tmp = this.postIt;
-            this.postIt = null;
-
-            return formatString(board, null, tmp.getData(), Type.REMOVE);
-        }
+        return formatString(board, null, tmp.getData(), Type.REMOVE);
     }
 
-    public boolean movePostIt(Board board, Cell cellTo) {
-        synchronized (this) {
-            if (!hasPostIt())
-                return false;
+    public synchronized boolean movePostIt(Board board, Cell cellTo) {
+        if (!hasPostIt())
+            return false;
 
-            if (cellTo.hasPostIt())
-                return false;
+        if (cellTo.hasPostIt())
+            return false;
 
-            if (!formatString(board, this.history.getFirst(), null, Type.UPDATE))
-                return false;
-        }
+        // FIXME: addPostIt() before formatString()
+        if (!formatString(board, this.history.getFirst(), null, Type.UPDATE))
+            return false;
 
         return cellTo.addPostIt(board, this.postIt) && this.removePostIt(board);
     }
 
-    public String getPostItData() {
+    public synchronized boolean undoPostItChange(Board board) {
+        for (final var entry : this.history) {
+            // TODO: use enum the correct way
+            if (Type.valueOf(entry.getType()) == Type.UPDATE) {
+                this.postIt.alterPostItData(entry.getPrevContent());
+
+                return formatString(board, entry, null, Type.UNDO);
+            }
+        }
+        return false;
+    }
+
+
+    public synchronized String getPostItData() {
         return this.postIt.getData();
     }
 
@@ -104,7 +113,8 @@ public class Cell implements Serializable {
         return column;
     }
 
-    public PostIt getPostIt() {
+    // FIXME: delete this!!!!!
+    public synchronized PostIt getPostIt() {
         return this.postIt;
     }
 
@@ -126,21 +136,6 @@ public class Cell implements Serializable {
     public boolean hasPostIt() {
         return this.postIt != null;
     }
-
-
-    public boolean addUndoToHistory(Board board, PostIt postit) {
-        synchronized (this.history) {
-            for (final var entry : this.history) {
-                if (Type.valueOf(entry.getType()) == Type.UNDO) {
-                    postit.alterPostItData(entry.getPrevContent());
-
-                    return formatString(board, entry, null, Type.UNDO);
-                }
-            }
-        }
-        return false;
-    }
-
 
     private boolean formatString(Board board, BoardHistory entry, String newData, Type type) {
         var sb = new StringBuilder();
@@ -180,9 +175,7 @@ public class Cell implements Serializable {
                 break;
         }
 
-
         return true;
     }
-
 
 }

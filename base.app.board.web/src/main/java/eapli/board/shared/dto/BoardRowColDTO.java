@@ -1,4 +1,4 @@
-package eapli.board.client.dto;
+package eapli.board.shared.dto;
 
 import eapli.framework.representations.dto.DTO;
 import lombok.AllArgsConstructor;

@@ -37,7 +37,7 @@ public class ChangePostIt extends BoardHistory {
 
     @Override
     public String getType() {
-        return "CHANGE";
+        return "UPDATE";
     }
 
     @Override
