@@ -1,0 +1,86 @@
+@startuml
+
+actor SBPServerApp as server
+
+participant ShareBoardHandler as handler
+participant SBProtocol as sbp
+participant BoardService as b_svc
+
+activate server
+server ->  handler: create(sock,codeRequest)
+    note right : -receives a socket and SBProtocol codeRequests
+    activate handler
+
+    deactivate handler
+
+
+    server -> handler : run()
+    note right : setup in/output streams
+deactivate server
+
+    activate handler
+        handler -> sbp : getToken()
+        handler <-- sbp : token
+        handler -> server : getClient(token)
+        activate server
+        note right of server : clients associated to token are stored at SBPServerApp
+        server --> handler : client
+        deactivate server
+        handler -> b_svc : listBoardsUserOwnsNotArchived(user)
+        activate b_svc
+            b_svc -> handler : boards
+        deactivate b_svc
+        note right of handler : setup SBProtocol to send boards as content
+        handler -> sbp : send(outS)
+
+        handler -> sbp : receiveBoardChosen = create(inS)
+        activate sbp
+            note right of sbp : content:\n-board title of the board chosen
+            sbp --> handler : boardChosen
+        deactivate sbp
+        handler -> server : getBoard(board)
+        activate server
+        note right of server : boards stored at SBPServerApp
+        server --> handler : board
+        deactivate server
+
+        handler -> b_svc : usersNotInvited(board)
+        note right of handler : setup SBProtocol to send users not invited as content
+        handler -> sbp : send(outS)
+
+        handler -> sbp : receiveInvitedUsers = create(inS)
+        activate sbp
+            note right of sbp : content:\n-username of users invited and perms associated
+                        sbp --> handler : usersInvited
+        deactivate sbp
+
+        loop for each username
+            handler -> UserRepository : ofIdentity(username)
+            activate UserRepository
+            handler <-- UserRepository : user
+            deactivate UserRepository
+            handler -> handler : addUserToInvite(user)
+        end
+
+        handler -> b_svc : srv.shareBoard(optBoard, usersToInvite)
+        activate b_svc
+
+        note right of b_svc: begin transaction
+        loop for each user
+                b_svc -> BoardParticipant : create(username, perms)
+                b_svc <-- BoardParticipant : participant
+                b_svc -> BoardParticipantRepository : save(participant)
+        end
+        note right of b_svc: commit transaction
+        deactivate b_svc
+        note right of handler : setup SBProtocol with success message
+        handler -> SBProtocol : send(outS))
+
+deactivate handler
+
+@enduml
+
+
+
+
+

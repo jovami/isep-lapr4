@@ -1,0 +1,137 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+skinparam padding 2
+skinparam ranksep 100
+skinparam classFontSize 18
+
+
+interface Runnable
+interface MessageProtocol
+
+interface BoardRepository
+{
+  +listBoardsUserCanView(SystemUser owner)
+ }
+
+abstract AbstractUI
+{
+}
+
+class ShareBoardUI
+{
+    # doShow()
+    + headline()
+}
+
+class ShareBoardController
+{
+ + listBoardsUserOwns()
+ + chooseBoard(String boardTitle)
+ + shareBoard()
+ + listUsers()
+ + prepareInvite(String username, BoardParticipantPermissions perm)
+}
+
+abstract AbstractSBServerHandler{
+}
+
+class ShareBoardHandler
+{
++ run()
+- inviteUsers(String[] invites)
+- sendUsersNotInvited(Board board)
+- sendBoardOwned(StringBuilder builder, List<Board> boards)
+- usersNotInvited(Board board)
+}
+
+class SBPServerApp
+{
++ HashMap<BoardTitle,Board> boards
++ HashMap<String,Client> activeAuths
+}
+
+class MenuRequest
+{
++run()
+}
+
+interface Runnable
+interface MessageProtocol
+
+class SBProtocol
+{
+ + setCode(int code)
+ + setContentFromString(String cStr)
+ + send(DataOutputStream out)
+ + getContentAsString()
+
+}
+
+class JpaBoardRepository
+{
++listBoardsUserOwnsNotArchived(SystemUser owner)
++listBoardsUserOwnsArchived(SystemUser owner)
++listBoardsUserOwns(SystemUser owner);
+
+}
+
+class Client
+{
+    +getUserLoggedIn()
+}
+
+class BoardService
+{
+ +listBoardsUserCanView(SystemUser owner)
+}
+
+class SBPClientApp
+
+
+abstract class BaseApplication
+
+class MainMenu
+{
+-buildMainMenu()
+}
+
+
+'extends
+ShareBoardUI --|> AbstractUI
+MenuRequest --|> Thread
+SBPClientApp -up-|> BaseApplication
+SBPServerApp -up-|> BaseApplication
+SBPServerApp o-- Client
+MainMenu --|> AbstractUI
+
+'depends on(imports)
+ShareBoardUI --> "1" ShareBoardController
+ShareBoardController --> "*" SBProtocol
+
+ShareBoardHandler --|> AbstractSBServerHandler
+AbstractSBServerHandler ..|> Runnable
+ShareBoardHandler --> "*" SBProtocol
+
+ShareBoardHandler --> "1" BoardService
+
+BoardService  --> "1" BoardRepository
+
+MenuRequest --> "1" SBProtocol
+MainMenu --> "1" ShareBoardUI
+SBPClientApp --> "1" MainMenu
+SBPServerApp --> "1" MenuRequest
+MenuRequest -- ShareBoardHandler
+ShareBoardHandler -- SBPServerApp
+
+
+
+'implements
+Thread ..|> Runnable
+SBProtocol ..|> MessageProtocol
+JpaBoardRepository ..|> BoardRepository
+
+
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+actor Client as client
+actor Server as server
+
+
+client -> server: listBoardsOwned(user)
+client <-- server: boardsOwned
+client -> server: chooseBoard(board)
+client <-- server: usersNotInvited
+client -> server: inviteUsers(users)
+client <-- server: sends ACK code
+
+@enduml

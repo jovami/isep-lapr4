@@ -1,62 +1,131 @@
 US 3004 -- As User, I want to share a board
 =========================================================
 
-# Analysis
-## Business rules
+## 1. Context
+
+**It is the first time the task is assigned to be developed**
+
+## 2. Requirements
+
+*In this section you should present the functionality that is being developed, how do you understand it, as well as
+possible correlations to other requirements (i.e., dependencies).*
+
+**US 3005** As User, I want to view, in real-time, the updates in the shared boards
+
+- Only users with view permissions can use this functionality
+
+  > Q: O cliente pretende que seja apenas desenvolvida uma página web para a visualização das boards e autenticação na
+  linha de comandos(cli), como demonstrado na página 11 da especificação do projeto, ou então também, aceitaria uma
+  aplicação totalmente desenvolvida numa página web (com autenticação executada na mesma)
+
+  > A:Como cliente, e se percebi bem, a primeira opção será o que eu pretendo. Ou seja, todas as funcionalidades da
+  Shared
+  board App são realizadas na aplicação do tipo "consola" em java com a exceção da parte relativa
+  à visualização em tempo real dos boards.
+
+*Regarding this requirement we understand that it relates to...*
+
+- Board must be shown in the user's browser and changes that are made to this board must be shown in real time without
+  user interaction
+
+## 3. Analysis
+
 This functionality has to follow specific business rules for it to work
 as intended, those business rules are:
-  - User logged can only add participants to a board that he/she owns.
-  - The participants invited have to be system users.
 
+- User logged can only add participants to a board that he/she owns.
+- The participants invited have to be system users.
 
+For deeper understand on the analysis made relating client-server model
+check [the following document](../SBServer/Analysis.md)
 
-## Unit tests
-
-In order to accurately test this functionality, we need to interact
-with the Aggregate Root repositories, meaning unit tests aren't the best approach here.
-
-Instead, integration tests should be performed.
+## 4. Design
 
 # Design
-To better answer this problem a service named **ShareBoardService** will be 
-implemented with the following method added to it:
 
-- `listBoardsUserOwns()` 
-This method will perform the
-needed database search operations in order to find all the boards that the user logged owns.
-The **DTO pattern** will be used to display a list of the boards in the UI (**BoardDTO**).
+**SharedBoardService**
+The ShareBoardService class is a key component of the application's server-side logic for sharing and managing boards.
+This class facilitates the sharing of boards with other system users, manages board ownership and participation, and
+provides various methods for retrieving board information based on user permissions.
 
-- `shareBoard(BoardDTO board, List<SystemUserNameEmailDTO> users)` 
-  This method will perform the creation of a **BoardParticipant** , meaning that for the board passed , for each
-  user in the list of users, a new **BoardParticipant(Board board, SystemUser participant)** will be created and 
-  saved in the repository **BoardParticipantRepository**
+    listBoardsUserOwns(SystemUser user):
+    This method retrieves a list of boards owned by a specific user. It calls the boardRepository to fetch the boards associated with the given user. The method returns a list of Board objects.
 
-- `boardParticipants(BoardDTO board)`
-  This method will perform the
-  needed database search operations in order to find all the participants of a specific board .
-  The **DTO pattern** will be used to display a list of the boards in the UI (**BoardParticipantDTO**).
+    shareBoard(Board board, List<Pair<SystemUser, BoardParticipantPermissions>> users):
+    The shareBoard method enables the sharing of a board with multiple users. It takes a Board object and a list of pairs, 
+    each containing a SystemUser and corresponding BoardParticipantPermissions. For each pair, it creates a new
+    BoardParticipant object and saves it using the boardParticipantRepository.
 
+    getBoardsByParticipant(SystemUser user):
+    This method retrieves a list of boards in which the specified user is a participant. It utilizes the boardParticipantRepository to fetch the relevant boards.
 
+    usersNotInvited(Board board):
+    Given a board, this method returns a list of users who have not been invited to participate in that board. It retrieves all system users using the userRepository and removes those who are already participants in the specified board.
 
-## Classes
-- Domain:
-    + **Board**
-    + **BoardParticipant**
-    + **SystemUser**
-- Controller:
-    + **ShareBoardService**
-    + **ShareBoardController**
-    + **AuthorizationService**
-- Repository:
-    + **BoardRepository**
-    + **BoardParticipantRepository**
-    + **UserRepository**
-- DTO:
-    + **BoardDTO**
-    + **BoardMapper**
-    + **BoardParticipantDTO**
-    + **BoardParticipantMapper**
-    + **SystemUserNameEmailDTO**
+In order easily communicate between SBServer and SBApp it was used the following grammars on the SBProtocol content:
 
-## Sequence diagram
-![sd](./sd.svg)
+- **to list board/users**: char '\0' between each of the elements
+  ex: **board1**\0**board2**\0**board3**\0
+- **invite participants**: char '\0' between each fo the invites, and "#&&#" between username and permissions
+
+  > marco1#&&#READ\0mary#&&#WRITE\0
+
+The previous example will be parsed into 2 BoardParticipants:
+
+- username: marco1 Permissions: READ
+- username: mary Permissions: WRITE
+
+**For a better understand on the design behind the client-server model
+check [the following document](../SBServer/Design.md)**
+
+### 4.1 Class diagram
+
+![Class diagram](./CD.svg)
+
+### 4.2 Unit Tests
+
+Integration tests should be performed in order to better improve this functionality
+
+### 4.3. Applied Patterns
+
+Builder Pattern:
+
+    In the ShareBoardHandler class, the StringBuilder is used to construct strings, specifically 
+    for sending responses to the client. The StringBuilder follows the Builder pattern, allowing the incremental construction of complex strings efficiently.
+
+Repository Pattern:
+
+    The ShareBoardService class utilizes the Repository pattern by interacting with repositories such as BoardRepository,
+    BoardParticipantRepository, and UserRepository. These repositories abstract the data access and provide a consistent 
+    interface for retrieving and persisting data related to boards, participants, and users.
+
+### 4.4 Sequence diagram
+
+In order to better understand this US has 2 components (client and server) that can be better described if divided.
+The following SSD describes better the communication between this client-server model
+
+Client-Server:
+
+![SSD](./SSD.svg)
+
+Client SD:
+
+![Sequence diagram](./ClientSD.svg)
+
+Server SD:
+
+![Sequence diagram](./ServerSD.svg)
+
+## 5. Implementation
+
+*In this section the team will present, important artifacts necessary to fully understand the implementation like
+fetching data operations*
+
+## 6. Integration/Demonstration
+
+The user can only use this functionality after creating a board 
+
+## 7. Observations
+
+No observations
+

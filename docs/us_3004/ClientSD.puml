@@ -1,0 +1,65 @@
+@startuml
+actor SBAappUser as user
+participant ShareBoardUI as ui
+participant ShareBoardController as ctrl
+participant SBProtocol as protocol
+participant ServerAJAX as svAJAX
+
+
+user -> ui : view Boards
+activate ui
+    ui --> ctrl : create(serverIp,serverPort)
+        note right : create instance of socket with serverIp and serverPort,\na input stream(inS) and output Stream(outS)
+
+    activate ctrl
+    deactivate ctrl
+
+    ui --> ctrl : boardsToView()
+    activate ctrl
+        ctrl -> protocol : create()
+        note right: setup SBProtocol with:\n token = (AUTH_TOKEN)\n code = SHAREBOARD
+        ctrl -> protocol : send(outS)
+        ctrl -> protocol : create(inS)
+        note right: read SBProtocol with boards\n owned separated by "\\0"
+        ctrl -> protocol : getContentAsString(inS)
+        ctrl <-- protocol : content
+        ctrl --> ui : content.split("\0")
+
+    deactivate ctrl
+    ui --> user : show boards
+    user -> ui : board
+    ui -> ctrl : chooseBoard(board)
+    activate ctrl
+            ctrl -> protocol : create()
+            ctrl -> protocol : setContentFromString(board)
+            note right: send board chosen on SBProtocol content
+            ctrl -> protocol : send(outS)
+
+            ctrl -> protocol : create(inS)
+            note right of protocol : received content with \nusers that can be invited\n separated by "\\0"
+            ctrl -> protocol : getContentAsString(inS)
+            ctrl <-- protocol : content
+            ctrl --> ui : content.split("\0")
+
+        deactivate ctrl
+        loop  while wants to invite
+            ui --> user : show users
+            user -> ui : user
+            ui <- user : shows permissions
+            user -> ui : perms
+            ui -> ctrl : addUser(user,perms)
+        end
+        ui -> ctrl : shareBoard()
+        activate ctrl
+        note right of ctrl: setup SBProtocol with \n regex "username#&&#perms\\0"
+        ui <-- ctrl : return operation success
+        deactivate ctrl
+        ui --> user : shows operation success
+
+
+    deactivate ctrl
+deactivate ui
+
+@enduml
+
+
