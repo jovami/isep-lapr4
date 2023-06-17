@@ -39,7 +39,7 @@ public class MenuChanges extends Thread {
             }
 
         } catch (IOException ex) {
-            System.out.printf("[WARNING] Thread error when reading request for %s",sock.getInetAddress());
+            System.out.printf("[WARNING] Thread error when reading request for %s\n",sock.getInetAddress());
         } catch (ReceivedERRCode er) {
             System.out.println("[ERR RECEIVED] " + er.getMessage());
         }

@@ -49,17 +49,29 @@ public class CreatePostItUI extends AbstractUI {
             System.out.printf("[Dimensions: %s (rows) x %s (columns)]\n",
                     list.get(index).first, list.get(index).second);
 
-            var row = Console.readInteger("-> Board row:");
-            if (row > Integer.parseInt(list.get(index).first) || row < 1) {
-                System.out.println("Invalid Row");
-                return false;
-            }
+            int out;
+            var row = 0;
+            var column = 0;
+            do {
+                out = 0;
+                row = Console.readInteger("-> Board row:");
+                if (row > Integer.parseInt(list.get(index).first) || row < 1) {
+                    System.out.println("Invalid Row");
+                    out++;
+                }
+                if (out == 0) {
+                    do {
+                        out = 0;
+                        column = Console.readInteger("-> Board column:");
+                        if (column > Integer.parseInt(list.get(index).second) || column < 1) {
+                            System.out.println("Invalid Column");
+                            out++;
+                        }
 
-            var column = Console.readInteger("-> Board column:");
-            if (column > Integer.parseInt(list.get(index).second) || column < 1) {
-                System.out.println("Invalid Row");
-                return false;
-            }
+                    } while (out != 0);
+                }
+            } while (out != 0);
+
 
             String position = row + "," + column;
 
@@ -100,7 +112,7 @@ public class CreatePostItUI extends AbstractUI {
             e.printStackTrace();
         } catch (ReceivedERRCode e) {
             System.out.println(e.getMessage());
-        }finally {
+        } finally {
             controller.close();
         }
         return false;
