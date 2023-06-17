@@ -30,7 +30,7 @@ public class MovePostItUI extends AbstractUI {
             dimensions.add(Pair.of(boardRowColumn.get(i + 1), boardRowColumn.get(i + 2)));
         }
 
-        var widget = new SelectWidget<>("Choose Board to view\n", list);
+        var widget = new SelectWidget<>("Choose a Board\n==============", list);
         widget.show();
         int idx = widget.selectedOption() - 1;
         if ((idx + 1) <= 0)
