@@ -17,7 +17,7 @@ Here **title**, **header**, and **section** are non-terminal rules defined withi
 The **title** rule specifies the title of the exam in the format of:
 
 ```
-title: 'TITLE' ':' STRING;
+title: 'TITLE' COLON value=STRING;
 ```
 
 ## Header
@@ -31,7 +31,7 @@ The header rule defines the header section of the exam and includes:
 The description property specifies an optional description of the exam header in the following format:
 
 ```
-description: 'DESCRIPTION' ':' STRING;
+description: 'DESCRIPTION' COLON value=STRING;
 ```
 
 The feedback and grading properties define when feedback and grading are given for the exam, respectively. They can take on one of three possible values:
@@ -83,16 +83,37 @@ Questions are part of a section, and they can vary in type:
 - Missing words;
 - True/False;
 
+Furthermore, as explained in the following sections, each question have an optional **feedback_text** rule which
+can be used to provide feedback to the student when the exam is graded. It is possible to define a feedback text for
+both correct and wrong answers.
+
+```
+feedback_text: 'FEEDBACK' LEFT_BRACE feedback_combination RIGHT_BRACE;
+feedback_combination: wrong_answer? correct_answer
+                    | correct_answer? wrong_answer;
+wrong_answer: 'WRONG_ANSWER' COLON value=STRING;
+correct_answer: 'CORRECT_ANSWER' COLON value=STRING;
+```
+
+The following example shows how to define a feedback text for a question:
+
+```
+FEEDBACK {
+    CORRECT_ANSWER: "It is right!"
+    WRONG_ANSWER: "You have to study a little more..."
+}
+```
+
 ### Matching Question
 
 Matching questions require the respondent to match a list of subquestions to a corresponding list of answers. The grammar rules for a matching question are defined as follows:
 
 ```
-matching: 'MATCHING' '{' description subquestion+ answer+ matching_solution+ '}';
-subquestion: 'SUBQUESTION' INT ':' STRING;
-answer: 'ANSWER' INT ':' STRING;
-matching_solution: 'SOLUTION' INT ':' match '[' FLOAT ']';
-match: INT '-' INT;
+matching: 'MATCHING' LEFT_BRACE description subquestion+ answer+ matching_solution+ feedback_text? RIGHT_BRACE;
+subquestion: 'SUBQUESTION' id=INT COLON value=STRING;
+answer: 'ANSWER' id=INT COLON value=STRING;
+matching_solution: 'SOLUTION' id=INT COLON match LEFT_BRACKET points=FLOAT RIGHT_BRACKET;
+match: subquestion_id=INT DASH answer_id=INT;
 ```
 
 Here, **subquestion** defines a subquestion with an integer ID and a string description, **answer** defines an answer with an integer ID and a string value, and **matching_solution** defines both the solution to the matching question and its score. The **match** rule specifies which subquestion corresponds to which answer, and the FLOAT token specifies the score for the match.
@@ -113,6 +134,11 @@ MATCHING {
     
     SOLUTION 1: 1-2 [1.0]
     SOLUTION 2: 2-1 [1.0]
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "Right!"
+        WRONG_ANSWER: "Wronggg..."
+    }
 }
 ```
 
@@ -129,12 +155,15 @@ This solution specifies that the correct match for the first subquestion is answ
 Multiple choice questions present a question with a list of possible answers, of which one or more may be correct. The grammar rules for multiple choice questions are defined as follows:
 
 ```
-multiple_choice: 'MULTIPLE_CHOICE' '{' choice_type description answer+ numerical_solution+ '}';
-numerical_solution: 'SOLUTION' INT ':' INT (',' INT)* '[' FLOAT ']';     
-choice_type: 'CHOICE_TYPE' ':' ('single-answer' | 'multiple-answer');
+multiple_choice: 'MULTIPLE_CHOICE' LEFT_BRACE choice_type description answer+ numerical_solution+ feedback_text? RIGHT_BRACE;
+numerical_solution: 'SOLUTION' id=INT COLON combinations LEFT_BRACKET points=FLOAT RIGHT_BRACKET;
+combinations: INT (',' INT)*;
+choice_type: 'CHOICE_TYPE' COLON value=('single-answer' | 'multiple-answer');
 ```
 
-Here, **multiple_choice** defines the top-level rule for a multiple choice question, which includes a **choice_type** rule that specifies whether the question allows a single answer or multiple answers. The **description** rule specifies the text of the question, and the **answer** rule defines the possible answers, each with an ID and a string value. The **numerical_solution** rule defines both the correct answers to the question and their score.
+Here, **multiple_choice** defines the top-level rule for a multiple choice question, which includes a **choice_type** rule that specifies whether the question allows a single answer or multiple answers. 
+The **description** rule specifies the text of the question, and the **answer** rule defines the possible answers, each with an ID and a string value. 
+The **numerical_solution** rule defines both the correct answers to the question and their score.
 
 An example of two multiple choice questions defined using this grammar is:
 
@@ -149,6 +178,11 @@ MULTIPLE_CHOICE {
     ANSWER 4: "Yuri Gagarin"
     
     SOLUTION 1: 2 [5.0]
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "Perfect"
+        WRONG_ANSWER: "Could be better"
+    }
 }
 
 MULTIPLE_CHOICE {
@@ -167,6 +201,11 @@ MULTIPLE_CHOICE {
     SOLUTION 5: 1 [0.2]
     SOLUTION 6: 3 [0.2]
     SOLUTION 7: 4 [0.1]
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "Perfect"
+        WRONG_ANSWER: "Could be better"
+    }
 }
 ```
 
@@ -175,12 +214,13 @@ MULTIPLE_CHOICE {
 Short answer questions require the respondent to provide a brief text answer to a given question or prompt. The grammar rules for a short answer question are defined as follows:
 
 ```
-short_answer: 'SHORT_ANSWER' '{' description case_sensitive string_solution+ '}';
-string_solution: 'SOLUTION' INT ':' STRING '[' FLOAT ']';
-case_sensitive: 'CASE_SENSITIVE:' BOOL;
+short_answer: 'SHORT_ANSWER' LEFT_BRACE description case_sensitive string_solution+ feedback_text? RIGHT_BRACE;
+string_solution: 'SOLUTION' id=INT COLON value=STRING LEFT_BRACKET points=FLOAT RIGHT_BRACKET;
+case_sensitive: 'CASE_SENSITIVE:' value=BOOL;
 ```
 
-Here, **description** specifies the question that the respondent must answer, **case_sensitive** specifies whether the answer is case-sensitive or not, and **string_solution** defines the correct answer and its score. The score is given as a FLOAT token.
+Here, **description** specifies the question that the respondent must answer, **case_sensitive** specifies whether the answer is case-sensitive or not, and **string_solution** defines the correct answer and its score.
+The score is given as a FLOAT token.
 
 An example of a short answer question defined using this grammar is:
 
@@ -191,6 +231,11 @@ SHORT_ANSWER {
 
     SOLUTION 1: "Boavista" [0.5]
     SOLUTION 2: "Avenida da Boavista" [1.0]
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "Yep, that's it!"
+        WRONG_ANSWER: "Completely wrong :/"
+    }
 }
 ```
 
@@ -215,6 +260,11 @@ NUMERICAL {
     ERROR: 0.5
 
     SOLUTION 1: 2 [1.0] 
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "Good job"
+        WRONG_ANSWER: "Better luck next time..."
+    }
 }
 ```
 
@@ -250,6 +300,11 @@ MISSING_WORDS {
         SOLUTION 1: 1 [1.5] 
         FROM_GROUP: "verbs"    
     }
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "You are right!"
+        WRONG_ANSWER: "You are wrong!"
+    }
 }   
 ```
 
@@ -270,6 +325,11 @@ An example of a true/false question defined using this grammar is:
 TRUE_FALSE {
     DESCRIPTION: "Water boils at 100 degrees Celsius."
     SOLUTION 1: true [1.0]
+    
+    FEEDBACK {
+        CORRECT_ANSWER: "It is right!"
+        WRONG_ANSWER: "You have to study a little more..."
+    }
 }
 ```
 
@@ -317,6 +377,11 @@ EXAM {
             SOLUTION 2: 2-1 [1.0]
             SOLUTION 3: 3-3 [1.0]
             SOLUTION 4: 4-4 [1.0]
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
 
         MULTIPLE_CHOICE {
@@ -329,6 +394,11 @@ EXAM {
             ANSWER 4: "Yuri Gagarin"
             
             SOLUTION 1: 2 [5.0]
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
 
         MULTIPLE_CHOICE {
@@ -347,6 +417,11 @@ EXAM {
             SOLUTION 5: 1 [0.2]
             SOLUTION 6: 3 [0.2]
             SOLUTION 7: 4 [0.1]
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
     }
 
@@ -359,6 +434,11 @@ EXAM {
 
             SOLUTION 1: "Boavista" [0.5]
             SOLUTION 2: "Avenida da Boavista" [1.0]
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
 
         NUMERICAL {
@@ -366,6 +446,11 @@ EXAM {
             ERROR: 0.5
 
             SOLUTION 1: 2 [1.0] 
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
 
         MISSING_WORDS {
@@ -381,11 +466,21 @@ EXAM {
                 SOLUTION 1: 1 [1.5] 
                 FROM_GROUP: "verbs"    
             }
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }      
 
         TRUE_FALSE {
             DESCRIPTION: "Water boils at 100 degrees Celsius."
             SOLUTION 1: true [1.0]
+            
+            FEEDBACK {
+                CORRECT_ANSWER: "You are right!"
+                WRONG_ANSWER: "You are wrong!"
+            }
         }
     }
 }
