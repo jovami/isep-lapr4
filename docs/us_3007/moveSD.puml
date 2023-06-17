@@ -1,0 +1,43 @@
+@startuml
+    actor User as user
+    participant MovePostItUI as ui
+    participant MovePostItController as ctrl
+    participant SBProtocol as sbp
+
+    user -> ui : enter
+    activate ui
+        ui -> ctrl : create()
+        activate ctrl
+        deactivate ctrl
+
+        ui -> ctrl : listBoardString()
+        activate ctrl
+            ctrl -> sbp :
+            note right of ctrl : retrieves the list of\nboards from the server
+            ctrl -> ui : boards
+        deactivate ctrl
+
+        ui -> user : show list of boards\n available for the user
+    deactivate ui
+
+    user -> ui : select board
+    activate ui
+        ui -> user : shows user the dimensions\nof the board and asks for\nthe cell position
+    deactivate ui
+
+    user -> ui : select cell
+    activate ui
+        ui -> user : asks the user for the cell to move the content to
+    deactivate ui
+
+    user -> ui : select cell
+    activate ui
+        ui -> ctrl : movePostIt()
+        activate ctrl
+            ctrl -> sbp : movePostIt()
+            note right of ctrl : sends the updated post-it\nto the server
+            ctrl -> ui : success
+        deactivate ctrl
+        ui -> user : success
+    deactivate ui
+@enduml
