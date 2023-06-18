@@ -46,7 +46,7 @@ public abstract class BoardHistory {
         this.boardTitle = BoardTitle.valueOf(dto.getBoard());
         this.row1 = dto.getPosition()[0];
         this.column1 = dto.getPosition()[1];
-        this.time = LocalDateTime.parse(dto.getTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+        this.time = LocalDateTime.parse(dto.getTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss"));
         if (this.type.equals(Type.CREATE)){
             this.prevContent = null;
             this.posContent = dto.getPosText();

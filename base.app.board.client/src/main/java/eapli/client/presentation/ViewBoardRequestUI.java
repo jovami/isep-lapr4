@@ -5,7 +5,9 @@ import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class ViewBoardRequestUI extends AbstractUI {
@@ -31,7 +33,7 @@ public class ViewBoardRequestUI extends AbstractUI {
             }
 
             ctrl.chooseBoard(selec.selectedElement());
-        } catch (ReceivedERRCode e) {
+        } catch (ReceivedERRCode | IOException | URISyntaxException e) {
             System.out.println(e.getMessage());
         }
         return false;

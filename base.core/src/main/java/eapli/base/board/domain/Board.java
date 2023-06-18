@@ -233,7 +233,7 @@ public class Board implements AggregateRoot<BoardTitle> {
                 sortedList.addAll(cellHistory);
             }
         }
-        sortedList.sort(Comparator.comparing(BoardHistory::getTime));
+        sortedList.sort(Comparator.comparing(BoardHistory::getTime).reversed());
         return (sortedList);
     }
 

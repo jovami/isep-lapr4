@@ -48,31 +48,10 @@ public class CreatePostItUI extends AbstractUI {
             System.out.printf("[Dimensions: %s (rows) x %s (columns)]\n",
                     list.get(index).first, list.get(index).second);
 
-            int out;
-            var row = 0;
-            var column = 0;
-            do {
-                out = 0;
-                row = Console.readInteger("-> Board row:");
-                if (row > Integer.parseInt(list.get(index).first) || row < 1) {
-                    System.out.println("Invalid Row");
-                    out++;
-                }
-                if (out == 0) {
-                    do {
-                        out = 0;
-                        column = Console.readInteger("-> Board column:");
-                        if (column > Integer.parseInt(list.get(index).second) || column < 1) {
-                            System.out.println("Invalid Column");
-                            out++;
-                        }
-
-                    } while (out != 0);
-                }
-            } while (out != 0);
+            int[] rowColumn = selectPositions(list, index);
 
 
-            String position = row + "," + column;
+            String position = rowColumn[0] + "," + rowColumn[1];
 
             if (!controller.isCellIdValid(position, Integer.parseInt(list.get(index).first), Integer.parseInt(list.get(index).second))) {
                 System.out.println("Invalid Cell Id");
@@ -115,6 +94,35 @@ public class CreatePostItUI extends AbstractUI {
             controller.close();
         }
         return false;
+    }
+
+    private int[] selectPositions(ArrayList<Pair<String, String>> list, int index) {
+        int out;
+        var row = 0;
+        var column = 0;
+        do {
+            out = 0;
+            row = Console.readInteger("-> Board row:");
+            if (row > Integer.parseInt(list.get(index).first) || row < 1) {
+                System.out.println("Invalid Row");
+                out++;
+            }
+            if (out == 0) {
+                do {
+                    out = 0;
+                    column = Console.readInteger("-> Board column:");
+                    if (column > Integer.parseInt(list.get(index).second) || column < 1) {
+                        System.out.println("Invalid Column");
+                        out++;
+                    }
+
+                } while (out != 0);
+            }
+        } while (out != 0);
+        int[] rowColumn = new int[2];
+        rowColumn[0] = row;
+        rowColumn[1] = column;
+        return rowColumn;
     }
 
     @Override

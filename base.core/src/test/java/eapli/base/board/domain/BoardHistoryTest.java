@@ -20,7 +20,7 @@ public class BoardHistoryTest {
         assertEquals(BoardTitle.valueOf("board1"), history.getBoardTitle());
         assertEquals("1", history.getRow1());
         assertEquals("1", history.getColumn1());
-        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")),
+        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")),
                 history.getTime());
         assertNull(history.getPrevContent());
         assertEquals("New content", history.getPosContent());
@@ -41,7 +41,7 @@ public class BoardHistoryTest {
         assertEquals(BoardTitle.valueOf("board1"), history.getBoardTitle());
         assertEquals("1", history.getRow1());
         assertEquals("1", history.getColumn1());
-        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")),
+        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")),
                 history.getTime());
         assertEquals("New content", history.getPrevContent());
         assertEquals("Old content", history.getPosContent());*/

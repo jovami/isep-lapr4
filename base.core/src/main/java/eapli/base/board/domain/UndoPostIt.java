@@ -30,7 +30,7 @@ public class UndoPostIt extends BoardHistory {
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
         this.column = Integer.parseInt(split[2].split(",")[1]);
-        this.time = LocalDateTime.parse(split[3], DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+        this.time = LocalDateTime.parse(split[3], DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss"));
         this.prevContent = split[4];
         this.posContent = split[5];
 
@@ -44,7 +44,7 @@ public class UndoPostIt extends BoardHistory {
     @Override
     public String toString() {
         return getType() + "\t" + board.title() + "\t" + row + "," + column + "\t" +
-                time.format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")) + "\t" + prevContent + "\t" + posContent;
+                time.format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")) + "\t" + prevContent + "\t" + posContent;
     }
 
 }

@@ -1,5 +1,6 @@
 package eapli.client.presentation;
 
+import eapli.board.shared.dto.BoardWriteAccessDTO;
 import eapli.client.application.UndoPostItLastChangeController;
 import eapli.board.shared.dto.BoardRowColDTO;
 import eapli.framework.io.util.Console;
@@ -45,7 +46,9 @@ public final class UndoPostItLastChangeUI extends AbstractUI {
 
             var selected = widget.selectedElement();
 
-            var row = Console.readInteger("-> Board row:");
+            int[] position = selectPositions(selected);
+
+            /*var row = Console.readInteger("-> Board row:");
             if (row > selected.rows() || row < 1) {
                 System.out.println("Invalid Row");
                 return false;
@@ -55,10 +58,10 @@ public final class UndoPostItLastChangeUI extends AbstractUI {
             if (col > selected.columns() || col < 1) {
                 System.out.println("Invalid Column");
                 return false;
-            }
+            }*/
 
             // Convert to 0-based indexing
-            var dto = new BoardRowColDTO(selected.title(), row - 1, col - 1);
+            var dto = new BoardRowColDTO(selected.title(), position[0] - 1, position[1] - 1);
 
             if (this.ctrl.undoChange(dto))
                 System.out.println("Undone successful");
@@ -71,6 +74,35 @@ public final class UndoPostItLastChangeUI extends AbstractUI {
         }
 
         return false;
+    }
+
+    private int[] selectPositions(BoardWriteAccessDTO selected) {
+        int out;
+        var row = 0;
+        var column = 0;
+        do {
+            out = 0;
+            row = Console.readInteger("-> Board row:");
+            if (row > selected.rows() || row < 1) {
+                System.out.println("Invalid Row");
+                out++;
+            }
+            if (out == 0) {
+                do {
+                    out = 0;
+                    column = Console.readInteger("-> Board column:");
+                    if (column > selected.columns() || column < 1) {
+                        System.out.println("Invalid Column");
+                        out++;
+                    }
+
+                } while (out != 0 || row > selected.rows());
+            }
+        } while (out != 0);
+        int[] rowColumn = new int[2];
+        rowColumn[0] = row;
+        rowColumn[1] = column;
+        return rowColumn;
     }
 
     @Override

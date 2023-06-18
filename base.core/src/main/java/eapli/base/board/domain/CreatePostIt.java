@@ -36,7 +36,7 @@ public class CreatePostIt extends BoardHistory {
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
         this.column = Integer.parseInt(split[2].split(",")[1]);
-        this.time = LocalDateTime.parse(split[3], DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+        this.time = LocalDateTime.parse(split[3], DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss"));
         this.content = split[4];
 
     }
@@ -51,7 +51,7 @@ public class CreatePostIt extends BoardHistory {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss");
         return getType()+"\t"+board.title()+"\t"+row+","+column+"\t"+formatter.format(time)+"\t"+content;
     }
 

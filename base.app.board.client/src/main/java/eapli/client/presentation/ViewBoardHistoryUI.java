@@ -55,7 +55,7 @@ public class ViewBoardHistoryUI extends AbstractUI {
     }
 
     public String header() {
-        return String.format("  %-6s | %-10s |  %-5s  |    %-13s | %-20s | %s",
+        return String.format("  %-6s | %-10s |  %-5s  |      %-13s  | %-20s | %s",
                 "Type", "Title", "Cell", "Alter Time", "Previous Text", "New Text");
     }
     @Override

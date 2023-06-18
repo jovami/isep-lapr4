@@ -152,7 +152,7 @@ public class Cell implements Serializable {
         sb.append(',');
         sb.append(column.getColumnId());
         sb.append('\t');
-        sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm")));
+        sb.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")));
 
         sb.append('\t');
 

@@ -46,7 +46,7 @@ public class ViewBoardRequestController {
         }
     }
 
-    public void chooseBoard(String board) throws ReceivedERRCode {
+    public void chooseBoard(String board) throws ReceivedERRCode, IOException, URISyntaxException {
         SBProtocol requestBoard = new SBProtocol();
         requestBoard.setCode(SBProtocol.CHOOSE_BOARD);
 
@@ -57,36 +57,20 @@ public class ViewBoardRequestController {
 
         requestBoard.setContentFromString(b.toString());
 
-        try {
-            requestBoard.send(outS);
+        requestBoard.send(outS);
 
-            SBProtocol receiveHtml = new SBProtocol(inS);
-            if (receiveHtml.getCode() == SBProtocol.GET_BOARD) {
+        SBProtocol receiveHtml = new SBProtocol(inS);
 
-                //board\0col\0row\0<cells info>
-                String d = receiveHtml.getContentAsString();
+        //board\0col\0row\0<cells info>
+        String d = receiveHtml.getContentAsString();
 
-                String[] dataContent = d.split("\0");
-                int rows = Integer.parseInt(dataContent[1]);
-                int cols = Integer.parseInt(dataContent[2]);
+        String[] dataContent = d.split("\0");
 
-                if ((rows * cols) != dataContent.length - HEADER_SIZE) {
-                    System.out.println("[WARNING] Data was corrupted when asking for board information");
-                }
 
-                ClientServerAjax.newBoardInfo(dataContent);
-                //setup request for boards on browser
-                openBrowser("bTitle=" + dataContent[0]);
-                sock.close();
-            } else {
-                System.out.println("Server Busy, try again later");
-            }
-        } catch (IOException ex) {
-            System.out.println("Error closing socket.");
-            System.out.println("Application aborted.");
-        } catch (URISyntaxException e) {
-            System.out.println("It was not possible to open the browser");
-        }
+        ClientServerAjax.newBoardInfo(dataContent);
+        //setup request for boards on browser
+        openBrowser("bTitle=" + dataContent[0]);
+        sock.close();
     }
 
     private void openBrowser(String urlQuery) throws IOException, URISyntaxException {

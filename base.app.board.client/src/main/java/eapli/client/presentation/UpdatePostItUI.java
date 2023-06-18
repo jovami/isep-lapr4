@@ -1,6 +1,7 @@
 package eapli.client.presentation;
 
 import eapli.board.shared.dto.BoardRowColDataDTO;
+import eapli.board.shared.dto.BoardWriteAccessDTO;
 import eapli.client.application.UpdatePostItController;
 import eapli.framework.io.util.Console;
 import eapli.framework.presentation.console.AbstractUI;
@@ -43,7 +44,8 @@ public class UpdatePostItUI extends AbstractUI {
 
             var selected = widget.selectedElement();
 
-            var row = Console.readInteger("-> Board row:");
+            int[] position = selectPositions(selected);
+            /*var row = Console.readInteger("-> Board row:");
             if (row > selected.rows() || row < 1) {
                 System.out.println("Invalid Row");
                 return false;
@@ -53,7 +55,7 @@ public class UpdatePostItUI extends AbstractUI {
             if (col > selected.columns() || col < 1) {
                 System.out.println("Invalid Column");
                 return false;
-            }
+            }*/
 
             var type = new SelectWidget<>("Content Type\n============", List.of("Text", "Image"));
             type.show();
@@ -74,7 +76,7 @@ public class UpdatePostItUI extends AbstractUI {
                     break;
             }
 
-            var dto = new BoardRowColDataDTO(selected.title(), row - 1, col - 1, content);
+            var dto = new BoardRowColDataDTO(selected.title(), position[0] - 1, position[1] - 1, content);
 
             if (this.ctrl.updatePostIt(dto))
                 System.out.println("Post-It updated successfully");
@@ -87,6 +89,35 @@ public class UpdatePostItUI extends AbstractUI {
         }
 
         return false;
+    }
+
+    private int[] selectPositions(BoardWriteAccessDTO selected) {
+        int out;
+        var row = 0;
+        var column = 0;
+        do {
+            out = 0;
+            row = Console.readInteger("-> Board row:");
+            if (row > selected.rows() || row < 1) {
+                System.out.println("Invalid Row");
+                out++;
+            }
+            if (out == 0) {
+                do {
+                    out = 0;
+                    column = Console.readInteger("-> Board column:");
+                    if (column > selected.columns() || column < 1) {
+                        System.out.println("Invalid Column");
+                        out++;
+                    }
+
+                } while (out != 0 || row > selected.rows());
+            }
+        } while (out != 0);
+        int[] rowColumn = new int[2];
+        rowColumn[0] = row;
+        rowColumn[1] = column;
+        return rowColumn;
     }
 
     @Override

@@ -19,6 +19,8 @@ public class BoardHistoryDTO {
     private final String prevText;
     @Getter
     private final String posText;
+    private final int pos0;
+    private final int pos1;
 
     @Override
     public boolean equals(Object o) {
@@ -42,6 +44,8 @@ public class BoardHistoryDTO {
         this.type = split[0];
         this.board = split[1];
         this.position = split[2].split(",");
+        pos0 = Integer.parseInt(position[0]) + 1;
+        pos1 = Integer.parseInt(position[1]) + 1;
         this.time = split[3];
 
         switch (type){
@@ -63,8 +67,8 @@ public class BoardHistoryDTO {
 
     @Override
     public String toString() {
-        return String.format("[%-6s] | %-10s | [%-2s,%-2s] | %-16s | %-20s | %s",
-                type, board, position[0], position[1], time, parseIfImage(prevText), parseIfImage(posText));
+        return String.format("[%-6s] | %-10s | [%-2s,%-2s] | %-19s | %-20s | %s",
+                type, board, pos0, pos1, time, parseIfImage(prevText), parseIfImage(posText));
     }
 
     private String parseIfImage(String content) {

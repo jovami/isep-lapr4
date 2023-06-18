@@ -31,9 +31,7 @@ public class ShareBoardHandler extends AbstractSBServerHandler {
     public void run() {
         try {
 
-            for (Client c : SBServerApp.activeAuths.values()) {
-                System.out.println("Client: "+c.getUserLoggedIn().username().toString());
-            }
+
             SystemUser owner = SBServerApp.activeAuths.get(authToken).getUserLoggedIn();
 
             StringBuilder builder = new StringBuilder();

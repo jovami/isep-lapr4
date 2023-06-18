@@ -24,9 +24,9 @@ public class ShareBoardController {
     private final Socket sock;
 
     public ShareBoardController(InetAddress serverIp, int serverPort) throws IOException {
-            sock = new Socket(serverIp, serverPort);
-            inS = new DataInputStream(sock.getInputStream());
-            outS = new DataOutputStream(sock.getOutputStream());
+        sock = new Socket(serverIp, serverPort);
+        inS = new DataInputStream(sock.getInputStream());
+        outS = new DataOutputStream(sock.getOutputStream());
     }
 
     public List<String> listBoardsUserOwns() throws IOException, ReceivedERRCode {
@@ -82,13 +82,11 @@ public class ShareBoardController {
     }
 
     public void sockClose() {
-        do {
-            try {
-                sock.close();
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } while (true);
+
+        try {
+            sock.close();
+        } catch (IOException ignored) {
+        }
+
     }
 }

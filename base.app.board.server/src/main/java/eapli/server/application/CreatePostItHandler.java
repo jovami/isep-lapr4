@@ -67,7 +67,7 @@ public class CreatePostItHandler extends AbstractSBServerHandler {
             alterBoard = arr[0];
             alterPosition = arr[1];
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss");
             alterTime = LocalDateTime.now().format(formatter);
 
             alterText = arr[2];

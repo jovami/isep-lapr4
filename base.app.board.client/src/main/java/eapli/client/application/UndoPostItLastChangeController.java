@@ -65,7 +65,7 @@ public final class UndoPostItLastChangeController {
     public void closeSocket() {
         try {
             this.sock.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 }

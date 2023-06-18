@@ -25,7 +25,7 @@ public class ChangePostIt extends BoardHistory {
     }
 
     public void parseStr(String string){
-        var fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
+        var fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss");
         String[] split = string.split("\t");
         this.board = BoardTitle.valueOf(split[1]);
         this.row = Integer.parseInt(split[2].split(",")[0]);
@@ -42,7 +42,7 @@ public class ChangePostIt extends BoardHistory {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss");
         return getType() + "\t"
                 + board.title() + "\t"
                 + row + "," + column + "\t"

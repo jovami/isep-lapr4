@@ -43,18 +43,16 @@ public class AuthRequestController {
 
     }
 
-    public void closeSock(){
+    public void closeSock() {
         closeSocket(this.sock);
     }
+
     public static void closeSocket(Socket socket) {
-        boolean closed;
-        do {
-            try {
-                socket.close();
-                closed = true;
-            } catch (IOException e) {
-                closed = false;
-            }
-        } while (!closed);
+
+        try {
+            socket.close();
+        } catch (IOException ignored) {
+        }
+
     }
 }
