@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The first line in an HTTP (Hypertext Transfer Protocol) message ..."
+
+    ANSWER 1: "always contains an identification of the method being used (e.g. GET, PUT, POST, DELETE)"
+    ANSWER 2: "establishes immediately the amount of bytes the message is carrying (Content-Length)"
+    ANSWER 3: "may or not contain an identifier of the HTTP protocol version (e.g. HTTP/1.1)"
+    ANSWER 4: "allows the immediate identification if the message is an HTTP request or an HTTP response"
+
+    SOLUTION 1: 4 [5.0]
+}

@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The SMTP (Simple Mail Transfer Protocol) protocol is used for communications between ..."
+
+    ANSWER 1: "the MUA (Mail User Agent) and the POP3 (Post Office Protocol version 3) servers"
+    ANSWER 2: "distinct MTA (Mail Transfer Agent), an MTA can take the client role or the server role"
+    ANSWER 3: "the MUA (Mail User Agent) and IMAP4 (Internet Message Access Protocol version 4) servers"
+    ANSWER 4: "the MTA (Mail Transfer Agent) and the local mailboxes to deposit messages"
+
+    SOLUTION 1: 2 [5.0]
+}

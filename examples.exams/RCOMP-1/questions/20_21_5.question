@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "In a local Ethernet (IEEE802.3/ISO8802-3) network, the Ethernet switches use MAC tables to..."
+
+    ANSWER 1: "register associations between 48 bits Ethernet addresses and 32 bits IPv4 addresses"
+    ANSWER 2: "avoid that collisions occur, making the CSMA/CD protocol unnecessary"
+    ANSWER 3: "temporarily store packets (frames) when they can’t be emitted immediately"
+    ANSWER 4: "emit each packet (frame) only on the output port where it is needed"
+
+    SOLUTION 1: 4 [5.0]
+}

@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "In the DNS (Domain Name System) names resolution system, NS (Name Server) type records ..."
+
+    ANSWER 1: "are also commonly known as Glue Records and they represent the root name servers"
+    ANSWER 2: "are vital, DNS domains system can’t be implemented without recurring to this type of record"
+    ANSWER 3: "must be unique in each domain, as it happens with SOA (Start Of Authority) records"
+    ANSWER 4: "contain IPv4 addresses and IPv6 addresses of DNS name servers"
+
+    SOLUTION 1: 2 [5.0]
+}

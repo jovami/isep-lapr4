@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The error control of the type ..."
+
+    ANSWER 1: "Continuous ARQ is an example of Forward Error Correction (FEC)"
+    ANSWER 2: "Automatic Repeat Request (ARQ) is greatly affected by network latency, especially in stop & wait mode"
+    ANSWER 3: "Forward Error Correction (FEC), requires the receiver to ask the sender to resend data whenever an error occurs"
+    ANSWER 4: "Backward Error Correction (BEC), allows the receiver to autonomously correct errors without involving the sender"
+
+    SOLUTION 1: 2 [5.0]
+}

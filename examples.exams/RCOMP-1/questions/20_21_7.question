@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The Cable Modem Termination System (CMTS) is ..."
+
+    ANSWER 1: "a completely passive equipment that aggregates a set of cables"
+    ANSWER 2: "used to provide ADSL (Asymmetric Digital Subscriber Line) connections to subscribers"
+    ANSWER 3: "a piece of equipment usually located inside the subscriber’s house"
+    ANSWER 4: "a piece of equipment simultaneously serving many subscribers, and having one MODEM for each subscriber"
+
+    SOLUTION 1: 4 [5.0]
+}

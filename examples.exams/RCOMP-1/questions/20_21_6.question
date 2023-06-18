@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The cells of ATM (Asynchronous Transfer Mode) networks..."
+
+    ANSWER 1: "carry an amount of useful data (payload) clearly bigger than the carried by typical Ethernet packets (frames)"
+    ANSWER 2: "have a variable overhead, between 5% and 10%"
+    ANSWER 3: "don’t guarantee the data delivery, however if data is delivered the order (sequence) is guaranteed"
+    ANSWER 4: "include mechanisms to detect errors on transported data (payload)"
+
+    SOLUTION 1: 3 [5.0]
+}

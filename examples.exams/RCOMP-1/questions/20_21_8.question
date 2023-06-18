@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "One characteristic of the header of an IPv4 (Internet Protocol version 4) packet is ..."
+
+    ANSWER 1: "having a field, named TTL (Time to Live), holding date/hour tag"
+    ANSWER 2: "having a field that allows error detection over the transported data (payload)"
+    ANSWER 3: "containing the destination IPv4 node address (where the packet is to be delivered), but not the source node address"
+    ANSWER 4: "being make of a variable number of bytes, however, always a multiple of 4 bytes"
+
+    SOLUTION 1: 4 [5.0]
+}

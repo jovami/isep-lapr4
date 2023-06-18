@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The EMI (electromagnetic interference) phenomena..."
+
+    ANSWER 1: "is the main cause for the internal noise found in data transmission mediums"
+    ANSWER 2: "only affects analogue signals, digital signals are immune to the harmful effects of this phenomenon"
+    ANSWER 3: "is the cause of ISI (Inter Symbol Interference)"
+    ANSWER 4: "in no way affects data transmissions over optical fibre"
+
+    SOLUTION 1: 4 [5.0]
+}

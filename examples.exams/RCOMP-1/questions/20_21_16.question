@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "SNMP (Simple Network Management Protocol) agents may be used by monitoring systems ..."
+
+    ANSWER 1: "for each SNMP agent being used a distinct monitoring system is required"
+    ANSWER 2: "in this context, the most common operation model is active checking"
+    ANSWER 3: "for that purpose, monitoring system send HTTP requests and agents return HTTP responses"
+    ANSWER 4: "in this context, the monitoring system sends SNMP SetRequest messages"
+
+    SOLUTION 1: 2 [5.0]
+}

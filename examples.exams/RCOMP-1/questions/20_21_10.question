@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The SLAAC (Stateless Address Auto Configuration) mechanism ..."
+
+    ANSWER 1: "never in any case uses the DHCPv6 service"
+    ANSWER 2: "may or not be used to establish the IPv6 configuration, it all depends on the received Router Advertisement message"
+    ANSWER 3: "only can be used if at the local networks there is at least one DHCPv6 server"
+    ANSWER 4: "aims at assigning a link-local unicast address to the node"
+
+    SOLUTION 1: 2 [5.0]
+}

@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "In the HTTP 1.1 protocol, the header field ..."
+
+    ANSWER 1: "User-Agent contains the name of the HTTP server emitting the message, for instance Apache/2.4.9"
+    ANSWER 2: "Content-Type may exist in HTTP responses, never in HTTP requests"
+    ANSWER 3: "Connection has no effect whatsoever, doesn’t affect the behaviour of clients or servers"
+    ANSWER 4: "Authorization may exist in HTTP requests), never in HTTP responses"
+
+    SOLUTION 1: 4 [5.0]
+}

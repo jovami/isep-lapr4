@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "In the Berkeley Sockets API, when a TCP (Transmission Control Protocol) client ..."
+
+    ANSWER 1: "successfully establishes a TCP connection with the server, a new socket is create at the client application"
+    ANSWER 2: "receives data through the TCP connection, it is not required to previously know how many bytes it should read"
+    ANSWER 3: "intends to establish a TCP connection, it must know the node address and the port number of the server"
+    ANSWER 4: "sends data through a TCP connection, it has no guarantee whatsoever that that data will be delivered"
+
+    SOLUTION 1: 3 [5.0]
+}

@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "When the TCP/IP protocols stack is compared with the OSI reference model (MR-OSI), we can say that..."
+
+    ANSWER 1: "the IP protocol (Internet Protocol) is located at the transport layer (MR-OSI layer 4)"
+    ANSWER 2: "in the TCP/IP protocol stack there is no physical link layer (MR-OSI layer 1)"
+    ANSWER 3: "the TCP (Transmission Control Protocol) protocol is located at the logical link layer (MS-OSI layer 2)"
+    ANSWER 4: "in the TCP/IP protocol stack there is no network layer (MR-OSI layer 3)"
+
+    SOLUTION 1: 2 [5.0]
+}

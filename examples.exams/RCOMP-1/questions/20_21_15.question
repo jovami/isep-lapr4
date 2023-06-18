@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "In the SSL/TLS (Secure Sockets Layer/Transport Layer Security) protocol, the Client Hello message ..."
+
+    ANSWER 1: "contains a list of cypher suites for the server so select one of them"
+    ANSWER 2: "always contains the client’s public key certificate"
+    ANSWER 3: "it’s the first message sent by the server to the client"
+    ANSWER 4: "is sent in response to the Server Hello message"
+
+    SOLUTION 1: 1 [5.0]
+}

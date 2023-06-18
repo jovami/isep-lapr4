@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The ICMP (Internet Control Message Protocol) messages ..."
+
+    ANSWER 1: "of time exceeded type indicate the maximum time specified in seconds by the sender has been exceeded"
+    ANSWER 2: "of destination unreachable type indicates a packet has not reached the intended destination"
+    ANSWER 3: "are transported by UDP (User Datagram Protocol) packets, the port number 1 is reserved for that purpose"
+    ANSWER 4: "of echo request and echo reply types are used by the traceroute command to establish the path being followed by packets"
+
+    SOLUTION 1: 2 [5.0]
+}

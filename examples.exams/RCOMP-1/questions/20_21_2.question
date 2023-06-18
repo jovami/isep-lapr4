@@ -1,0 +1,11 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+    DESCRIPTION: "The QAM (Quadrature Amplitude Modulation) techniques..."
+
+    ANSWER 1: "have the drawback of producing a constant signal during transmission of a sequence of symbols one"
+    ANSWER 2: "produce analogue signals where digital data is represented by amplitude values and phase changes"
+    ANSWER 3: "are actually a combination of PSK (Phase Shift Keying) and FSK (Frequency Shift Keying) techniques"
+    ANSWER 4: "can be used on baseband-type transmission media, but never on passband-type transmission media"
+
+    SOLUTION 1: 2 [5.0]
+}
