@@ -93,6 +93,21 @@ public class Board implements AggregateRoot<BoardTitle> {
         return this.getCell(row, column).updatePostIt(this, data, user);
     }
 
+    public Optional<String> movePostIt(int rowFrom, int colFrom, int rowTo, int colTo, SystemUser user) {
+        synchronized (this.cells) {
+            var idxFrom = (rowFrom - 1) * this.numColumns + (colFrom - 1);
+            var idxTo = (rowTo - 1) * this.numColumns + (colTo - 1);
+            if (idxFrom < 0 || idxFrom >= this.cells.size() || idxTo < 0 || idxTo >= this.cells.size())
+                return Optional.empty(); // TODO: report invalid index
+        }
+
+        synchronized (getCell(rowFrom, colFrom)) {
+            synchronized (getCell(rowTo, colTo)) {
+                return getCell(rowFrom, colFrom).movePostIt(this, getCell(rowTo, colTo), user);
+            }
+        }
+    }
+
 
     public Optional<String> undoChangeOnPostIt(int row, int column, SystemUser user) {
         synchronized (this.cells) {
@@ -172,15 +187,6 @@ public class Board implements AggregateRoot<BoardTitle> {
     public void addColumnIds(int lastRow) {
         for (int i = 0; i < lastRow; i++) {
             boardColumnList.add(new BoardColumn(i));
-        }
-    }
-
-    public boolean movePostIt(int rowFrom, int colFrom, int rowTo, int colTo) {
-
-        synchronized (getCell(rowFrom, colFrom)) {
-            synchronized (getCell(rowTo, colTo)) {
-                return getCell(rowFrom, colFrom).movePostIt(this, getCell(rowTo, colTo));
-            }
         }
     }
 

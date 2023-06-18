@@ -15,7 +15,7 @@ public class MovePostItAjax implements Runnable {
     }
 
     public void run() {
-        var postItInfo =  protocol.getContentAsString().split("\t");
+        var postItInfo = protocol.getContentAsString().split("\t");
 
         int rowFrom = Integer.parseInt(postItInfo[1]);
         int colFrom = Integer.parseInt(postItInfo[2]);

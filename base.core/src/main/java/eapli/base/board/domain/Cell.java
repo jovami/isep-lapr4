@@ -46,9 +46,9 @@ public class Cell implements Serializable {
     }
 
     public synchronized boolean addPostIt(Board board, PostIt postIt) {
-        if (hasPostIt()) {
+        if (hasPostIt())
             return false;
-        }
+
         this.postIt = postIt;
 
         formatString(board, null, postIt.getData(), Type.CREATE);
@@ -65,27 +65,28 @@ public class Cell implements Serializable {
         return true;
     }
 
+    public synchronized Optional<String> movePostIt(Board board, Cell cellTo, SystemUser user) {
+        if (!this.hasPostIt() || !this.postIt.getOwner().sameAs(user))
+            return Optional.empty();
+
+        if (cellTo.hasPostIt() || !this.postIt.getOwner().sameAs(user))
+            return Optional.empty();
+
+        if (cellTo.addPostIt(board, this.postIt) && this.removePostIt(board))
+            return Optional.of(cellTo.postIt.getData());
+
+        return Optional.empty();
+    }
+
     public synchronized boolean removePostIt(Board board) {
         if (!hasPostIt())
             return false;
+
         var tmp = this.postIt;
         this.postIt = null;
 
-        formatString(board, null, tmp.getData(), Type.REMOVE);
+        formatString(board, this.history.getFirst(), tmp.getData(), Type.REMOVE);
         return true;
-    }
-
-    public synchronized boolean movePostIt(Board board, Cell cellTo) {
-        if (!hasPostIt())
-            return false;
-
-        if (cellTo.hasPostIt())
-            return false;
-
-        // FIXME: addPostIt() before formatString()
-        formatString(board, this.history.getFirst(), null, Type.UPDATE);
-
-        return cellTo.addPostIt(board, this.postIt) && this.removePostIt(board);
     }
 
     public synchronized Optional<String> undoPostItChange(Board board, SystemUser user) {

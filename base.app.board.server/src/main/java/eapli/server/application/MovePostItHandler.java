@@ -3,66 +3,78 @@ package eapli.server.application;
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
+import eapli.board.shared.dto.BoardFromToDTOEncoder;
+import eapli.board.shared.dto.BoardWriteAccessDTOEncoder;
 import eapli.server.SBServerApp;
-import eapli.server.application.newChangeEvent.NewChangeEvent;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
+import eapli.server.application.newChangeEvent.NewChangeEvent;
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class MovePostItHandler extends AbstractSBServerHandler{
-    private final ShareBoardService svcBoard;
-    private final PostItService svcPostIt;
     private final EventPublisher publisher;
 
     public MovePostItHandler(Socket socket, SBProtocol authRequest) {
-        super(socket,authRequest);
-        this.svcBoard = new ShareBoardService();
-        this.svcPostIt = new PostItService();
+        super(socket, authRequest);
         this.publisher = InProcessPubSub.publisher();
     }
 
+    private void sendBoardsUserCanWrite() throws IOException {
+        var user = SBServerApp.activeAuths.get(authToken)
+                .getUserLoggedIn();
+
+        var boards = new ShareBoardService().boardsUserCanWrite(user);
+        var body = new BoardWriteAccessDTOEncoder().encode(boards);
+
+        var reply = new SBProtocol();
+        reply.setContentFromString(body);
+        reply.send(outS);
+    }
+
+    @Override
     public void run() {
         try {
-            var inS = new DataInputStream(sock.getInputStream());
-            var outS = new DataOutputStream(sock.getOutputStream());
+            this.sendBoardsUserCanWrite();
 
-            var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+            var request = new SBProtocol(inS);
 
-            var user = SBServerApp.activeAuths.get(authToken).getUserLoggedIn();
-            var boards = svcBoard.boardsUserCanWrite(user);
+            var decoder = new BoardFromToDTOEncoder();
+            var boardInfo = decoder.decode(request.getContentAsString());
 
-            var responseSent = new SBProtocol();
-            responseSent.setContentFromString(buildBoardString(boards));
-            responseSent.send(outS);
+            var title = boardInfo.boardName();
 
-            var receivedText = new SBProtocol(inS);
-            var arr = receivedText.getContentAsString().split("\t");
+            var rowFrom = boardInfo.rowFrom() + 1;
+            var colFrom = boardInfo.columnFrom() + 1;
+            var rowTo = boardInfo.rowTo() + 1;
+            var colTo = boardInfo.columnTo() + 1;
 
-            var board = SBServerApp.boards.get(BoardTitle.valueOf(arr[0]));
-            if (board == null)
-                throw new ReceivedERRCode("Board not found");
-
-            int rowFrom = Integer.parseInt(arr[1]);
-            int columnFrom = Integer.parseInt(arr[2]);
-            int rowTo = Integer.parseInt(arr[3]);
-            int columnTo = Integer.parseInt(arr[4]);
-
-            if (!svcPostIt.movePostIt(board, rowFrom, columnFrom, rowTo, columnTo, user)) {
-                var protocol = new SBProtocol();
-                protocol.setCode(SBProtocol.ERR);
-                protocol.setContentFromString("Error moving Post-It");
-                protocol.send(outS);
+            var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
+            if (board == null) {
+                var err = new SBProtocol();
+                err.setCode(SBProtocol.ERR);
+                err.send(this.outS);
                 return;
             }
 
-            publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
+            var user = SBServerApp.activeAuths.get(authToken).getUserLoggedIn();
+
+            var data = board.movePostIt(rowFrom, colFrom, rowTo, colTo, user);
+            if (data.isEmpty()) {
+                var err = new SBProtocol();
+                err.setCode(SBProtocol.ERR);
+                err.send(this.outS);
+                return;
+            }
+
+            var message = String.format("%s\t%d\t%d\t%d\t%d", title, rowFrom, colFrom, rowTo, colTo);
+            var protocol = new SBProtocol();
+            protocol.setCode(SBProtocol.MOVE_POST_IT);
+            protocol.setContentFromString(message);
+
+            this.publisher.publish(new NewChangeEvent(title, protocol));
 
             var reply = new SBProtocol();
             reply.setCode(SBProtocol.ACK);
@@ -70,42 +82,5 @@ public class MovePostItHandler extends AbstractSBServerHandler{
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String createString(String alterBoard, int row, int column, String alterText, String alterTime) {
-        return "CREATE"
-                + "\t"
-                + alterBoard
-                + "\t"
-                + row + "," + column
-                + "\t"
-                + alterTime
-                + "\t"
-                + alterText;
-    }
-
-    private String removeString(String alterBoard, int row, int column, String alterText, String alterTime) {
-        return "REMOVE"
-                + "\t"
-                + alterBoard
-                + "\t"
-                + row + "," + column
-                + "\t"
-                + alterTime
-                + "\t"
-                + alterText;
-    }
-
-    public String buildBoardString(Iterable<Board> boards) {
-        var builder = new StringBuilder();
-        for (var b : boards) {
-            builder.append(b.getBoardTitle().title());
-            builder.append("\t");
-            builder.append(b.getNumRows());
-            builder.append("\t");
-            builder.append(b.getNumColumns());
-            builder.append(' ');
-        }
-        return builder.toString();
     }
 }

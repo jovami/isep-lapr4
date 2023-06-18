@@ -101,10 +101,10 @@ public class CellTest {
         cell.addPostIt(board, postIt);
 
         // Act
-        boolean moved = cell.movePostIt(board, destinationCell);
+        var moved = cell.movePostIt(board, destinationCell, user1);
 
         // Assert
-        assertTrue(moved);
+        assertEquals(destinationCell.getPostIt().getData() , moved.orElseThrow());
         assertFalse(cell.hasPostIt());
         assertTrue(destinationCell.hasPostIt());
         assertEquals(postIt, destinationCell.getPostIt());
@@ -116,10 +116,10 @@ public class CellTest {
         Cell destinationCell = new Cell(new BoardRow(2), new BoardColumn(2));
 
         // Act
-        boolean moved = cell.movePostIt(board, destinationCell);
+        var moved = cell.movePostIt(board, destinationCell, user1);
 
         // Assert
-        assertFalse(moved);
+        assertFalse(moved.isPresent());
         assertFalse(cell.hasPostIt());
         assertFalse(destinationCell.hasPostIt());
     }
@@ -132,10 +132,10 @@ public class CellTest {
         destinationCell.addPostIt(board, new PostIt(user1, "OtherPostItData"));
 
         // Act
-        boolean moved = cell.movePostIt(board, destinationCell);
+        var moved = cell.movePostIt(board, destinationCell, user1);
 
         // Assert
-        assertFalse(moved);
+        assertFalse(moved.isPresent());
         assertTrue(cell.hasPostIt());
         assertEquals(postIt, cell.getPostIt());
         assertTrue(destinationCell.hasPostIt());

@@ -1,0 +1,158 @@
+@startuml
+interface SBEncoder {
+    + fieldSeparator(): CharSequence
+    + multiSeparator(): CharSequence
+
+    + encode(T): String
+    + encode(Iterable<T>): String
+
+    + decode(String): U
+    + decodeMany(String): List<U>
+}
+
+
+interface SBClientSideEncoder {
+
+    + encode(T): String
+    + encode(Iterable<T>): String
+
+    + decode(String): T
+    + decodeMany(String): List<T>
+}
+
+class BoardFromToDTO {
+    - boardName: String
+    - rowFrom: Integer
+    - colFrom: Integer
+    - rowTo: Integer
+    - colTo: Integer
+}
+
+class BoardFromToDTOEncoder {
+
+    + encode(BoardRowColDTO): String
+    + encode(Iterable<BoardRowColDTO>): String
+
+    + decode(String): BoardFromToDTO
+    + decodeMany(String): List<BoardFromToDTO>
+}
+
+class BoardWriteAccessDTO {
+
+    - boardName: String
+    - row: Integer
+    - column: Integer
+}
+
+class BoardWriteAccessDTOEncoder {
+
+    + encode(Board): String
+    + encode(Iterable<Board>): String
+
+    + decode(String): BoardWriteAccessDTO
+    + decodeMany(String): List<BoardWriteAccessDTO>
+}
+
+
+class SBProtocol {
+}
+
+class MovePostItController <<ClientSide>> {
+}
+
+
+class Board {
+    - numRows: int
+    - numColumns: int
+    --
+    + movePostIt(rowFrom: int, colFrom: int, rowTo: int, colTo: int, user: SystemUser): Optional<String>
+}
+
+class Cell {
+    - row: BoardRow
+    - column: BoardColumn
+    - history: Deque<BoardHistory>
+    - postIt: PostIt
+    --
+    + hasPostIt(): boolean
+    + movePostIt(board: Board, cellTo: Cell, user: SystemUser): Optional<String>
+}
+
+class PostIt {
+    - content: String
+    - postItOwner: SystemUser
+    --
+    + alterPostItData(String newData): String
+    + getContent(): String
+}
+
+abstract class BoardHistory {
+    - type: String
+    - board: Board
+    - position: String
+    - time: LocalDateTime
+}
+
+class CreatePostIt {
+    --
+    + CreatePostIt(position: String)
+}
+
+class ChangePostIt {
+    --
+    + ChangePostIt(position: String)
+}
+class UndoPostIt {
+    --
+    + UndoPostIt(position: String, prevContent: String)
+}
+
+class SystemUser {
+}
+
+class MovePostItHandler <<ServerSide>> {
+}
+
+class ShareBoardService <<Service>> {
+    + boardsUserCanWrite(user: SystemUser): Collection<Board>
+}
+
+interface EventPublisher <<PubSub>> {
+    + publish(event: DomainEvent): void
+}
+
+MovePostItController ..up> BoardFromToDTOEncoder
+MovePostItController ..up> BoardFromToDTO
+MovePostItController ..up> BoardWriteAccessDTOEncoder
+MovePostItController ..up> BoardWriteAccessDTO
+
+MovePostItController ..right> SBProtocol
+
+SBEncoder <|-- SBClientSideEncoder
+
+SBEncoder <|.. BoardFromToDTOEncoder
+BoardFromToDTOEncoder ..> BoardFromToDTO
+
+SBClientSideEncoder <|.. BoardWriteAccessDTOEncoder
+BoardWriteAccessDTOEncoder ..> BoardWriteAccessDTO
+
+MovePostItHandler ..up> BoardFromToDTOEncoder
+MovePostItHandler ..up> BoardFromToDTO
+MovePostItHandler ..up> BoardWriteAccessDTOEncoder
+MovePostItHandler ..up> BoardWriteAccessDTO
+
+MovePostItHandler ..left> SBProtocol
+
+MovePostItHandler ..> Board
+MovePostItHandler ..> EventPublisher
+MovePostItHandler ..> ShareBoardService
+
+Board *-- Cell
+Board o-- SystemUser
+Cell o-- PostIt
+Cell *-- BoardHistory
+
+BoardHistory <|-- UndoPostIt
+BoardHistory <|-- CreatePostIt
+BoardHistory <|-- ChangePostIt
+@enduml
