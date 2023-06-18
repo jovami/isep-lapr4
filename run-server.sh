@@ -6,4 +6,8 @@
 
 #REM call the java VM, e.g,
 #java -cp $BASE_CP eapli.board.server.SBServerApp "$@"
-exec java -jar base.app.board.server/target/base.app.board.server-1.4.0-SNAPSHOT.jar "$@"
+
+PORT="${1:-9000}"
+shift
+
+exec java -jar base.app.board.server/target/base.app.board.server-1.4.0-SNAPSHOT.jar "${PORT}" "$@"

@@ -27,21 +27,30 @@
     </properties>
 
     <modules>
-        <!--Eapli-base-->
+        <!-- eapli base -->
+        <module>base.app.common.console</module>
+        <module>base.bootstrappers</module>
+        <module>base.core</module>
+
+        <!-- apps -->
         <module>base.app.manager.console</module>
         <module>base.app.student.console</module>
         <module>base.app.teacher.console</module>
-        <module>base.app.common.console</module>
         <module>base.app.bootstrap</module>
-        <module>base.bootstrappers</module>
-        <module>base.core</module>
+
+        <!-- persistence -->
         <module>base.persistence.impl</module>
+
+        <!-- grammar -->
         <module>jovami.grammar.impl</module>
+
+        <!-- shared boards -->
         <module>base.app.board.web</module>
-        <!-- CI builds only -->
-        <module>ecourse.util.ci</module>
         <module>base.app.board.server</module>
         <module>base.app.board.client</module>
+
+        <!-- CI builds only -->
+        <module>ecourse.util.ci</module>
     </modules>
 
     <dependencies>
