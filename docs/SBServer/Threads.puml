@@ -1,0 +1,12 @@
+@startuml
+
+Client -> Server: do a change onto a board
+
+note right: start a new Thread \nfor each client
+Server --> Client: send the change to all active clients
+Server --> Client:
+Server --> Client:
+
+Client -> Browser: each client Updates Browser
+
+@enduml

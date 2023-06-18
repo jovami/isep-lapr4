@@ -1,0 +1,70 @@
+@startuml
+
+class AcceptRejectMeetingRequestUI {
+  - SystemUser: SystemUser
+  + create(): void
+  + showInvitedMeetings(): void
+  + selectMeetingRequest(): void
+}
+
+class AcceptRejectMeetingRequestController {
+  + showInvitedMeetings(): List<Meeting>
+  + accept(meeting: Meeting): void
+  + deny(meeting: Meeting): void
+}
+
+class AcceptRejectMeetingRequestService {
+  + acceptMeetingRequest(participant: MeetingParticipant): void
+  + rejectMeetingRequest(participant: MeetingParticipant): void
+}
+
+class MeetingRequestDTOMapper {
+  + toDTO(meetings: List<Meeting>): List<MeetingRequestDTO>
+}
+
+class MeetingRequestDTO {
+  - meeting: Meeting
+  - participant: SystemUser
+  - status: MeetingParticipantStatus
+  + getMeeting(): Meeting
+  + getParticipant(): SystemUser
+  + getStatus(): MeetingParticipantStatus
+}
+
+class MeetingParticipant {
+  + accept(): void
+  + deny(): void
+}
+
+class MeetingParticipantRepository {
+  + findMeetingParticipantBySystemUserAndMeeting(SystemUser: SystemUser, meeting: Meeting): MeetingParticipant
+  + save(meetingParticipant: MeetingParticipant): void
+}
+
+class SystemUser {
+ 
+}
+
+class Meeting {
+ 
+}
+
+class MeetingParticipantStatus {
+   - ACCEPTED
+   - REJECTED
+   - PENDING
+}
+
+AcceptRejectMeetingRequestUI --> AcceptRejectMeetingRequestController
+AcceptRejectMeetingRequestController --> AcceptRejectMeetingRequestService
+AcceptRejectMeetingRequestController --> MeetingRequestDTOMapper
+
+AcceptRejectMeetingRequestService --> MeetingParticipantRepository
+MeetingRequestDTOMapper --> MeetingRequestDTO
+MeetingParticipant --> MeetingParticipantStatus
+MeetingParticipant --> SystemUser
+MeetingRequestDTO --> Meeting
+MeetingRequestDTO --> MeetingParticipant
+
+
+@enduml

@@ -71,9 +71,35 @@ parsing the information of the board history, this class will be called **BoardH
 
 ### 4.4. Tests
 
-In order to accurately test this functionality, we need to interact with the Aggregate Root repositories, meaning unit tests aren't the best approach here.
+    @Test
+    public void testCreateGetType() {
+    BoardHistory history = new CreatePostIt();
+    String type = history.getType();
 
-Instead, integration tests should be performed.
+        assertEquals("CREATE", type);
+    }
+    @Test
+    public void testUndoGetType() {
+        BoardHistory history = new UndoPostIt();
+        String type = history.getType();
+
+        assertEquals("UNDO", type);
+    }
+    @Test
+    public void testRemoveGetType() {
+        BoardHistory history = new RemovePostIt();
+        String type = history.getType();
+
+        assertEquals("REMOVE", type);
+    }
+
+    @Test
+    public void testUpdateGetType() {
+        BoardHistory history = new ChangePostIt();
+        String type = history.getType();
+
+        assertEquals("UPDATE", type);
+    }
 
 ## 5. Implementation
 
@@ -83,6 +109,15 @@ Instead, integration tests should be performed.
     
     public Optional<T> ofIdentity(final I id) {
         return this.matchOne("e." + this.identityFieldName() + " = :id", "id", id);
+    }
+
+    public Iterable<Board> listBoardsUserParticipatesNotArchived(SystemUser user) {
+        final var query = entityManager().createQuery(
+                "SELECT e.board FROM BoardParticipant e WHERE ((e.participant = :user And e.board.state <> 'ARCHIVED' " +
+                "And (e.permission = 'READ' OR e.permission = 'WRITE')))",
+            Board.class);
+        query.setParameter("user", user);
+        return query.getResultList();
     }
 
 

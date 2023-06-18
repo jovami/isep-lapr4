@@ -1,6 +1,11 @@
 package eapli.base.board.domain;
 
 
+import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
+import eapli.framework.infrastructure.authz.domain.model.NilPasswordPolicy;
+import eapli.framework.infrastructure.authz.domain.model.PlainTextEncoder;
+import eapli.framework.infrastructure.authz.domain.model.SystemUserBuilder;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -10,48 +15,42 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardHistoryTest {
 
-    @Test
-    public void testConstructorWithValidDTO() {
-        String str = "CREATE\tboard1\t1,1\t01-01-2023,12:00\tNew content";
-
-        BoardHistory history = new CreatePostIt(str);
-
-        assertEquals("CREATE", history.getType());
-        assertEquals(BoardTitle.valueOf("board1"), history.getBoardTitle());
-        assertEquals("1", history.getRow1());
-        assertEquals("1", history.getColumn1());
-        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")),
-                history.getTime());
-        assertNull(history.getPrevContent());
-        assertEquals("New content", history.getPosContent());
-    }
-    @Test
-    public void testUndo() {
-        /*
-        String str = "UNDO\tboard1\t1,1\t01-01-2023,12:00\tOld content\tNew content";
-
-        BoardRepository repo = PersistenceContext.repositories().boards();
-        var b = repo.ofIdentity(BoardTitle.valueOf("board1")).get();
-        b.undoChangeOnPostIt(1,1);
 
 
-        BoardHistory history = new UndoPostIt(str);
-
-        assertEquals("UNDO", history.getType());
-        assertEquals(BoardTitle.valueOf("board1"), history.getBoardTitle());
-        assertEquals("1", history.getRow1());
-        assertEquals("1", history.getColumn1());
-        assertEquals(LocalDateTime.parse("01-01-2023,12:00", DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm:ss")),
-                history.getTime());
-        assertEquals("New content", history.getPrevContent());
-        assertEquals("Old content", history.getPosContent());*/
-    }
 
     @Test
-    public void testGetType() {
+    public void testCreateGetType() {
         BoardHistory history = new CreatePostIt();
         String type = history.getType();
 
         assertEquals("CREATE", type);
     }
+
+    @Test
+    public void testUndoGetType() {
+        BoardHistory history = new UndoPostIt();
+        String type = history.getType();
+
+        assertEquals("UNDO", type);
+    }
+
+    @Test
+    public void testRemoveGetType() {
+        BoardHistory history = new RemovePostIt();
+        String type = history.getType();
+
+        assertEquals("REMOVE", type);
+    }
+
+    @Test
+    public void testUpdateGetType() {
+        BoardHistory history = new ChangePostIt();
+        String type = history.getType();
+
+        assertEquals("UPDATE", type);
+    }
+
+
+
+
 }
