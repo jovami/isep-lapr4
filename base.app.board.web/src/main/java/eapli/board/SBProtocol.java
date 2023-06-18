@@ -9,10 +9,9 @@ import java.io.IOException;
 public class SBProtocol implements MessageProtocol {
     private static final Integer SBPRROTOCOL_VERSION = 1;
     private static final int CR = 13;
-
     private Integer code;
     private Integer dataLength;
-    // private String authToken;
+    private String authToken;
     private byte[] content;
 
     // SBProtocol codes
@@ -49,12 +48,7 @@ public class SBProtocol implements MessageProtocol {
             code = parseByte(in.readByte());
             dataLength = parseLength(in.readByte(), in.readByte());
             content = new byte[dataLength];
-
-            if (code > SBProtocol.AUTH && code != SBProtocol.TOKEN) {
-                // authToken=readToken(in);
-            } else {
-                // authToken=null;
-            }
+            readToken(in);
             in.readFully(content, 0, dataLength);
             if (code == SBProtocol.ERR && dataLength != 0) {
                 throw new ReceivedERRCode(getContentAsString());
@@ -77,6 +71,11 @@ public class SBProtocol implements MessageProtocol {
                 ret = ret + (char) val;
         } while (val != CR);
 
+        if (ret.equals("")) {
+            authToken = null;
+        } else {
+            authToken = ret;
+        }
         return ret;
     }
 
@@ -84,6 +83,7 @@ public class SBProtocol implements MessageProtocol {
         code = -1;
         dataLength = -1;
         content = null;
+        authToken = null;
     }
 
     public int getCode() {
@@ -126,16 +126,14 @@ public class SBProtocol implements MessageProtocol {
         int dataLength2 = parseByte(b2);
         return dataLength1 + (dataLength2 * 256);
     }
-    /*
-     * public void setToken(String token) {
-     * this.authToken = token;
-     * }
-     *
-     * public String token() {
-     * System.out.println("Token:<"+authToken+">");
-     * return this.authToken;
-     * }
-     */
+
+    public void setToken(String token) {
+        this.authToken = token;
+    }
+
+    public String token() {
+        return this.authToken;
+    }
 
     public boolean send(DataOutputStream out) throws IOException {
         out.write(SBPRROTOCOL_VERSION.byteValue());
@@ -153,6 +151,7 @@ public class SBProtocol implements MessageProtocol {
             out.write(code.byteValue());
             out.write((byte) 0);
             out.write((byte) 0);
+            writeToken(out);
             return true;
         }
 
@@ -166,20 +165,18 @@ public class SBProtocol implements MessageProtocol {
             out.write((byte) 0);
             out.write((byte) 0);
         }
-
-        // if (authToken!=null)
-        // writeToken(out);
+        writeToken(out);
         if ((content != null)) {
             out.write(content, 0, dataLength);
         }
         return true;
     }
-    /*
-     * private void writeToken(DataOutputStream out) throws IOException {
-     * out.write(authToken.getBytes());
-     * out.write(CR);
-     * }
-     */
+
+    private void writeToken(DataOutputStream out) throws IOException {
+        if (authToken!=null)
+            out.write(authToken.getBytes());
+        out.write(CR);
+    }
 
     public void setContentFromString(String cStr) {
         dataLength = cStr.length();
@@ -189,7 +186,7 @@ public class SBProtocol implements MessageProtocol {
     public static void sendErr(String messageErr, DataOutputStream outS) throws IOException {
         SBProtocol p = new SBProtocol();
         p.setCode(ERR);
-        if (messageErr!=null)
+        if (messageErr != null)
             p.setContentFromString(messageErr);
         p.send(outS);
     }

@@ -64,7 +64,21 @@ public class BoardHistoryDTO {
     @Override
     public String toString() {
         return String.format("[%-6s] | %-10s | [%-2s,%-2s] | %-16s | %-20s | %s",
-                type, board, position[0], position[1], time, prevText, posText);
+                type, board, position[0], position[1], time, parseIfImage(prevText), parseIfImage(posText));
+    }
+
+    private String parseIfImage(String content) {
+        String prev;
+        if (content==null){
+            return null;
+        }
+        if (content.startsWith("\"")&& content.endsWith("\"")){
+            String[] tmp = content.split("/");
+            prev = "\""+ tmp[tmp.length-1];
+        }else {
+            prev = content;
+        }
+        return prev;
     }
 
 

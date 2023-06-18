@@ -66,8 +66,8 @@ public class ConsoleUtils {
         return "";
     }
 
-    public static File chooseFile() {
-        var chooseFile = new JFileChooser("base.app.board.web/src/main/java/eapli/board/www/images");
+    public static File chooseFile(String directoryPath) {
+        var chooseFile = new JFileChooser(directoryPath);
         var extension = new FileNameExtensionFilter(null, "jpg", "svg", "jpeg", "png", "gif", "webp");
         chooseFile.setFileFilter(extension);
         chooseFile.showOpenDialog(null);

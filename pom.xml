@@ -40,6 +40,8 @@
         <module>base.app.board.web</module>
         <!-- CI builds only -->
         <module>ecourse.util.ci</module>
+        <module>base.app.board.server</module>
+        <module>base.app.board.client</module>
     </modules>
 
     <dependencies>
