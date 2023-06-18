@@ -70,15 +70,23 @@ The same should be applicable to communications in the **opposite direction**.
 ### 4.2 Sequence Diagram
 
 #### 4.2.1. Updating a post-it's content
+
 Client side:
+
 ![Sequence Diagram](update_clientSD.svg)
+
 Server side:
+
 ![Sequence Diagram](update_serverSD.svg)
 
 #### 4.2.2. Moving a post-it to another cell
+
 Client side:
+
 ![Sequence Diagram](move_clientSD.svg)
+
 Server side:
+
 ![Sequence Diagram](move_serverSD.svg)
 
 ### 4.3. Applied Patterns

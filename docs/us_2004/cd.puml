@@ -1,0 +1,147 @@
+@startuml
+class RegularExam {
+    - title: RegularExamTitle
+    - specification: RegularExamSpecification
+    - date: RegularExamDate
+    - course: Course
+}
+
+class RegularExamTitle {
+    - value: String
+}
+
+class RegularExamSpecification {
+    - spec: String
+}
+
+class RegularExamDate {
+    - start: LocalDateTime
+    - end: LocalDateTime
+}
+
+class Course {
+}
+
+class RegularExamResult {
+    - grade: ExamGrade
+    - gradeProperties: ExamGradeProperties
+    - student: Student
+    - exam: RegularExam
+}
+
+class ExamGrade {
+    - grade: Float
+    - maxGrade: Float
+}
+
+enum ExamGradeProperties {
+    - NONE
+    - ON_SUBMISSION
+    - AFTER_SUBMISSION
+}
+
+class Student {
+    - name: String
+    - surname: String
+    - email: String
+    - indexNumber: String
+}
+
+class TakeExamController {
+    + ongoingExams()
+    + examToBeTaken(examDto: OngoingExamDTO): ResponseEntity<ExamToBeTakenDTO>
+    + examGrading(resolutionDto: ExamResolutionDTO): ResponseEntity<ExamResultDTO>
+}
+
+interface ParserExamService {
+    + generateExam(exam: RegularExam): ExamToBeTakenDTO
+}
+
+interface GradeExamService {
+    + correctExam(exam: RegularExam, resolution: ExamResolutionDTO): CorrectedExamDTO
+}
+
+interface RegularExamRepository {
+    + findByCourse(course: Course): Iterable<RegularExam>
+    + examsOfCoursesAfterTime(time: LocalDateTime, courses: Set<Course>): Iterable<RegularExam>
+    + ongoingExams(courses: Set<Course>): Iterable<RegularExam>
+}
+
+interface EnrollmentRepository {
+    + coursesOfEnrolledStudent(student: Student): Iterable<Course>
+    + enrollmentsByCourse(course: Course): Iterable<Enrollment>
+    + studentsOfEnrolledCourse(course: Course): Iterable<Student>
+    + ongoingCoursesOfStudent(student: Student): Iterable<Course>
+}
+
+interface RegularExamResultRepository {
+    + examResultsByStudent(student: Student): Iterable<RegularExamResult>
+    + regularExamResultsByCourse(course: Course): Iterable<RegularExamResult>
+    + completedExams(student: Student): Iterable<RegularExam>
+}
+
+class OngoingExamDTO {
+    - title: String
+    - course: String
+    - startTime: LocalDateTime
+    - endTime: LocalDateTime
+}
+
+class OngoingExamDTOMapper {
+    + toDTO(exam: RegularExam): OngoingExamDTO
+}
+
+class ListOngoingExamsService {
+    + forStudent(student: Student): Iterable<RegularExam>
+}
+
+class ExamToBeTakenDTO {
+    - title: String
+    - description: String
+    - sections: List<Section>
+}
+
+class ExamResultDTO {
+    - sections: List<Section>
+    - grade: Float
+    - maxGrade: Float
+}
+
+class ExamResultDTOMapper {
+    + toDTO(correction: CorrectedExamDTO): ExamResultDTO
+}
+
+RegularExam --> RegularExamTitle
+RegularExam --> RegularExamSpecification
+RegularExam --> RegularExamDate
+RegularExam --> Course
+
+RegularExamResult --> ExamGrade
+RegularExamResult --> ExamGradeProperties
+RegularExamResult --> Student
+RegularExamResult --> RegularExam
+
+RegularExamRepository ..> RegularExam
+RegularExamResultRepository ..> RegularExamResult
+
+ParserExamService ..> RegularExam
+GradeExamService ..> RegularExam
+
+ParserExamService ..> ExamToBeTakenDTO
+
+GradeExamService ..> ExamResolutionDTO
+
+TakeExamController ..> ExamResultDTOMapper
+TakeExamController ..> ExamResultDTO
+ExamResultDTOMapper ..> ExamResultDTO
+
+TakeExamController ..> OngoingExamDTOMapper
+TakeExamController ..> OngoingExamDTO
+OngoingExamDTOMapper ..> OngoingExamDTO
+
+TakeExamController ..> ListOngoingExamsService
+ListOngoingExamsService ..> RegularExamRepository
+ListOngoingExamsService ..> EnrollmentRepository
+ListOngoingExamsService ..> RegularExamResultRepository
+
+@enduml

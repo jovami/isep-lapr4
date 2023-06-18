@@ -132,29 +132,8 @@ This use case was broken down into three parts:
 ![gradeExamSD](./gradeExamSD.svg)
 
 ### 3.2. Classes
-[//]: # (TODO: Class diagram)
-- Domain:
-    + **RegularExam**
-    + **ExamResult**
-    + **Course**
-    + **Student**
-- Controller:
-    + **TakeExamController**
-- Grammar:
-    + **ParseExamService**
-    + **GradeExamService**
-- Repository:
-    + **RegularExamRepository**
-    + **EnrollmentRepository**
-    + **RegularExamResultRepository**
-- DTO:
-    + **OngoingExamDTO**
-    + **OngoingExamDTOMapper**
 
-    + **ExamToBeTakenDTO**
-
-    + **ExamResultDTO**
-    + **ExamResultDTOMapper**
+![Class Diagram](./cd.svg)
 
 ### 3.3. Applied Patterns
 
@@ -174,7 +153,10 @@ This use case was broken down into three parts:
 
 ### 3.4. Tests
 
-[//]: # (TODO: Add tests???)
+In order to accurately test this functionality, we need to interact
+with the Aggregate Root repositories, meaning **unit tests aren't the best approach here**.
+
+Instead, integration tests should be performed.
 
 ## 4. Integration/Demonstration
 
