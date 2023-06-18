@@ -1,7 +1,7 @@
 @startuml
 actor SBServer as server
 
-participant UpdatePostItHandler as ctrl
+participant MovePostItHandler as ctrl
 
 participant SystemUser as sys_usr
 
@@ -11,8 +11,8 @@ participant BoardService as svc
 participant BoardWriteAccessDTOEncoder as wrt_enc
 participant BoardWriteAccessDTO as wrt_dto
 
-participant BoardRowColDataDTOEncoder as enc
-participant BoardRowColDataDTO as dto
+participant BoardFromToDTOEncoder as enc
+participant BoardFromToDTO as dto
 
 participant Board as board
 participant Cell as cell
@@ -82,30 +82,36 @@ activate ctrl
         note right : board obtained via SBServerApp
     deactivate board
 
-    ctrl --> sys_usr : get(dto.name)
+    ctrl --> sys_usr : get(dto.boardName)
     activate sys_usr
     deactivate sys_usr
 
-    ctrl --> board : updatePostIt(dto.row, dto.col, dto.data, user)
+    ctrl --> board : movePostIt(dto.rowFrom, dto.colFrom, dto.rowTo, dto.colTo, user)
     activate board
         board --> cell : get(row, col)
         activate cell
         deactivate cell
 
-        board --> cell : updatePostIt(data, user)
+        board --> cell : movePostIt(data, cellTo, user)
         activate cell
-            cell --> post : alterPostItData(data)
+            cell --> post : get()
             activate post
             deactivate post
 
-            cell --> cell : addUpdateToHistory()
+            cell --> cell : cellTo.addPostIt(postIt)
+
+            cell --> cell : addCreateToHistory()
+
+            cell --> cell : removePostIt()
+
+            cell --> cell : addRemoveToHistory()
         deactivate cell
     deactivate board
 
 
     ctrl --> protocol : create()
     activate protocol
-        note right : code: UPDATE_POST_IT\ncontent: boardName, row, col, data
+        note right : code: MOVE_POST_IT\ncontent: boardName, rowFrom, colFrom, rowTo, colTo
     deactivate protocol
 
     ctrl --> evt : create(name, protocol)

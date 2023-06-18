@@ -1,0 +1,96 @@
+@startuml
+actor SBAappUser as user
+
+participant MovePostItUI as ui
+participant MovePostItController as ctrl
+
+participant SBProtocol as protocol
+
+participant BoardWriteAccessDTOEncoder as wrt_enc
+participant BoardWriteAccessDTO as wrt_dto
+
+participant BoardFromToDTOEncoder as enc
+
+user --> ui : move post-it
+activate ui
+    ui --> ctrl : create(ip, port)
+    note right : establish socket, input and output streams
+
+    activate ctrl
+    deactivate ctrl
+
+    ui --> ctrl : requestBoards()
+    activate ctrl
+
+        ctrl --> protocol : create()
+        activate protocol
+            note right : code: MOVE_POST_IT\ndue to technical limitations
+        deactivate protocol
+
+        ctrl --> protocol : send(outS)
+        activate protocol
+            note right of ctrl : controller awaits for server reply
+        deactivate protocol
+
+        ctrl --> protocol : create(inS)
+        activate protocol
+            protocol --> ctrl : reply
+        deactivate protocol
+
+        ctrl --> wrt_enc : decodeMany(reply.getContentAsString)
+        activate wrt_enc
+            loop for each value in reply
+                wrt_enc --> wrt_dto : create()
+                activate wrt_dto
+                deactivate wrt_dto
+            end loop
+
+            wrt_enc --> ctrl : boardDTOList
+        deactivate wrt_enc
+
+
+        ctrl --> ui : boardDTOList
+    deactivate ctrl
+
+    ui --> user : show boards
+    note right ui : ui now prompts user for information\nabout the post-it to move
+
+deactivate ui
+
+user --> ui : choose board and\ninput cell info
+activate ui
+
+    ui --> ctrl : movePostIt(infoDto)
+    activate ctrl
+            ctrl --> enc : encode(dto)
+            activate enc
+                note right : encode dto in a way that\ncan be sent via protocol
+                enc --> ctrl : encodedDTO
+            deactivate enc
+
+            ctrl --> protocol : create()
+            activate protocol
+                note right : code: MOVE_POST_IT\ncontent: encodedDTO
+            deactivate protocol
+
+            ctrl -> protocol : send(outS)
+            activate protocol
+                note right of ctrl : controller awaits for server reply
+            deactivate protocol
+
+            ctrl --> protocol : create(inS)
+            activate protocol
+                protocol --> ctrl : reply
+            deactivate protocol
+
+            ctrl --> ui : success
+    deactivate ctrl
+
+    ui --> user : inform success
+
+    ui --> ctrl : closeSocket()
+    activate ctrl
+    deactivate ctrl
+deactivate ui
+
+@enduml
