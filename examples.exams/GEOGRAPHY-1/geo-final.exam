@@ -1,0 +1,197 @@
+EXAM {
+    TITLE: "Geography Final Exam"
+    HEADER {
+        FEEDBACK: on-submission
+        GRADING: on-submission
+    }
+
+    SECTION 1 {
+
+        MATCHING {
+            DESCRIPTION: "Match the countries with their capital cities"
+
+            SUBQUESTION 1: "Portugal"
+            SUBQUESTION 2: "Kyrgyzstan"
+            SUBQUESTION 3: "Kosovo"
+            SUBQUESTION 4: "Montenegro"
+
+            ANSWER 1: "Pristina"
+            ANSWER 2: "Lisbon"
+            ANSWER 3: "Bishkek"
+            ANSWER 4: "Podgorica"
+
+            SOLUTION 1: 1-2 [1.0]
+            SOLUTION 2: 2-3 [1.0]
+            SOLUTION 3: 3-1 [1.0]
+            SOLUTION 4: 4-4 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "That' it!"
+                WRONG_ANSWER: "Portugal <-> Lisbon | Kyrgyzstan <-> Bishkek | Kosovo <-> Pristina | Montenegro <-> Podgorica"
+            }
+        }
+
+        MULTIPLE_CHOICE {
+            CHOICE_TYPE: single-answer
+            DESCRIPTION: "In which state is the Alcatraz Island located?"
+
+            ANSWER 1: "Ohio"
+            ANSWER 2: "Maine"
+            ANSWER 3: "California"
+            ANSWER 4: "West Virginia"
+
+            SOLUTION 1: 3 [5.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Good job! It was indeed California!!"
+                WRONG_ANSWER: "Alcatraz is 1.25 miles offshore from San Francisco, California"
+            }
+        }
+
+        MULTIPLE_CHOICE {
+            CHOICE_TYPE: multiple-answer
+            DESCRIPTION: "Which of the following are cities in Africa?"
+
+            ANSWER 1: "Bagré"
+            ANSWER 2: "Alor Setar"
+            ANSWER 3: "Miri"
+            ANSWER 4: "Edd"
+            ANSWER 5: "Aveiro"
+            ANSWER 6: "Kuantan"
+            ANSWER 7: "Big Bend"
+
+            SOLUTION 1: 1,4,7 [3.0]
+
+            SOLUTION 2: 1,4 [2.0]
+            SOLUTION 3: 1,7 [2.0]
+            SOLUTION 4: 4,7 [2.0]
+
+            SOLUTION 5: 1 [1.0]
+            SOLUTION 6: 4 [1.0]
+            SOLUTION 7: 7 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Perfect"
+                WRONG_ANSWER: "Could be better"
+            }
+        }
+    }
+
+    SECTION 2 {
+        SHORT_ANSWER {
+            DESCRIPTION: "Where is Casa da Música located?"
+            CASE_SENSITIVE: false
+
+            SOLUTION 1: "Boavista" [0.5]
+            SOLUTION 2: "Avenida da Boavista" [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "Yep, that's it!"
+                WRONG_ANSWER: "Completely wrong :/"
+            }
+        }
+
+        MATCHING {
+            DESCRIPTION: "Match the following countries with their continent"
+
+            SUBQUESTION 1: "Bahrain"
+            SUBQUESTION 2: "Burkina Faso"
+            SUBQUESTION 3: "Jamaica"
+            SUBQUESTION 4: "Montenegro"
+            SUBQUESTION 5: "China"
+            SUBQUESTION 6: "Moldova"
+            SUBQUESTION 7: "Venezuela"
+
+            ANSWER 1: "Asia"
+            ANSWER 2: "Europe"
+            ANSWER 3: "Africa"
+            ANSWER 4: "South America"
+            ANSWER 5: "North America"
+            ANSWER 6: "Oceania"
+            ANSWER 7: "Antarctica"
+
+            SOLUTION 1: 1-1 [1.0]
+            SOLUTION 2: 2-3 [1.0]
+            SOLUTION 3: 3-5 [1.0]
+            SOLUTION 4: 4-2 [1.0]
+            SOLUTION 5: 5-1 [1.0]
+            SOLUTION 6: 6-2 [1.0]
+            SOLUTION 6: 7-4 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "That' it!"
+                WRONG_ANSWER: "Nope!"
+            }
+        }
+
+        TRUE_FALSE {
+            DESCRIPTION: "The flag of Israel features the famous Star of David"
+
+            SOLUTION 1: true [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "It is right!"
+                WRONG_ANSWER: "You have to study a little more..."
+            }
+        }
+
+        NUMERICAL {
+            DESCRIPTION: "As of 2022, what is the estimate population of Greenland?"
+            ERROR: 10000.0
+
+            SOLUTION 1: 56583 [1.0]
+
+            FEEDBACK {
+                CORRECT_ANSWER: "You manage to guess within a margin of 10000! (It was 56583)"
+                WRONG_ANSWER: "According to worldpopulationreview.com, it's 56583"
+            }
+        }
+
+
+        MISSING_WORDS {
+            DESCRIPTION: "The country previously known as [1] changed its name in [2] to [3]."
+
+            GROUP "old_countries" {
+                ITEM 1: "Turkey"
+                ITEM 2: "Swaziland"
+                ITEM 3: "Ceylon"
+                ITEM 4: "Czech Republic"
+            }
+
+            GROUP "new_countries" {
+                ITEM 1: "Eswatini"
+                ITEM 2: "Czechia"
+                ITEM 3: "Türkiye"
+                ITEM 4: "Sri Lanka"
+            }
+
+            GROUP "years" {
+                ITEM 1: "2022"
+                ITEM 2: "2019"
+                ITEM 3: "2003"
+                ITEM 4: "2023"
+            }
+
+            CHOICE 1 {
+                SOLUTION 1: "Turkey" [1.5]
+                FROM_GROUP: "old_countries"
+            }
+
+            CHOICE 2 {
+                SOLUTION 1: "2022" [1.5]
+                FROM_GROUP: "years"
+            }
+
+            CHOICE 3 {
+                SOLUTION 1: "Türkiye" [2.0]
+                FROM_GROUP: "new_countries"
+
+            }
+
+            FEEDBACK {
+                CORRECT_ANSWER: "That's it!"
+                WRONG_ANSWER: "Turkey changed its official English name in 2022 to Türkiye"
+            }
+        }
+    }
+}
