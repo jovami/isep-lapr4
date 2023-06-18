@@ -16,7 +16,7 @@ interface BoardRepository
   +listBoardsUserOwnsArchived(SystemUser owner)
  }
 
-class AbstractUI
+abstract class AbstractUI
 {
 }
 
@@ -106,7 +106,7 @@ class MainMenu
 -buildMainMenu()
 }
 
-
+SBPServerApp o-- Client
 'extends
 ArchiveBoardUI --|> AbstractUI
 MenuRequest --|> Thread
@@ -122,7 +122,7 @@ ArchiveBoardHandler --> "*" SBProtocol
 ArchiveBoardHandler -up-> "1" BoardRepository
 
 
-ArchiveBoardHandler --> "1" Client
+
 ArchiveBoardHandler --> "1" BoardService
 
 BoardService  --> "1" BoardRepository

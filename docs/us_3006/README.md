@@ -58,26 +58,16 @@ After this operation the user will choose a Board to create a post-it on, some i
 
 After all information is inserted by the user the following operation will be done:
 
-- A service named **PostItService** will be used, to create a post-it and add it to a cell for this we used method `createPostIt(Board board, int row, int col, String text, SystemUser postItOwner)`.
-
-In SBPServerApp we will have a map of **Board** and **BoardHistory** , this was used to reduce the access to database in runtime and
-because we don't need to persist the history of board. Now for each **Board** we will have a list of its histories.
-
-Now we need to had to histories a post-it , for this we will use a class **CreatePostIt** that extends **BoardHistory**, this 
-class **CreatePostIt** is slightly different that **Post-It** , because here we only have a string containing all data including the
-time post-it was created .
-
-We used **BoardHistory** as the name says because we want to have a history of post-its, the next user stories will need to now 
-when post-it was created and the previous content of a post-it.
+In SBPServerApp we will have a map of **Board** , this was used to reduce the access to database in runtime.
+We search for the board intended and after verify if the **Cell** we want to add the post-it is empty, we
+create **Post-it** and add it to the cell on board.
 
 In the end a new event it's added to **NewChangeEvent**, the event stores the relevant data required for publishing the event. 
 It is crucial to include at least the following information:
 
 - Board: to determine which users should be notified. 
 - SBProtocol message: to be sent to the SBApp. The event handler utilizes the information from the event to iterate 
-through all the users subscribed to the board and sends the SBProtocol message, containing the details of the specific change, through Berkeley sockets.
-
-**For a better understand on the **Observer Pattern** used in events check [the following document](../us_3005/README.md)**
+through all the users subscribed to the board and sends the SBProtocol message, containing the details of the specific change.
 
 
 ### 4.1. Realization

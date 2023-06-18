@@ -54,15 +54,11 @@ class SBPServerApp
     +{static}Map<BoardTitle, Board> boards
 }
 
-class SBPClientAPP
+class SBPClientApp
 {
 }
 
 
-class CreatePostIt
-{
-  +parseStr(String content)
-}
 
 class Client
 {
@@ -80,14 +76,10 @@ class MainMenu
     - buildMainMenu()
 }
 
-class PostItService
-{
-    +createPostIt(Board board, int row, int col, String text, SystemUser postItOwner)
-}
-
 class Board
 {
    +getCell(int row, int column)
+   +addPostIt(int row, int column, PostIt postIt)
 }
 
 class Cell
@@ -98,19 +90,27 @@ class Cell
 class PostIt {
 }
 
-abstract class BoardHistory
+class NewChangeEvent
+{
+    - String board
+    - SBProtocol message
+}
+
+abstract class AbstractUI
 {
 }
 
+abstract class BaseApplication
 
+interface Runnable
 
-
-
-
+SBPServerApp o-- Client
 'extends --|>
-
-CreatePostIt --|> BoardHistory
-
+MainMenu -up-|> AbstractUI
+CreatePostItUI -up-|> AbstractUI
+SBPClientApp -up-|> BaseApplication
+SBPServerApp -up-|> BaseApplication
+MenuRequest --|> Thread
 
 
 'depends on(imports)  -->
@@ -121,27 +121,30 @@ CreatePostItController --> "*" SBProtocol
 CreatePostItHandler --> "*" SBProtocol
 
 
-CreatePostItHandler --> "1" CreatePostIt
-CreatePostItHandler --> "1" Client
-CreatePostItHandler --> "1" BoardService
-CreatePostItHandler --> "1" PostItService
 
-SBPClientAPP --> "1" MainMenu
+
+CreatePostItHandler --> "1" BoardService
+CreatePostItHandler --> "1" Board
+
+SBPClientApp --> "1" MainMenu
 MainMenu --> "1" CreatePostItUI
 SBPServerApp --> "1" MenuRequest
 MenuRequest --> "1" CreatePostItHandler
 MenuRequest -up-> "1" SBProtocol
 
-PostItService --> "1" Board
+
 Board --> "*" Cell
 Cell --> "1" PostIt
 
 BoardService --> "1" BoardParticipantRepository
 
 SBPServerApp ----> "*" Board
-SBPServerApp -> "*" BoardHistory
+
+CreatePostItHandler --> "1" NewChangeEvent
 
 'implements ..|>
 SBProtocol ..|> MessageProtocol
+Thread ..|> Runnable
+CreatePostItHandler ..|> Runnable
 
 @enduml

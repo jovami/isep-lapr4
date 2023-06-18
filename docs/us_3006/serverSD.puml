@@ -5,19 +5,17 @@ actor SBPServerApp as server
 
 participant CreatePostItHandler as handler
 participant SBProtocol as sbp
-participant BoardService as b_svc
-participant PostItService as p_svc
 participant Client as c_user
-participant Board as b
+participant BoardService as b_svc
 participant Cell as cell
 participant PostIt as postit
-participant CreatePostIt as c_postit
+participant Board as b
 participant NewChangeEvent as nce
 participant EventPublisher as ep
 
 activate server
 server ->  handler: create(sock,codeRequest)
-    note right : -receives a socket and SBProtocol codeRequest\n-creates services
+    note right : -receives a socket and SBProtocol codeRequest\n-create service
     activate handler
 
     deactivate handler
@@ -59,28 +57,17 @@ server ->  handler: create(sock,codeRequest)
             cell --> handler : true/false
         deactivate cell
 
+        handler -> postit : postit = create(user, postItdata)
+        note right : postItdata string
+        activate postit
+        deactivate postit
 
-        handler -> p_svc : createPostIt(board,row,col,text, owner)
-        activate p_svc
-               p_svc -> b : getCell(row,col)
-               activate b
-               deactivate b
-               p_svc -> postit : create(owner,text)
-               activate postit
-               deactivate postit
-               p_svc -> cell : addPostIt(postit)
-               activate cell
-               deactivate cell
-               p_svc --> handler : true/false
-        deactivate p_svc
-        note right of handler: SBPServerApp as boardHistories ,get histories of "optBoard"
-        handler -> c_postit : create(sb)
-        activate c_postit
-            note right : sb contains:\n-row\n-column\n-Local date time\n-content of postit
+        handler -> b : addPostIt(row,column,postit)
+        activate b
+            b --> handler : true/false
+        deactivate b
 
-        deactivate c_postit
 
-        note right of handler : add postIt to boardHistory
         handler -> nce : event = create(boardTitle,receiveText)
         activate nce
         deactivate nce
