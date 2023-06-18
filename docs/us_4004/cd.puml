@@ -1,0 +1,100 @@
+@startuml
+
+class Meeting {
+    - owner: SystemUser
+}
+
+class MeetingParticipant {
+    - meeting: Meeting
+    - user: SystemUser
+}
+
+enum MeetingParticipantStatus {
+    - ACCEPTED,
+    - REJECTED,
+    - PENDING
+}
+
+class SystemUser {
+
+}
+
+class ListMeetingParticipantsController {
+    + meetingsOfUser(): Iterable<MeetingOfUserDTO>
+    + meetingParticipants(dto: MeetingOfUserDTO): Iterable<MeetingParticipantDTO>
+}
+
+class ListMeetingsService {
+    + meetingsOfUser(user: SystemUser): Iterable<Meeting>
+}
+
+class MyUserService {
+    + currentUser(): SystemUser
+}
+class MeetingRepository {
+    + organizedBy(user: SystemUser): Iterable<Meeting>
+}
+class MeetingParticipantRepository {
+    + meetingsOfUser(user: SystemUser): Iterable<Meeting>
+    + meetingParticipants(meeting: Meeting): Iterable<MeetingParticipant>
+}
+
+class MeetingOfUserDTO {
+    - meetingID: int
+    - description: String
+    - startTime: LocalDateTime
+    - owner: Name
+    - ownerEmail: EmailAddress
+}
+
+
+class MeetingOfUserDTOMapper {
+    + toDTO(meeting: Meeting): MeetingOfUserDTO
+    + toDTO(meetings: Iterable<Meeting>): List<MeetingOfUserDTO>
+}
+class MeetingParticipantDTO {
+    - name: Username
+    - email: EmailAddress
+    - status: MeetingParticipantStatus
+}
+class MeetingParticipantDTOMapper {
+    + toDTO(meeting: MeetingParticipant): MeetingParticipantDTO
+    + toDTO(meetings: Iterable<MeetingParticipant>): List<MeetingParticipantDTO>
+}
+
+ListMeetingParticipantsController ..> MeetingRepository
+ListMeetingParticipantsController ..> MeetingParticipantDTO
+ListMeetingParticipantsController ..> MyUserService
+MyUserService ..> SystemUser
+ListMeetingParticipantsController ..> ListMeetingsService
+
+
+ListMeetingsService ..> SystemUser
+ListMeetingsService ..> MeetingRepository
+ListMeetingsService ..> MeetingParticipantRepository
+
+ListMeetingParticipantsController ..> MeetingOfUserDTOMapper
+ListMeetingParticipantsController ..> MeetingOfUserDTO
+MeetingOfUserDTOMapper ..> MeetingOfUserDTO
+MeetingOfUserDTOMapper ..> Meeting
+
+MeetingRepository ..> SystemUser
+MeetingRepository ..> Meeting
+
+MeetingParticipantRepository ..> SystemUser
+MeetingParticipantRepository ..> Meeting
+MeetingParticipantRepository ..> MeetingParticipant
+
+
+ListMeetingParticipantsController ..> MeetingParticipantDTOMapper
+MeetingParticipantDTOMapper ..> MeetingParticipantDTO
+MeetingParticipantDTOMapper ..> MeetingParticipant
+
+
+MeetingParticipant --> Meeting
+MeetingParticipant --> SystemUser
+MeetingParticipant --> MeetingParticipantStatus
+
+MeetingParticipantStatus --> SystemUser
+
+@enduml
