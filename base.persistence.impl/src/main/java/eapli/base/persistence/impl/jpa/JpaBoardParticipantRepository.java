@@ -6,6 +6,7 @@ import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.repositories.BoardParticipantRepository;
 import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
+import org.hibernate.sql.Select;
 import eapli.framework.infrastructure.repositories.impl.jpa.JpaAutoTxRepository;
 
 import java.util.List;
@@ -13,11 +14,12 @@ import java.util.Map;
 
 public class JpaBoardParticipantRepository extends JpaAutoTxRepository<BoardParticipant, Integer, Integer> implements BoardParticipantRepository {
 
-    JpaBoardParticipantRepository (final TransactionalContext autoTx) {
+    JpaBoardParticipantRepository(final TransactionalContext autoTx) {
         super(autoTx, "participantId");
     }
+
     public JpaBoardParticipantRepository(final String puname,
-                                   @SuppressWarnings({ "rawtypes", "java:S3740" }) final Map properties) {
+                                         @SuppressWarnings({"rawtypes", "java:S3740"}) final Map properties) {
         super(puname, properties, "participantId");
 
     }
@@ -32,7 +34,6 @@ public class JpaBoardParticipantRepository extends JpaAutoTxRepository<BoardPart
         return query.getResultList();
 
     }
-
 
 
     public List<Board> listBoardsByParticipant(SystemUser user) {
@@ -59,7 +60,19 @@ public class JpaBoardParticipantRepository extends JpaAutoTxRepository<BoardPart
 
     @Override
     public Iterable<BoardParticipant> byUser(SystemUser user) {
-        return match("e.participant = :user","user",user);
+        return match("e.participant = :user", "user", user);
     }
+
+    @Override
+    public Iterable<Board> listBoardsUserParticipatesNotArchived(SystemUser user) {
+        final var query = entityManager().createQuery(
+                "SELECT e.board FROM BoardParticipant e WHERE ((e.participant = :user And e.board.state <> 'ARCHIVED' " +
+                        "And (e.permission = 'READ' OR e.permission = 'WRITE')))",
+                Board.class);
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
+
+
 }
 

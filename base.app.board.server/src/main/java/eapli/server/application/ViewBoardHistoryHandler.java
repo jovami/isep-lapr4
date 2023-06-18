@@ -12,29 +12,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ViewBoardHistoryHandler {
-    private DataInputStream inS;
-    private DataOutputStream outS;
-    private final Socket sock;
+public class ViewBoardHistoryHandler extends AbstractSBServerHandler{
 
     public ViewBoardHistoryHandler(Socket socket, SBProtocol request) {
+        super(socket, request);
         this.sock = socket;
     }
 
     public void run() {
         try {
-            inS = new DataInputStream(sock.getInputStream());
-            outS = new DataOutputStream(sock.getOutputStream());
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
 
             StringBuilder builder = new StringBuilder();
+            ViewBoardRequestService srv = new ViewBoardRequestService();
+            Iterable<Board> boards = srv.listReadableNonArchivedBoardsForUser(SBServerApp.activeAuths.
+                    get(authToken).getUserLoggedIn());
 
-            for (Board b : SBServerApp.boards.values()) {
-                builder.append(b.getBoardTitle().title());
+            for (Board board : boards) {
+                builder.append(board.getBoardTitle().title());
                 builder.append("/r");
             }
             ;
@@ -50,7 +44,6 @@ public class ViewBoardHistoryHandler {
                 throw new ReceivedERRCode("Board not found");
             }
 
-            //var history = SBPServerApp.histories.get(optBoard);
 
             StringBuilder historyBuilder = new StringBuilder();
             for (BoardHistory bh :optBoard.getHistory()) {

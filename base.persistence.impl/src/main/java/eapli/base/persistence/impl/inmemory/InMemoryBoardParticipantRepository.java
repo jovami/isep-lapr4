@@ -55,6 +55,17 @@ public class InMemoryBoardParticipantRepository extends InMemoryDomainRepository
                 .filter(boardParticipant -> boardParticipant.sameAs(user))
                 .collect(Collectors.toList());
     }
+    @Override
+    public Iterable<Board> listBoardsUserParticipatesNotArchived(SystemUser user) {
+        return valuesStream()
+                .filter(boardParticipant -> {
+                    if (!boardParticipant.participant().sameAs(user)
+                            || !boardParticipant.permission().equals(BoardParticipantPermissions.READ)) return false;
+                    boardParticipant.board();
+                    return true;
+                })
+                .map(BoardParticipant::board).collect(Collectors.toList());
+    }
 
 
 }

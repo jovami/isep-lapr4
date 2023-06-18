@@ -17,6 +17,8 @@ public class NotificationsController {
     private final DataInputStream inS;
     private final DataOutputStream outS;
     private final Socket sock;
+    private final List<NotificationDto> notifications = new ArrayList<>();
+
 
     public NotificationsController(InetAddress serverIP, int serverPort) throws IOException {
 
@@ -27,31 +29,32 @@ public class NotificationsController {
     }
 
     public List<NotificationDto> listNotfs() throws IOException, ReceivedERRCode {
-        //search for boards that the  user owns
+        //search for boards that the user owns
         SBProtocol sendUser = new SBProtocol();
         sendUser.setCode(SBProtocol.VIEW_NOTFS);
-        sendUser.setToken(SBPClientApp.authToken());
         sendUser.send(outS);
 
         //receive Boards owned
         SBProtocol getNotfs = new SBProtocol(inS);
-        List<NotificationDto> dto = new ArrayList<>();
 
         for (String str : getNotfs.getContentAsString().split("\0")) {
-            dto.add(new NotificationDto(str.split("#&&#")));
+            notifications.add(new NotificationDto(str.split("#&&#")));
         }
-        return dto;
 
+        return notifications;
+    }
+    public void readNotification(NotificationDto notificationDto) {
+        notifications.remove(notificationDto);
     }
 
     public void sockClose() {
-        do {
+
             try {
                 sock.close();
                 return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while (true);
+
     }
 }

@@ -55,6 +55,7 @@ public class BoardBootstrapper implements Action {
         SystemUser ownerMary = userMary();
         SystemUser participant = owner;
 
+
         //Boards list johnny participates with Write permissions
         saveBoard(BoardTitle.valueOf("board7"), 10, 10, ownerMary);
         saveBoardWithParticipantWithWritePermissions(BoardTitle.valueOf("board7"),participant);

@@ -3,17 +3,19 @@ package eapli.client.presentation;
 import eapli.client.application.NotificationsController;
 import eapli.client.dto.NotificationDto;
 import eapli.framework.presentation.console.AbstractUI;
-import eapli.framework.presentation.console.ListWidget;
+import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
-
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsUI extends AbstractUI {
 
     private final int serverPort;
     private final InetAddress serverIP;
+    private final List<NotificationDto> readNotifications = new ArrayList<>();
+
 
     public NotificationsUI(InetAddress serverIP, int serverPort) {
         this.serverIP = serverIP;
@@ -32,9 +34,35 @@ public class NotificationsUI extends AbstractUI {
 
         try {
             List<NotificationDto> notfs = controller.listNotfs();
+            if (notfs.isEmpty()) {
+                System.out.println("No notifications to show");
+                return false;
+            }
 
-            ListWidget<NotificationDto> listNotfs = new ListWidget<>("Notifications: ", notfs);
-            listNotfs.show();
+            boolean flag = true;
+            do {
+                List<NotificationDto> unreadNotfs = getUnreadNotifications(notfs);
+
+                if (unreadNotfs.isEmpty()) {
+                    System.out.println("No notifications to show");
+                    return false;
+                }
+
+                SelectWidget<NotificationDto> listNotfs = new SelectWidget<>("Notifications (Select to Mark as Read): ", unreadNotfs);
+                listNotfs.show();
+
+                if (listNotfs.selectedOption() == 0) {
+                    flag = false;
+                }
+
+                NotificationDto selectedNotf = listNotfs.selectedElement();
+                controller.readNotification(selectedNotf);
+                readNotifications.add(selectedNotf);
+
+            } while (flag);
+
+
+
 
         } catch (IOException e) {
             System.out.println("Error while reading data from socket");
@@ -47,6 +75,18 @@ public class NotificationsUI extends AbstractUI {
         }
         return false;
     }
+
+    private List<NotificationDto> getUnreadNotifications(List<NotificationDto> allNotifications) {
+        List<NotificationDto> unreadNotifications = new ArrayList<>();
+        for (NotificationDto notification : allNotifications) {
+            if (!readNotifications.contains(notification)) {
+                unreadNotifications.add(notification);
+            }
+        }
+        return unreadNotifications;
+    }
+
+
 
     @Override
     public String headline() {

@@ -23,6 +23,6 @@ public interface BoardParticipantRepository extends DomainRepository<Integer,Boa
     default Iterable<Board> boardsUserCanRead(SystemUser user){
         return withPermission(user,BoardParticipantPermissions.READ);
     }
+    Iterable<Board> listBoardsUserParticipatesNotArchived(SystemUser user);
 
-    //Iterable<SystemUser> listBoardUsers(Board board);
 }

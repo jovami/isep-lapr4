@@ -1,16 +1,16 @@
-package eapli.server;
+package eapli.server.application;
 
 import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
-import eapli.server.application.AbstractSBServerHandler;
-import eapli.server.application.ShareBoardService;
+
+import eapli.server.SBServerApp;
 import eapli.server.application.newChangeEvent.NewChangeWatchDog;
-import eapli.server.domain.Client;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 //TODO ABSTRACT HANDLER
@@ -33,7 +33,7 @@ public class ViewBoardRequestHandler extends AbstractSBServerHandler {
 
             if (boardStr == null) {
                 System.out.println("[WARNING] Error choosing Board");
-                    SBProtocol.sendErr("Error while choosing board", outS);
+                SBProtocol.sendErr("Error while choosing board", outS);
                 return;
             }
 
@@ -94,22 +94,16 @@ public class ViewBoardRequestHandler extends AbstractSBServerHandler {
         SBProtocol responseSent = new SBProtocol();
         responseSent.setCode(SBProtocol.LIST_BOARDS);
 
-        ShareBoardService srv = new ShareBoardService();
-        Client client = SBServerApp.activeAuths.get(authToken);
-        if (client == null){
-            System.out.println("Client not found");
-            return false;
-        }
-        Iterable<Board> boards = srv.getBoardsByParticipant(client.getUserLoggedIn());
+
+        ViewBoardRequestService srv = new ViewBoardRequestService();
+
+        Iterable<Board> boards = srv.listReadableNonArchivedBoardsForUser(SBServerApp.activeAuths.get(authToken).getUserLoggedIn());
         StringBuilder builder = new StringBuilder();
 
-        //TODO: single service
         for (Board board : boards) {
             builder.append(board.getBoardTitle().title()).append("\0");
         }
-        for (Board board : srv.listBoardsUserOwnsNotArchived(SBServerApp.activeAuths.get(authToken).getUserLoggedIn())) {
-            builder.append(board.getBoardTitle().title()).append("\0");
-        }
+
         String b = builder.toString();
         responseSent.setContentFromString(b);
         return responseSent.send(outS);
