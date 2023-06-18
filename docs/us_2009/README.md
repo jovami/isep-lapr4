@@ -22,7 +22,7 @@ the grammar defined for the exam's structure.
 This use case is based on the following requirements:
 
 - **R1.** The student must be able to see a list of formative exams they can take.
-- **R2.** The student must be able to take a formative exam exam.
+- **R2.** The student must be able to take a formative exam.
 - **R3.** The student must be able to see their grade and feedback on their performance, for each question.
 
 ### 2.1. Questions, Answers and Interpretations
@@ -126,7 +126,7 @@ Some of the major implementation differences:
 ## 4. Integration/Demonstration
 
 In order to execute this use case, the user should first have at their disposal a formative exam specification file, as
-well as a repository of questions, also in the form of a file. 
+well as a repository of questions, also in the form of a file.
 It should be in accordance with the formative exam grammar specification, more information on which can be found in the
 [Formative Exam Specification Manual](../us_2008/grammar-reference.md).
 
@@ -138,5 +138,5 @@ with their grade and feedback for each question after they submit their exam.
 ## 5. Observations
 
 This use case was successfully implemented, and **all the requirements were met**. Even though the client did not
-specify that the formative exam should be done in a web browser, this was the chosen implementation method, as it is the 
+specify that the formative exam should be done in a web browser, this was the chosen implementation method, as it is the
 most **user-friendly** and, as a team, we believe it is the most appropriate for this use case.
