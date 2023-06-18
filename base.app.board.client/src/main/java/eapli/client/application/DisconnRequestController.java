@@ -23,7 +23,7 @@ public class DisconnRequestController {
     }
 
     public boolean disconn() {
-        boolean disconnected;
+        boolean disconnected = false;
         do {
             try {
                 sock = new Socket(serverIP, serverPort);
@@ -49,7 +49,6 @@ public class DisconnRequestController {
                 }
 
             } catch (IOException | ReceivedERRCode e) {
-                throw new RuntimeException(e);
             }
         } while (!disconnected);
 

@@ -3,8 +3,9 @@ package eapli.client.presentation;
 import eapli.client.application.NotificationsController;
 import eapli.client.dto.NotificationDto;
 import eapli.framework.presentation.console.AbstractUI;
-import eapli.framework.presentation.console.SelectWidget;
+import eapli.framework.presentation.console.ListWidget;
 import jovami.util.exceptions.ReceivedERRCode;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -39,29 +40,15 @@ public class NotificationsUI extends AbstractUI {
                 return false;
             }
 
-            boolean flag = true;
-            do {
-                List<NotificationDto> unreadNotfs = getUnreadNotifications(notfs);
+            List<NotificationDto> unreadNotfs = getUnreadNotifications(notfs);
 
-                if (unreadNotfs.isEmpty()) {
-                    System.out.println("No notifications to show");
-                    return false;
-                }
+            if (unreadNotfs.isEmpty()) {
+                System.out.println("No notifications to show");
+                return false;
+            }
 
-                SelectWidget<NotificationDto> listNotfs = new SelectWidget<>("Notifications (Select to Mark as Read): ", unreadNotfs);
-                listNotfs.show();
-
-                if (listNotfs.selectedOption() == 0) {
-                    flag = false;
-                }
-
-                NotificationDto selectedNotf = listNotfs.selectedElement();
-                controller.readNotification(selectedNotf);
-                readNotifications.add(selectedNotf);
-
-            } while (flag);
-
-
+            ListWidget<NotificationDto> listNotfs = new ListWidget<>("Notifications: ", unreadNotfs);
+            listNotfs.show();
 
 
         } catch (IOException e) {
@@ -70,7 +57,6 @@ public class NotificationsUI extends AbstractUI {
             System.out.println(e.getMessage());
             return false;
         } finally {
-
             controller.sockClose();
         }
         return false;
@@ -85,7 +71,6 @@ public class NotificationsUI extends AbstractUI {
         }
         return unreadNotifications;
     }
-
 
 
     @Override

@@ -18,14 +18,10 @@ public class ArchiveBoardController {
     private final DataOutputStream outS;
     private final Socket sock;
 
-    public ArchiveBoardController(InetAddress serverIp, int serverPort) {
-        try {
+    public ArchiveBoardController(InetAddress serverIp, int serverPort) throws IOException {
             sock = new Socket(serverIp, serverPort);
             inS = new DataInputStream(sock.getInputStream());
             outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
@@ -60,9 +56,7 @@ public class ArchiveBoardController {
         try{
             sock.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-
     }
 
 

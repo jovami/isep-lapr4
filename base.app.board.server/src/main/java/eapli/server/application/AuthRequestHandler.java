@@ -75,13 +75,10 @@ public class AuthRequestHandler extends AbstractSBServerHandler {
                 responseSent.send(outS);
                 return;
             }
-
-            //TODO: store token
             authenticateUser(responseSent, systemUser);
 
-
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("There was and error while reading socket for auth");
         }
 
     }

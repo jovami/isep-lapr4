@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence">
-  <persistence-unit name="eapli.base">
-    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <persistence-unit name="eapli.base">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-    <class>eapli.framework.infrastructure.authz.domain.model.SystemUser</class>
-    <class>eapli.framework.infrastructure.authz.domain.model.Role</class>
-    <class>eapli.framework.infrastructure.authz.domain.model.RoleSet</class>
-    <class>eapli.framework.infrastructure.authz.domain.model.RoleAssignment</class>
-    <class>eapli.base.clientusermanagement.domain.ClientUser</class>
-    <class>eapli.base.clientusermanagement.domain.SignupRequest</class>
-    <class>eapli.base.enrollment.domain.Enrollment</class>
-    <class>eapli.base.enrollmentrequest.domain.EnrollmentRequest</class>
-    <class>eapli.base.course.domain.Course</class>
-    <class>eapli.base.course.domain.StaffMember</class>
-    <class>eapli.base.board.domain.Board</class>
-    <class>eapli.base.board.domain.Cell</class>
-    <class>eapli.base.board.domain.PostIt</class>
-    <class>eapli.base.board.domain.BoardHistory</class>
-    <class>eapli.base.board.domain.BoardParticipant</class>
-    <class>eapli.base.clientusermanagement.domain.users.Manager</class>
-    <class>eapli.base.clientusermanagement.domain.users.Teacher</class>
-    <class>eapli.base.clientusermanagement.domain.users.Student</class>
-    <class>eapli.base.event.recurringPattern.domain.RecurringPattern</class>
-    <class>eapli.base.event.timetable.domain.TimeTable</class>
-    <class>eapli.base.event.meeting.domain.Meeting</class>
-    <class>eapli.base.event.meeting.domain.MeetingParticipant</class>
-    <class>eapli.base.event.lecture.domain.Lecture</class>
-    <class>eapli.base.event.lecture.domain.LectureParticipant</class>
-    <class>eapli.base.exam.domain.RegularExam</class>
-    <class>eapli.base.formativeexam.domain.FormativeExam</class>
-    <class>eapli.base.question.domain.Question</class>
-    <class>eapli.base.examresult.domain.RegularExamResult</class>
+        <class>eapli.framework.infrastructure.authz.domain.model.SystemUser</class>
+        <class>eapli.framework.infrastructure.authz.domain.model.Role</class>
+        <class>eapli.framework.infrastructure.authz.domain.model.RoleSet</class>
+        <class>eapli.framework.infrastructure.authz.domain.model.RoleAssignment</class>
+        <class>eapli.base.clientusermanagement.domain.ClientUser</class>
+        <class>eapli.base.clientusermanagement.domain.SignupRequest</class>
+        <class>eapli.base.enrollment.domain.Enrollment</class>
+        <class>eapli.base.enrollmentrequest.domain.EnrollmentRequest</class>
+        <class>eapli.base.course.domain.Course</class>
+        <class>eapli.base.course.domain.StaffMember</class>
+        <class>eapli.base.board.domain.Board</class>
+        <class>eapli.base.board.domain.Cell</class>
+        <class>eapli.base.board.domain.PostIt</class>
+        <class>eapli.base.board.domain.BoardHistory</class>
+        <class>eapli.base.board.domain.BoardParticipant</class>
+        <class>eapli.base.clientusermanagement.domain.users.Manager</class>
+        <class>eapli.base.clientusermanagement.domain.users.Teacher</class>
+        <class>eapli.base.clientusermanagement.domain.users.Student</class>
+        <class>eapli.base.event.recurringPattern.domain.RecurringPattern</class>
+        <class>eapli.base.event.timetable.domain.TimeTable</class>
+        <class>eapli.base.event.meeting.domain.Meeting</class>
+        <class>eapli.base.event.meeting.domain.MeetingParticipant</class>
+        <class>eapli.base.event.lecture.domain.Lecture</class>
+        <class>eapli.base.event.lecture.domain.LectureParticipant</class>
+        <class>eapli.base.exam.domain.RegularExam</class>
+        <class>eapli.base.formativeexam.domain.FormativeExam</class>
+        <class>eapli.base.question.domain.Question</class>
+        <class>eapli.base.examresult.domain.RegularExamResult</class>
 
-    <properties>
-      <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->
-      <property name="javax.persistence.jdbc.url" value="jdbc:h2:./.db/ecourse;MV_STORE=FALSE;AUTO_SERVER=true;"/>
+        <properties>
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/base"/>-->
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:./.db/ecourse;MV_STORE=FALSE;AUTO_SERVER=true;"/>-->
 
-      <property name="javax.persistence.jdbc.user" value="sa"/>
-      <property name="javax.persistence.jdbc.password" value=""/>
-      <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-      <!-- <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/> -->
-      <!-- <property name = "hibernate.show_sql" value = "true" /> -->
-      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://vsgate-s2.dei.isep.ipp.pt:10816/ecourse"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="hibernate.show_sql" value = "false" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 
-    </properties>
-  </persistence-unit>
+        </properties>
+    </persistence-unit>
 </persistence>

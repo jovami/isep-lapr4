@@ -1,5 +1,8 @@
 package eapli.base.event.recurringPattern.domain;
 
+import eapli.framework.domain.model.AggregateRoot;
+
+import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -7,22 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import eapli.framework.domain.model.AggregateRoot;
-
 @Entity
 @Table(name = "RECURRINGPATTERN")
 public class RecurringPattern implements AggregateRoot<Integer> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int code;
 
     @Enumerated(EnumType.STRING)

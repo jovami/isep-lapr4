@@ -9,7 +9,7 @@ import java.util.Objects;
 public class PostIt {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int postItId;
     @Lob
     @Basic(fetch = FetchType.LAZY)

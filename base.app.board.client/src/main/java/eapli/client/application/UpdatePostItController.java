@@ -25,20 +25,18 @@ public class UpdatePostItController {
         this.outS = new DataOutputStream(sock.getOutputStream());
     }
 
-    public List<BoardWriteAccessDTO> requestBoards() {
+    public List<BoardWriteAccessDTO> requestBoards() throws IOException, ReceivedERRCode {
         final var requestBoards = new SBProtocol();
         requestBoards.setCode(SBProtocol.UPDATE_POST_IT);
         requestBoards.setToken(SBPClientApp.authToken());
 
-        try {
-            requestBoards.send(this.outS);
-            final var reply = new SBProtocol(this.inS);
 
-            final var decoder = new BoardWriteAccessDTOEncoder();
-            return decoder.decodeMany(reply.getContentAsString());
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
-        }
+        requestBoards.send(this.outS);
+        final var reply = new SBProtocol(this.inS);
+
+        final var decoder = new BoardWriteAccessDTOEncoder();
+        return decoder.decodeMany(reply.getContentAsString());
+
     }
 
     public boolean updatePostIt(BoardRowColDataDTO dto) throws IOException, ReceivedERRCode {

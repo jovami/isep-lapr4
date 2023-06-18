@@ -1,12 +1,5 @@
 package eapli.base.event.meeting.application;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTO;
 import eapli.base.clientusermanagement.dto.SystemUserNameEmailDTOMapper;
 import eapli.base.event.meeting.domain.Meeting;
@@ -25,6 +18,13 @@ import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @UseCaseController
 public class ScheduleMeetingController {
@@ -60,7 +60,6 @@ public class ScheduleMeetingController {
         Optional<SystemUser> user = userRepository.ofIdentity(authz.session().get().authenticatedUser().identity());
 
         pattern = buildPattern(date, startTime, durationMinutes);
-        txCtx.beginTransaction();
         pattern = patternRepository.save(pattern);
 
         if (pattern != null) {
@@ -68,12 +67,10 @@ public class ScheduleMeetingController {
                 meeting = new Meeting(user.get(), description, pattern);
                 this.meeting = meetingRepository.save(meeting);
                 if (schedule()){
-                    txCtx.commit();
                     return true;
                 }
             }
         }
-        txCtx.rollback();
         return false;
     }
 

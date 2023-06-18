@@ -4,13 +4,11 @@ import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.board.domain.Cell;
 import eapli.board.SBProtocol;
-
 import eapli.server.SBServerApp;
 import eapli.server.application.newChangeEvent.NewChangeWatchDog;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 
 //TODO ABSTRACT HANDLER
@@ -66,6 +64,7 @@ public class ViewBoardRequestHandler extends AbstractSBServerHandler {
                 SBServerApp.activeAuths.get(authToken).setPort(Integer.parseInt(boardStr[1]));
 
                 addSubsriber(board.getBoardTitle().title());
+                System.out.printf("[INFO] %s requested to view %s\n",SBServerApp.activeAuths.get(authToken).getUserLoggedIn().username().toString(),board.getBoardTitle().title());
             }
 
         } catch (IOException | ReceivedERRCode ignored) {

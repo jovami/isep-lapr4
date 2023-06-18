@@ -51,16 +51,13 @@ public class UndoPostItLastChangeHandler extends AbstractSBServerHandler {
 
             var title = boardInfo.boardName();
 
-            // FIXME: Board class is using 1-based indexing
             var row = boardInfo.row() + 1;
             var col = boardInfo.column() + 1;
 
             var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
 
             if (board == null) {
-                var err = new SBProtocol();
-                err.setCode(SBProtocol.ERR);
-                err.send(this.outS);
+                SBProtocol.sendErr("Board not found",outS);
                 return;
             }
 
@@ -69,9 +66,7 @@ public class UndoPostItLastChangeHandler extends AbstractSBServerHandler {
 
             Optional<String> opt = board.undoChangeOnPostIt(row, col, user);
             if (opt.isEmpty()) {
-                var reply = new SBProtocol();
-                reply.setCode(SBProtocol.ERR);
-                reply.send(outS);
+                SBProtocol.sendErr("Could not undo last change",outS);
                 return;
             }
 
@@ -86,6 +81,8 @@ public class UndoPostItLastChangeHandler extends AbstractSBServerHandler {
             var reply = new SBProtocol();
             reply.setCode(SBProtocol.ACK);
             reply.send(outS);
+
+            System.out.printf("[INFO] undo last change on post-it from cell(%d,%d)\n",row,col);
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }

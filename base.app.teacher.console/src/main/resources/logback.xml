@@ -26,28 +26,28 @@
 	</appender>
 
 	<!-- LOG everything at INFO level -->
-	<root level="error">
-		<appender-ref ref="STDOUT" />
+	<root level="NONE">
+		<appender-ref ref="FILE" />
 	</root>
 
 	<!-- specific LOG level -->
-	<logger name="eapli.framework" level="debug" additivity="false">
-		<appender-ref ref="STDOUT" />
+	<logger name="eapli.framework" level="NONE" additivity="false">
+		<appender-ref ref="FILE" />
 	</logger>
-	<logger name="eapli.base" level="info" additivity="false">
-		<appender-ref ref="STDOUT" />
+		<logger name="eapli.base" level="NONE" additivity="false">
+		<appender-ref ref="FILE" />
 	</logger>
 
-	<Logger name="org.hibernate" level="WARN">
-		<appender-ref ref="STDOUT" />
+	<Logger name="org.hibernate" level="NONE">
+		<appender-ref ref="FILE" />
 	</Logger>
-	<Logger name="org.hibernate.SQL" level="error">
-		<appender-ref ref="STDOUT" />
+	<Logger name="org.hibernate.SQL" level="NONE">
+		<appender-ref ref="FILE" />
 	</Logger>
-	<Logger name="org.hibernate.type" level="error">
-		<appender-ref ref="STDOUT" />
+	<Logger name="org.hibernate.type" level="NONE">
+		<appender-ref ref="FILE" />
 	</Logger>
-	<Logger name="org.hibernate.util.DTDEntityResolver" level="error">
-		<appender-ref ref="STDOUT" />
+	<Logger name="org.hibernate.util.DTDEntityResolver" level="NONE">
+		<appender-ref ref="FILE" />
 	</Logger>
 </configuration>

@@ -1,17 +1,11 @@
 package eapli.base.clientusermanagement.domain.users;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Version;
-
 import eapli.framework.domain.model.AggregateRoot;
 import eapli.framework.domain.model.DomainEntities;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.validations.Preconditions;
+
+import javax.persistence.*;
 
 @Entity
 public class Manager implements AggregateRoot<Integer> {
@@ -23,7 +17,7 @@ public class Manager implements AggregateRoot<Integer> {
     // TODO: check one to one
     // @EmbeddedId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int managerId;
 
     @Embedded

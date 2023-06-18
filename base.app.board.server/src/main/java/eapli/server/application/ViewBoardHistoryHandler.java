@@ -7,8 +7,6 @@ import eapli.board.SBProtocol;
 import eapli.server.SBServerApp;
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -55,6 +53,7 @@ public class ViewBoardHistoryHandler extends AbstractSBServerHandler{
             response.setCode(SBProtocol.VIEW_BOARD_HISTORY);
             response.setContentFromString(historyBuilder.toString());
             response.send(outS);
+            System.out.printf("[INFO] board history was requested by %s\n",SBServerApp.activeAuths.get(authToken).getUserLoggedIn().username().toString());
 
         } catch (
                 IOException | ReceivedERRCode e) {

@@ -32,6 +32,7 @@ public class NotificationsController {
         //search for boards that the user owns
         SBProtocol sendUser = new SBProtocol();
         sendUser.setCode(SBProtocol.VIEW_NOTFS);
+        sendUser.setToken(SBPClientApp.authToken());
         sendUser.send(outS);
 
         //receive Boards owned
@@ -43,18 +44,10 @@ public class NotificationsController {
 
         return notifications;
     }
-    public void readNotification(NotificationDto notificationDto) {
-        notifications.remove(notificationDto);
-    }
-
     public void sockClose() {
-
-            try {
-                sock.close();
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+        try {
+            sock.close();
+        } catch (IOException e) {
+        }
     }
 }

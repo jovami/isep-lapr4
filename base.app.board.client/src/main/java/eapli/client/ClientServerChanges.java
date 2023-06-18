@@ -22,10 +22,9 @@ public class ClientServerChanges extends Thread {
                 cliSock = serverSock.accept();
                 MenuChanges menu = new MenuChanges(cliSock);
                 menu.start();
-
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("There was an error reading socket");
         }
 
     }

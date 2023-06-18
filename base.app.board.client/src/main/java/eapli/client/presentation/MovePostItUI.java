@@ -1,6 +1,5 @@
 package eapli.client.presentation;
 
-import com.ibm.icu.impl.Pair;
 import eapli.board.shared.dto.BoardFromToDTO;
 import eapli.board.shared.dto.BoardWriteAccessDTO;
 import eapli.client.application.MovePostItController;
@@ -11,7 +10,6 @@ import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
 public class MovePostItUI extends AbstractUI {
     private final InetAddress ip;
@@ -43,34 +41,16 @@ public class MovePostItUI extends AbstractUI {
 
             var selected = widget.selectedElement();
 
+            System.out.printf("[Dimensions: %s (rows) x %s (columns)]\n",
+                    selected.rows(), selected.columns());
             System.out.println("Moving from\n===========");
             int[] positionFrom = selectPositions(selected);
 
-            /*var rowFrom = Console.readInteger("-> Board row:");
-            if (rowFrom > selected.rows() || rowFrom < 1) {
-                System.out.println("Invalid Row");
-                return false;
-            }
-
-            var colFrom = Console.readInteger("-> Board column:");
-            if (colFrom > selected.columns() || colFrom < 1) {
-                System.out.println("Invalid Column");
-                return false;
-            }*/
-
+            System.out.printf("[Dimensions: %s (rows) x %s (columns)]\n",
+                    selected.rows(), selected.columns());
             System.out.println("Moving to\n=========");
             int[] positionTo = selectPositions(selected);
-            /*var rowTo = Console.readInteger("-> Board row:");
-            if (rowTo > selected.rows() || rowTo < 1) {
-                System.out.println("Invalid Row");
-                return false;
-            }
 
-            var colTo = Console.readInteger("-> Board column:");
-            if (colTo > selected.columns() || colTo < 1) {
-                System.out.println("Invalid Column");
-                return false;
-            }*/
 
             var dto = new BoardFromToDTO(selected.title(), positionFrom[0] - 1,
                     positionFrom[1] - 1, positionTo[0] - 1, positionTo[1] - 1);
@@ -80,7 +60,7 @@ public class MovePostItUI extends AbstractUI {
             else
                 System.out.println("Failed to update Post-It");
         } catch (IOException | ReceivedERRCode e) {
-            System.out.println("Could not move Post-It, check if the post-it exists and if the destination is empty");
+            System.out.println(e.getMessage());
         } finally {
             ctrl.closeSocket();
         }

@@ -26,7 +26,6 @@ public class MeetingService {
 
             RecurringPattern pattern = m.pattern();
             if(!pattern.addException(pattern.startDate())){
-                txCtx.rollback();
                 return false;
             }
 
@@ -35,7 +34,6 @@ public class MeetingService {
             txCtx.commit();
             return true;
         }catch (ConcurrencyException | IntegrityViolationException e){
-            txCtx.rollback();
             return false;
         }
     }

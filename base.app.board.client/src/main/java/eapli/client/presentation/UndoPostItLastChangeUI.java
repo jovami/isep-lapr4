@@ -46,19 +46,10 @@ public final class UndoPostItLastChangeUI extends AbstractUI {
 
             var selected = widget.selectedElement();
 
+            System.out.printf("[Dimensions: %s (rows) x %s (columns)]\n",
+                    selected.rows(), selected.columns());
             int[] position = selectPositions(selected);
 
-            /*var row = Console.readInteger("-> Board row:");
-            if (row > selected.rows() || row < 1) {
-                System.out.println("Invalid Row");
-                return false;
-            }
-
-            var col = Console.readInteger("-> Board column:");
-            if (col > selected.columns() || col < 1) {
-                System.out.println("Invalid Column");
-                return false;
-            }*/
 
             // Convert to 0-based indexing
             var dto = new BoardRowColDTO(selected.title(), position[0] - 1, position[1] - 1);

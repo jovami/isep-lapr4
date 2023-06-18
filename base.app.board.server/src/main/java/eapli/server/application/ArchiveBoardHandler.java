@@ -30,7 +30,7 @@ public class ArchiveBoardHandler extends AbstractSBServerHandler{
             inS = new DataInputStream(sock.getInputStream());
             outS = new DataOutputStream(sock.getOutputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return;
         }
         try {
 
@@ -69,6 +69,7 @@ public class ArchiveBoardHandler extends AbstractSBServerHandler{
             sendBoardsArchive.setCode(SBProtocol.GET_BOARDS_OWNED_ARCHIVED);
             sendBoardsArchive.send(outS);
 
+            System.out.println("[INFO] "+boardName+" archived");
 
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);

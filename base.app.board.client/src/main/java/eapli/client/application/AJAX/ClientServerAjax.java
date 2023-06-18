@@ -69,7 +69,7 @@ public class ClientServerAjax extends Thread {
                 try {
                     cliSock.close();
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    System.out.println("There was an error closing the HTTP servers");
                 }
             }
         }

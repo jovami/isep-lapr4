@@ -34,19 +34,16 @@ public final class UndoPostItLastChangeController {
 
     }
 
-    public List<BoardWriteAccessDTO> requestBoards() {
+    public List<BoardWriteAccessDTO> requestBoards() throws IOException, ReceivedERRCode {
         final var requestBoards = new SBProtocol();
         requestBoards.setCode(SBProtocol.UNDO_LAST_POST_IT_CHANGE);
         requestBoards.setToken(SBPClientApp.authToken());
-        try {
-            requestBoards.send(outS);
-            final var reply = new SBProtocol(inS);
 
-            final var decoder = new BoardWriteAccessDTOEncoder();
-            return decoder.decodeMany(reply.getContentAsString());
-        } catch (IOException | ReceivedERRCode e) {
-            throw new RuntimeException(e);
-        }
+        requestBoards.send(outS);
+        final var reply = new SBProtocol(inS);
+
+        final var decoder = new BoardWriteAccessDTOEncoder();
+        return decoder.decodeMany(reply.getContentAsString());
     }
 
     public boolean undoChange(BoardRowColDTO dto) throws ReceivedERRCode, IOException {

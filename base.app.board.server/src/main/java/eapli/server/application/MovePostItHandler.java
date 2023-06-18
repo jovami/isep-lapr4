@@ -1,13 +1,12 @@
 package eapli.server.application;
 
-import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
 import eapli.board.shared.dto.BoardFromToDTOEncoder;
 import eapli.board.shared.dto.BoardWriteAccessDTOEncoder;
-import eapli.server.SBServerApp;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
+import eapli.server.SBServerApp;
 import eapli.server.application.newChangeEvent.NewChangeEvent;
 import jovami.util.exceptions.ReceivedERRCode;
 
@@ -53,9 +52,7 @@ public class MovePostItHandler extends AbstractSBServerHandler{
 
             var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
             if (board == null) {
-                var err = new SBProtocol();
-                err.setCode(SBProtocol.ERR);
-                err.send(this.outS);
+                SBProtocol.sendErr("Board not found",outS);
                 return;
             }
 
@@ -63,9 +60,7 @@ public class MovePostItHandler extends AbstractSBServerHandler{
 
             var data = board.movePostIt(rowFrom, colFrom, rowTo, colTo, user);
             if (data.isEmpty()) {
-                var err = new SBProtocol();
-                err.setCode(SBProtocol.ERR);
-                err.send(this.outS);
+                SBProtocol.sendErr("Could not move post-it",outS);
                 return;
             }
 
@@ -79,6 +74,9 @@ public class MovePostItHandler extends AbstractSBServerHandler{
             var reply = new SBProtocol();
             reply.setCode(SBProtocol.ACK);
             reply.send(outS);
+
+            System.out.printf("[INFO] Moved post it from cell(%d,%d) to cell(%d,%d)\n",rowFrom,colFrom,rowTo,colFrom);
+
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }

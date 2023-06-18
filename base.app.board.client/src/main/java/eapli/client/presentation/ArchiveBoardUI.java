@@ -23,7 +23,14 @@ public class ArchiveBoardUI extends AbstractUI {
     @Override
     protected boolean doShow() {
 
-        ArchiveBoardController controller = new ArchiveBoardController(serverIP, serverPort);
+
+        ArchiveBoardController controller;
+        try {
+            controller = new ArchiveBoardController(serverIP, serverPort);
+        } catch (IOException e) {
+            System.out.println("Server busy, try again later");
+            return false;
+        }
 
         //Get All board Names
         try {
@@ -52,16 +59,11 @@ public class ArchiveBoardUI extends AbstractUI {
 
             new ListWidget<>("\nList of boards user owns archived",List.of(boardsArchived)).show();
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ReceivedERRCode e) {
+        } catch (IOException | ReceivedERRCode e) {
             System.out.println(e.getMessage());
-            return false;
         }finally {
             controller.closeSocket();
         }
-
-
 
         return false;
     }

@@ -1,33 +1,32 @@
 package eapli.base.exam.domain;
 
+import eapli.framework.domain.model.ValueObject;
+import eapli.framework.validations.Preconditions;
+
+import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
-import javax.persistence.Embeddable;
-
-import eapli.framework.domain.model.ValueObject;
-import eapli.framework.validations.Preconditions;
 
 @Embeddable
 public class RegularExamDate implements ValueObject {
 
     private static final long serialVersionUID = 1L;
 
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     protected RegularExamDate() {
-        this.start = null;
-        this.end = null;
+        this.startDate = null;
+        this.endDate = null;
     }
 
-    public RegularExamDate(LocalDateTime start, LocalDateTime end) {
-        Preconditions.noneNull(start, end);
-        Preconditions.ensure(start.isBefore(end), "The open date must be before the close date");
+    public RegularExamDate(LocalDateTime startDate, LocalDateTime endDate) {
+        Preconditions.noneNull(startDate, endDate);
+        Preconditions.ensure(startDate.isBefore(endDate), "The open date must be before the close date");
 
-        this.start = start;
-        this.end = end;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public static RegularExamDate valueOf(LocalDateTime openDate, LocalDateTime closeDate) {
@@ -35,11 +34,11 @@ public class RegularExamDate implements ValueObject {
     }
 
     public LocalDateTime openDate() {
-        return this.start;
+        return this.startDate;
     }
 
     public LocalDateTime closeDate() {
-        return this.end;
+        return this.endDate;
     }
 
     @Override
@@ -49,19 +48,19 @@ public class RegularExamDate implements ValueObject {
         if (o == null || getClass() != o.getClass())
             return false;
         RegularExamDate that = (RegularExamDate) o;
-        return this.start.equals(that.start) && this.end.equals(that.end);
+        return this.startDate.equals(that.startDate) && this.endDate.equals(that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start);
+        return Objects.hash(startDate);
     }
 
     @Override
     public String toString() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d/M/yyyy H:m");
-        String open = fmt.format(start);
-        String close = fmt.format(end);
+        String open = fmt.format(startDate);
+        String close = fmt.format(endDate);
         return "Opening: " + open +
                 " | Closing: " + close;
     }

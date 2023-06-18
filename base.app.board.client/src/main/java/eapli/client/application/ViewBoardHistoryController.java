@@ -15,15 +15,13 @@ public class ViewBoardHistoryController {
     private final DataInputStream inS;
     private final DataOutputStream outS;
 
-    public ViewBoardHistoryController(InetAddress serverIP, int serverPort) {
-        try {
-            this.sock = new Socket(serverIP, serverPort);
-            this.inS = new DataInputStream(sock.getInputStream());
-            this.outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ViewBoardHistoryController(InetAddress serverIP, int serverPort) throws IOException {
+
+        this.sock = new Socket(serverIP, serverPort);
+        this.inS = new DataInputStream(sock.getInputStream());
+        this.outS = new DataOutputStream(sock.getOutputStream());
     }
+
     public String[] requestBoards() throws ReceivedERRCode {
         SBProtocol requestAllBoard = new SBProtocol();
         requestAllBoard.setToken(SBPClientApp.authToken());

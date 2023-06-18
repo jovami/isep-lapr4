@@ -22,8 +22,14 @@ public class ViewBoardRequestUI extends AbstractUI {
 
     @Override
     public boolean doShow() {
+        ViewBoardRequestController ctrl;
         try {
-            ViewBoardRequestController ctrl = new ViewBoardRequestController(serverIp, serverPort);
+            ctrl = new ViewBoardRequestController(serverIp, serverPort);
+        } catch (IOException e) {
+            System.out.println("Server Busy, try again later!");
+            return false;
+        }
+        try {
             String[] names = ctrl.requestBoards();
 
             SelectWidget<String> selec = new SelectWidget<>("Choose Board to view\n", List.of(names));

@@ -25,7 +25,13 @@ public class CreatePostItUI extends AbstractUI {
 
     @Override
     protected boolean doShow() {
-        CreatePostItController controller = new CreatePostItController(serverIP, serverPort);
+        CreatePostItController controller = null;
+        try {
+            controller = new CreatePostItController(serverIP, serverPort);
+        } catch (IOException | ReceivedERRCode e) {
+            System.out.println("[WARNING] "+e.getMessage());
+            return false;
+        }
         try {
             var boardRowColumn = controller.getBoardsList();
             var arr = new ArrayList<String>();

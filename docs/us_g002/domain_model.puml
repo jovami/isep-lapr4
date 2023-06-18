@@ -100,28 +100,12 @@ package CoursePackage <<Rectangle>> {
             -maxStudents
         }
 
-        abstract CourseEvent <<Event>>
-
-        class CourseClosedEvent <<Event>>
-        class CourseOpenEvent <<Event>>
-        class CourseEnrollOpenEvent <<Event>>
-        class CourseEnrollClosedEvent <<Event>>
-        class CourseCreatedEvent <<Event>>
-
         Course  -down-> CourseID
         Course  -up->  CourseState
         Course  -down->  CourseDescription
         Course  -down-> CourseCapacity
-        Course -up-> CourseEvent
 
         Course -> CourseDuration
-
-        CourseEvent <|-up-- CourseClosedEvent
-        CourseEvent <|-left-- CourseOpenEvent
-        CourseEvent <|-up-- CourseEnrollOpenEvent
-        CourseEvent <|-up-- CourseEnrollClosedEvent
-        CourseEvent <|-up-- CourseCreatedEvent
-
     }
 
     package STAFF <<Aggregate>>{
@@ -148,7 +132,7 @@ package CoursePackage <<Rectangle>> {
         EnrollmentRequest "1" -> "0..1"DeniedReason
         EnrollmentRequest -> RequestState
         EnrollmentRequest  o-- "*" Student
-        EnrollmentRequest --> Course
+        EnrollmentRequest -left-> Course
     }
 
     Teacher "*" <-up-- "1" StaffMember
@@ -175,8 +159,6 @@ package ExamPackage <<Rectangle>> {
     package REGULAR_EXAM <<Aggregate>> {
 
         entity RegularExam <<root>> <<Entity>>
-
-        class ClosingEvent <<Event>>
 
         class RegularExamSpecification <<value object>>
 
@@ -216,57 +198,56 @@ package ExamPackage <<Rectangle>> {
     }
 
     package EXAM_RESULT <<Aggregate>> {
-        entity ExamResult <<root>> <<Entity>>{
+        entity RegularExamResult <<root>> <<Entity>>{
             - period
         }
-        class ExamGrade <<value object>>
-        class ExamFeedback <<value object>>
-
-        entity AnswerGiven <<Entity>>{
+        enum ExamFeedbackProperties{
+            - NONE
+            - ON_SUBMISSION
+            - AFTER_CLOSING
+        }
+        enum ExamGradeProperties{
+            - NONE
+            - ON_SUBMISSION
+            - AFTER_CLOSING
         }
 
+        class ExamGrade <<value object>>
+
+        RegularExamResult -> ExamFeedbackProperties
+        RegularExamResult -> ExamGradeProperties
+
     }
 
-    class Answer <<value object>>{
-    }
 
     class GenerateFormativeExam <<Service>>
-    note bottom of GenerateFormativeExam: generate formative exams based on formativeExamSpecification
-    FormativeExamSpecification --> GenerateFormativeExam
-    GenerateFormativeExam --> FormativeExam
 
-    class SubmissionEvent <<Event>>
+    GenerateFormativeExam --> FormativeExamSpecification
+    GenerateFormativeExam --> QuestionSpecification
+
     class ExamGradingService <<Service>>
+    class ParserExamService <<Service>>
 
     RegularExam ---> ExamDate
     RegularExam -down--> RegularExamSpecification
 
-
-    Question  --> Answer : solution
     'Question  -up-> QuestionType
-    Question -> "0..*" QuestionSpecification
+    Course "1" <- Question
+    Question *- QuestionSpecification
 
-    ClosingEvent <-up-- RegularExam
-    SubmissionEvent -> ExamGradingService
-    RegularExam --> SubmissionEvent
-    FormativeExam --> SubmissionEvent
 
-    ExamGradingService "1" -up-> "1" ExamResult
+    ExamGradingService "1" -up-> "1" RegularExamResult
+    ExamGradingService "1" -up-> "1" RegularExam
+    ParserExamService -> RegularExamSpecification
 
-    ExamResult -up-> ExamGrade
-    ExamResult -> ExamFeedback
-    ExamResult  -right-> Student :does exam <
-    ExamResult -> "0..1" RegularExam
-    ExamResult --> "0..1" FormativeExam
+    RegularExamResult -up-> ExamGrade
+    RegularExamResult  -right-> Student :does exam <
+    RegularExamResult -> "0..1" RegularExam
 
-    ExamResult *- "*" AnswerGiven
-    AnswerGiven --->  Question
-    AnswerGiven --> Answer
 
     Course *-- "0..*" RegularExam
     Course *-- "0..*" FormativeExam
 
-    ClosingEvent -> ExamGradingService
     note bottom: responsible for auto-correcting\nand grading the exam
 
     Teacher -->  RegularExam
@@ -280,6 +261,7 @@ package ExamPackage <<Rectangle>> {
 }
 
 package BoardPackage <<Rectangle>> {
+    class ShareBoardService <<Service>>
     package BOARD <<Aggregate>> {
 
         entity Board <<root>> <<Entity>>{
@@ -306,12 +288,31 @@ package BoardPackage <<Rectangle>> {
 
         entity Cell <<Entity>>{
         }
-        class Header<<value object>>
 
-        entity BoardHistory <<Entity>>
+        abstract CellHistory<<abstract>>{
+            - TimeStamp
+            -postIt
+        }
         note left : stores every post-it that \nis created/modified
 
-        class TimeStamp <<value object>>
+        class  CreatePostitHistory <<value object>>{
+            - timeStamp
+            - postIt
+        }
+        class  UpdatePostitHistory <<value object>>{
+          - timeStamp
+          - postIt
+        }
+
+        class  UndoPostitHistory <<value object>>{
+            - timeStamp
+            - postIt
+        }
+        class  MovePostitHistory <<value object>>{
+            - timeStamp
+            - postIt
+        }
+
 
         entity PostIt <<Entity>> {
             - postItId
@@ -324,51 +325,32 @@ package BoardPackage <<Rectangle>> {
         }
 
 
-        enum Permissions <<enum>>{
-            - read
-            - write
-        }
-
-        class ShareBoardEvent <<Event>>
-
-        class CommitPostItEvent <<Event>>
-        note bottom : event triggered when\npost-it is created or modified
-
-        class ShareBoardService <<Service>>
-        Board --> ShareBoardService
-        note right :responsible for sharing boards
-
-        class PostItService <<Service>>
-        BoardHistory ---> PostItService
-        note bottom : responsible for create or modify PostIt\n(save previous post in BoardHistory)
-
-        class CreateBoardService <<Service>>
-        Board  -up-> CreateBoardService
-        note bottom : responsible manage the cells in the board
-
-
-
+        class NewChangeEvent <<Event>>
+        note bottom : event triggered when\ncell content is modified
     }
 
     package BOARDPARTICIPANT <<Aggregate>> {
         entity  BoardParticipant <<Entity>>
+        enum Permissions <<enum>>{
+            - read
+            - write
+        }
+        note right :responsible for sharing boards
+
     }
 
     Board *-up- "*" BoardRow
     Board *-up- "*" BoardCollumn
     Board --> BoardStatus
     Board --> BoardTitle
-    Board --> "*" BoardHistory
     Board *--> "1..*" Cell
     Board <-- SystemUser : admin
 
+    Board --> ShareBoardService
+    BoardParticipant --> ShareBoardService
     Cell "1" o-- "0..1" PostIt
-    Cell -left> Header
     Cell -> BoardCollumn
     Cell -> BoardRow
-
-    ShareBoardEvent <- Board
-    ShareBoardEvent --> ShareBoardService
 
     BoardParticipant --> Board
     BoardParticipant --> "*"  SystemUser
@@ -377,12 +359,13 @@ package BoardPackage <<Rectangle>> {
     PostIt --> BoardParticipant : owns <
     PostIt --> TypeOfContent
 
-    CommitPostItEvent <- PostIt
-    CommitPostItEvent ---> PostItService
+    NewChangeEvent <- Cell
 
-    BoardHistory -> TimeStamp
-    BoardHistory --> PostIt
-    BoardHistory --> BoardParticipant : commits post-it <
+    Cell *-up- "0..*" CellHistory
+    CellHistory <-up- MovePostitHistory
+    CellHistory <-up- UndoPostitHistory
+    CellHistory <-up- CreatePostitHistory
+    CellHistory <-up- UpdatePostitHistory
 
 }
 
@@ -429,7 +412,7 @@ package EventPackage <<Rectangle>> {
     class CheckAvailabilityService<<Service>>
     note right: checks if an user is available\n for the given RecurringPattern
 
-    package Lecture <<Aggregate>>{
+    package LECTURE <<Aggregate>>{
         entity Lecture <<root>> <<entity>> {
         }
         enum LectureType {
@@ -450,28 +433,24 @@ package EventPackage <<Rectangle>> {
 
         entity Meeting <<root>> <<Entity>>
 
-        class ScheduleMeetingEvent <<Event>>
-
-        class CancelsMeetingEvent <<Event>>
-
         class MeetingService <<Service>>
         note right: responsible for managing\n meetings between users
 
+
+        Meeting -> MeetingService
+
+    }
+    package MEETINGPARTICIPANT <<Aggregate>> {
         entity MeetingParticipant <<Entity>>
+        MeetingParticipant "1" -> "*" SystemUser
+        MeetingParticipant  ->  ParticipantStatus
+        MeetingParticipant "*" --up> "1" Meeting
 
         enum ParticipantStatus {
             - accepted
             - rejected
             - pending
         }
-
-        Meeting -> MeetingService
-        Meeting  -up->  ScheduleMeetingEvent
-        Meeting <-up- CancelsMeetingEvent
-
-        MeetingParticipant "1" -> "*" SystemUser
-        MeetingParticipant  ->  ParticipantStatus
-        MeetingParticipant "*" --up> "1" Meeting
 
     }
 

@@ -20,19 +20,11 @@ public class CreatePostItController {
     private ArrayList<String> boardColumns;
 
 
-    public CreatePostItController(InetAddress serverIP, int serverPort) {
-        try {
+    public CreatePostItController(InetAddress serverIP, int serverPort) throws IOException, ReceivedERRCode {
             this.sock = new Socket(serverIP, serverPort);
             this.inS = new DataInputStream(sock.getInputStream());
             this.outS = new DataOutputStream(sock.getOutputStream());
             canCreatePostIt();
-        } catch (IOException | RuntimeException e) {
-            System.out.println("Failed to connect to provided SERVER-ADDRESS and SERVER-PORT.");
-            System.out.println("Application aborted.");
-            throw new RuntimeException(e);
-        } catch (ReceivedERRCode e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

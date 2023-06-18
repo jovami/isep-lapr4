@@ -29,7 +29,6 @@ public class DisconnRequestHandler extends AbstractSBServerHandler {
         try {
             responseSent.send(outS);
         } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -1,9 +1,5 @@
 package eapli.base.event.lecture.application;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-
 import eapli.base.clientusermanagement.application.MyUserService;
 import eapli.base.clientusermanagement.usermanagement.domain.BaseRoles;
 import eapli.base.course.domain.Course;
@@ -17,15 +13,17 @@ import eapli.base.event.recurringPattern.domain.RecurringPattern;
 import eapli.base.event.recurringPattern.repositories.RecurringPatternRepository;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.framework.application.UseCaseController;
-import eapli.framework.domain.repositories.TransactionalContext;
 import eapli.framework.infrastructure.authz.application.AuthorizationService;
 import eapli.framework.infrastructure.authz.application.AuthzRegistry;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
 @UseCaseController
 public class ScheduleLectureController {
     private final AuthorizationService authz = AuthzRegistry.authorizationService();
-    private final TransactionalContext txCtx;
     private final LectureRepository lectureRepository;
     private final RecurringPatternRepository patternRepository;
     private final EnrollmentRepository enrollmentRepository;
@@ -34,7 +32,6 @@ public class ScheduleLectureController {
     private final MyUserService userSvc;
 
     public ScheduleLectureController() {
-        txCtx = PersistenceContext.repositories().newTransactionalContext();
         lectureRepository = PersistenceContext.repositories().lectures();
         patternRepository = PersistenceContext.repositories().recurringPatterns();
         enrollmentRepository = PersistenceContext.repositories().enrollments();
@@ -50,11 +47,9 @@ public class ScheduleLectureController {
         var teacher = this.userSvc.currentTeacher();
 
         var pattern = buildPattern(startDate, endDate, startTime, durationMinutes);
-        txCtx.beginTransaction();
 
         pattern = patternRepository.save(pattern);
         if (pattern == null) {
-            txCtx.rollback();
             return false;
         }
 
@@ -71,19 +66,16 @@ public class ScheduleLectureController {
         try {
             user = this.userSvc.currentUser();
         } catch (IllegalStateException e) {
-            txCtx.rollback();
             return false;
         }
 
         var organizer = user;
 
         if (!this.svc.scheduleLecture(organizer, participants, lecture)) {
-            txCtx.rollback();
             return false;
         }
 
         lectureRepository.save(lecture);
-        txCtx.commit();
 
         return true;
     }

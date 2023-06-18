@@ -1,22 +1,16 @@
 package eapli.base.event.lecture.domain;
 
-import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 import eapli.base.clientusermanagement.domain.users.Student;
 import eapli.framework.domain.model.AggregateRoot;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class LectureParticipant implements AggregateRoot<Integer> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "LECTUREPARTICIPANTID")
     private int id;
     @ManyToOne

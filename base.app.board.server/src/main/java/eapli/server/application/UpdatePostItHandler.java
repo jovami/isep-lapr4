@@ -52,18 +52,14 @@ public class UpdatePostItHandler extends AbstractSBServerHandler {
 
             var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
             if (board == null) {
-                var err = new SBProtocol();
-                err.setCode(SBProtocol.ERR);
-                err.send(this.outS);
+                SBProtocol.sendErr("Board not found",outS);
                 return;
             }
 
             var user = SBServerApp.activeAuths.get(authToken).getUserLoggedIn();
 
             if (!board.updatePostIt(row, col, data, user)) {
-                var reply = new SBProtocol();
-                reply.setCode(SBProtocol.ERR);
-                reply.send(this.outS);
+                SBProtocol.sendErr("Could not update cell",outS);
                 return;
             }
 
@@ -78,6 +74,7 @@ public class UpdatePostItHandler extends AbstractSBServerHandler {
             var reply = new SBProtocol();
             reply.setCode(SBProtocol.ACK);
             reply.send(outS);
+            System.out.printf("[INFO] updated post-it from cell(%d,%d)\n",row,col);
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }

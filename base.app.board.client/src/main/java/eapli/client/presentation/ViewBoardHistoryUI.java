@@ -6,6 +6,7 @@ import eapli.framework.presentation.console.AbstractUI;
 import eapli.framework.presentation.console.SelectWidget;
 import jovami.util.exceptions.ReceivedERRCode;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -25,6 +26,11 @@ public class ViewBoardHistoryUI extends AbstractUI {
     public boolean doShow() {
         try {
             controller = new ViewBoardHistoryController(serverIp, serverPort);
+        } catch (IOException e) {
+            System.out.println("Server Busy, try again later!");
+            return false;
+        }
+        try {
             String[] names = controller.requestBoards();
 
             SelectWidget<String> selec = new SelectWidget<>("Choose Board to view\n", List.of(names));

@@ -106,6 +106,8 @@ public class CreatePostItHandler extends AbstractSBServerHandler {
             response.setCode(SBProtocol.ACK);
             response.send(outS);
 
+            System.out.println("[INFO] post-it created successfully on "+alterBoard);
+
 
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);

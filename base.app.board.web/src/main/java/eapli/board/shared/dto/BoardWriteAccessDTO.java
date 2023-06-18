@@ -18,6 +18,6 @@ public class BoardWriteAccessDTO {
 
     @Override
     public String toString() {
-        return String.format("%s (%dx%d)", this.title, this.rows, this.columns);
+        return String.format("%s", this.title);
     }
 }

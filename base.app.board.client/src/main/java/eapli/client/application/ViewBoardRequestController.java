@@ -22,28 +22,22 @@ public class ViewBoardRequestController {
     private final DataOutputStream outS;
     private final int HEADER_SIZE = 3;
 
-    public ViewBoardRequestController(InetAddress serverIP, int serverPort) {
-        try {
-            this.sock = new Socket(serverIP, serverPort);
-            this.inS = new DataInputStream(sock.getInputStream());
-            this.outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public ViewBoardRequestController(InetAddress serverIP, int serverPort) throws IOException {
+
+        this.sock = new Socket(serverIP, serverPort);
+        this.inS = new DataInputStream(sock.getInputStream());
+        this.outS = new DataOutputStream(sock.getOutputStream());
     }
 
-    public String[] requestBoards() throws ReceivedERRCode {
+    public String[] requestBoards() throws ReceivedERRCode, IOException {
         SBProtocol requestAllBoard = new SBProtocol();
         requestAllBoard.setToken(SBPClientApp.authToken());
         requestAllBoard.setCode(SBProtocol.VIEW_ALL_BOARDS);
 
-        try {
-            requestAllBoard.send(outS);
-            SBProtocol receiveBoards = new SBProtocol(inS);
-            return receiveBoards.getContentAsString().split("\0");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        requestAllBoard.send(outS);
+        SBProtocol receiveBoards = new SBProtocol(inS);
+        return receiveBoards.getContentAsString().split("\0");
     }
 
     public void chooseBoard(String board) throws ReceivedERRCode, IOException, URISyntaxException {

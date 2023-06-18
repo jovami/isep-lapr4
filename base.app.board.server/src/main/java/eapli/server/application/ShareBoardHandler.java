@@ -6,11 +6,10 @@ import eapli.base.board.domain.BoardParticipantPermissions;
 import eapli.base.board.domain.BoardTitle;
 import eapli.base.infrastructure.persistence.PersistenceContext;
 import eapli.board.SBProtocol;
-import eapli.server.SBServerApp;
-import eapli.server.domain.Client;
 import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 import eapli.framework.infrastructure.authz.domain.model.Username;
 import eapli.framework.infrastructure.authz.domain.repositories.UserRepository;
+import eapli.server.SBServerApp;
 import jovami.util.exceptions.ReceivedERRCode;
 
 import java.io.IOException;
@@ -68,6 +67,8 @@ public class ShareBoardHandler extends AbstractSBServerHandler {
             SBProtocol ack = new SBProtocol();
             ack.setCode(SBProtocol.ACK);
             ack.send(outS);
+
+            System.out.printf("[INFO] %s participants updated\n",boardName);
 
         } catch (IOException | ReceivedERRCode ignored) {
         }

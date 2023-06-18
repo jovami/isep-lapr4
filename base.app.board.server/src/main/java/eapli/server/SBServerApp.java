@@ -76,14 +76,14 @@ public class SBServerApp extends BaseApplication {
             boards.putIfAbsent(board.getBoardTitle(), board);
         }
 
-        try {
-            while (true) {
+        while (true) {
+            try {
                 cliSock = sock.accept();
                 MenuRequest req = new MenuRequest(cliSock);
                 req.start();
+            } catch (Exception | Error error) {
+                System.out.println("Failed reading socket!");
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

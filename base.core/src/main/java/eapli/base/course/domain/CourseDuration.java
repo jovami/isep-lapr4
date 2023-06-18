@@ -1,28 +1,27 @@
 package eapli.base.course.domain;
 
-import java.time.LocalDate;
-
-import javax.persistence.Embeddable;
-
 import eapli.framework.domain.model.ValueObject;
 import eapli.framework.validations.Preconditions;
 
+import javax.persistence.Embeddable;
+import java.time.LocalDate;
+
 @Embeddable
 public class CourseDuration implements ValueObject {
-    private final LocalDate start;
-    private final LocalDate end;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
     protected CourseDuration() {
-        this.start = null;
-        this.end = null;
+        this.startDate = null;
+        this.endDate = null;
     }
 
-    protected CourseDuration(LocalDate start, LocalDate end) {
-        Preconditions.noneNull(start, end);
-        Preconditions.ensure(start.isBefore(end), "Start date must be before end date");
+    protected CourseDuration(LocalDate startDate, LocalDate endDate) {
+        Preconditions.noneNull(startDate, endDate);
+        Preconditions.ensure(startDate.isBefore(endDate), "Start date must be before end date");
 
-        this.start = start;
-        this.end = end;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public static CourseDuration valueOf(LocalDate start, LocalDate end){
@@ -30,15 +29,15 @@ public class CourseDuration implements ValueObject {
     }
 
     public LocalDate startDate() {
-        return this.start;
+        return this.startDate;
     }
 
     public LocalDate endDate() {
-        return this.end;
+        return this.endDate;
     }
 
     @Override
     public String toString() {
-        return start +  " - " + end;
+        return startDate +  " - " + endDate;
     }
 }
