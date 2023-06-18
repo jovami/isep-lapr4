@@ -1,0 +1,140 @@
+@startuml
+
+actor SBServer as server
+
+participant UndoPostItLastChangeHandler as ctrl
+
+participant SystemUser as sys_usr
+
+participant SBProtocol as protocol
+participant BoardService as svc
+
+participant BoardWriteAccessDTOEncoder as wrt_enc
+participant BoardWriteAccessDTO as wrt_dto
+
+participant BoardRowColDTOEncoder as enc
+participant BoardRowColDTO as dto
+
+participant Board as board
+participant Cell as cell
+participant PostIt as post
+
+participant NewChangeEvent as evt
+participant EventPublisher as pub
+
+server --> ctrl : create(socket, request)
+activate ctrl
+deactivate ctrl
+
+server -> ctrl : run()
+activate ctrl
+
+    note right : establish socket input/output stream
+
+
+    ctrl --> sys_usr : get()
+    activate sys_usr
+        note right : sys_usr obtained via SBServerApp and auth token
+    deactivate sys_usr
+
+    ctrl --> svc : boardsUserCanWrite(sys_usr)
+    activate svc
+        note right : same process as US_3006
+        svc --> ctrl : boards
+    deactivate svc
+
+    ctrl --> wrt_enc : encode(boards)
+    activate wrt_enc
+        loop for each board in boards
+            wrt_enc --> wrt_dto : create()
+            activate wrt_dto
+            deactivate wrt_dto
+        end loop
+
+        wrt_enc --> ctrl : encodedBoardList
+    deactivate wrt_enc
+
+    ctrl --> protocol : create()
+    activate protocol
+        note right : content: encodedBoardList
+    deactivate protocol
+
+    ctrl --> protocol : send(outS)
+
+    note right of ctrl : await client reply
+
+    ctrl --> protocol : create(inS)
+    activate protocol
+        protocol --> ctrl : reply
+    deactivate protocol
+
+    ctrl --> enc : decode(request.getContentAsString)
+    activate enc
+        enc --> dto : create
+        activate dto
+        deactivate dto
+
+        enc --> ctrl : dto
+    deactivate enc
+
+
+    ctrl --> board : get()
+    activate board
+        note right : board obtained via SBServerApp
+    deactivate board
+
+    ctrl --> sys_usr : get(dto.boardName)
+    activate sys_usr
+        note right : sys_usr obtained via SBServerApp and auth token
+    deactivate sys_usr
+
+    ctrl --> board : undoChangeOnPostIt(dto.row, dto.col, sys_usr)
+    activate board
+        board --> cell : get(row, col)
+        activate cell
+        deactivate cell
+
+        board --> cell : undoPostItChange(sys_usr)
+        activate cell
+            cell --> cell : getLastHistoryUpdate()
+
+            cell --> post : alterPostItData(history.prevContent)
+            activate post
+            deactivate post
+
+            cell --> cell : addUndoToHistory()
+
+            cell --> board : newPostItContent
+        deactivate cell
+
+        board --> ctrl : newPostItContent
+    deactivate board
+
+
+    ctrl --> protocol : create()
+    activate protocol
+        note right : code: UPDATE_POST_IT\ncontent: boardName, row, col, newPostItContent
+    deactivate protocol
+
+    ctrl --> evt : create(boardName, protocol)
+    activate evt
+    deactivate evt
+
+    ctrl --> pub : publish(event)
+    activate pub
+    deactivate pub
+
+    ctrl --> protocol : create()
+    activate protocol
+        note right : code: ACK
+    deactivate protocol
+
+    ctrl --> protocol : send(outS)
+    activate protocol
+    deactivate protocol
+
+deactivate ctrl
+
+@enduml
+
+

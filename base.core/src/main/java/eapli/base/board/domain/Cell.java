@@ -1,6 +1,5 @@
 package eapli.base.board.domain;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +8,16 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import eapli.framework.infrastructure.authz.domain.model.SystemUser;
 
 @Entity
 public class Cell implements Serializable {
@@ -50,6 +59,7 @@ public class Cell implements Serializable {
         if (!hasPostIt())
             return false;
 
+        // TODO: unused?
         String oldData = this.postIt.alterPostItData(newData);
 
         formatString(board, this.history.getFirst(), newData, Type.UPDATE);
@@ -79,13 +89,16 @@ public class Cell implements Serializable {
         return cellTo.addPostIt(board, this.postIt) && this.removePostIt(board);
     }
 
-    public synchronized Optional<String> undoPostItChange(Board board) {
+    public synchronized Optional<String> undoPostItChange(Board board, SystemUser user) {
+        if (!this.hasPostIt() || !this.postIt.getOwner().sameAs(user))
+            return Optional.empty();
+
         for (final var entry : this.history) {
             if (Type.valueOf(entry.getType()) == Type.UPDATE) {
 
                 this.postIt.alterPostItData(entry.getPrevContent());
 
-                formatString(board, entry, null, Type.UNDO);
+                this.formatString(board, entry, null, Type.UNDO);
                 return Optional.of(entry.getPrevContent());
             }
         }
@@ -105,7 +118,6 @@ public class Cell implements Serializable {
         return column;
     }
 
-    // FIXME: delete this!!!!!
     public synchronized PostIt getPostIt() {
         return this.postIt;
     }
@@ -125,7 +137,7 @@ public class Cell implements Serializable {
         return Objects.hash(row, column);
     }
 
-    public boolean hasPostIt() {
+    public synchronized boolean hasPostIt() {
         return this.postIt != null;
     }
 

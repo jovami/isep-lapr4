@@ -1,0 +1,13 @@
+@startuml
+
+actor Client as client
+actor Server as server
+
+client -> server : openSocket
+client <-- server : accept socket
+client -> server: requestBoards()
+client <-- server: board with permissions to write
+client -> server: undoChange(board)
+client <-- server: inform success
+
+@enduml

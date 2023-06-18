@@ -19,7 +19,7 @@ import java.util.List;
  * UndoPostItLastChangeController
  */
 @UseCaseController
-public class UndoPostItLastChangeController {
+public final class UndoPostItLastChangeController {
 
     private Socket sock;
     private DataInputStream inS;
@@ -58,14 +58,12 @@ public class UndoPostItLastChangeController {
 
         final var reply = new SBProtocol(this.inS);
         return reply.getCode() != SBProtocol.ACK;
-
     }
 
     public void closeSocket() {
         try {
-            sock.close();
+            this.sock.close();
         } catch (IOException e) {
         }
     }
-
 }

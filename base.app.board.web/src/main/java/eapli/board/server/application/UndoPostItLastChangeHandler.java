@@ -1,5 +1,11 @@
 package eapli.board.server.application;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Optional;
+
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
 import eapli.board.server.SBServerApp;
@@ -10,12 +16,6 @@ import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
 import eapli.framework.validations.Preconditions;
 import jovami.util.exceptions.ReceivedERRCode;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.Optional;
 
 /**
  * UndoPostItLastChangeHandler
@@ -79,9 +79,10 @@ public class UndoPostItLastChangeHandler implements Runnable {
                 return;
             }
 
-            System.out.println("hi before board.undoChangeOnPostIt()");
+            var user = SBServerApp.activeAuths.get(this.sock.getInetAddress())
+                    .getUserLoggedIn();
 
-            Optional<String> opt = board.undoChangeOnPostIt(row, col);
+            Optional<String> opt = board.undoChangeOnPostIt(row, col, user);
             if (opt.isEmpty()) {
                 var reply = new SBProtocol();
                 reply.setCode(SBProtocol.ERR);
@@ -89,16 +90,13 @@ public class UndoPostItLastChangeHandler implements Runnable {
                 return;
             }
 
-            System.out.println("hi after board.undoChangeOnPostIt()");
-
-            var message = String.format("%s\t%d,%d\t%s", title, row, col,opt.get());
+            var message = String.format("%s\t%d,%d\t%s", title, row, col, opt.get());
 
             SBProtocol protocol = new SBProtocol();
             protocol.setCode(SBProtocol.UPDATE_POST_IT);
             protocol.setContentFromString(message);
 
-            var event = new NewChangeEvent(title, protocol);
-            this.publisher.publish(event);
+            this.publisher.publish(new NewChangeEvent(title, protocol));
 
             var reply = new SBProtocol();
             reply.setCode(SBProtocol.ACK);

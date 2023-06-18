@@ -16,12 +16,12 @@ public interface SBEncoder<T, U> {
     /**
      * @return char by which to separate object fields
      */
-    public CharSequence fieldSeparator();
+    CharSequence fieldSeparator();
 
     /**
      * @return char by which to separate multiple objects
      */
-    public CharSequence multiSeparator();
+    CharSequence multiSeparator();
 
     /**
      * Encode an object to a plain string delimited by a separator
@@ -31,7 +31,7 @@ public interface SBEncoder<T, U> {
      *
      * @see #fieldSeparator()
      */
-    public String encode(T obj);
+    String encode(T obj);
 
     /**
      * Encode many objects to a single string.
@@ -58,12 +58,12 @@ public interface SBEncoder<T, U> {
      *
      * @see #fieldSeparator()
      */
-    public U decode(String str);
+    U decode(String str);
 
     /**
-     * Encode many objects to a single string.
+     * Decode a single string into many objects.
      * Default implementation splits by {@link #multiSeparator()}
-     * and then calls {@link #decode(String)} each of the result elements
+     * and then calls {@link #decode(String)} on each of the result elements
      *
      * @param str string to decode
      * @return decoded objects
@@ -78,5 +78,4 @@ public interface SBEncoder<T, U> {
                 .map(this::decode)
                 .collect(Collectors.toList());
     }
-
 }

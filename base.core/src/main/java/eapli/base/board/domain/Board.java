@@ -95,14 +95,14 @@ public class Board implements AggregateRoot<BoardTitle> {
     }
 
 
-    public Optional<String> undoChangeOnPostIt(int row, int column) {
+    public Optional<String> undoChangeOnPostIt(int row, int column, SystemUser user) {
         synchronized (this.cells) {
             var idx = (row - 1) * this.numColumns + (column - 1);
             if (idx < 0 || idx >= this.cells.size())
                 return Optional.empty(); // TODO: report invalid index
         }
 
-        return this.getCell(row, column).undoPostItChange(this);
+        return this.getCell(row, column).undoPostItChange(this, user);
     }
 
     public void archiveBoard() {
