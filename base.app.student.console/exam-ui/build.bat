@@ -4,14 +4,15 @@ rem use at your own risk
 @echo off
 setlocal
 
-cd /d "%~dp0" || exit /b 1
+set "SCRIPT_DIR=%~dp0"
+cd /d "%SCRIPT_DIR%" || exit /b 1
 
 set "DEST=..\src\main\resources\static"
 set "SRC=.\dist"
 
 set "TEMPLATES=..\src\main\resources\templates"
 
-npm run build || exit /b 1
+call npm run build || exit /b 1
 
 echo.
 
@@ -19,10 +20,10 @@ if exist "%DEST%" rd /s /q "%DEST%"
 
 echo.
 
-xcopy /s /e /i "%SRC%" "%DEST%"
+xcopy /e /i "%SRC%" "%DEST%"
 
-rem HACK: application.properties isn't being read for some reason
-mkdir "%TEMPLATES%" 2>nul
+REM HACK: application.properties isn't being read for some reason
+md "%TEMPLATES%" 2>nul
 move /y "%DEST%\index.html" "%TEMPLATES%"
 
 endlocal
