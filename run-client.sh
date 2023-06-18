@@ -6,4 +6,4 @@
 
 #REM call the java VM, e.g,
 #java -cp $BASE_CP eapli.board.client.SBPClientApp "$@"
-exec java -jar base.app.board.client/target/base.app.board.client-1.4.0-SNAPSHOT.jar %1 %2
+exec java -jar base.app.board.client/target/base.app.board.client-1.4.0-SNAPSHOT.jar "$@"
