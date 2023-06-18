@@ -101,6 +101,15 @@ class ExamToBeTakenDTO {
     - sections: List<Section>
 }
 
+class GrammarContext {
+    - factory: GrammarToolFactory
+}
+
+class GrammarToolFactory {
+    + examParserService(): ParserExamService
+    + gradeExamService(): GradeExamService
+}
+
 class ExamResultDTO {
     - sections: List<Section>
     - grade: Float
@@ -128,6 +137,11 @@ ParserExamService ..> RegularExam
 GradeExamService ..> RegularExam
 
 ParserExamService ..> ExamToBeTakenDTO
+
+TakeExamController ..> GrammarContext
+GrammarContext --> GrammarToolFactory
+GrammarToolFactory --> ParserExamService
+GrammarToolFactory --> GradeExamService
 
 GradeExamService ..> ExamResolutionDTO
 
