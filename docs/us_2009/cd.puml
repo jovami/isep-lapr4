@@ -1,0 +1,138 @@
+@startuml
+class FormativeExam {
+    - title: FormativeExamTitle
+    - specification: FormativeExamSpecification
+    - course: Course
+}
+
+class FormativeExamTitle {
+    - value: String
+}
+
+class FormativeExamSpecification {
+    - spec: String
+}
+
+class Question {
+    - specification: QuestionSpecification
+    - course: Course
+}
+
+class QuestionSpecification {
+    - spec: String
+}
+
+class Course {
+}
+
+class TakeFormativeExamController {
+    + formativeExams(): List<FormativeExamDTO>
+    + generateFormativeExam(examDTO: FormativeExamDTO): ExamToBeTakenDTO
+    + examGrading(resolutionDTO: FormativeExamResolutionDTO): ExamResultDTO
+}
+
+interface GenerateFormativeExamService {
+    + generate(exam: FormativeExam, questions: Iterable<Questions>): ExamToBeTakenDTO
+}
+
+interface GradeFormativeExamService {
+    + correctExam(exam: FormativeExam, resolution: FormativeExamResolutionDTO, questions: Map<Long, Question>): ExamResultDTO
+}
+
+interface FormativeExamRepository {
+    + formativeExamsOfCourses(courses: Set<Course>): Iterable<FormativeExam>
+}
+
+interface EnrollmentRepository {
+    + ongoingCoursesOfStudent(student: Student): Iterable<Course>
+}
+
+interface QuestionRepository {
+    + questionsOfCourse(course: Course): Iterable<Question>
+}
+
+class FormativeExamResolutionDTO {
+    - sectionAnswers: List<Section>
+}
+
+class FormativeExamResolutionDTOUnmapper {
+    + fromDTO(dto: FormativeExamResolutionDTO): Map<Long, Question>
+}
+
+class ListFormativeExamsService {
+    + forStudent(student: Student): Iterable<FormativeExam>
+}
+
+class FormativeExamDTO {
+    - examName: String
+    - courseName: String
+}
+
+class FormativeExamMapper {
+    + toDTO(exam: FormativeExam): FormativeExamDTO
+}
+
+'
+class ExamToBeTakenDTO {
+    - title: String
+    - description: String
+    - sections: List<Section>
+}
+
+class GrammarContext {
+    - factory: GrammarToolFactory
+}
+
+class GrammarToolFactory {
+    + formativeExamGenerator(): GenerateFormativeExamService
+    + formativeExamGrader(): GradeFormativeExamService
+}
+
+
+class ExamResultDTO {
+    - sections: List<Section>
+    - grade: Float
+    - maxGrade: Float
+}
+
+TakeFormativeExamController ..> ListFormativeExamsService
+ListFormativeExamsService ..> FormativeExamRepository
+ListFormativeExamsService ..> EnrollmentRepository
+
+TakeFormativeExamController ..> FormativeExamMapper
+FormativeExamMapper ..> FormativeExamDTO
+TakeFormativeExamController ..> FormativeExamDTO
+
+TakeFormativeExamController ..> FormativeExamRepository
+TakeFormativeExamController ..> QuestionRepository
+
+TakeFormativeExamController ..> GenerateFormativeExamService
+GenerateFormativeExamService ..> FormativeExam
+GenerateFormativeExamService ..> Question
+GenerateFormativeExamService ..> ExamToBeTakenDTO
+TakeFormativeExamController ..> ExamToBeTakenDTO
+
+TakeFormativeExamController ..> GrammarContext
+GrammarContext --> GrammarToolFactory
+GrammarToolFactory --> GenerateFormativeExamService
+GrammarToolFactory --> GradeFormativeExamService
+
+TakeFormativeExamController ..> FormativeExamResolutionDTO
+TakeFormativeExamController ..> FormativeExamResolutionDTOUnmapper
+FormativeExamResolutionDTOUnmapper ..> FormativeExamResolutionDTO
+FormativeExamResolutionDTOUnmapper ..> QuestionRepository
+
+TakeFormativeExamController ..> GradeFormativeExamService
+GradeFormativeExamService ..> FormativeExam
+GradeFormativeExamService ..> FormativeExamResolutionDTO
+GradeFormativeExamService ..> Question
+GradeFormativeExamService ..> ExamResultDTO
+
+FormativeExam --> FormativeExamTitle
+FormativeExam --> FormativeExamSpecification
+FormativeExam --> Course
+
+Question --> QuestionSpecification
+Question --> Course
+
+@enduml
