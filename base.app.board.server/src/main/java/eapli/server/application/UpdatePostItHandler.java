@@ -1,104 +1,85 @@
 package eapli.server.application;
 
-import eapli.base.board.domain.Board;
 import eapli.base.board.domain.BoardTitle;
 import eapli.board.SBProtocol;
+import eapli.board.shared.dto.BoardRowColDataDTOEncoder;
+import eapli.board.shared.dto.BoardWriteAccessDTOEncoder;
 import eapli.server.SBServerApp;
-import eapli.server.application.newChangeEvent.NewChangeEvent;
 import eapli.framework.infrastructure.pubsub.EventPublisher;
 import eapli.framework.infrastructure.pubsub.impl.inprocess.service.InProcessPubSub;
+import eapli.server.application.newChangeEvent.NewChangeEvent;
 import jovami.util.exceptions.ReceivedERRCode;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class UpdatePostItHandler extends AbstractSBServerHandler {
-    private final ShareBoardService svcBoard;
-    private final PostItService svcPostIt;
     private final EventPublisher publisher;
 
     public UpdatePostItHandler(Socket socket, SBProtocol authRequest) {
-        super(socket,authRequest);
-        this.svcBoard = new ShareBoardService();
-        this.svcPostIt = new PostItService();
+        super(socket, authRequest);
         this.publisher = InProcessPubSub.publisher();
     }
 
+    private void sendBoardsUserCanWrite() throws IOException {
+        var user = SBServerApp.activeAuths.get(authToken)
+                .getUserLoggedIn();
+
+        var boards = new ShareBoardService().boardsUserCanWrite(user);
+        var body = new BoardWriteAccessDTOEncoder().encode(boards);
+
+        var reply = new SBProtocol();
+        reply.setContentFromString(body);
+        reply.send(outS);
+    }
+
+    @Override
     public void run() {
         try {
-            var time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy,HH:mm"));
+            this.sendBoardsUserCanWrite();
 
-            var inS = new DataInputStream(sock.getInputStream());
-            var outS = new DataOutputStream(sock.getOutputStream());
+            var request = new SBProtocol(inS);
+
+            var decoder = new BoardRowColDataDTOEncoder();
+            var boardInfo = decoder.decode(request.getContentAsString());
+
+            var title = boardInfo.name();
+
+            var row = boardInfo.row() + 1;
+            var col = boardInfo.column() + 1;
+
+            var data = boardInfo.data();
+
+            var board = SBServerApp.boards.get(BoardTitle.valueOf(title));
+            if (board == null) {
+                var err = new SBProtocol();
+                err.setCode(SBProtocol.ERR);
+                err.send(this.outS);
+                return;
+            }
 
             var user = SBServerApp.activeAuths.get(authToken).getUserLoggedIn();
-            var boards = svcBoard.boardsUserCanWrite(user);
 
-            var responseSent = new SBProtocol();
-            responseSent.setContentFromString(buildBoardString(boards));
-            responseSent.send(outS);
-
-            var receivedText = new SBProtocol(inS);
-            var arr = receivedText.getContentAsString().split("\t");
-
-            var board = SBServerApp.boards.get(BoardTitle.valueOf(arr[0]));
-            if (board == null)
-                throw new ReceivedERRCode("Board not found");
-
-            var dimensions = arr[1].split(",");
-            int row = Integer.parseInt(dimensions[0]);
-            int column = Integer.parseInt(dimensions[1]);
-
-            //TODO: this should be synchronized
-            var cell = board.getCell(row, column);
-            if (!cell.hasPostIt()) {
-                var protocol = new SBProtocol();
-                protocol.setCode(SBProtocol.ERR);
-                protocol.setContentFromString("Cell is empty");
-                protocol.send(outS);
-                return;
-            }
-            var prevText = cell.getPostIt().getData();
-
-            if (!svcPostIt.updatePostIt(board, row, column, arr[2], user)) {
-                var protocol = new SBProtocol();
-                protocol.setCode(SBProtocol.ERR);
-                protocol.setContentFromString("Cell is empty");
-                protocol.send(outS);
+            if (!board.updatePostIt(row, col, data, user)) {
+                var reply = new SBProtocol();
+                reply.setCode(SBProtocol.ERR);
+                reply.send(this.outS);
                 return;
             }
 
-            //SBPServerApp.histories.get(board).push(
-            //new ChangePostIt(getUpdateString(arr[0], arr[1], prevText, arr[2], time)));
+            var message = String.format("%s\t%d,%d\t%s", title, row, col, data);
 
-            publisher.publish(new NewChangeEvent(board.getBoardTitle().title(), receivedText));
+            var protocol = new SBProtocol();
+            protocol.setCode(SBProtocol.UPDATE_POST_IT);
+            protocol.setContentFromString(message);
 
-            var response = new SBProtocol();
-            response.setCode(SBProtocol.ACK);
-            response.send(outS);
+            this.publisher.publish(new NewChangeEvent(title, protocol));
+
+            var reply = new SBProtocol();
+            reply.setCode(SBProtocol.ACK);
+            reply.send(outS);
         } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String getUpdateString(String alterBoard, String alterPosition, String prevText, String alterText, String alterTime) {
-        return "UPDATE" + "\t" + alterBoard + "\t" + alterPosition + "\t" + alterTime + "\t" + prevText + "\t" + alterText;
-    }
-
-    public String buildBoardString(Iterable<Board> boards) {
-        var builder = new StringBuilder();
-        for (var b : boards) {
-            builder.append(b.getBoardTitle().title());
-            builder.append("\t");
-            builder.append(b.getNumRows());
-            builder.append("\t");
-            builder.append(b.getNumColumns());
-            builder.append(' ');
-        }
-        return builder.toString();
     }
 }

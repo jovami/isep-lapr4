@@ -9,14 +9,6 @@ public class PostItService {
 
     }
 
-    public boolean updatePostIt(Board board, int row, int col, String text, SystemUser postItOwner) {
-        var c = board.getCell(row, col);
-        if (!c.hasPostIt() || !c.getPostIt().getOwner().equals(postItOwner))
-            return false;
-
-        return c.changePostItData(board, text);
-    }
-
     // TODO: MOVE VERIFICATIONS TO HERE
     public boolean movePostIt(Board board, int rowFrom, int colFrom, int rowTo, int colTo, SystemUser postItOwner) {
         var cellFrom = board.getCell(rowFrom, colFrom);

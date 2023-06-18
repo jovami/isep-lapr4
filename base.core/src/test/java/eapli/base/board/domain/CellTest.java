@@ -55,7 +55,7 @@ public class CellTest {
         cell.addPostIt(board, postIt);
 
         // Act
-        boolean changed = cell.changePostItData(board, "NewPostItData");
+        boolean changed = cell.updatePostIt(board, "NewPostItData", user1);
 
         // Assert
         assertTrue(changed);
@@ -65,7 +65,7 @@ public class CellTest {
     @Test
     public void testChangePostItData_NoPostIt() {
         // Act
-        boolean changed = cell.changePostItData(board, "NewPostItData");
+        boolean changed = cell.updatePostIt(board, "NewPostItData", user1);
 
         // Assert
         assertFalse(changed);

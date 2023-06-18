@@ -1,7 +1,7 @@
 package eapli.client.application;
 
-
 import eapli.board.SBProtocol;
+import eapli.board.shared.dto.*;
 import eapli.client.SBPClientApp;
 import eapli.framework.application.UseCaseController;
 import jovami.util.exceptions.ReceivedERRCode;
@@ -11,7 +11,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 @UseCaseController
@@ -20,52 +19,45 @@ public class UpdatePostItController {
     private final DataInputStream inS;
     private final DataOutputStream outS;
 
-    public UpdatePostItController(InetAddress serverIP, int serverPort) {
+    public UpdatePostItController(InetAddress serverIP, int serverPort) throws IOException {
+        this.sock = new Socket(serverIP, serverPort);
+        this.inS = new DataInputStream(sock.getInputStream());
+        this.outS = new DataOutputStream(sock.getOutputStream());
+    }
+
+    public List<BoardWriteAccessDTO> requestBoards() {
+        final var requestBoards = new SBProtocol();
+        requestBoards.setCode(SBProtocol.UPDATE_POST_IT);
+        requestBoards.setToken(SBPClientApp.authToken());
+
         try {
-            this.sock = new Socket(serverIP, serverPort);
-            this.inS = new DataInputStream(sock.getInputStream());
-            this.outS = new DataOutputStream(sock.getOutputStream());
-        } catch (IOException | RuntimeException e) {
-            System.out.println("Failed to connect to provided SERVER-ADDRESS and SERVER-PORT.");
-            System.out.println("Application aborted.");
+            requestBoards.send(this.outS);
+            final var reply = new SBProtocol(this.inS);
+
+            final var decoder = new BoardWriteAccessDTOEncoder();
+            return decoder.decodeMany(reply.getContentAsString());
+        } catch (IOException | ReceivedERRCode e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ArrayList<String> listBoardString() throws ReceivedERRCode, IOException {
-        var message = new SBProtocol();
-        message.setCode(SBProtocol.UPDATE_POST_IT);
-        message.setToken(SBPClientApp.authToken());
-        message.send(outS);
+    public boolean updatePostIt(BoardRowColDataDTO dto) throws IOException, ReceivedERRCode {
+        final var protocol = new SBProtocol();
+        final var encoder = new BoardRowColDataDTOEncoder();
 
-        var boardColumns = new ArrayList<>(List.of(new SBProtocol(inS).getContentAsString().split(" ")));
+        protocol.setCode(SBProtocol.UPDATE_POST_IT);
+        protocol.setContentFromString(encoder.encode(dto));
 
-        var boards = new ArrayList<String>();
-        for (var s : boardColumns) {
-            var arr = s.split("\t");
-            boards.add(arr[0]);
-            boards.add(arr[1]);
-            boards.add(arr[2]);
+        protocol.send(this.outS);
+
+        final var reply = new SBProtocol(this.inS);
+        return reply.getCode() == SBProtocol.ACK;
+    }
+
+    public void closeSocket() {
+        try {
+            this.sock.close();
+        } catch (IOException ignored) {
         }
-
-        return boards;
-    }
-
-    public boolean updatePostIt(String str) throws IOException, ReceivedERRCode {
-        var message = new SBProtocol();
-        message.setCode(SBProtocol.UPDATE_POST_IT);
-        message.setContentFromString(str);
-        message.send(outS);
-
-        var received = new SBProtocol(inS);
-        return received.getCode() == SBProtocol.ACK;
-    }
-
-    public String createBoardPositionTextString(String boardChosen, String position, String text) {
-        return boardChosen + "\t" + position + "\t" + text;
-    }
-
-    public void close() {
-        AuthRequestController.closeSocket(sock);
     }
 }

@@ -55,14 +55,13 @@ public class Cell implements Serializable {
         return true;
     }
 
-    public synchronized boolean changePostItData(Board board, String newData) {
-        if (!hasPostIt())
+    public synchronized boolean updatePostIt(Board board, String data, SystemUser user) {
+        if (!this.hasPostIt() || !this.postIt.getOwner().sameAs(user))
             return false;
 
-        // TODO: unused?
-        String oldData = this.postIt.alterPostItData(newData);
+        this.postIt.alterPostItData(data);
 
-        formatString(board, this.history.getFirst(), newData, Type.UPDATE);
+        this.formatString(board, this.history.getFirst(), data, Type.UPDATE);
         return true;
     }
 

@@ -83,15 +83,14 @@ public class Board implements AggregateRoot<BoardTitle> {
         return cell.addPostIt(this, postIt);
     }
 
-    public boolean changePostItData(int row, int column, String newData) {
+    public boolean updatePostIt(int row, int column, String data, SystemUser user) {
         synchronized (this.cells) {
             var idx = (row - 1) * this.numColumns + (column - 1);
             if (idx < 0 || idx >= this.cells.size())
                 return false; // TODO: report invalid index
         }
 
-        var cell = this.getCell(row, column);
-        return cell.changePostItData(this, newData);
+        return this.getCell(row, column).updatePostIt(this, data, user);
     }
 
 
