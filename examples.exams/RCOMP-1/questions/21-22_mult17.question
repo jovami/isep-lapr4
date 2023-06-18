@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In the context of the use of …"
+
+    ANSWER 1: "SNMP (Simple Network Management Protocol), the agent communicates through the TCP protocol."
+
+    ANSWER 2: "SMTP (Simple Mail Transfer Protocol) the client is able to send and to receive electronic mail messages."
+
+    ANSWER 3: "SNMP (Simple Network Management Protocol) the TRAP messages are requests sent to the agent."
+
+    ANSWER 4: "IMAP4 (Internet Message Access Protocol version 4) the client allows the access to the user’s mailbox."
+
+    SOLUTION 1: 4 [5.0]
+}

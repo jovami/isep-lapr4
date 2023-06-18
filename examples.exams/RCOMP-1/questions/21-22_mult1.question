@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In digital data transmission, ..."
+
+    ANSWER 1: "the external noise never affects the digital modulation; it only affects digital signals"
+
+    ANSWER 2: "the noise resulting from electromagnetic interference (EMI) doesn’t exist in optical fibres."
+
+    ANSWER 3: "the internal noise is always higher than the external noise, especially in electrical signals transmission mediums."
+
+    ANSWER 4: "the noise is much more harmful near the signal emitter than near the signal receiver"
+
+    SOLUTION 1: 2 [5.0]
+}

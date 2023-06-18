@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In HTTP (Hypertext Transfer Protocol) the argument (URI) of a request with the GET method …"
+
+    ANSWER 1: "is stored in a header field line of the request message."
+
+    ANSWER 2: "can be used to send data to the server"
+
+    ANSWER 3: "must refer to a static content because the GET method does not support dynamic contents."
+
+    ANSWER 4: "is stored in the request message body (content)."
+
+    SOLUTION 1: 2 [5.0]
+}

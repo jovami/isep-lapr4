@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "One advantage of choosing to implement a network application over UDP instead of TCP is that …"
+
+    ANSWER 1: "when by some reason data is not delivered at the destination, the emitter is always notified about what has happened."
+
+    ANSWER 2: "the receiver is not required to know in advance (before receiving) how many bytes is the emitter sending."
+
+    ANSWER 3: "it is possible to transfer larger amounts of data in each send operation."
+
+    ANSWER 4: "there are more guarantees that sent data is delivered at the destination."
+
+    SOLUTION 1: 2 [5.0]
+}

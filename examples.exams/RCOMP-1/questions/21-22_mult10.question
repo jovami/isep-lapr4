@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The header of a TCP (Transmission Control Protocol) segment …"
+
+    ANSWER 1: "contains the Reception Window Size field, this field cannot in whatsoever case have the value zero"
+
+    ANSWER 2: "contains, like for UDP (User Datagram Protocol), a source port number and a destination port number."
+
+    ANSWER 3: "has a fixed size, always equal to twenty bytes."
+
+    ANSWER 4: "contains several flags, it is never possible for flags SYN and ACK to be active at the same time on the same segment."
+
+    SOLUTION 1: 2 [5.0]
+}

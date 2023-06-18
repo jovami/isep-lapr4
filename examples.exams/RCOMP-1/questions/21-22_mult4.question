@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In a network, a packet may contain a field that allows the receiver to detect if an error has happened during the transmission, …"
+
+    ANSWER 1: "the size of such filed (number of bits) does not depend on the size of the packer neither the amount of data it transports."
+
+    ANSWER 2: "that field always must be sent before the useful data (payload), it can never be sent after the payload."
+
+    ANSWER 3: "if that field’s value is the correct one, then the receiver has absolute guarantees that no error has occurred."
+
+    ANSWER 4: "that field is essential in Forward Error Correction (FEC), but unnecessary in Backward Error Correction (BEC)."
+
+    SOLUTION 1: 1 [5.0]
+}

@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The PSK (Phase Shift Keying) technique …"
+
+    ANSWER 1: "should not be used in passband transmission mediums, it should be used in baseband transmission mediums."
+
+    ANSWER 2: "may be combined with the FSK (Frequency Shift Keying) technique, but not with the ASK (Amplitude Shift Keying) technique."
+
+    ANSWER 3: "produces analogue signals, while the ASK (Amplitude Shift Keying) technique produces digital signals."
+
+    ANSWER 4: "is a digital modulation technique, it allows sending digital data through analogue signals."
+
+    SOLUTION 1: 4 [5.0]
+}

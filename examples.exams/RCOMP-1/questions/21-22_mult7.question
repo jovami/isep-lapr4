@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The network connection known as the Local Loop ..."
+
+    ANSWER 1: "is a physical point-to-point connection between two different internet service subscribers."
+
+    ANSWER 2: "can use the ADSL (Asymmetric Digital Subscriber Line) technology, in that case installing optical fibre is required."
+
+    ANSWER 3: "may be implemented using wireless transmission (Wireless Local Loop), in that case analogue signals are used."
+
+    ANSWER 4: "always encompasses the use of MODEMs because it always requires the use of analogue signals."
+
+    SOLUTION 1: 3 [5.0]
+}

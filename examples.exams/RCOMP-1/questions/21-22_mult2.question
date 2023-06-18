@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "Digital signals are created by techniques known as line coding, ..."
+
+    ANSWER 1: "the frequency of the produced signal does not depend on the used line coding technique."
+
+    ANSWER 2: "the Biphase-L (Manchester) technique has the inconvenient of turning the symbol synchronization harder."
+
+    ANSWER 3: "on a given transmission medium, the maximum data rate depends on the used line coding technique."
+
+    ANSWER 4: "whatever is the line coding technique, the produced signal has only two possible values, corresponding to bits 0 and 1."
+
+    SOLUTION 1: 3 [5.0]
+}

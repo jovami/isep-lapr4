@@ -1,0 +1,16 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In the DNS (Domain Name System) names resolution system, the records of type …"
+
+    ANSWER 1: "NS (Name Server) are used to store the IP addresses of the root name servers."
+
+    ANSWER 2: "MX (Mail eXchanger) contains IP addresses belonging to SMTP (Simple Mail Transfer Protocol) servers of a DNS domain"
+
+    ANSWER 3: "SOA (Start Of Authority) contains the list of all root name servers existing in the DNS system."
+
+    ANSWER 4: "A (IPv4 address) and AAAA (IPv6 address) are in some cases used as Glue Records"
+
+
+    SOLUTION 1: 4 [5.0]
+}

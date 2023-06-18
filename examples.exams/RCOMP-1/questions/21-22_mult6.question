@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In the local Ethernet networks (IEEE802.3/ISO8802-3) the node addresses are made up of 48 bits, …"
+
+    ANSWER 1: "in network switch’s MAC table, it is normal having multiple entries with the same Ethernet node address"
+
+    ANSWER 2: "the Ethernet address where all 48 bits have the value one is reserved, and it cannot be used for any purpose whatsoever."
+
+    ANSWER 3: "it is absolutely fundamental for each Ethernet node address to be unique over the entire Internet."
+
+    ANSWER 4: "each Ethernet frame (Ethernet packet) carries two Ethernet node addresses."
+
+    SOLUTION 1: 4 [5.0]
+}

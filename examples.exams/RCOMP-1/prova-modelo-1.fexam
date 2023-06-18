@@ -1,0 +1,22 @@
+FORMATIVE EXAM {
+    TITLE: "Example of an RCOMP final exam (i.e prova modelo)"
+
+    HEADER {
+        DESCRIPTION: "For each topic/question, there’s only one totally correct option/answer. Every topic/question have the same value."
+    }
+
+    SECTION 1 {
+        QUESTION 1:  MULTIPLE_CHOICE
+        QUESTION 2:  MULTIPLE_CHOICE
+        QUESTION 3:  MULTIPLE_CHOICE
+        QUESTION 4:  MULTIPLE_CHOICE
+        QUESTION 5:  MULTIPLE_CHOICE
+        QUESTION 6:  MULTIPLE_CHOICE
+        QUESTION 7:  MULTIPLE_CHOICE
+        QUESTION 8:  MULTIPLE_CHOICE
+        QUESTION 9:  MULTIPLE_CHOICE
+        QUESTION 10: MULTIPLE_CHOICE
+        QUESTION 11: MULTIPLE_CHOICE
+    }
+
+}

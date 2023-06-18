@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In IPv4 (Internet Protocol version 4) it is possible to fragment IPv4 packets (IPv4 packet fragmentation), …"
+
+    ANSWER 1: "for that the DF (Don’t Fragment) flag must be active in the IPv4 packet’s header."
+
+    ANSWER 2: "the fragmentation is deployed whenever the packet’s size is smaller than the network’s MTU (Maximum Transmission Unit)."
+
+    ANSWER 3: "such IPv4 packets fragmentation is based on the PMTUD (Path Maximum Transmission Unit Discovery) mechanism."
+
+    ANSWER 4: "the fragmentation ensures the maximum advantage is taken from the MTU (Maximum Transmission Unit) of each network."
+
+    SOLUTION 1: 4 [5.0]
+}

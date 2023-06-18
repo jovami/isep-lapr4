@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The RSA (Rivest–Shamir–Adleman) algorithm …"
+
+    ANSWER 1: "uses the same secret key to encrypt and to decrypt data."
+
+    ANSWER 2: "uses a public key and a private key, for the sake of security, both should be kept secret."
+
+    ANSWER 3: "is an asymmetric key cryptographic algorithm that is also used to implement digital signatures"
+
+    ANSWER 4: "typically uses cryptographic keys with 128 bits, or at most 256 bits."
+
+    SOLUTION 1: 3 [5.0]
+}

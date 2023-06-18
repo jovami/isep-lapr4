@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The OSI (Open Systems Interconnection) reference model establishes seven layers, …"
+
+    ANSWER 1: "the layers of the IEEE 802 (ISSO 8802) architecture match (correspond to) the network layer of the OSI model."
+
+    ANSWER 2: "the logical link layer never interacts directly with the physical link layer."
+
+    ANSWER 3: "when packets arrive from the network, the first layer they pass through is the transport layer."
+
+    ANSWER 4: "in the TCP/IP stack there is no layer equivalent (corresponding to) the OSI model’s physical link layer."
+
+    SOLUTION 1: 4 [5.0]
+}

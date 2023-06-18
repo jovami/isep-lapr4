@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import eapli.base.clientusermanagement.domain.users.Teacher;
 import eapli.base.course.domain.Course;
 import eapli.base.course.domain.CourseFactory;
 import eapli.base.course.domain.CourseID;
+import eapli.base.course.domain.StaffMember;
 import eapli.base.course.dto.CreateCourseDTO;
 import eapli.base.enrollment.domain.Enrollment;
 import eapli.base.enrollmentrequest.domain.EnrollmentRequest;
@@ -36,7 +39,8 @@ public class ExamBootstrapper implements Action {
     private final RepositoryFactory repos;
 
     private Teacher teacher;
-    private Student student;
+
+    private final List<Student> students;
 
     private static final Logger logger;
     private static final Acronym ACRONYM;
@@ -51,15 +55,22 @@ public class ExamBootstrapper implements Action {
     public ExamBootstrapper() {
         super();
 
+        this.students = new ArrayList<>();
         this.repos = PersistenceContext.repositories();
+    }
+
+    private Student studentByName(String username) {
+        return this.repos.students().findByUsername(Username.valueOf(username))
+                .orElseThrow();
     }
 
     @Override
     public boolean execute() {
         this.teacher = this.repos.teachers().ofIdentity(ACRONYM)
                 .orElseThrow();
-        this.student = this.repos.students().findByUsername(Username.valueOf("sairy"))
-                .orElseThrow();
+
+        this.students.add(studentByName("sairy"));
+        this.students.add(studentByName("johnny"));
 
         var dir = new File(prefix);
 
@@ -86,12 +97,13 @@ public class ExamBootstrapper implements Action {
             /* questions */
             if (subfile.isDirectory()) {
                 if (!subfile.getName().equalsIgnoreCase("questions")) {
-                    logger.warn("Unexpected file found for course '{}': '{}'", course.identity(), subfile.getName());
+                    logger.warn("Unexpected file found for course '{}': '{}'",
+                            course.identity(),
+                            subfile.getName());
                     continue;
                 }
-                for (final var question : subfile.listFiles()) {
+                for (final var question : subfile.listFiles())
                     bootstrapQuestion(question, course);
-                }
             }
 
             switch (FilenameUtils.getExtension(subfile.getName())) {
@@ -105,27 +117,46 @@ public class ExamBootstrapper implements Action {
         }
     }
 
-    private void bootstrapFormativeExam(File spec, Course c) throws IOException {
-        var svc = GrammarContext.grammarTools().formativeExamValidator();
-
-        logger.info("Bootstrapping formative exam '{}' for course '{}'", spec.getName(), c.identity());
-
-        var fexam = new FormativeExamFactory(svc).build(spec.getName().replace(".fexam", ""), c, spec).orElseThrow();
-
-        this.repos.formativeExams().save(fexam);
-    }
-
     private void bootstrapRegularExam(File spec, Course c) throws IOException {
         var svc = GrammarContext.grammarTools().regularExamValidator();
 
-        logger.info("Bootstrapping exam '{}' for course '{}'", spec.getName(), c.identity());
+        logger.info("Bootstrapping exam '{}' for course '{}'",
+                spec.getName(),
+                c.identity());
 
         var now = LocalDateTime.now();
         var end = now.plusDays(3);
 
-        var exam = new RegularExamFactory(svc).build(spec.getName().replace(".exam", ""), now, end, c, spec).orElseThrow();
+        var exam = new RegularExamFactory(svc)
+                .build(spec.getName().replace(".exam", ""), now, end, c, spec)
+                .orElseThrow();
 
         this.repos.regularExams().save(exam);
+    }
+
+    private void bootstrapFormativeExam(File spec, Course c) throws IOException {
+        var svc = GrammarContext.grammarTools().formativeExamValidator();
+
+        logger.info("Bootstrapping formative exam '{}' for course '{}'",
+                spec.getName(),
+                c.identity());
+
+        var fexam = new FormativeExamFactory(svc)
+                .build(spec.getName().replace(".fexam", ""), c, spec)
+                .orElseThrow();
+
+        this.repos.formativeExams().save(fexam);
+    }
+
+    private void bootstrapQuestion(File spec, Course c) throws IOException {
+        var svc = GrammarContext.grammarTools().questionValidator();
+
+        logger.info("Bootstrapping question '{}' for formative exams of course '{}'",
+                spec.getName(),
+                c.identity());
+
+        var question = new QuestionFactory(svc).build(c, spec).orElseThrow();
+        this.repos.questions().save(question);
     }
 
     private Course bootstrapCourse(String name) {
@@ -143,33 +174,29 @@ public class ExamBootstrapper implements Action {
                 startDate, endDate, 120, 420);
 
         var course = new CourseFactory().build(dto);
-        course.open();
-        course.setHeadTeacher(teacher);
 
-        course.openEnrollments();
+        course.open();
+        course.setHeadTeacher(this.teacher);
 
         course = this.repos.courses().save(course);
 
-        var request = new EnrollmentRequest(course, student);
-        request.approveEnrollmentRequest();
+        var staff1 = this.repos.teachers().ofIdentity(Acronym.valueOf("JFA"));
+        if (staff1.isPresent())
+            this.repos.staffs().save(new StaffMember(course, staff1.get()));
 
-        this.repos.enrollmentRequests().save(request);
+        course.openEnrollments();
+        course = this.repos.courses().save(course);
 
-        var enrollment = new Enrollment(course, student);
-        this.repos.enrollments().save(enrollment);
+        for (final var student : this.students) {
+            var request = new EnrollmentRequest(course, student);
+            request.approveEnrollmentRequest();
+            this.repos.enrollmentRequests().save(request);
+
+            var enrollment = new Enrollment(course, student);
+            this.repos.enrollments().save(enrollment);
+        }
 
         course.closeEnrollments();
         return this.repos.courses().save(course);
     }
-
-    private void bootstrapQuestion(File spec, Course c) throws IOException {
-        var svc = GrammarContext.grammarTools().questionValidator();
-
-        logger.info("Bootstrapping question '{}' for formative exams of course '{}'", spec.getName(), c.identity());
-
-        var question = new QuestionFactory(svc).build(c, spec).orElseThrow();
-
-        this.repos.questions().save(question);
-    }
-
 }

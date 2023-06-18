@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "The ARP (Address Resolution Protocol) protocol …"
+
+    ANSWER 1: "sends responses to the local network’s broadcast address, requests are never sent to that address."
+
+    ANSWER 2: "is fundamental for either IPv4 or IPv6 (Internet Protocol version 6) to operate in an Ethernet local network."
+
+    ANSWER 3: "allows transforming DNS (Domain Name System) names of hosts and servers into IPv4 addresses."
+
+    ANSWER 4: "operates strictly within a local network, its packets are never transferred between different networks."
+
+    SOLUTION 1: 4 [5.0]
+}

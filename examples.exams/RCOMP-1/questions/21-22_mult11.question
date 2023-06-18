@@ -1,0 +1,15 @@
+MULTIPLE_CHOICE {
+    CHOICE_TYPE: single-answer
+
+    DESCRIPTION: "In a routing table, the column known as metric or cost …"
+
+    ANSWER 1: "is relevant only when there are two lines specifying the same destination network (same value in the destination column)."
+
+    ANSWER 2: "always must have the same value between two lines that have the same value in the next-hop column."
+
+    ANSWER 3: "contains numerical values that do not depend on the routing protocol being used to build the table."
+
+    ANSWER 4: "may contain IP addresses or names of local network interfaces of the router"
+
+    SOLUTION 1: 1 [5.0]
+}
