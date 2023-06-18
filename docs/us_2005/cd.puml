@@ -1,0 +1,82 @@
+@startuml
+class ListStudentGradesController {
+    + listStudentGrades(): List<ExamGradeAndCourseDTO>
+}
+
+class ListExamResultsService {
+    + regularExamsResultsBasedOnGradingProperties(s: Student): Iterable<RegularExamResult>
+}
+
+interface RegularExamResultRepository {
+    + examResultsByStudent(s: Student): Iterable<RegularExamResult>
+}
+
+class ExamGradeAndCourseDTO {
+    - title: RegularExamTitle
+    - grade: ExamGrade
+    - date: RegularExamDate
+    - id: CourseID
+}
+
+class ExamGradeAndCourseDTOMapper {
+    + toDTO(result: RegularExamResult): ExamGradeAndCourseDTO
+}
+
+class RegularExamResult {
+    - grade: ExamGrade
+    - gradeProperties: ExamGradeProperties
+    - student: Student
+    - regularExam: RegularExam
+}
+
+class ExamGrade {
+    - grade: Float
+    - maxGrade: Float
+}
+
+class ExamGradeProperties {
+    - NONE
+    - ON_SUBMISSION
+    - AFTER_CLOSING
+}
+
+class Student { }
+
+class RegularExam {
+    - title: RegularExamTitle
+    - specification: RegularExamSpecification
+    - date: RegularExamDate
+    - course: Course
+}
+
+class RegularExamTitle {
+    - title: String
+}
+
+class RegularExamDate {
+    - start: LocalDateTime
+    - end: LocalDateTime
+}
+
+ListStudentGradesController --> ListExamResultsService
+ListExamResultsService --> RegularExamResultRepository
+ListExamResultsService ..> Student
+ListExamResultsService ..> RegularExamResult
+ListExamResultsService ..> RegularExam
+
+ListStudentGradesController ..> ExamGradeAndCourseDTO
+ListStudentGradesController ..> ExamGradeAndCourseDTOMapper
+ExamGradeAndCourseDTOMapper ..> ExamGradeAndCourseDTO
+
+ListStudentGradesController ..> Student
+
+RegularExamResult --> ExamGrade
+RegularExamResult --> ExamGradeProperties
+RegularExamResult --> Student
+RegularExamResult --> RegularExam
+
+RegularExam --> RegularExamTitle
+RegularExam --> RegularExamSpecification
+RegularExam --> RegularExamDate
+RegularExam --> Course
+@enduml

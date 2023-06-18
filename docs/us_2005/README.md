@@ -40,24 +40,7 @@ summarize:
 
 ### 3.2. Classes
 
-[//]: # (TODO: Class diagram)
-
-- Domain:
-  + **ExamResult**
-  + **ExamGrade**
-  + **ExamGradeProperties**
-  + **CourseId**
-  + **Student**
-  + **SystemUser**
-- Controller:
-  + **ListStudentGradesController**
-  + **ListExamResultsService**
-- Repository:
-  + **StudentRepository**
-  + **ExamResultRepository**
-- DTO:
-  + **ExamGradeAndCourseDTO**
-  + **ExamGradeAndCourseDTOMapper**
+![cd](./cd.svg)
 
 ### 3.3. Applied Patterns
 
