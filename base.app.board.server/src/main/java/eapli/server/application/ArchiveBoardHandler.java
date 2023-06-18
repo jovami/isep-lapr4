@@ -58,6 +58,8 @@ public class ArchiveBoardHandler extends AbstractSBServerHandler{
             board.archiveBoard();
             boardRepository.save(board);
 
+
+
             StringBuilder builderArchive = new StringBuilder();
             var boardsArchived = srv.listBoardsUserOwnsArchived(owner);
 

@@ -36,10 +36,8 @@ public class PostIt {
     }
     
 
-    public synchronized String alterPostItData(String newData) {
-        String oldData = this.postItData;
+    public synchronized void alterPostItData(String newData) {
         this.postItData = newData;
-        return oldData;
     }
 
     public synchronized String getData() {

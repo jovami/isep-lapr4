@@ -48,6 +48,7 @@ public class ArchiveBoardUI extends AbstractUI {
                 System.out.println("\n[INFO] There was an error choosing the board");
                 return false;
             }
+            System.out.println("Board archived successfully");
 
             new ListWidget<>("\nList of boards user owns archived",List.of(boardsArchived)).show();
 
