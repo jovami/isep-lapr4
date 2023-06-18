@@ -5,6 +5,7 @@ import eapli.framework.validations.Preconditions;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Deprecated
 @Embeddable
 public class ExamFeedback {
 
