@@ -1,0 +1,30 @@
+
+
+matching:
+    answers separated by newlines
+    e.g.: "1-2\n2-1\n3-3\n4-4"
+
+true/false:
+    "true"|"false"
+
+numerical:
+    number as string
+
+short answer:
+    answer string
+    e.g.: "Avenida da Boavista"
+
+
+multiple choice:
+    single:
+        answer key as string
+        e.g.: "2"
+
+    multiple:
+        answer keys delimited by commas
+        UI must ensure numbers are in INCREASING ORDER
+        e.g.: "1,3,4" but not "1,4,3"
+
+missing words:
+    answers separated by newlines, in order of choice
+    e.g.: "fly\n1984\nJava\nSCOMP"

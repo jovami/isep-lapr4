@@ -19,6 +19,7 @@ on:
 jobs:
   build:
 
+    if: github.repository_owner == 'Departamento-de-Engenharia-Informatica'
     runs-on: ubuntu-latest
 
     steps:
